@@ -80,12 +80,12 @@ export class WeaveDirective {
    */
   ngOnInit() {
     // define the elements and context of the weave draft.
-    this.canvasEl = this.el.nativeElement.firstElementChild;
-    this.svgEl = this.el.nativeElement.lastElementChild;
-    this.cx = this.canvasEl.getContext('2d');
+    this.canvasEl = this.el.nativeElement.firstElementChild; // HTMLCanvasElement
+    this.svgEl = this.el.nativeElement.lastElementChild; // svg - Scalable Vector Graphics
+    this.cx = this.canvasEl.getContext('2d'); // HTMLCanvasElement method, allows drawing
 
     // set the width and height
-    this.canvasEl.width = this.weave.warps * 20;
+    this.canvasEl.width = this.weave.warps * 20; // 20 = cell dimension
     this.canvasEl.height = this.weave.wefts * 20;
 
     // Set up the initial grid.
@@ -437,35 +437,45 @@ export class WeaveDirective {
    */
   public functional() {
     this.updateSize();
-    this.cx.clearRect(0,0, this.canvasEl.width, this.canvasEl.height);
+    this.weave.clearSelvedge();
+    this.cx.clearRect(0,0, this.canvasEl.width, this.canvasEl.height); // clears draft
     // this.drawGrid();
     this.cx.setLineDash([0]);
 
     for (var l = 0; l < this.weave.layers.length; l++) {
       // Each layer.
-      this.cx.strokeStyle = this.weave.layers[l].getColor();
+      console.log("This layer: " + this.weave.layers[l].id + " insert direction: " + this.weave.layers[l].insert);
+      this.cx.strokeStyle = this.weave.layers[l].getColor(); // draw a line of the shuttle's color
       this.cx.lineWidth = 5;
       var first = true;
-      var left = !this.weave.layers[l].insert;
-      var py = null;
-      var s,e;
-      var s1 = null;
-      var s2 = null;
-      var e1 = null;
-      var e2 = null;
+      
+      var left = false; // argh there's got to be a better way to deal with this and have HTML give a boolean
+      if (this.weave.layers[l].insert === "0") {
+        left = true;
+      }
 
-      for (var i = this.weave.visibleRows.length; i > 0 ; i--) {
-        var y = ((i - 1) * 20) + 10;
-        var r = this.weave.visibleRows[i - 1];
+      var py = null; // previous y coord of line
+      var s,e; // what are these?
+      var s1 = null; // line 1, left end
+      var s2 = null; // line 2, left end
+      var e1 = null; // line 1, right end
+      var e2 = null; // line 2, right end
+
+      for (var i = 0; i < this.weave.visibleRows.length; i++) {
+      // for each row in the draft
+        var y = (i * 20) + 10; // middle of row height
+        var r = this.weave.visibleRows[i]; // row number
         first = true;
-        for (var x = 0; x < this.weave.pattern[r].length; x++) {
+      // console.log("Beginning row " + r + "in direction " + left);
+        for (var x = 0; x < this.weave.pattern[r].length; x++) { // going right across the row r
 
-          if (this.weave.isUp(i - 1,x)) {
+          if (this.weave.isUp(i, x)) { // if there is a black square in this part of the row
 
-            if (first && this.weave.rowLayerMapping[r] === l) {
+            if (first && this.weave.rowLayerMapping[r] === l) { 
+            // begin path if this row is on layer "l" and the first one we've encountered in the row
               this.cx.beginPath();
-              this.cx.moveTo(x * 20 + 5, y);
-              this.cx.lineTo((x + 1)* 20 - 5, y)
+              this.cx.moveTo(x * 20 + 5, y); // sets origin of path
+              this.cx.lineTo((x + 1)* 20 - 5, y) // this is only 10 pixels to the right, first blip?
               first = false;
               if (s1 === null) {
                 s1 = (x * 20) + 5;
@@ -476,6 +486,7 @@ export class WeaveDirective {
                 e2 = (x + 1) * 20 - 5;
               }
             } else if (this.weave.rowLayerMapping[r] === l) {
+            // else keep drawing the line
               this.cx.lineTo((x + 1) * 20 - 5, y);
 
               if (py === y) {
@@ -487,20 +498,27 @@ export class WeaveDirective {
             }
           }
         }
+
         if (first === false) {
-          this.cx.stroke();
+          this.cx.stroke(); // actually fills in the line (like Illustrator)
+          // if shuttle exits on the left, fill in selvedge, L1 R0
+          // if shuttle exits on the right, fill in selvedge, L0 R1
+          this.weave.selvedgeL[r] = left;
+          this.weave.selvedgeR[r] = !left;
+          left = !left; // switch direction here to properly toggle direction
         }
 
         if (s2 !== null && e2 !== null) {
-          e = Math.max(e1,e2);
-          s = Math.min(s1,s2);
-          this.cx.beginPath();
-          if (left) {
+        // we've filled in the start and end of line 2
+          e = Math.max(e1,e2); // which line ends farther out right
+          s = Math.min(s1,s2); // which line ends farther out left
+          this.cx.beginPath(); // resets path to start drawing a new line
+          if (left) { // vertical line downwards on left end, connect with s2
             this.cx.moveTo(s1, py);
             this.cx.lineTo(s, py);
-            this.cx.lineTo(s, y);
+            this.cx.lineTo(s, y); // y > py
             this.cx.lineTo(s2, y);
-          } else if (!left) {
+          } else if (!left) { // vertical line downwards on right end, connect with e2
             this.cx.moveTo(e1, py);
             this.cx.lineTo(e, py);
             this.cx.lineTo(e, y);
@@ -512,17 +530,56 @@ export class WeaveDirective {
           s2 = null;
           e2 = null;
           py = y;
-          left = !left;
+          // left = !left; // switch directions
         }
-
       }
     }
 
     this.cx.strokeStyle = "#000";
+    console.log("L edge: " + this.weave.selvedgeL);
+    console.log("R edge: " + this.weave.selvedgeR);
   }
 
   /**
-   * Redraws teh entire canvas based on weave pattern.
+   * Generates a simulated floating selvedge using the yarn directions.
+   * Similar logic to functional(), filling out the draft.selvedgeL/R containers.
+   * Does NOT manipulate the canvas.
+   * @extends WeaveDirective
+   * @returns {void}
+   */
+  public generateSelvedge() {
+    this.weave.clearSelvedge();
+    console.log("Generating selvedge.");
+    
+    for (var l = 0; l < this.weave.layers.length; l++) {
+      // Each layer.
+      console.log("This layer: " + this.weave.layers[l].id + " insert direction: " + this.weave.layers[l].insert);
+      var first = true;
+      var left = false; // set initial direction
+      if (this.weave.layers[l].insert === "0") {
+        left = true;
+      }
+
+      for (var i = 0; i < this.weave.visibleRows.length; i++) {
+      // for each visible row in the draft
+        var r = this.weave.visibleRows[i]; // row number
+        if (this.weave.rowLayerMapping[r] === l && !this.weave.isEmptyRow(r)) {
+        // if this row is assigned to this layer and has something in it
+          // if shuttle exits on the left, fill in selvedge, L1 R0
+          // if shuttle exits on the right, fill in selvedge, L0 R1
+          this.weave.selvedgeL[r] = left;
+          this.weave.selvedgeR[r] = !left;
+          left = !left; // switch direction here
+        }
+      }
+    }
+
+    console.log("L edge: " + this.weave.selvedgeL);
+    console.log("R edge: " + this.weave.selvedgeR);
+  }
+
+  /**
+   * Redraws the entire canvas based on weave pattern.
    * @extends WeaveDirective
    * @returns {void}
    */
