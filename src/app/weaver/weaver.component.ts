@@ -3,12 +3,13 @@ import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { PatternService } from '../core/provider/pattern.service';
 import { WeaveDirective } from '../core/directives/weave.directive';
 import { Draft } from '../core/model/draft';
-import { Layer } from '../core/model/layer';
+import { Shuttle } from '../core/model/shuttle';
 import { Pattern } from '../core/model/pattern';
 import {MatDialog, MatDialogConfig} from "@angular/material";
 import { ConnectionModal } from './modal/connection/connection.modal';
 import { InitModal } from './modal/init/init.modal';
 import { LabelModal } from './modal/label/label.modal';
+import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
 
 /**
  * Controller of the Weaver component.
@@ -63,7 +64,7 @@ export class WeaverComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.draft = new Draft(30, result.warps, result.epi);
-        this.draft.layers[0].setColor('#3d3d3d');
+        this.draft.shuttles[0].setColor('#3d3d3d');
       }
     });
 
@@ -223,7 +224,7 @@ export class WeaverComponent implements OnInit {
    */
   public openConnectionDialog() {
 
-    const dialogRef = this.dialog.open(ConnectionModal, {data: {layers: this.draft.layers}});
+    const dialogRef = this.dialog.open(ConnectionModal, {data: {shuttles: this.draft.shuttles}});
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -249,23 +250,44 @@ export class WeaverComponent implements OnInit {
   }
 
   /**
-   * Change layer of row to next in list.
+   * Generates simulated floating selvedge.
+   */
+  public generateSelvedge() {
+    this.weaveRef.generateSelvedge();
+  }
+
+  /**
+   * Open the selvedge modal.
    * @extends WeaveComponent
-   * @param {number} layer - ID of previous layer
+   * @returns ???
+   */
+  public openSelvedgeDialog() {
+    const dialogRef = this.dialog.open(SelvedgeModal, 
+      {data: {draft: this.draft, L: this.draft.selvedgeL, R: this.draft.selvedgeR} 
+      // and anything else you need or would just help shorten code
+      });
+
+    dialogRef.afterClosed().subscribe(result => {console.log(result)});
+  }
+
+  /**
+   * Change shuttle of row to next in list.
+   * @extends WeaveComponent
+   * @param {number} shuttle - ID of previous shuttle
    * @param {number} the index of row within the pattern.
    * @returns {void}
    */
-  public rowLayerChange(row, index) {
+  public rowShuttleChange(row, index) {
 
-    const len = this.draft.layers.length;
-    var layer = this.draft.rowLayerMapping[row];
+    const len = this.draft.shuttles.length;
+    var shuttle = this.draft.rowShuttleMapping[row];
 
-    var newLayer = (layer + 1) % len;
-    while (!this.draft.layers[newLayer].visible) {
-      var newLayer = (newLayer + 1) % len;
+    var newShuttle = (shuttle + 1) % len;
+    while (!this.draft.shuttles[newShuttle].visible) {
+      var newShuttle = (newShuttle + 1) % len;
     }
 
-    this.draft.rowLayerMapping[row] = newLayer;
+    this.draft.rowShuttleMapping[row] = newShuttle;
 
     this.weaveRef.redrawRow(index * 20, index);
   }
@@ -285,14 +307,14 @@ export class WeaverComponent implements OnInit {
    * @extends WeaveComponent
    * @returns {void}
    */
-  public insertRow(i, layer) {
-    this.draft.insertRow(i, layer);
+  public insertRow(i, shuttle) {
+    this.draft.insertRow(i, shuttle);
     this.draft.updateConnections(i, 1);
     this.weaveRef.updateSize();
   }
 
-  public cloneRow(i, c, layer) {
-    this.draft.cloneRow(i, c, layer);
+  public cloneRow(i, c, shuttle) {
+    this.draft.cloneRow(i, c, shuttle);
     this.draft.updateConnections(i, 1);
     this.weaveRef.updateSize();
   }
@@ -307,19 +329,19 @@ export class WeaverComponent implements OnInit {
     this.patterns = e.patterns;
   }
 
-  public createLayer(e: any) {
-    this.draft.addLayer(e.layer);
-    if (e.layer.image) {
+  public createShuttle(e: any) {
+    this.draft.addShuttle(e.shuttle);
+    if (e.shuttle.image) {
       this.weaveRef.updateSize();
     }
   }
 
-  public hideLayer(e:any) {
+  public hideShuttle(e:any) {
     this.draft.updateVisible();
     this.weaveRef.updateSize();
   }
 
-  public showLayer(e:any) {
+  public showShuttle(e:any) {
     this.draft.updateVisible();
     this.weaveRef.updateSize();
   }

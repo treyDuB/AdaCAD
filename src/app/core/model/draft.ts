@@ -1,4 +1,5 @@
-import { Layer } from './layer';
+import { Shuttle } from './shuttle';
+import { Shape } from './shape';
 
 import * as _ from 'lodash';
 
@@ -8,12 +9,14 @@ import * as _ from 'lodash';
  */
 export interface DraftInterface {
   pattern: Array<Array<boolean>>;
-  layers: Array<Layer>;
-  rowLayerMapping: Array<number>;
+  shuttles: Array<Shuttle>;
+  rowShuttleMapping: Array<number>;
   connections: Array<any>;
   labels: Array<any>;
   wefts: number;
   warps: number;
+  selvedgeL: Array<boolean>;
+  selvedgeR: Array<boolean>;
 
 }
 
@@ -23,29 +26,34 @@ export interface DraftInterface {
  */
 export class Draft implements DraftInterface {
   pattern: Array<Array<boolean>>;
-  layers: Array<Layer>;
-  rowLayerMapping: Array<number>;
+  shuttles: Array<Shuttle>; // shuttles in use
+  rowShuttleMapping: Array<number>;
   visibleRows: Array<number>;
   connections: Array<any>;
+  shapes: Array<Shape>; // associated shapes
   labels: Array<any>;
   wefts: number;
   warps: number;
   epi: number;
 
+  // selvedge containers, length should equal pattern height
+  selvedgeL: Array<boolean>;
+  selvedgeR: Array<boolean>;
+
   constructor(wefts, warps, epi) {
-    let l = new Layer();
+    let l = new Shuttle();
     l.setID(0);
     l.setVisible(true);
     l.setThickness(epi);
     this.wefts = wefts;
     this.warps = warps;
     this.epi = epi;
-    this.layers = [l];
-    this.rowLayerMapping = [];
+    this.shuttles = [l];
+    this.rowShuttleMapping = [];
     this.visibleRows = [];
 
     for(var i = 0; i < wefts; i++) {
-        this.rowLayerMapping.push(0);
+        this.rowShuttleMapping.push(0);
         this.visibleRows.push(i);
     }
 
@@ -74,20 +82,20 @@ export class Draft implements DraftInterface {
     this.pattern[row][j] = bool;
   }
 
-  rowToLayer(row: number) {
-    return this.rowLayerMapping[row];
+  rowToShuttle(row: number) {
+    return this.rowShuttleMapping[row];
   }
 
   updateVisible() {
     var i = 0;
-    var layers = [];
+    var shuttles = [];
     var visible = [];
-    for (i = 0; i < this.layers.length; i++) {
-      layers.push(this.layers[i].visible);
+    for (i = 0; i < this.shuttles.length; i++) {
+      shuttles.push(this.shuttles[i].visible);
     }
 
-    for (i = 0; i< this.rowLayerMapping.length; i++) {
-      var show = layers[this.rowLayerMapping[i]];
+    for (i = 0; i< this.rowShuttleMapping.length; i++) {
+      var show = shuttles[this.rowShuttleMapping[i]];
 
       if (show) {
         visible.push(i);
@@ -101,7 +109,7 @@ export class Draft implements DraftInterface {
 
   }
 
-  createConnection(layer: Layer, line: any) {
+  createConnection(shuttle: Shuttle, line: any) {
 
   }
 
@@ -151,7 +159,7 @@ export class Draft implements DraftInterface {
     }
   }
 
-  insertRow(i: number, layerId: number) {
+  insertRow(i: number, shuttleId: number) {
     var col = [];
 
     for (var j = 0; j < this.warps; j++) {
@@ -160,21 +168,21 @@ export class Draft implements DraftInterface {
 
     this.wefts += 1;
 
-    this.rowLayerMapping.splice(i,0,layerId);
+    this.rowShuttleMapping.splice(i,0,shuttleId);
     this.pattern.splice(i,0,col);
     this.updateVisible();
 
   }
 
-  cloneRow(i: number, c: number, layerId: number) {
+  cloneRow(i: number, c: number, shuttleId: number) {
     var row = this.visibleRows[c];
     const col = _.clone(this.pattern[c]);
 
-    console.log(i, c, layerId);
+    console.log(i, c, shuttleId);
 
     this.wefts += 1;
 
-    this.rowLayerMapping.splice(i, 0, layerId);
+    this.rowShuttleMapping.splice(i, 0, shuttleId);
     this.pattern.splice(i, 0, col);
 
     this.updateVisible();
@@ -183,7 +191,7 @@ export class Draft implements DraftInterface {
   deleteRow(i: number) {
     var row = this.visibleRows[i];
     this.wefts -= 1;
-    this.rowLayerMapping.splice(i, 1);
+    this.rowShuttleMapping.splice(i, 1);
     this.pattern.splice(i, 1);
 
     this.updateVisible();
@@ -203,36 +211,109 @@ export class Draft implements DraftInterface {
     }
   }
 
-  addLayer(layer) {
-    layer.setID(this.layers.length);
-    layer.setVisible(true);
-    if (!layer.thickness) {
-      layer.setThickness(this.epi);
+  addShuttle(shuttle) {
+    shuttle.setID(this.shuttles.length);
+    shuttle.setVisible(true);
+    if (!shuttle.thickness) {
+      shuttle.setThickness(this.epi);
     }
-    this.layers.push(layer);
+    this.shuttles.push(shuttle);
 
-    if (layer.image) {
-      this.insertImage(layer);
+    if (shuttle.image) {
+      this.insertImage(shuttle);
     }
 
   }
 
-  insertImage(layer) {
-    var max = this.rowLayerMapping.length;
-    var data = layer.image;
+  insertImage(shuttle) {
+    var max = this.rowShuttleMapping.length;
+    var data = shuttle.image;
     for (var i=data.length; i > 0; i--) {
       var idx = Math.min(max, i);
-      this.rowLayerMapping.splice(idx,0,layer.id);
+      this.rowShuttleMapping.splice(idx,0,shuttle.id);
       this.pattern.splice(idx,0,data[i - 1]);
+    }
+  }
+
+  shuttleToShape(shuttle: Shuttle, shape: Shape) {
+    // first iteration: don't care about insert dir
+    shape.shuttles.push(shuttle);
+    var first = true; 
+    var s,e; // start, end
+
+    for (var y=0; y < this.wefts; y++) {
+      // for each row in the draft
+      if (this.rowToShuttle(y) == shuttle.id) {
+        // if this row belongs to the shuttle
+        shuttle.rowsUsed.push(y);
+        first = true; // begin scanning new row
+        for (var x = 0; x < this.pattern[y].length; x++) { // going across the row
+          if (this.isUp(y, x)) { // if there is a black square in this part of the row
+            if (first) {
+              // we found the start
+              s = x;
+              first = false;              
+            }
+            e = x; // keep updating end until the last up heddle in row
+          }
+        }
+        // we've found the start and end x's, and y is row
+        var rowBounds = [y, s, e];
+        shape.bounds.push(rowBounds);
+      }
+    }
+  }
+
+  updateShuttleRows(shuttle: Shuttle) {
+    for (var i=0; i < this.wefts; i++) {
+      if (this.rowToShuttle(i) == shuttle.id) {
+        shuttle.rowsUsed.push(i);
+      }
     }
   }
 
   getColor(index) {
     var row = this.visibleRows[index];
-    var id = this.rowLayerMapping[row];
-    var layer = this.layers[id];
+    var id = this.rowShuttleMapping[row];
+    var shuttle = this.shuttles[id];
 
-    return layer.color;
+    return shuttle.color;
+  }
+
+  clearSelvedge(){
+    for (var i=0; i < this.wefts; i++) {
+      this.selvedgeL[i] = false;
+      this.selvedgeR[i] = false;
+    }
+  }
+
+  // adds selvedge to the outside of the draft, adding two columns
+  addSelvedge(){
+    console.log("Adding selvedge. Draft width: " + this.warps);
+    for (var i=0; i < this.wefts; i++) {
+      this.pattern[i].unshift(this.selvedgeL[i]);
+      this.pattern[i].push(this.selvedgeR[i]);
+    }
+    this.warps += 2;
+    console.log("Added selvedge. Draft width: " + this.warps);
+  }
+
+  removeSelvedge(){
+    for (var i=0; i < this.visibleRows.length; i++) {
+      this.pattern[i].shift();
+      this.pattern[i].pop();
+    }
+    this.warps -= 2;
+  }
+
+  // replaces first and last columns of the draft with selvedge
+  replaceSelvedge(){
+    for (var i=0; i < this.visibleRows.length; i++) {
+      this.pattern[i].shift();
+      this.pattern[i].pop();
+      this.pattern[i].unshift(this.selvedgeL[i]);
+      this.pattern[i].push(this.selvedgeR[i]);
+    }
   }
 
 }

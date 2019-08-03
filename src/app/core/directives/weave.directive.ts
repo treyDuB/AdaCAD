@@ -4,7 +4,7 @@ import { Observable, Subscription, fromEvent, from } from 'rxjs';
 import * as d3 from "d3";
 
 import { Draft } from '../model/draft';
-import { Layer } from '../model/layer';
+import { Shuttle } from '../model/shuttle';
 import { Point } from '../model/point';
 import { Selection } from '../model/selection';
 import { CanvasToBMP } from '../model/canvas2image';
@@ -26,7 +26,7 @@ export class WeaveDirective {
   @Input('brush') brush: any;
 
   /**
-   * The Draft object containing the pattern and layer information.
+   * The Draft object containing the pattern and shuttle information.
    * It is defined and inputed from the HTML declaration of the WeaveDirective.
    * @property {Draft}
    */
@@ -432,6 +432,7 @@ export class WeaveDirective {
   /// PUBLIC FUNCTIONS
   /**
    * Visualizes the path of the yarns within the weave.
+   * As it renders the yarn paths, also generates a simulated floating selvedge
    * @extends WeaveDirective
    * @returns {void}
    */
@@ -442,15 +443,15 @@ export class WeaveDirective {
     // this.drawGrid();
     this.cx.setLineDash([0]);
 
-    for (var l = 0; l < this.weave.layers.length; l++) {
-      // Each layer.
-      console.log("This layer: " + this.weave.layers[l].id + " insert direction: " + this.weave.layers[l].insert);
-      this.cx.strokeStyle = this.weave.layers[l].getColor(); // draw a line of the shuttle's color
+    for (var l = 0; l < this.weave.shuttles.length; l++) {
+      // Each shuttle.
+      console.log("This shuttle: " + this.weave.shuttles[l].id + " insert direction: " + this.weave.shuttles[l].insert);
+      this.cx.strokeStyle = this.weave.shuttles[l].getColor(); // draw a line of the shuttle's color
       this.cx.lineWidth = 5;
       var first = true;
       
       var left = false; // argh there's got to be a better way to deal with this and have HTML give a boolean
-      if (this.weave.layers[l].insert === "0") {
+      if (this.weave.shuttles[l].insert === "0") {
         left = true;
       }
 
@@ -471,8 +472,8 @@ export class WeaveDirective {
 
           if (this.weave.isUp(i, x)) { // if there is a black square in this part of the row
 
-            if (first && this.weave.rowLayerMapping[r] === l) { 
-            // begin path if this row is on layer "l" and the first one we've encountered in the row
+            if (first && this.weave.rowShuttleMapping[r] === l) { 
+            // begin path if this row is on shuttle "l" and the first one we've encountered in the row
               this.cx.beginPath();
               this.cx.moveTo(x * 20 + 5, y); // sets origin of path
               this.cx.lineTo((x + 1)* 20 - 5, y) // this is only 10 pixels to the right, first blip?
@@ -485,7 +486,7 @@ export class WeaveDirective {
                 s2 = (x * 20) + 5;
                 e2 = (x + 1) * 20 - 5;
               }
-            } else if (this.weave.rowLayerMapping[r] === l) {
+            } else if (this.weave.rowShuttleMapping[r] === l) {
             // else keep drawing the line
               this.cx.lineTo((x + 1) * 20 - 5, y);
 
@@ -501,10 +502,6 @@ export class WeaveDirective {
 
         if (first === false) {
           this.cx.stroke(); // actually fills in the line (like Illustrator)
-          // if shuttle exits on the left, fill in selvedge, L1 R0
-          // if shuttle exits on the right, fill in selvedge, L0 R1
-          this.weave.selvedgeL[r] = left;
-          this.weave.selvedgeR[r] = !left;
           left = !left; // switch direction here to properly toggle direction
         }
 
@@ -530,14 +527,11 @@ export class WeaveDirective {
           s2 = null;
           e2 = null;
           py = y;
-          // left = !left; // switch directions
         }
       }
     }
 
     this.cx.strokeStyle = "#000";
-    console.log("L edge: " + this.weave.selvedgeL);
-    console.log("R edge: " + this.weave.selvedgeR);
   }
 
   /**
@@ -551,20 +545,20 @@ export class WeaveDirective {
     this.weave.clearSelvedge();
     console.log("Generating selvedge.");
     
-    for (var l = 0; l < this.weave.layers.length; l++) {
-      // Each layer.
-      console.log("This layer: " + this.weave.layers[l].id + " insert direction: " + this.weave.layers[l].insert);
+    for (var l = 0; l < this.weave.shuttles.length; l++) {
+      // Each shuttle.
+      console.log("This shuttle: " + this.weave.shuttles[l].id + " insert direction: " + this.weave.shuttles[l].insert);
       var first = true;
       var left = false; // set initial direction
-      if (this.weave.layers[l].insert === "0") {
+      if (this.weave.shuttles[l].insert === "0") {
         left = true;
       }
 
       for (var i = 0; i < this.weave.visibleRows.length; i++) {
       // for each visible row in the draft
         var r = this.weave.visibleRows[i]; // row number
-        if (this.weave.rowLayerMapping[r] === l && !this.weave.isEmptyRow(r)) {
-        // if this row is assigned to this layer and has something in it
+        if (this.weave.rowShuttleMapping[r] === l && !this.weave.isEmptyRow(r)) {
+        // if this row is assigned to this shuttle and has something in it
           // if shuttle exits on the left, fill in selvedge, L1 R0
           // if shuttle exits on the right, fill in selvedge, L0 R1
           this.weave.selvedgeL[r] = left;
@@ -607,8 +601,8 @@ export class WeaveDirective {
     var height = 0;
 
     for (var i = 0; i < this.weave.wefts; i++) {
-      var layerId = this.weave.rowLayerMapping[i];
-      var t = this.weave.layers[layerId].getThickness();
+      var shuttleId = this.weave.rowShuttleMapping[i];
+      var t = this.weave.shuttles[shuttleId].getThickness();
       if (t !== undefined) {
         height += Math.ceil((this.weave.wpi / t) * 20);
       }
@@ -622,8 +616,8 @@ export class WeaveDirective {
     var y = 0;
     while (y < this.canvasEl.height) {
       color = this.weave.getColor(i);
-      var l = this.weave.rowLayerMapping[i];
-      var h = Math.ceil((this.weave.wpi / this.weave.layers[l].getThickness()) * 20);
+      var l = this.weave.rowShuttleMapping[i];
+      var h = Math.ceil((this.weave.wpi / this.weave.shuttles[l].getThickness()) * 20);
       for (var x = 0; x < this.weave.warps * 20; x += 20) {
         if (!this.weave.isUp(i , x / 20)) {
           this.cx.fillStyle = color;
