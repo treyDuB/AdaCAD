@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material";
 import { ConnectionModal } from '../../modal/connection/connection.modal';
+import { Shape } from '../../../core/model/shape';
 
 @Component({
   selector: 'app-design',
@@ -10,6 +11,7 @@ import { ConnectionModal } from '../../modal/connection/connection.modal';
 export class DesignComponent implements OnInit {
   @Input() brush;
   @Input() favorites;
+  @Input() shapes;
   @Output() onBrushChange: any = new EventEmitter();
   @Output() onFill: any = new EventEmitter();
   @Output() onMask: any = new EventEmitter();
@@ -19,9 +21,11 @@ export class DesignComponent implements OnInit {
   @Output() onViewChange: any = new EventEmitter();
   @Output() onConnectionCreate: any = new EventEmitter();
   @Output() onLabelCreate: any = new EventEmitter();
+  @Output() shapesChange: any = new EventEmitter();
 
   view = 'pattern';
   copy = false;
+  shapeDefined = false;
 
   constructor(private dialog: MatDialog) { }
 
@@ -29,13 +33,17 @@ export class DesignComponent implements OnInit {
   }
 
   openConnectionDialog() {
-
     this.onConnectionCreate.emit();
   }
 
   openLabelDialog() {
-
     this.onLabelCreate.emit();
+  }
+
+  openShapeDialog(shape) {
+    console.log(this.shapes);
+    this.shapesChange.emit(shape);
+    this.shapeDefined = true;
   }
 
   viewChange(e: any) {

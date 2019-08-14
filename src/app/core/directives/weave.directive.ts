@@ -102,7 +102,7 @@ export class WeaveDirective {
      this.removeSubscription();
    }
 
-   /// EVENTS
+  /// EVENTS
   /**
    * Touch start event. Subscribes to the move event.
    * @extends WeaveDirective
@@ -438,7 +438,7 @@ export class WeaveDirective {
    */
   public functional() {
     this.updateSize();
-    this.weave.clearSelvedge();
+    //this.weave.clearSelvedge();
     this.cx.clearRect(0,0, this.canvasEl.width, this.canvasEl.height); // clears draft
     // this.drawGrid();
     this.cx.setLineDash([0]);
@@ -542,8 +542,8 @@ export class WeaveDirective {
    * @returns {void}
    */
   public generateSelvedge() {
-    this.weave.clearSelvedge();
-    console.log("Generating selvedge.");
+    //this.weave.clearSelvedge();
+    //console.log("Generating selvedge.");
     
     for (var l = 0; l < this.weave.shuttles.length; l++) {
       // Each shuttle.

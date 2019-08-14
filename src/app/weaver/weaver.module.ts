@@ -34,6 +34,7 @@ import { ConnectionModal } from './modal/connection/connection.modal';
 import { InitModal } from './modal/init/init.modal';
 import { LabelModal } from './modal/label/label.modal';
 import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
+import { ShapeModal } from './modal/shape/shape.modal';
 
 
 @NgModule({
@@ -42,7 +43,6 @@ import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
     CoreModule,
     FormsModule,
     ReactiveFormsModule,
-
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -73,7 +73,8 @@ import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
     ConnectionModal,
     InitModal,
     LabelModal,
-    SelvedgeModal
+    SelvedgeModal,
+    ShapeModal
   ],
   entryComponents: [
     ShuttlesModal,
@@ -81,7 +82,8 @@ import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
     ConnectionModal,
     InitModal,
     LabelModal,
-    SelvedgeModal
+    SelvedgeModal,
+    ShapeModal
   ],
 })
 export class WeaverModule { }

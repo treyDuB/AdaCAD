@@ -17,6 +17,7 @@ export class Shuttle {
 
   constructor() {
     this.insert = 0;
+    this.rowsUsed = [];
   }
 
   setID(id: number) {

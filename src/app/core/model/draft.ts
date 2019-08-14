@@ -17,6 +17,7 @@ export interface DraftInterface {
   warps: number;
   selvedgeL: Array<boolean>;
   selvedgeR: Array<boolean>;
+  shapes: Array<Shape>;
 
 }
 
@@ -60,6 +61,7 @@ export class Draft implements DraftInterface {
     this.connections = [];
     this.labels = [];
     this.pattern = [];
+    this.shapes = [];
 
     for(var i = 0; i < wefts; i++) {
       this.pattern.push([]);
@@ -211,7 +213,7 @@ export class Draft implements DraftInterface {
     }
   }
 
-  addShuttle(shuttle) {
+  addShuttle(shuttle: Shuttle) {
     shuttle.setID(this.shuttles.length);
     shuttle.setVisible(true);
     if (!shuttle.thickness) {
@@ -225,7 +227,7 @@ export class Draft implements DraftInterface {
 
   }
 
-  insertImage(shuttle) {
+  insertImage(shuttle: Shuttle) {
     var max = this.rowShuttleMapping.length;
     var data = shuttle.image;
     for (var i=data.length; i > 0; i--) {
@@ -235,9 +237,34 @@ export class Draft implements DraftInterface {
     }
   }
 
+  addShape(newShape: Shape) {
+    newShape.setID(this.shapes.length);
+    this.shapes.push(newShape);
+  }
+
+  shuttleInShape(id: number, shape: Shape) {
+    for (var i = 0; i < shape.shuttles.length; i++) {
+      if (id == shape.shuttles[i].id) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   shuttleToShape(shuttle: Shuttle, shape: Shape) {
     // first iteration: don't care about insert dir
-    shape.shuttles.push(shuttle);
+    var create = false;
+
+    // adding a new shuttle
+    if (!this.shuttleInShape(shuttle.id, shape)) {
+      shape.shuttles.push(shuttle);
+      create = true;
+    } else { // updating shuttle, refresh all
+      shape.bounds = [];
+      shuttle.rowsUsed = [];
+    }
+
     var first = true; 
     var s,e; // start, end
 
@@ -245,9 +272,8 @@ export class Draft implements DraftInterface {
       // for each row in the draft
       if (this.rowToShuttle(y) == shuttle.id) {
         // if this row belongs to the shuttle
-        shuttle.rowsUsed.push(y);
         first = true; // begin scanning new row
-        for (var x = 0; x < this.pattern[y].length; x++) { // going across the row
+        for (var x = 0; x < this.warps; x++) { // going across the row
           if (this.isUp(y, x)) { // if there is a black square in this part of the row
             if (first) {
               // we found the start
@@ -257,14 +283,44 @@ export class Draft implements DraftInterface {
             e = x; // keep updating end until the last up heddle in row
           }
         }
-        // we've found the start and end x's, and y is row
-        var rowBounds = [y, s, e];
-        shape.bounds.push(rowBounds);
+
+        if (!first) { // if the row is not empty
+          // we've found the start and end x's, and y is row
+          var rowBounds = [y, s, e];
+          shuttle.rowsUsed.push(y);
+          shape.bounds.push(rowBounds);
+        }
+      }
+    }
+
+    //console.log(shape.printBounds());
+    //console.log(shuttle.rowsUsed);
+  }
+
+  shapeToDraft(shape: Shape) {
+    var row;
+    var rowStart;
+    var rowEnd;
+    for (var i=0; i < shape.bounds.length; i++) {
+      // for each row in Shape, parse start/end
+      row = shape.bounds[i][0];
+      rowStart = shape.bounds[i][1];
+      rowEnd = shape.bounds[i][2];
+
+      for (var j=0; j < this.warps; j++) {
+        if (j < rowStart) {
+          this.pattern[row][j] = false; // clear every square before start of row
+        } else if (j == rowStart || j == rowEnd) {
+          this.pattern[row][j] = true; // always mark start/end of row, leave everything in between alone
+        } else if (j > rowEnd) {
+          this.pattern[row][j] = false; // clear every square after end of row
+        }
       }
     }
   }
 
   updateShuttleRows(shuttle: Shuttle) {
+    shuttle.rowsUsed = []; // refresh
     for (var i=0; i < this.wefts; i++) {
       if (this.rowToShuttle(i) == shuttle.id) {
         shuttle.rowsUsed.push(i);

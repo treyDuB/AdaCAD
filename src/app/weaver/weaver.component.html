@@ -3,16 +3,18 @@
   <mat-sidenav mode="side" position="end" opened>
     <mat-tab-group #group (click)="selected = group.selectedIndex;">
       <mat-tab label="Design">
-        <app-design [brush]="brush" [favorites]="patterns | filter: {favorite: true }"
-        (onViewChange)="onViewChange($event);"
+        <app-design [brush]="brush" [favorites]="patterns | filter: {favorite: true }" [(shapes)]="shapes"
+        (onViewChange)="onViewChange($event)" 
         (onBrushChange)="onBrushChange($event)" 
-        (onFill)="onFill($event)" 
+        (onFill)="onFill($event);" 
         (onCopy)="onCopy();"
-        (onClear)="onClear();" 
-        (onMask)="onMask($event);" 
-        (onPaste)="onPaste($event);"
-        (onConnectionCreate)="openConnectionDialog();"
-        (onLabelCreate)="openLabelDialog()"></app-design> 
+        (onClear)="onClear();"
+        (onMask)="onMask($event)" 
+        (onPaste)="onPaste($event)" 
+        (onConnectionCreate)="openConnectionDialog();" 
+        (onLabelCreate)="openLabelDialog();" 
+        (onSelvedge)="openSelvedgeDialog();"
+        (shapesChange)="openShapeDialog($event);"></app-design>
       </mat-tab>
       <mat-tab label="Shuttles">
         <app-shuttles *ngIf="selected === 1" [shuttles]="draft?.shuttles" (onColorChange)="redraw()"

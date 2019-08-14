@@ -21,10 +21,9 @@ export class Shape {
 	/**
 	 * Constructor needs width and where the shape is placed
 	 */
-	constructor(width: number, startCol: number) {
-		this.width = width;
-		this.startCol = startCol;
-		this.endCol = startCol + width - 1;
+	constructor() {
+		this.shuttles = [];
+		this.bounds = [];
 	}
 
 	// set functions
@@ -34,6 +33,18 @@ export class Shape {
 	    if (!this.name) {
 	      this.name = 'Shape ' + (id + 1);
 		}
+	}
+
+	setWidth(width: number) {
+		this.width = width;
+	}
+
+	setStartCol(col: number) {
+		this.startCol = col;
+	}
+
+	setEndCol(col: number) {
+		this.endCol = col;
 	}
 
 	// get functions
@@ -52,11 +63,16 @@ export class Shape {
 	}
 
 	// returns a string listing all bounds of the Shape
-	getBounds() {
-		let boundsString = new String;
-		// for element in bounds array
-		for (var i = 0; i < this.bounds.length; i++) {
-			boundsString += "Row " + i + ": " + this.bounds[i][1] + " to " + this.bounds[i][2];
+	printBounds() {
+		if (this.bounds.length) {
+			let boundsString = new String;
+			// for element in bounds array
+			for (var i = 0; i < this.bounds.length; i++) {
+				boundsString += "Row " + i + ": " + this.bounds[i][1] + " to " + this.bounds[i][2];
+			}
+			return boundsString;
+		} else {
+			return "empty shape";
 		}
 	}
 
@@ -64,7 +80,7 @@ export class Shape {
 	 * Once given a shuttle, fills out bounds row by row
 	 * implement in draft.ts? draft has access to shuttle row mapping
 	 */
-	shapeFromShuttle(shuttle: Shuttle) {
+	addShuttle(shuttle: Shuttle) {
 		this.shuttles.push(shuttle); // add shuttle to associate
 	}
 

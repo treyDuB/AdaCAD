@@ -13,6 +13,8 @@ import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { ChecklistModule } from './checklist/checklist.module';
+
 import { CoreModule } from './core/core.module';
 import { WeaverModule } from './weaver/weaver.module';
 // import { secrets } from '../environments/secrets';
@@ -30,6 +32,7 @@ import { WeaverModule } from './weaver/weaver.module';
     HttpModule,
     WeaverModule,
     BrowserAnimationsModule,
+    ChecklistModule,
     // AngularFireModule.initializeApp(firebaseConfig),
     // AngularFireDatabaseModule,
     // AngularFireAuthModule,

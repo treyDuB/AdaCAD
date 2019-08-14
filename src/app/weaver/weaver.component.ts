@@ -5,11 +5,13 @@ import { WeaveDirective } from '../core/directives/weave.directive';
 import { Draft } from '../core/model/draft';
 import { Shuttle } from '../core/model/shuttle';
 import { Pattern } from '../core/model/pattern';
-import {MatDialog, MatDialogConfig} from "@angular/material";
+import { Shape } from '../core/model/shape';
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ConnectionModal } from './modal/connection/connection.modal';
 import { InitModal } from './modal/init/init.modal';
 import { LabelModal } from './modal/label/label.modal';
 import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
+import { ShapeModal } from './modal/shape/shape.modal';
 
 /**
  * Controller of the Weaver component.
@@ -47,6 +49,12 @@ export class WeaverComponent implements OnInit {
   patterns;
 
   /**
+   * List of all shapes defined on the draft
+   * @property {Array<Shape>}
+   */
+  shapes: Array<Shape>;
+
+  /**
    * The name of the current view being shown.
    * @property {string}
    */
@@ -63,8 +71,9 @@ export class WeaverComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.draft = new Draft(30, result.warps, result.epi);
+        this.draft = new Draft(20, result.warps, result.epi);
         this.draft.shuttles[0].setColor('#3d3d3d');
+        this.shapes = this.draft.shapes;
       }
     });
 
@@ -268,6 +277,40 @@ export class WeaverComponent implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {console.log(result)});
+  }
+
+  /**
+   * Open shape modal.
+   * @extends WeaveComponent
+   * @returns {void}
+   */
+  public openShapeDialog(shape) {
+    var create = false;
+    if (!shape) {
+      shape = new Shape();
+      this.draft.addShape(shape);
+      create = true;
+    }
+
+    const dialogRef = this.dialog.open(ShapeModal, 
+      {data: {draft: this.draft, shapes: this.draft.shapes, shape: shape, shuttles: this.draft.shuttles}
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!create && result) {
+        console.log("shape edited");
+        this.draft.shapes[result.id] = result;
+      } else { // new shape created
+        console.log("shape created");
+      }
+      if (result) {
+        //console.log(result);
+        //console.log(this.draft.shapes);
+        this.redraw();
+      }
+    });
+
+    this.shapes = this.draft.shapes;
   }
 
   /**
