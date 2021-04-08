@@ -1,4 +1,5 @@
 import { Point } from './point';
+import { Shape } from './shape';
 
 /**
  * Definition of selection object.
@@ -9,6 +10,8 @@ export class Selection {
   end: Point;
   width: number;
   height: number;
+
+  shape: Shape; // for non-rectangular selections
   target: any;
 
 
@@ -52,8 +55,4 @@ export class Selection {
     if(this.target !== undefined) return this.target.id;
     return undefined;
   }
-
-
-
-
 }

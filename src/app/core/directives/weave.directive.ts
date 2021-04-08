@@ -12,6 +12,7 @@ import { Shuttle } from '../model/shuttle';
 import { Pattern } from '../model/pattern';
 import { Point } from '../model/point';
 import { Selection } from '../model/selection';
+import { Region } from '../model/region';
 import { CanvasToBMP } from '../model/canvas2image';
 import { DraftSegment } from '../../ngrx/draft/segment';
 import { AddAction } from '../../ngrx/draft/actions';
@@ -1318,192 +1319,191 @@ export class WeaveDirective {
    * @param {string} - the type of logic used to fill selected area.
    * @returns {void}
    */
-  // private fillArea(
-  //   selection: Selection, 
-  //   pattern: Array<Array<boolean>>, 
-  //   type: string
-  // ) {
 
-  //   console.log("fill area called");
-  //   console.log(selection, pattern, type);
+  private fillArea(
+    selection: Selection, 
+    pattern: Pattern, 
+    type: string
+  ) {
 
-  //   var dims = this.render.getCellDims("base");
-  //   var updates = [];
+    console.log("fill area called");
+    console.log(selection, pattern, type);
+
+    var dims = this.render.getCellDims("base");
+    var updates = [];
     
-  //   var screen_i = Math.min(selection.start.si, selection.end.si)
-  //   const draft_i = Math.min(selection.start.i, selection.end.i);
-  //   const draft_j = Math.min(selection.start.j, selection.end.j);
+    var screen_i = Math.min(selection.start.si, selection.end.si)
+    const draft_i = Math.min(selection.start.i, selection.end.i);
+    const draft_j = Math.min(selection.start.j, selection.end.j);
   
-  //   const rows = pattern.length;
-  //   const cols = pattern[0].length;
+    const rows = pattern.height;
+    const cols = pattern.width;
 
-  //   var w,h;
+    var w,h;
 
-  //   w = Math.ceil(selection.width);
-  //   h = Math.ceil(selection.height);
+    w = Math.ceil(selection.width);
+    h = Math.ceil(selection.height);
 
+    if(selection.target.id === "warp-systems"){
+      h = pattern.height;
+      screen_i = 0;
+    } 
+    if(selection.target.id === "weft-systems"){
+      w = pattern.width;
+    } 
 
-  //   if(selection.target.id === "warp-systems"){
-  //     h = pattern.length;
-  //     screen_i = 0;
-  //   } 
-  //   if(selection.target.id === "weft-systems"){
-  //     w = pattern[0].length;
-  //   } 
+    if(selection.target.id === "warp-materials"){
+       h = pattern.height;
+       screen_i = 0;
+    }
+    if(selection.target.id === "weft-materials"){
+      w = pattern.width;
+    } 
 
-  //   if(selection.target.id === "warp-materials"){
-  //      h = pattern.length;
-  //      screen_i = 0;
-  //   }
-  //   if(selection.target.id === "weft-materials"){
-  //     w = pattern[0].length;
-  //   } 
+    //cycle through each visible row/column of the selection
+    for (var i = 0; i < h; i++ ) {
+      for (var j = 0; j < w; j++ ) {
 
-  //   //cycle through each visible row/column of the selection
-  //   for (var i = 0; i < h; i++ ) {
-  //     for (var j = 0; j < w; j++ ) {
+        var row = i + screen_i;
+        var col = j + draft_j;
 
-  //       var row = i + screen_i;
-  //       var col = j + draft_j;
-
-
-  //       var temp = pattern[i % rows][j % cols];
+        var temp = pattern.pattern[i % rows][j % cols];
        
-  //       var prev = false; 
-  //       switch(selection.target.id){
+        var prev = false; 
+        switch(selection.target.id){
 
-  //         case 'drawdown':
-  //             var draft_row = this.weave.visibleRows[row];
-  //             prev = this.weave.pattern[draft_row][col].isUp();
+          case 'drawdown':
+              var draft_row = this.weave.visibleRows[row];
+              prev = this.weave.pattern[draft_row][col].isUp();
 
-  //         break;
-  //         case 'threading':
-  //             var frame = this.weave.loom.frame_mapping[row];
-  //             prev = this.weave.loom.isInFrame(col, frame);
+          break;
+          case 'threading':
+              var frame = this.weave.loom.frame_mapping[row];
+              prev = this.weave.loom.isInFrame(col, frame);
           
-  //         break;
-  //         case 'treadling':
-  //             var draft_row = this.weave.visibleRows[row];
-  //             prev = (this.weave.loom.isInTreadle(draft_row, col)); 
-  //         break;
-  //         case 'tieups':
-  //             var frame = this.weave.loom.frame_mapping[row];
-  //             prev = this.weave.loom.hasTieup(frame,col); 
-          
-  //         break;
-  //         default:
-  //         break;
-  //       }
+          break;
+          case 'treadling':
+              var draft_row = this.weave.visibleRows[row];
+              prev = (this.weave.loom.isInTreadle(draft_row, col)); 
+          break;
+          case 'tieups':
+              var frame = this.weave.loom.frame_mapping[row];
+              prev = this.weave.loom.hasTieup(frame,col); 
+          break;
+          default:
+          break;
+        }
 
-  //       if (prev !== null){
+        if (prev !== null){
 
-  //         var val = false;
-  //         switch (type) {
-  //           case 'invert':
-  //            val = !temp;
-  //             break;
-  //           case 'mask':
-  //            val = temp && prev;
-  //             break;
-  //           case 'mirrorX':
-  //             val = pattern[(h - i - 1) % rows][j % cols];
-  //             break;
-  //           case 'mirrorY':
-  //             val = pattern[i % rows][(w - j - 1) % cols];
-  //             break;
-  //           default:
-  //             val = temp;
-  //             break;
-  //         }
+          var val = false;
+          switch (type) {
+            case 'invert':
+             val = !temp;
+              break;
+            case 'mask':
+             val = temp && prev;
+              break;
+            case 'mirrorX':
+              val = pattern.pattern[(h - i - 1) % rows][j % cols];
+              break;
+            case 'mirrorY':
+              val = pattern.pattern[i % rows][(w - j - 1) % cols];
+              break;
+            default:
+              val = temp;
+              break;
+          }
 
 
-  //         var updates = [];
+          var updates = [];
 
-  //         switch(selection.target.id){
+          switch(selection.target.id){
            
-  //          case 'drawdown':
-  //          var draft_row = this.weave.visibleRows[row];
+           case 'drawdown':
+           var draft_row = this.weave.visibleRows[row];
 
-  //           if(this.weave.hasCell(draft_row,col)){
+            if(this.weave.hasCell(draft_row,col)){
 
-  //               var p = new Point(); 
-  //               p.si = row;
-  //               p.i = this.weave.visibleRows[row];
-  //               p.j = col;
+                var p = new Point(); 
+                p.si = row;
+                p.i = this.weave.visibleRows[row];
+                p.j = col;
               
-  //               this.weave.setHeddle(p.i,p.j,val);
-  //               this.updateLoomFromDraft(p);
-  //             }
+                this.weave.setHeddle(p.i,p.j,val);
+                this.updateLoomFromDraft(p);
+              }
 
-  //           break;
+            break;
             
-  //           case 'threading':
-  //           var frame = this.weave.loom.frame_mapping[row];
+            case 'threading':
+            var frame = this.weave.loom.frame_mapping[row];
 
-  //             if(this.weave.loom.inThreadingRange(frame,col)){ 
-  //               updates = this.weave.loom.updateThreading(frame, col, val);
-  //               this.weave.updateDraftFromThreading(updates); 
-  //             }
-  //           break;
+              if(this.weave.loom.inThreadingRange(frame,col)){ 
+                updates = this.weave.loom.updateThreading(frame, col, val);
+                this.weave.updateDraftFromThreading(updates); 
+              }
+            break;
 
-  //           case 'treadling':
-              
-  //            var draft_row = this.weave.visibleRows[row];
-  //            if(this.weave.loom.inTreadlingRange(draft_row,col)){ 
-  //               updates = this.weave.loom.updateTreadling(draft_row, col, val);
-  //               this.weave.updateDraftFromTreadling(updates);
-  //             }
-  //           break;
-  //           case 'tieups':
-  //             var frame = this.weave.loom.frame_mapping[row];
+            case 'treadling':
+             var draft_row = this.weave.visibleRows[row];
+             if(this.weave.loom.inTreadlingRange(draft_row,col)){ 
+                updates = this.weave.loom.updateTreadling(draft_row, col, val);
+                this.weave.updateDraftFromTreadling(updates);
+              }
+            break;
 
-  //             if(this.weave.loom.inTieupRange(frame, col)){
-  //               updates = this.weave.loom.updateTieup(frame, col, val);
-  //               this.weave.updateDraftFromTieup(updates);
-  //             }
-  //           break;
-  //           case 'weft-systems':
-  //             var draft_row = this.weave.visibleRows[row];
-  //             val = pattern[i % rows][j % cols];
-  //             if(val && col < this.weave.weft_systems.length) this.weave.rowSystemMapping[draft_row] = col;
+            case 'tieups':
+              var frame = this.weave.loom.frame_mapping[row];
+
+              if(this.weave.loom.inTieupRange(frame, col)){
+                updates = this.weave.loom.updateTieup(frame, col, val);
+                this.weave.updateDraftFromTieup(updates);
+              }
+            break;
+
+            case 'weft-systems':
+              var draft_row = this.weave.visibleRows[row];
+              val = pattern.pattern[i % rows][j % cols];
+              if(val && col < this.weave.weft_systems.length) this.weave.rowSystemMapping[draft_row] = col;
             
-  //           break;
-  //           case 'warp-systems':
-  //             val = pattern[i % rows][j % cols];
-  //             if(val && row < this.weave.warp_systems.length){
-  //                 this.weave.colSystemMapping[col] = row;
-  //             }
-  //           break;
-  //           case 'weft-materials':
-  //             var draft_row = this.weave.visibleRows[row];
-  //             val = pattern[i % rows][j % cols];
-  //             if(val && col < this.weave.shuttles.length) this.weave.rowShuttleMapping[draft_row] = col;
+            break;
+            case 'warp-systems':
+              val = pattern.pattern[i % rows][j % cols];
+              if(val && row < this.weave.warp_systems.length){
+                  this.weave.colSystemMapping[col] = row;
+              }
+            break;
+            case 'weft-materials':
+              var draft_row = this.weave.visibleRows[row];
+              val = pattern.pattern[i % rows][j % cols];
+              if(val && col < this.weave.shuttles.length) this.weave.rowShuttleMapping[draft_row] = col;
             
-  //           break;
-  //           case 'warp-materials':
-  //             val = pattern[i % rows][j % cols];
-  //             if(val && row < this.weave.shuttles.length){
-  //                 this.weave.colShuttleMapping[col] = row;
-  //             }
-  //           break;
-  //           default:
-  //           break;
-  //         }
-  //       }
+            break;
+            case 'warp-materials':
+              val = pattern.pattern[i % rows][j % cols];
+              if(val && row < this.weave.shuttles.length){
+                  this.weave.colShuttleMapping[col] = row;
+              }
+            break;
+            default:
+            break;
+          }
+        }
+      }
+    }
 
+    var u_threading = this.weave.loom.updateUnused(this.weave.loom.threading, this.weave.loom.min_frames, this.weave.loom.num_frames, "threading");
+    var u_treadling = this.weave.loom.updateUnused(this.weave.loom.treadling, this.weave.loom.min_treadles, this.weave.loom.num_treadles, "treadling");
 
-  //     }
-  //   }
+    // FIRST VERSION: turn the selection and fill into a Region
+    var reg = new Region();
+    reg.fromSelection(selection, pattern); // pattern needs Pattern object, right now it's just getting the bool array
+    this.weave.addRegion(reg);
 
-  //   var u_threading = this.weave.loom.updateUnused(this.weave.loom.threading, this.weave.loom.min_frames, this.weave.loom.num_frames, "threading");
-  //   var u_treadling = this.weave.loom.updateUnused(this.weave.loom.treadling, this.weave.loom.min_treadles, this.weave.loom.num_treadles, "treadling");
-  //   this.addHistoryState();
-  //   this.redraw();
-  //   this.redrawLoom();
-
-  // }
-
-
+    this.addHistoryState();
+    this.redraw({drawdown:true, loom:true});
+  }
 
   /**
    * Fills the visible regions of the mask with the stitch

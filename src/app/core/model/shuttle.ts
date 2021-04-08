@@ -1,6 +1,6 @@
 /**
  * Definition of Shuttle object.
-* a shuttle inhertis from a material. 
+* a shuttle inherits from a material. 
  * @class
  */
 export class Shuttle {

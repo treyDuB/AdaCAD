@@ -399,15 +399,13 @@ export class WeaverComponent implements OnInit {
    * @returns {void}
    */
   public onFill(e) {
+    var p = this.draft.patterns[e.id];
     
-    var p = this.draft.patterns[e.id].pattern;
-    
-    this.draft.fillArea(this.weaveRef.selection, p, 'original');
+    this.weaveRef.fillArea(this.weaveRef.selection, p, 'original');
 
     if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
     
     this.weaveRef.redraw({drawdown:true, loom:true})
-    
   }
 
   /**
@@ -432,10 +430,10 @@ export class WeaverComponent implements OnInit {
    * @returns {void}
    */
   public onMask(e) {
-    // console.log(e);
-    // var p = this.draft.patterns[e.id].pattern;
-    // this.weaveRef.maskArea(p);
-    // this.redraw();
+    console.log(e);
+    var p = this.draft.patterns[e.id];
+    this.weaveRef.maskArea(p);
+    this.redraw();
   }
 
   /**
