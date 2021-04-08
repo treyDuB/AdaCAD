@@ -1,4 +1,14 @@
 
+.cdk-live-announcer-element{
+  display: none;
+}
+
+
+canvas{
+  position: absolute;
+  top: 120px;
+  left:50px;
+}
 
 
 .design-container{
@@ -299,9 +309,11 @@
   position: absolute;
   cursor: pointer;
   user-select: none;
+  pointer-events: none;
   width: 20px;
   height:100%;
-  z-index: -1;
+  font-size: 10px;
+  z-index: 1;
 
 }
 
@@ -315,10 +327,12 @@
   position: absolute;
   cursor: pointer;
   user-select: none;
+  pointer-events: none;
   height: 20px;
   width:100%;
-  z-index: -1; /* keep from interfering with warp selection" */
-
+  font-size: 10px;
+  z-index: 1; /* keep from interfering with warp selection" */
+ 
 }
 
 
@@ -370,7 +384,7 @@
   position: absolute;
   top: 0;
   width: 100%;
-  height: 60px;
+  height: 20px;
 
 
   .insert-button {
@@ -378,7 +392,7 @@
     justify-content: center;
     cursor: pointer;
     display: block;
-    height: 90px;
+    height: 20px;
     position:absolute;
 
 
