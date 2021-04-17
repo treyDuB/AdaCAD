@@ -1326,7 +1326,7 @@ computeYarnPaths(){
    */
   public fillArea(
     selection: Selection, 
-    pattern: Array<Array<boolean>>, 
+    pattern: Pattern, 
     type: string
   ) {
 
@@ -1379,7 +1379,7 @@ computeYarnPaths(){
 
           case 'drawdown':
               var draft_row = this.visibleRows[row];
-              prev = this.pattern.pattern[draft_row][col].isUp();
+              prev = this.pattern[draft_row][col].isUp();
 
           break;
           case 'threading':

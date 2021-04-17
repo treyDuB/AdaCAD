@@ -1,5 +1,19 @@
 coding log for this branch - S Wu
 
+# 4/8/2021
+I think I broke the visual yarn path view? Because I modified the fillArea functions (in Draft and the Weave Directive) to take a Pattern object rather than a 2D boolean array, this might have ripple effects. I already had to change the Pattern constructor to take an optional boolean array for when fillArea is called outside of filling with a Pattern (like clear, inverting, etc.) to create a dummy pattern (id = -1).
+
+Fixed the invert selection function, probably more to do with the merge conflict.
+
+ISSUES:
+- what happened to warp/weft adding buttons?
+- yarn view is weird
+
+IDEAS:
+- for Masks tab, view each region as their color code
+- lock a warp/weft system to a specific material so you toggle them together
+- Circuit and Masks tab should have the "Circuit" and "Mask" menus at the top, above Design
+
 # 3/30/2021
 Something happens with a Region object, undefined shape and effect after filling from a pattern (printing to console)
 

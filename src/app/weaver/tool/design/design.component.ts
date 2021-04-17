@@ -68,7 +68,10 @@ export class DesignComponent implements OnInit {
 
       if(e.target.name == "point") this.clearEvent(true);
       else if(e.target.name == "erase") this.clearEvent(false);
-      else if(e.target.name == "invert") this.pasteEvent(e, 'invert');
+      else if(e.target.name == "invert") {
+        this.copyEvent(e);
+        this.pasteEvent(e, 'invert');
+      }
      }
   }
 

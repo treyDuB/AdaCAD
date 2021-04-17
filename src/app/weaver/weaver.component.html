@@ -57,7 +57,17 @@
           (onHideWarpSystem)="hideWarpSystem($event);"
           (onShowWarpSystem)="showWarpSystem($event);">
         </app-warpsystems> -->
-       
+
+        <app-schematic  [hidden] = "render?.current_view != 'yarn'"
+        (onConnectionCreate)="openConnectionDialog();"
+        (onLabelCreate)="openLabelDialog()"
+        >
+        </app-schematic> 
+
+        <app-masks [hidden] = "render?.current_view != 'mask'"
+          (onMask)="onMask($event);" >
+        </app-masks>
+
         <app-design
         [brush]="brush"
         [patterns]="draft?.patterns"
@@ -71,7 +81,6 @@
         (onCreatePattern)="createPattern($event);"
         (onRemovePattern)="removePattern($event);"
         (onChange) = "onChange($event);"
-      
         >
         </app-design> 
  
@@ -82,13 +91,7 @@
           (onThicknessChange) ="thicknessChange($event)"
           (onCreateShuttle) ="createShuttle($event)"
         >
-
         </app-materials>
-
-        <app-masks [hidden] = "render?.current_view != 'mask'"
-          (onMask)="onMask($event);" >
-        </app-masks>
-
 
         <app-loom 
           [epi] = "draft?.epi"
@@ -109,15 +112,9 @@
           (onLoomTypeChange) = "loomChange($event)"
           (onFrameChange) = "frameChange($event)"
           (onTreadleChange) = "treadleChange($event)"
-          >
+        >
         </app-loom>
 
-        <app-schematic  [hidden] = "render?.current_view != 'yarn'"
-        (onConnectionCreate)="openConnectionDialog();"
-        (onLabelCreate)="openLabelDialog()"
-        >
-
-      </app-schematic> 
     </mat-accordion>
 
     </div>

@@ -415,8 +415,9 @@ export class WeaverComponent implements OnInit {
    * @returns {void}
    */
   public onClear(b:boolean) {
-    
-    this.draft.fillArea(this.weaveRef.selection, [[b]], 'original')
+    var p = new Pattern([[b]]);
+
+    this.weaveRef.fillArea(this.weaveRef.selection, p, 'original')
 
     if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
 
@@ -433,7 +434,7 @@ export class WeaverComponent implements OnInit {
     console.log(e);
     var p = this.draft.patterns[e.id];
     this.weaveRef.maskArea(p);
-    this.redraw();
+    this.weaveRef.redraw({drawdown:true, loom:true});
   }
 
   /**
@@ -444,7 +445,7 @@ export class WeaverComponent implements OnInit {
    */
   public onPaste(e) {
 
-    var p = this.weaveRef.copy;
+    var p = new Pattern(this.weaveRef.copy);
 
 
     var type;
@@ -452,7 +453,7 @@ export class WeaverComponent implements OnInit {
     if(e.type === undefined) type = "original";
     else type =  e.type;
 
-    this.draft.fillArea(this.weaveRef.selection, p, type);
+    this.weaveRef.fillArea(this.weaveRef.selection, p, type);
     
     if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
 
@@ -467,7 +468,7 @@ export class WeaverComponent implements OnInit {
    */
   public onCopy() {
 
-    this.weaveRef.selection.setExplicit();
+    this.weaveRef.copyArea();
   }
 
   /**

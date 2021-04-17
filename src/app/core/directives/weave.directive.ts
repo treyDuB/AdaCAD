@@ -1497,9 +1497,11 @@ export class WeaveDirective {
     var u_treadling = this.weave.loom.updateUnused(this.weave.loom.treadling, this.weave.loom.min_treadles, this.weave.loom.num_treadles, "treadling");
 
     // FIRST VERSION: turn the selection and fill into a Region
-    var reg = new Region();
-    reg.fromSelection(selection, pattern); // pattern needs Pattern object, right now it's just getting the bool array
-    this.weave.addRegion(reg);
+    if (pattern.id != -1 && selection.target.id == 'drawdown') {
+      var reg = new Region();
+      reg.fromSelection(selection, pattern); // pattern needs Pattern object, right now it's just getting the bool array
+      this.weave.addRegion(reg);
+    }
 
     this.addHistoryState();
     this.redraw({drawdown:true, loom:true});

@@ -11,11 +11,16 @@ export class Pattern {
   id: number;
   name: string;
 
-  constructor() {
+  constructor(patternArray = null) {
     this.favorite = false;
-    this.height = 0;
-    this.width = 0;
-    this.pattern = [];
+    this.id = -1;
+    if (patternArray) {
+      this.setPattern(patternArray);
+    } else {
+      this.height = 0;
+      this.width = 0;
+      this.pattern = [];
+    }
   }
 
 
