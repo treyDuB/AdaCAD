@@ -7,9 +7,20 @@ License: https://www.wowthemes.net/freebies-license/
     html { font-size:18px; } /* Increase the font size on higher resolutions */
     .container {max-width:80%;}
 }
+
+
 .mainheading {
-    padding: 1rem 0rem;
+    background: url('/adacad/assets/images/draft_placeholder.png');
+    background-repeat: repeat;
+    color: white;
+    margin: 4% 0%;
 }
+
+ .heading-container {
+    padding-left: 12%;
+  
+ }
+
 
 a {
     color: #00ab6b;
@@ -50,8 +61,8 @@ pre {
 
 .site-content {
     min-height: 60vh;
-    padding-top: 1.5rem;
-    margin-top: 57px;
+    padding-top: 1.1rem;
+    /* margin-top: 57px; */
     transition: all 0.4s;
 }
 
@@ -98,7 +109,7 @@ section.recent-posts {
 }
 
 @media (min-width:992px) {
-    .navbar-expand-lg .navbar-nav .nav-link {
+    .navbar-expand-lg .navbar-nav .nav-link .create-link{
         padding-right: 0.8rem;
         padding-left: 0.8rem;
     }
@@ -306,6 +317,9 @@ span.post-read-more a:hover {
 
 .mainheading h1.sitetitle {
     font-family: Righteous;
+    color:black;
+    margin-bottom: 2%;
+
 }
 
 .mainheading h1.posttitle {
@@ -741,6 +755,28 @@ img {
 
 .pointerup i.fa {
     color: #eaeaea;
+}
+
+
+.subheading{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    padding-left: 12%;
+}
+
+.subheading li{
+    list-style: none;
+    background: #3f51b5;
+    margin: 4px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 4px solid black;
+}
+
+.subheading li a{
+    color: white;
 }
 
 .bottompagination span.navigation i {

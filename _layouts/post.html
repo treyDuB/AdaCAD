@@ -9,54 +9,67 @@ post_class: post-template
 ================================================== -->
 <div class="container">
     <div class="row">
-
-        <!-- Post Share -->
-        <div class="col-md-2 pl-0">
-            {% include share.html %}
-        </div>
-
         <!-- Post -->
         {% assign author = site.authors[page.author] %}
 
-        <div class="col-md-9 flex-first flex-md-unordered">
-            <div class="mainheading">
+        <!-- Post Share -->
+        <div class="col-md-3 pl-0">
+          <!-- Author Box -->
+            {% if page.author %}
 
-                <!-- Author Box -->
-                {% if page.author %}
-                <div class="row post-top-meta">
-                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0">
-                        {% if author.avatar %}
-                        <img class="author-thumb" src="{{site.baseurl}}/{{ author.avatar }}" alt="{{ author.display_name }}">
-                        {% else %}
-                        <img class="author-thumb" src="https://www.gravatar.com/avatar/{{ author.gravatar }}?s=250&d=mm&r=x" alt="{{ author.display_name }}">
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
-                        <a target="_blank" class="link-dark" href="{{ author.web }}">{{ author.display_name }}</a><a target="_blank" href="{{ author.twitter }}" class="btn follow">Follow</a>
-                        <span class="author-description">{{ author.description }}</span>
-                    </div>
-                </div>
-                {% endif %}
+                    <a target="_blank" class="link-dark" href="{{ author.web }}">By {{ author.display_name }}</a>
+                   <br>
+                    <span class="author-description">{{ author.description }}</span>
+               
+            {% endif %}
+
+
+            {% if page.file %}
+                    <h6>AdaCAD File</h6>
+                    <a target="_blank" class="btn btn-warning" href="{{site.baseurl}}/{{ page.file }}">Download the .ada File</a>
+
+
+               
+            {% endif %}
+
+
+
+            {% if page.howto %}
+                    <h6>Related How To</h6>
+
+                    <a target="_blank" class="btn btn-warning" href="{{site.baseurl}}/{{ page.howto }}">Watch the How To Video</a>
+
+
+               
+            {% endif %}
+
+
+
+        </div>
+
+        <div class="col-md-8 flex-first flex-md-unordered">
+
+                
 
                 <!-- Post Title -->
                 <h1 class="posttitle">{{ page.title }}</h1>
 
-            </div>
 
-            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
-            {% if site.adsense == "enabled" %}
-                {% include adsense-under-header.html %}
-            {% endif %}
-            <!-- End Adsense -->
+            <!-- Post Featured Video -->
+            {% if page.video %}
+
+                <p><iframe width="560" height="315" src="{{page.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+
+    
 
             <!-- Post Featured Image -->
-            {% if page.image %}
+            {% else if page.image %}
 
-            {% if site.lazyimages == "enabled" %}
-            <img class="featured-image img-fluid lazyimg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAQAAAA3fa6RAAAADklEQVR42mNkAANGCAUAACMAA2w/AMgAAAAASUVORK5CYII=" data-src="{% if page.image contains "://" %}{{ page.image }}{% else %}{{ site.baseurl }}/{{ page.image }}{% endif %}" alt="{{ page.title }}">
-            {% else %}
-            <img class="featured-image img-fluid" src="{% if page.image contains "://" %}{{ page.image }}{% else %}{{ site.baseurl }}/{{ page.image }}{% endif %}" alt="{{ page.title }}">
-            {% endif %}
+                {% if site.lazyimages == "enabled" %}
+                <img class="featured-image img-fluid lazyimg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAQAAAA3fa6RAAAADklEQVR42mNkAANGCAUAACMAA2w/AMgAAAAASUVORK5CYII=" data-src="{% if page.image contains "://" %}{{ page.image }}{% else %}{{ site.baseurl }}/{{ page.image }}{% endif %}" alt="{{ page.title }}">
+                {% else %}
+                <img class="featured-image img-fluid" src="{% if page.image contains "://" %}{{ page.image }}{% else %}{{ site.baseurl }}/{{ page.image }}{% endif %}" alt="{{ page.title }}">
+                {% endif %}
 
             {% endif %}
             <!-- End Featured Image -->
