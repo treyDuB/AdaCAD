@@ -38,7 +38,7 @@ comments: true
 	<h6>Open Code</h6>
 	<p>Want to do some creative coding within AdaCAD to realize some new designs?
 		<br> 
-		<a target="_blank" class="btn" href="https://github.com/UnstableDesign/AdaCAD"><i class="fab fa-github"></i>Fork AdaCAD on GitHub</a>
+		<a target="_blank" class="btn" href="https://github.com/UnstableDesign/AdaCAD"><i class="fab fa-github"></i> Fork AdaCAD on GitHub</a>
 	</p>
 
 <br>
@@ -47,7 +47,7 @@ comments: true
 		<br> 
 		<a target="_blank" class="btn" href="{{ site.baseurl }}/assets/pdf/CHI2020.pdf">Read Craftspeople as Technical Collaborators</a>
 
-			<a target="_blank" class="btn btn-warning" href="{{ site.baseurl }}/assets/pdf/CHI2018.pdf">Read the Original AdaCAD Paper</a>
+			<a target="_blank" class="btn" href="{{ site.baseurl }}/assets/pdf/CHI2018.pdf">Read the Original AdaCAD Paper</a>
 
 	</p>
 
