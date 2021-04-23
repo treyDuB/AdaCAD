@@ -8,12 +8,26 @@ post_class: post-template
 <!-- Begin Article
 ================================================== -->
 <div class="container">
-    <div class="row">
+
+
+     <div class="row">
+        <div class="col-md-3 pl-0">
+        </div>
+
+
+        <div class="col-md-8 flex-first flex-md-unordered">
+                  <!-- Post Title -->
+                <h1 class="posttitle">{{ page.title }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+
         <!-- Post -->
         {% assign author = site.authors[page.author] %}
 
         <!-- Post Share -->
-        <div class="col-md-3 pl-0">
+        <div class="col-md-3 pl-0 authorbox">
           <!-- Author Box -->
             {% if page.author %}
 
@@ -51,14 +65,12 @@ post_class: post-template
 
                 
 
-                <!-- Post Title -->
-                <h1 class="posttitle">{{ page.title }}</h1>
-
+              
 
             <!-- Post Featured Video -->
             {% if page.video %}
 
-                <p><iframe width="560" height="315" src="{{page.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+                  <p><iframe width="728" height="409" src="{{page.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
     
 

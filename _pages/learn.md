@@ -47,22 +47,22 @@ comments: false
 
 <h6>Prototyping Smart Textiles E-Book</h6>
 <p>A textbook in progress that describes textile structures to engineers, and engineering concepts to non-engnieers</p>
-<a class="btn btn-warning" target="_blank" href="https://unstable.design/prototyping-smart-textiles/_book/">Read the Book</a>
+<a class="btn" target="_blank" href="https://unstable.design/prototyping-smart-textiles/_book/">Read the Book</a>
 
 <br>
 <h6>Soft Object Course</h6>
 <p>You can follow our course curriculum and view student projects on our course webpage</p>
-<a class="btn btn-warning" target="_blank" href="https://unstable.design/soft-object/_book/">Check out Curriculum</a>
+<a class="btn" target="_blank" href="https://unstable.design/soft-object/_book/">Check out Curriculum</a>
 <br>
 
 <h6>How to Get What you Want</h6>
 <p>If it were not for Kobakant, we would have never been able to do this project. They offer an incredible set of resources for those interested in experimental weaving, sewing, felting, and fibering of all kinds</p>
-<a class="btn btn-warning" target="_blank" href="https://www.kobakant.at/DIY/">Check out Kobakant</a>
+<a class="btn" target="_blank" href="https://www.kobakant.at/DIY/">Check out Kobakant</a>
 <br>
 
 <h6>E-Textiles Lounge</h6>
 <p>The e-textiles lounge youtube channel offers several great tutorials for soft circuit projects, including great details on working with conductive yarns and multimeters.</p>
-<a class="btn btn-warning" target="_blank" href="https://www.youtube.com/channel/UCRfYpxm10B2plhkC5g597Iw">Check out E-Textiles Lounge</a>
+<a class="btn" target="_blank" href="https://www.youtube.com/channel/UCRfYpxm10B2plhkC5g597Iw">Check out E-Textiles Lounge</a>
 <br>
 
 </div>

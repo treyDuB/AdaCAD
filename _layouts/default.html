@@ -45,7 +45,9 @@ ga('send', 'pageview');
 ================================================== -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mediumnavigation nav-down">
 
+
     <div class="container pr-0">
+
 
     <!-- Begin Logo -->
 <!--     <a class="navbar-brand" href="{{ site.baseurl }}/">
@@ -57,15 +59,17 @@ ga('send', 'pageview');
     <span class="navbar-toggler-icon"></span>
     </button>
 
+        <div class="create-btn">
+            <a target="_blank" class="btn btn-error" href="https://adacad-weaver.firebaseapp.com/"> Start Drafting</a>
+        </div>
+
     <div class="collapse navbar-collapse" id="navbarMediumish">
 
         <!-- Begin Menu -->
 
             <ul class="navbar-nav ml-auto">
 
-                <li class="nav-item create">
-                <a target="_blank" class="nav-link btn btn-warning" href="https://adacad-weaver.firebaseapp.com/"> Start Drafting</a>
-                </li>
+             
                 
                 {% if page.url == "/" %}
                 <li class="nav-item active">
@@ -108,14 +112,18 @@ ga('send', 'pageview');
                 </li>
 
                 {% include search-lunr.html %}
+            
 
             </ul>
+
 
         <!-- End Menu -->
 
     </div>
 
     </div>
+
+
 </nav>
 <!-- End Navigation
 ================================================== -->
@@ -126,19 +134,24 @@ ga('send', 'pageview');
 <!-- Site Title
 ================================================== -->
 <div class="mainheading">
-    <div class="heading-container">
-    <h1 class="sitetitle">
-        <span style="background: white; color:black; border: 4px solid black">{{ site.name }}</span>
-    </h1>
-    <p class="lead">
-         <span style="background: white; color:black; border: 4px solid black; padding: 4px">
-            {{ site.description }}
-         </span>
-    </p>
-    </div>
+
+ <div class="row">
+       
+        <div class="col-md-1 pl-0">
+        </div>
+
+        <div class="col-md-9 pl-0 flex-first flex-md-unordered">
+            <!-- Post Title -->
+             <h1 class="sitetitle"><span>{{ site.name }}</span></h1>
+             <p class="lead">
+                 <span >
+                    {{ site.description }}
+                 </span>
+            </p>
+        </div>
 
 </div>
-
+</div>
 
 
 
@@ -159,7 +172,7 @@ ga('send', 'pageview');
 ================================================== -->
 <div class="alertbar">
 	<div class="container text-center">
-		<span><img src="{{ site.baseurl }}/{{ site.logo }}" alt="{{site.title}}"> &nbsp; Never miss a <b>story</b> from us, subscribe to our newsletter</span>
+		<span><img src="{{ site.baseurl }}/{{ site.logo }}" alt="{{site.title}}"> &nbsp; Hoping for <b>updates</b> from us, subscribe to our newsletter</span>
         <form action="{{site.mailchimp-list}}" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
             <div class="mc-field-group">
             <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>

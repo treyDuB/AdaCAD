@@ -1,12 +1,13 @@
 ---
 layout: howto
-title:  "Design Tools"
+title:  "View Options"
 author: laura
 categories: [how to]
-image: assets/images/design.png
-video: https://www.youtube.com/watch?v=oD9ApMhJ4XA
+image: assets/images/views.png
+video: https://www.youtube.com/watch?v=otC04lcy2J8
 ---
 
-<p>This video will walk you through the different design tools that AdaCAD offers.</p>
+<p>This video describes how to switch between and what is shown in yarn, draft, and circuit view. Give insight into showing and hiding weft and warp systems.
+</p>
 
 

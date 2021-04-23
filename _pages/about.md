@@ -32,20 +32,20 @@ comments: true
 	<h6>Experimental Weaving Resdiency</h6>
 	<p>A mostly-annual open call for artists in residence at the Unstable Design Lab.
 		<br> 
-		<a target="_blank" class="btn btn-warning" href="https://unstable.design/category/experimental-weaving-residency/">More Information</a>
+		<a target="_blank" class="btn" href="https://unstable.design/category/experimental-weaving-residency/">More Information</a>
 	</p>
 <br>
 	<h6>Open Code</h6>
 	<p>Want to do some creative coding within AdaCAD to realize some new designs?
 		<br> 
-		<a target="_blank" class="btn btn-warning" href="https://github.com/UnstableDesign/AdaCAD"><i class="fab fa-github"></i>Fork AdaCAD on GitHub</a>
+		<a target="_blank" class="btn" href="https://github.com/UnstableDesign/AdaCAD"><i class="fab fa-github"></i>Fork AdaCAD on GitHub</a>
 	</p>
 
 <br>
 	<h6>Research</h6>
 	<p>Curious To Read some of our Research on Experimental Weaving and Smart Textiles:
 		<br> 
-		<a target="_blank" class="btn btn-warning" href="{{ site.baseurl }}/assets/pdf/CHI2020.pdf">Read Craftspeople as Technical Collaborators</a>
+		<a target="_blank" class="btn" href="{{ site.baseurl }}/assets/pdf/CHI2020.pdf">Read Craftspeople as Technical Collaborators</a>
 
 			<a target="_blank" class="btn btn-warning" href="{{ site.baseurl }}/assets/pdf/CHI2018.pdf">Read the Original AdaCAD Paper</a>
 

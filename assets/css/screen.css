@@ -10,25 +10,64 @@ License: https://www.wowthemes.net/freebies-license/
 
 
 .mainheading {
-    background: url('/adacad/assets/images/draft_placeholder.png');
-    background-repeat: repeat;
-    color: white;
-    margin: 4% 0%;
+    margin: 6% 0% 6% 0%;
 }
 
- .heading-container {
-    padding-left: 12%;
-  
+.authorbox{
+    justify-content:right;
+    text-align: right;
+}
+
+.posttitle{
+    font-size: 1.8em;
+}
+
+
+
+ .create-btn{
+    justify-content: left;
+ }
+
+ h6{
+    padding-top: 1em;
+    color: black;
  }
 
 
+ .author-description{
+    font-size: .8em;
+    color: #666;
+ }
+
+.btn{
+    margin-bottom: 1em;
+    border-color: #3f51b5;
+
+ }
+
+ .btn-warning,
+ .btn-error:hover{
+    background-color: #3f51b5;
+    border-color: #3f51b5;
+    color: white;
+ }
+
+.btn-warning:hover,
+.btn-error{
+    background-color: #ff4081;
+    border-color: #ff4081;
+    color: white;
+ }
+
+
+
 a {
-    color: #00ab6b;
+    color: #3f51b5;
     transition: all 0.2s;
 }
 
 a:hover {
-    color: #038252;
+    color: #ff4081;
     text-decoration: none;
 }
 
@@ -315,16 +354,16 @@ span.post-read-more a:hover {
     margin-right: 5px;
 }
 
-.mainheading h1.sitetitle {
-    font-family: Righteous;
-    color:black;
-    margin-bottom: 2%;
+.mainheading h1.sitetitle,
+.lead {
+    color:#3f51b5;
 
 }
 
 .mainheading h1.posttitle {
-    font-weight: 700;
+    font-weight: 500;
     margin-bottom: 1rem;
+    color: black;
 }
 
 .footer {
@@ -595,8 +634,8 @@ ul.tags li a:hover {
 }
 
 .alertbar input[type="submit"] {
-    background-color: #1C9963;
-    border: 1px solid #1C9963;
+    background-color: #ff4081;
+    border: 1px solid #ff4081;
     color: rgba(255, 255, 255, 1);
     fill: rgba(255, 255, 255, 1);
     font-size: 0.85rem;
@@ -758,26 +797,6 @@ img {
 }
 
 
-.subheading{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    padding-left: 12%;
-}
-
-.subheading li{
-    list-style: none;
-    background: #3f51b5;
-    margin: 4px;
-    padding: 8px;
-    border-radius: 10px;
-    border: 4px solid black;
-}
-
-.subheading li a{
-    color: white;
-}
 
 .bottompagination span.navigation i {
     display: inline-block;
@@ -810,8 +829,6 @@ iframe {
         padding: 0;
         height: 350px;
         border-radius: 0;
-        background-image: url(../images/jumbotron.jpg);
-        background-size: cover;
     }
 
     .jumbotron.fortags .col-md-4 {
@@ -828,7 +845,6 @@ iframe {
     margin-top: 3rem;
     padding: 0;
     border-radius: 0;
-    background-image: url(../images/jumbotron.jpg);
     background-size: cover;
 }
 
