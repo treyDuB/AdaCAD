@@ -8,9 +8,18 @@ License: https://www.wowthemes.net/freebies-license/
     .container {max-width:80%;}
 }
 
+div.subheading-links{
+    margin: 0px 8px;
+}
 
-.mainheading {
-    margin: 6% 0% 6% 0%;
+.jumbo-left{
+    background-image: url('../images/warp-face.png');
+    background-size: 10px;
+}
+
+.jumbo-right{
+    background-image: url('../images/weft-face.png');
+    background-size: 10px;
 }
 
 .authorbox{
@@ -40,10 +49,23 @@ License: https://www.wowthemes.net/freebies-license/
  }
 
 .btn{
-    margin-bottom: 1em;
+    margin: 1em 0em;
     border-color: #3f51b5;
 
  }
+
+a.btn-heading{
+    border-color: white;
+    color: white;
+    margin-left: 4px;
+ }
+
+ a.btn-heading:hover,
+ a.btn-heading.active{
+    background: white;
+    color: #3f51b5;
+ }
+
 
  .btn-warning,
  .btn-error:hover{
@@ -117,7 +139,6 @@ section.recent-posts {
     border-bottom: 1px solid rgba(0, 0, 0, .125);
     margin-bottom: 25px;
     font-weight: 700;
-    font-size: 1.4rem;
     margin-bottom: 27px;
 }
 
@@ -141,9 +162,9 @@ section.recent-posts {
 
 @media (min-width:576px) {
     .card-columns.listfeaturedtag {
-        -webkit-column-count: 2;
-        -moz-column-count: 2;
-        column-count: 2;
+        -webkit-column-count: 1;
+        -moz-column-count: 1;
+        column-count: 1;
     }
 }
 
@@ -167,8 +188,11 @@ section.recent-posts {
 }
 
 .maxthumb {
-    max-height: 300px;
+    margin:0px;
+    padding:0px;
     overflow: hidden;
+    justify-content: center;
+    vertical-align: middle;
 }
 
 .listfeaturedtag .card,
@@ -216,6 +240,8 @@ section.recent-posts {
     .featured-box-img-cover {
         height: auto;
         width: 100%;
+        -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
     }
 }
 
@@ -354,9 +380,54 @@ span.post-read-more a:hover {
     margin-right: 5px;
 }
 
-.mainheading h1.sitetitle,
-.lead {
-    color:#3f51b5;
+
+.mainheading{
+    margin: 6% 0;
+    padding: 50px 0px;
+    background: #3f51b5;
+}
+
+.mainheading h1.sitetitle{
+    color:white;
+    font-family: 'Varela Round', sans-serif;
+    padding-left: 20px;
+    font-size: 6em;
+    text-align: left;
+    margin: 0px;
+
+}
+.mainheading h1.sitetitle a{
+    color:white;
+}
+
+.adabox:hover a{
+    vertical-align: bottom;
+    color:white;
+}
+
+.adabox:hover{
+    display: block;
+    color:white;
+    background-size: 60px;
+    background-image: url('../images/first-ada.png');
+    background-repeat: no-repeat;
+    background-position: center;    
+}
+
+.mainheading .lead{
+    color:white;
+    font-family: 'Varela Round', sans-serif;
+    padding-left: 20px;
+    font-size: 1.5em;
+    text-align: left;
+
+}
+
+.mainheading h1.sitetitle .subtitle{
+    color:white;
+    font-family: 'Varela Round', sans-serif;
+    font-size: .2em;
+    line-height: 1.25em;
 
 }
 
@@ -832,7 +903,7 @@ iframe {
     }
 
     .jumbotron.fortags .col-md-4 {
-        background: rgba(0, 0, 0, 0.75);
+    /*    background: rgba(0, 0, 0, 0.75);*/
         color: #fff;
     }
 

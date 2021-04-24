@@ -2,7 +2,6 @@
 layout: page
 title: For Weavers
 permalink: /weavers
-comments: true
 ---
 
 <div class="row justify-content-between">

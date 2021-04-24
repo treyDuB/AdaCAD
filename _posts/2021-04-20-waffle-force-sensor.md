@@ -8,6 +8,7 @@ file: assets/ada/waffle-sensor.ada
 video: https://www.youtube.com/embed/_lJBt69aJ7k
 idea: sedimentation/ 
 featured: true
+comments: true
 
 ---
 

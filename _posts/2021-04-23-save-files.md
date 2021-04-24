@@ -5,7 +5,7 @@ author: laura
 categories: [how to]
 image: /assets/images/save_file.png
 comments: true
-video: https://www.youtube.com/watch?v=bH4RswqAtjs
+video: https://www.youtube.com/embed/bH4RswqAtjs
 ---
 
 

@@ -5,6 +5,7 @@ author: shanel
 categories: [ideas]
 image: /assets/images/multicomponent.png
 tags: [thermochromics, double weaving, force sensing, circuitry]
+comments: true
 
 ---
 Designed By: Shanel Wu; Warps: 230; Shuttles: 6

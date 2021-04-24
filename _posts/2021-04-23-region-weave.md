@@ -5,6 +5,7 @@ author: laura
 categories: [ideas]
 image: assets/images/3-region-weave.gif
 tags: [thermochromics, circuitry, press button]
+comments: true
 
 ---
 
