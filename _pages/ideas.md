@@ -8,7 +8,10 @@ comments: false
 <div class="row justify-content-between">
 <div class="col-md-8 pr-5">
 
-<p></p>
+<p>
+	The ideas page shows some of the prototypes and how tos that we have made to document our projects in the Unstable Design Lab. 
+
+</p>
 
 <div class="row listrecent">
 	
