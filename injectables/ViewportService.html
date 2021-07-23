@@ -103,13 +103,13 @@
                                     <a href="../components/ConnectionModal.html" >ConnectionModal</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/FinetuneComponent.html" >FinetuneComponent</a>
+                                    <a href="../components/DraftdetailComponent.html" >DraftdetailComponent</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../components/DraftviewerComponent.html" >DraftviewerComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/FlowComponent.html" >FlowComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/FreehandComponent.html"  class="active" >FreehandComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/ImageComponent.html" >ImageComponent</a>
@@ -137,6 +137,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../components/MixerDesignComponent.html" >MixerDesignComponent</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../components/MixerInitComponent.html" >MixerInitComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/MixerPatternsComponent.html" >MixerPatternsComponent</a>
@@ -214,9 +217,6 @@
                             >
                                 <li class="link">
                                     <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../directives/WeaveDirective.html" >WeaveDirective</a>
                                 </li>
                         </ul>
                     </li>
@@ -319,6 +319,9 @@
                                 <li class="link">
                                     <a href="../injectables/UploadService.html" >UploadService</a>
                                 </li>
+                                <li class="link">
+                                    <a href="../injectables/ViewportService.html"  class="active" >ViewportService</a>
+                                </li>
                         </ul>
                     </li>
             
@@ -350,6 +353,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/DesignMode.html" >DesignMode</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/DesignModes.html" >DesignModes</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/DesignModes.html" >DesignModes</a>
@@ -560,13 +566,13 @@
                                            <a href="../components/ConnectionModal.html" >ConnectionModal</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/FinetuneComponent.html" >FinetuneComponent</a>
+                                           <a href="../components/DraftdetailComponent.html" >DraftdetailComponent</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../components/DraftviewerComponent.html" >DraftviewerComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/FlowComponent.html" >FlowComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/FreehandComponent.html"  class="active" >FreehandComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/ImageComponent.html" >ImageComponent</a>
@@ -594,6 +600,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../components/MixerDesignComponent.html" >MixerDesignComponent</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../components/MixerInitComponent.html" >MixerInitComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/MixerPatternsComponent.html" >MixerPatternsComponent</a>
@@ -671,9 +680,6 @@
                    >
                                        <li class="link">
                                            <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../directives/WeaveDirective.html" >WeaveDirective</a>
                                        </li>
                                </ul>
                            </li>
@@ -776,6 +782,9 @@
                                        <li class="link">
                                            <a href="../injectables/UploadService.html" >UploadService</a>
                                        </li>
+                                       <li class="link">
+                                           <a href="../injectables/ViewportService.html"  class="active" >ViewportService</a>
+                                       </li>
                                </ul>
                            </li>
                    
@@ -807,6 +816,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/DesignMode.html" >DesignMode</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/DesignModes.html" >DesignModes</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/DesignModes.html" >DesignModes</a>
@@ -928,118 +940,528 @@
                    
                    </nav>
                </div>
-               <div class="content component">
+               <div class="content injectable">
                    <div class="content-data">
 
 
+
+
 <ol class="breadcrumb">
-  <li>Components</li>
-  <li>FreehandComponent</li>
+  <li>Injectables</li>
+  <li>ViewportService</li>
 </ol>
 
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+    </li>
+    <li>
+        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+    </li>
+</ul>
 
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-        </li>
-        <li>
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="infos"><p class="comment">
-    <h3>File</h3>
-</p>
-<p class="comment">
-    <code>src/app/mixer/modal/freehand/freehand.component.ts</code>
-</p>
-
-
-
-<section>
-    <h3>Metadata</h3>
-    <table class="table table-sm table-hover">
-        <tbody>
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="infos">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/mixer/provider/viewport.service.ts</code>
+        </p>
 
 
+            <section>
+                <h3 id="constructor">Constructor</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>constructor()</code>
+                                </td>
+                            </tr>
+            
+                        </tbody>
+                    </table>
+            </section>
+
+            <section>
+                <h3 id="methods">Methods</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> setAbsolute</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>setAbsolute(w: number, h: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>void</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> set</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>set(x: number, y: number, width: number, height: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>void</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> setWidth</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>setWidth(w: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>void</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getWidth</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getWidth()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>number</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getAbsoluteWidth</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getAbsoluteWidth()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>number</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> setHeight</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>setHeight(h: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>void</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getHeight</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getHeight()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>number</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getAbsoluteHeight</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getAbsoluteHeight()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>number</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getTopLeft</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getTopLeft()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/Point.html" target="_self" >Point</a></code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getBounds</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getBounds()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>Bounds</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getCenterPoint</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getCenterPoint()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description"><p>this gets the center point of the current viewport</p>
+            </div>
+                                        <div class="io-description">
+                                        </div>
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/Point.html" target="_self" >Point</a></code>
+            
+                                        </div>
+                                            <div class="io-description">
+                                                
+                                            </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> setViewportCenter</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>setViewportCenter()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description"><p>set the viewport in the center of the screen</p>
+            </div>
+                                        <div class="io-description">
+                                        </div>
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/Point.html" target="_self" >Point</a></code>
+            
+                                        </div>
+                                            <div class="io-description">
+                                                <p>the point for referencing</p>
+            
+                                            </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
+
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> absolute</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>absolute:     <code>Bounds</code>
+            </bcode>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>the total size of scrollable space</p>
+            </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> vp</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>vp:     <code>Bounds</code>
+            </bcode>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>the bounds of the viewport within that space</p>
+            </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+    <div class="tab-pane fade tab-source-code" id="source">
+        <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { Observable } from &#x27;rxjs&#x27;;
+import { Bounds, Point } from &#x27;../../core/model/datatypes&#x27;;
 
 
+const locations &#x3D; new Observable((observer) &#x3D;&gt; {
+  let watchId: number;
+});
 
-
-
-
-
-
-
-
-            <tr>
-                <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>app-freehand</code></td>
-            </tr>
-
-            <tr>
-                <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>freehand.component.scss</code></td>
-            </tr>
-
-
-
-            <tr>
-                <td class="col-md-3">templateUrl</td>
-                <td class="col-md-9"><code>freehand.component.html</code></td>
-            </tr>
-
-
-        </tbody>
-    </table>
-</section>
-
-
-
-    <section>
-        <h3 id="constructor">Constructor</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>constructor(dialogRef: any, data: any)</code>
-                        </td>
-                    </tr>
-    
-                </tbody>
-            </table>
-    </section>
-
-
-</div>
-        <div class="tab-pane fade tab-source-code" id="source">
-            <pre><code class="hljs javascript">import { Component, Inject, OnInit } from &#x27;@angular/core&#x27;;
-import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material&#x27;;
-import { OpHelpModal } from &#x27;../ophelp/ophelp.modal&#x27;;
-
-@Component({
-  selector: &#x27;app-freehand&#x27;,
-  templateUrl: &#x27;./freehand.component.html&#x27;,
-  styleUrls: [&#x27;./freehand.component.scss&#x27;]
+@Injectable({
+  providedIn: &#x27;root&#x27;
 })
-export class FreehandComponent implements OnInit {
+export class ViewportService {
 
-  constructor(private dialogRef: MatDialogRef&lt;FreehandComponent&gt;,
-    @Inject(MAT_DIALOG_DATA) private data: any) { 
+
+
+
+  /**
+   * the total size of scrollable space
+   */
+  absolute: Bounds;
+
+  /**
+   * the bounds of the viewport within that space
+   */
+  vp: Bounds;
+
+  constructor(){
+    this.vp &#x3D; {
+      topleft: {x:0, y:0}, 
+      width: 0, 
+      height:0
+    };
+
+    this.absolute &#x3D; {
+      topleft: {x:0, y:0}, 
+      width: 0, 
+      height:0
+    };
+
+   }
+
+   
+
+   setAbsolute(w: number, h: number){
+    this.absolute.width &#x3D; w;
+    this.absolute.height &#x3D; h;
+   }
+
+
+  set(x: number, y: number, width: number, height: number){
+    this.vp.topleft &#x3D; {x: x, y:y};
+    this.vp.width &#x3D; width;
+    this.vp.height &#x3D; height;
+  }
+
+  setWidth(w: number){
+    this.vp.width &#x3D; w;
+  }
+
+  getWidth(): number{
+    return this.vp.width;
+  }
+
+  getAbsoluteWidth(): number{
+    return this.absolute.width;
+  }
+
+  setHeight(h: number){
+    this.vp.height &#x3D; h;
+  }
+
+  getHeight(): number{
+    return this.vp.height;
+  }
+
+  getAbsoluteHeight(): number{
+    return this.absolute.height;
+  }
+
+  getTopLeft(): Point{
+    return this.vp.topleft;
+  }
+
+  getBounds(): Bounds {
+    return this.vp;
+  }
+
+  /**
+   * this gets the center point of the current viewport
+   * @returns 
+   */
+  getCenterPoint(): Point{
+    const center: Point &#x3D; {
+      x: this.vp.topleft.x + this.vp.width/2,
+      y: this.vp.topleft.y + this.vp.height/2
+    }
+    return center;
+  }
+
+  /**
+  * set the viewport in the center of the screen
+  * @returns the point for referencing
+   */
+  setViewportCenter(): Point{
+
+    const abs_topleft: Point &#x3D; {
+      x: this.absolute.width/2 - this.vp.width/2,
+      y: this.absolute.height/2 - this.vp.height/2
+    }
+
+    this.vp.topleft &#x3D; abs_topleft;
+    return abs_topleft;
 
   }
 
-  ngOnInit() {
-  }
+  
+
+
 
 }
 </code></pre>
-        </div>
     </div>
-
-
-
+</div>
 
 
 
