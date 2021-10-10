@@ -272,9 +272,6 @@
                                     <a href="../classes/Pattern.html" >Pattern</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../classes/PatternFinder.html" >PatternFinder</a>
-                                </li>
-                                <li class="link">
                                     <a href="../classes/Point.html" >Point</a>
                                 </li>
                                 <li class="link">
@@ -300,9 +297,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/Util.html" >Util</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/VAE.html" >VAE</a>
                                 </li>
                         </ul>
                     </li>
@@ -354,6 +348,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/PatternService.html" >PatternService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/TreeService.html" >TreeService</a>
@@ -783,9 +780,6 @@
                                            <a href="../classes/Pattern.html" >Pattern</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../classes/PatternFinder.html" >PatternFinder</a>
-                                       </li>
-                                       <li class="link">
                                            <a href="../classes/Point.html" >Point</a>
                                        </li>
                                        <li class="link">
@@ -811,9 +805,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/Util.html" >Util</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/VAE.html" >VAE</a>
                                        </li>
                                </ul>
                            </li>
@@ -865,6 +856,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/PatternService.html" >PatternService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/TreeService.html" >TreeService</a>
@@ -1133,7 +1127,10 @@
 import { Injectable, Input } from &#x27;@angular/core&#x27;;
 import { Cell } from &#x27;../../core/model/cell&#x27;;
 import { Draft } from &quot;../../core/model/draft&quot;;
+import { VaeService} from &quot;../../core/provider/vae.service&quot;
+import { PatternfinderService} from &quot;../../core/provider/patternfinder.service&quot;
 import utilInstance from &#x27;../../core/model/util&#x27;;
+import { Loom } from &#x27;../../core/model/loom&#x27;;
 
 export interface OperationParams {
   name: string,
@@ -1148,7 +1145,7 @@ export interface Operation {
     dx: string,
     max_inputs: number,
     params: Array&lt;OperationParams&gt;,
-    perform: (input: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; Array&lt;Draft&gt;
+    perform: (input: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; Promise&lt;Array&lt;Draft&gt;&gt;
  }
 
  export interface OperationClassification{
@@ -1165,7 +1162,7 @@ export class OperationService {
   ops: Array&lt;Operation&gt; &#x3D; [];
   classification: Array&lt;OperationClassification&gt; &#x3D; [];
 
-  constructor() { 
+  constructor(private vae: VaeService, private pfs: PatternfinderService) { 
 
     const rect: Operation &#x3D; {
       name: &#x27;rectangle&#x27;,
@@ -1185,7 +1182,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         const outputs: Array&lt;Draft&gt; &#x3D; [];
         const d: Draft &#x3D; new Draft({warps: input_params[0], wefts: input_params[1]});
         
@@ -1203,7 +1200,7 @@ export class OperationService {
 
 
         outputs.push(d);
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1212,7 +1209,7 @@ export class OperationService {
       dx: &quot;this sets all heddles to lifted, allowing it to be masked by any pattern&quot;,
       params: [],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(draft &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: draft.warps, wefts:draft.wefts});
           d.fill([[new Cell(false)]], &#x27;clear&#x27;);
@@ -1224,7 +1221,7 @@ export class OperationService {
           }
           return d;
         });
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1233,7 +1230,7 @@ export class OperationService {
       dx: &quot;this sets all unset heddles in this draft to heddle downs (white squares)&quot;,
       params: [],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;)&#x3D;&gt; {
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(draft &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: draft.warps, wefts:draft.wefts});
           draft.pattern.forEach((row, i) &#x3D;&gt; {
@@ -1250,7 +1247,7 @@ export class OperationService {
           }
           return d;
         });
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1259,7 +1256,7 @@ export class OperationService {
       dx: &quot;this sets all down heddles in this draft to unset&quot;,
       params: [],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(draft &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: draft.warps, wefts:draft.wefts});
           draft.pattern.forEach((row, i) &#x3D;&gt; {
@@ -1276,7 +1273,7 @@ export class OperationService {
           }
           return d;
         });
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1285,7 +1282,7 @@ export class OperationService {
       dx: &quot;this turns the draft by 90 degrees but leaves materials in same place&quot;,
       params: [],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(draft &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: draft.wefts, wefts:draft.warps});
           //get each column from the input, save it as the ror in the output
@@ -1306,7 +1303,7 @@ export class OperationService {
 
           return d;
         });
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1316,7 +1313,7 @@ export class OperationService {
       dx: &#x27;interlace the input drafts together in alternating lines&#x27;,
       params: [],
       max_inputs: 100,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         
         const outputs: Array&lt;Draft&gt; &#x3D; [];
 
@@ -1350,7 +1347,7 @@ export class OperationService {
         });
 
         outputs.push(d);
-        return outputs;
+        return Promise.resolve(outputs);
       }     
     }
 
@@ -1372,7 +1369,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;)&#x3D;&gt; {
 
         const height &#x3D; 2*input_params[1];
 
@@ -1410,7 +1407,7 @@ export class OperationService {
           });
         }
 
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1432,9 +1429,9 @@ export class OperationService {
         }
       ],
       max_inputs: 100,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;)&#x3D;&gt; {
 
-        if(inputs.length &lt; 1) return [];
+        if(inputs.length &lt; 1) return Promise.resolve([]);
 
         const first: Draft &#x3D; inputs.shift();
 
@@ -1469,7 +1466,7 @@ export class OperationService {
 
         }, init_draft);
         outputs.push(d);
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1491,9 +1488,9 @@ export class OperationService {
         }
       ],
       max_inputs: 100,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
-        if(inputs.length &lt; 1) return [];
+        if(inputs.length &lt; 1) return Promise.resolve([]);
 
         const first: Draft &#x3D; inputs.shift();
 
@@ -1528,7 +1525,7 @@ export class OperationService {
 
         }, init_draft);
         outputs.push(d);
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1609,9 +1606,9 @@ export class OperationService {
         }
       ],
       max_inputs: 100,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
-        if(inputs.length &lt; 1) return [];
+        if(inputs.length &lt; 1) return Promise.resolve([]);
 
         const first: Draft &#x3D; inputs.shift();
 
@@ -1646,7 +1643,7 @@ export class OperationService {
 
         }, init_draft);
         outputs.push(d);
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1668,9 +1665,9 @@ export class OperationService {
         }
       ],
       max_inputs: 100,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
-        if(inputs.length &lt; 1) return [];
+        if(inputs.length &lt; 1) return Promise.resolve([]);
 
         const first: Draft &#x3D; inputs.shift();
 
@@ -1705,7 +1702,7 @@ export class OperationService {
 
         }, init_draft);
         outputs.push(d);
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1715,7 +1712,7 @@ export class OperationService {
       dx: &#x27;fills black cells of the first input with the pattern specified by the second input, white cells with third input&#x27;,
       params: [],
       max_inputs: 3,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         let outputs: Array&lt;Draft&gt; &#x3D; [];
 
         if(inputs.length &#x3D;&#x3D; 0){
@@ -1740,15 +1737,22 @@ export class OperationService {
           d.fill(inputs[1].pattern, &#x27;mask&#x27;);
 
           const op: Operation &#x3D; this.getOp(&#x27;overlay&#x27;);
-          const out: Array&lt;Draft&gt; &#x3D; op.perform([d, di], [0, 0]);
-          outputs.push(out[0]);
+
+        
+          op.perform([d, di], [0, 0])
+            .then(out &#x3D;&gt; {
+              outputs.push(out[0]);
+            });
+
+          // op.perform([d, di], [0, 0]);
+          // outputs.push(out[0]);
 
 
         }
 
 
 
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1757,7 +1761,7 @@ export class OperationService {
       dx: &#x27;generates or fills input a draft with tabby structure&#x27;,
       params: [],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
 
         const pattern:Array&lt;Array&lt;Cell&gt;&gt; &#x3D; [];
@@ -1784,7 +1788,7 @@ export class OperationService {
           });
         }
 
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -1806,7 +1810,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
 
         const sum: number &#x3D; input_params.reduce( (acc, val) &#x3D;&gt; {
@@ -1837,7 +1841,7 @@ export class OperationService {
           });
         }
 
-        return outputs;
+        return Promise.resolve(outputs);
       }
           
     }
@@ -1861,7 +1865,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
             const d: Draft &#x3D; new Draft({warps: input_params[0]*input.warps, wefts: input_params[1]*input.wefts});
@@ -1881,7 +1885,7 @@ export class OperationService {
             return d;
         });
 
-        return outputs;
+        return Promise.resolve(outputs);
       }
           
     }
@@ -1904,7 +1908,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const weft_factor &#x3D;input_params[1] /input.wefts ;
@@ -1921,7 +1925,7 @@ export class OperationService {
             return d;
         });
 
-        return outputs;
+        return Promise.resolve(outputs);
       }
           
     }
@@ -1956,7 +1960,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
             const new_warps &#x3D; input_params[1] + input_params[3] + input.warps;
@@ -1979,7 +1983,7 @@ export class OperationService {
             return d;
         });
 
-        return outputs;
+        return Promise.resolve(outputs);
       }
           
     }
@@ -2008,7 +2012,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
 
         const sum: number &#x3D; input_params[0] + input_params[1];
@@ -2040,7 +2044,7 @@ export class OperationService {
           });
         }
 
-        return outputs;
+        return Promise.resolve(outputs);
       }
           
     }
@@ -2063,7 +2067,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
         const sum: number &#x3D; input_params.reduce( (acc, val) &#x3D;&gt; {
             return val + acc;
@@ -2089,7 +2093,7 @@ export class OperationService {
           });
         }
 
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -2113,12 +2117,16 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
        
         const shift: number &#x3D; Math.ceil(input_params[1]/2);
-        const d: Array&lt;Draft&gt; &#x3D; this.getOp(&#x27;twill&#x27;).perform(inputs, input_params);
-        const outputs: Array&lt;Draft&gt; &#x3D; this.getOp(&#x27;slope&#x27;).perform(d, [shift, 1]);
-        return outputs;
+
+        this.getOp(&#x27;twill&#x27;).perform(inputs, input_params)
+          .then(d &#x3D;&gt; {
+            return Promise.resolve(this.getOp(&#x27;slope&#x27;).perform(d, [shift, 1]));
+          })
+        
+          return Promise.resolve([]);
       }        
     }
 
@@ -2146,7 +2154,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
        
         const pattern:Array&lt;Array&lt;Cell&gt;&gt; &#x3D; [];
         for(let i &#x3D; 0; i &lt; input_params[1]; i++){
@@ -2169,7 +2177,7 @@ export class OperationService {
           });
         }
 
-        return outputs;
+        return Promise.resolve(outputs);
       }        
     }
 
@@ -2178,13 +2186,13 @@ export class OperationService {
       dx: &#x27;generates an output that is the inverse or backside of the input&#x27;,
       params: [],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
           d.fill(d.pattern, &#x27;invert&#x27;);
           return d;
         });
-        return outputs;
+        return Promise.resolve(outputs);
       }
     }
 
@@ -2193,13 +2201,13 @@ export class OperationService {
       dx: &#x27;generates an output that is the left-right mirror of the input&#x27;,
       params: [],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
           d.fill(d.pattern, &#x27;mirrorY&#x27;);
           return d;
         });
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2208,13 +2216,13 @@ export class OperationService {
       dx: &#x27;generates an output that is the top-bottom mirror of the input&#x27;,
       params: [],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;)&#x3D;&gt; {
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
           d.fill(d.pattern, &#x27;mirrorX&#x27;);
           return d;
         });
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2230,7 +2238,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;)&#x3D;&gt; {
           
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
@@ -2239,7 +2247,7 @@ export class OperationService {
             }
           return d;
         });
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2255,7 +2263,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
           
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
@@ -2264,7 +2272,7 @@ export class OperationService {
             }
           return d;
         });
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2286,7 +2294,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
           
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts});
@@ -2303,7 +2311,7 @@ export class OperationService {
             }
           return d;
         });
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2319,7 +2327,7 @@ export class OperationService {
         dx: &#x27;the number of mirrors to produce&#x27;
       }],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         
         
 
@@ -2332,7 +2340,7 @@ export class OperationService {
             });
             outputs &#x3D; outputs.concat(ds);
         }
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2348,7 +2356,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
           
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
@@ -2372,7 +2380,7 @@ export class OperationService {
 
           return d;
         });
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2388,7 +2396,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
           
           const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
@@ -2414,7 +2422,7 @@ export class OperationService {
 
           return d;
         });
-        return outputs;
+        return  Promise.resolve(outputs);
       }
     }
 
@@ -2423,10 +2431,10 @@ export class OperationService {
       dx: &#x27;creates a draft in which each input is assigned to a layer in a multilayered structure, assigns 1 to top layer and so on&#x27;,
       params: [],
       max_inputs: 100, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;)&#x3D;&gt; {
           
           const layers &#x3D; inputs.length;
-          if(layers &#x3D;&#x3D; 0) return [];
+          if(layers &#x3D;&#x3D; 0) return Promise.resolve([]);
 
           const max_wefts:number &#x3D; utilInstance.getMaxWefts(inputs);
           const max_warps:number &#x3D; utilInstance.getMaxWarps(inputs);
@@ -2444,27 +2452,22 @@ export class OperationService {
           }
 
 
-          const overlay: Array&lt;Draft&gt; &#x3D; this.getOp(&#x27;interlace&#x27;).perform(inputs, []);
-          
-        
-
-        //  const outputs: Array&lt;Draft&gt; &#x3D; inputs.map((input, ndx) &#x3D;&gt; {
-            const d: Draft &#x3D; new Draft({warps: max_warps*layers, wefts: max_wefts*layers});
-            d.fill(pattern, &quot;original&quot;);
-            console.log(&#x27;filledd draft&#x27;, d);
-
-            overlay[0].pattern.forEach((row, ndx) &#x3D;&gt; {
-              const layer_id:number &#x3D; ndx % layers;
-              row.forEach((c, j) &#x3D;&gt; {
-                d.pattern[ndx][j*layers+layer_id].setHeddle(c.getHeddle());
+          this.getOp(&#x27;interlace&#x27;).perform(inputs, [])
+            .then(overlay &#x3D;&gt; {
+              const d: Draft &#x3D; new Draft({warps: max_warps*layers, wefts: max_wefts*layers});
+              d.fill(pattern, &quot;original&quot;);
+              console.log(&#x27;filledd draft&#x27;, d);
+  
+              overlay[0].pattern.forEach((row, ndx) &#x3D;&gt; {
+                const layer_id:number &#x3D; ndx % layers;
+                row.forEach((c, j) &#x3D;&gt; {
+                  d.pattern[ndx][j*layers+layer_id].setHeddle(c.getHeddle());
+                });
               });
+              return  Promise.resolve([d]);
             });
-            return [d];
-       // });
-
-
-       //   return outputs;
       }
+      
     }
 
     const tile: Operation &#x3D; {
@@ -2485,7 +2488,7 @@ export class OperationService {
         }
       ],
       max_inputs: 1,
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
         const outputs:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
           const width: number &#x3D; input_params[0]*input.warps;
@@ -2496,8 +2499,7 @@ export class OperationService {
           return d;
         });
 
-
-        return outputs;
+        return Promise.resolve(outputs);
       }
           
     }
@@ -2507,7 +2509,7 @@ export class OperationService {
       dx: &#x27;attaches inputs toether into one draft with each iniput side by side&#x27;,
       params: [],
       max_inputs: 100, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
           
         const outputs: Array&lt;Draft&gt; &#x3D; [];
         const total:number &#x3D; inputs.reduce((acc, draft)&#x3D;&gt;{
@@ -2537,9 +2539,94 @@ export class OperationService {
         }
              
         outputs.push(d);
-        return outputs;
+        return Promise.resolve(outputs);
+        ;
       }
     }
+
+    const germanify: Operation &#x3D; {
+      name: &#x27;gemanify&#x27;,
+      dx: &#x27;uses ML to edit the input based on patterns in a german drafts weave set&#x27;,
+      params: [
+        {name: &#x27;output selection&#x27;,
+        min: 1,
+        max: 10,
+        value: 1,
+        dx: &#x27;which pattern to select from the variations&#x27;
+        }
+      ],
+      max_inputs: 1,
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+        if(inputs.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve([]);
+        const inputDraft &#x3D; inputs[0]
+  
+        return this.vae.loadModels(&#x27;german&#x27;)
+          .then(() &#x3D;&gt; {
+            const loom:Loom &#x3D; new Loom(inputDraft, 8, 10);
+            loom.recomputeLoom(inputDraft);
+            let pattern &#x3D; this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.pattern);
+          
+            return utilInstance.patternToSize(pattern, 48, 48);
+          })
+          .then(draftSeed&#x3D;&gt; this.vae.generateFromSeed(draftSeed))
+          .then(suggestions &#x3D;&gt; suggestions.map(suggestion &#x3D;&gt; {
+                  const treadlingSuggest &#x3D; this.pfs.getTreadlingFromArr(suggestion);
+                  const threadingSuggest &#x3D; this.pfs.getThreadingFromArr(suggestion);
+                  const pattern &#x3D; this.pfs.computePatterns(threadingSuggest, treadlingSuggest, suggestion)
+                  const draft:Draft &#x3D; new Draft({warps: pattern[0].length, wefts: pattern.length});
+                    for (var i &#x3D; 0; i &lt; pattern.length; i++) {
+                      for (var j &#x3D; 0; j &lt; pattern[i].length; j++) {
+                          draft.pattern[i][j].setHeddle((pattern[i][j] &#x3D;&#x3D; 1 ? true : false));
+                      }
+                    }
+                  return draft
+                
+                })
+              )
+        }
+      }  
+      const crackleify: Operation &#x3D; {
+        name: &#x27;crackle-ify&#x27;,
+        dx: &#x27;uses ML to edit the input based on patterns in a german drafts weave set&#x27;,
+        params: [
+          {name: &#x27;output selection&#x27;,
+          min: 1,
+          max: 10,
+          value: 1,
+          dx: &#x27;which pattern to select from the variations&#x27;
+          }
+        ],
+        max_inputs: 1,
+        perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+          if(inputs.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve([]);
+          const inputDraft &#x3D; inputs[0]
+    
+          return this.vae.loadModels(&#x27;crackle_weave&#x27;)
+            .then(() &#x3D;&gt; {
+              const loom:Loom &#x3D; new Loom(inputDraft, 8, 10);
+              loom.recomputeLoom(inputDraft);
+              let pattern &#x3D; this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.pattern);
+            
+              return utilInstance.patternToSize(pattern, 52, 52);
+            })
+            .then(draftSeed&#x3D;&gt; this.vae.generateFromSeed(draftSeed))
+            .then(suggestions &#x3D;&gt; suggestions.map(suggestion &#x3D;&gt; {
+                    const treadlingSuggest &#x3D; this.pfs.getTreadlingFromArr(suggestion);
+                    const threadingSuggest &#x3D; this.pfs.getThreadingFromArr(suggestion);
+                    const pattern &#x3D; this.pfs.computePatterns(threadingSuggest, treadlingSuggest, suggestion)
+                    const draft:Draft &#x3D; new Draft({warps: pattern[0].length, wefts: pattern.length});
+                      for (var i &#x3D; 0; i &lt; pattern.length; i++) {
+                        for (var j &#x3D; 0; j &lt; pattern[i].length; j++) {
+                            draft.pattern[i][j].setHeddle((pattern[i][j] &#x3D;&#x3D; 1 ? true : false));
+                        }
+                      }
+                    return draft
+                  
+                  })
+                )
+          }
+        }    
+    
 
 
     //**push operatiinos to the array here */
@@ -2575,6 +2662,8 @@ export class OperationService {
     this.ops.push(overlay);
     this.ops.push(atop);
     this.ops.push(mask);
+    this.ops.push(germanify);
+    this.ops.push(crackleify);
     // this.ops.push(reverse);
 
 
@@ -2598,6 +2687,11 @@ export class OperationService {
     this.classification.push(
       {category: &#x27;compose&#x27;,
       ops: [mirror, interlace, layer, tile, joinleft, selvedge,atop, overlay, mask, bindweftfloats, bindwarpfloats]}
+    );
+
+    this.classification.push(
+      {category: &#x27;machine learning&#x27;,
+      ops: [germanify, crackleify]}
     );
 
   }
