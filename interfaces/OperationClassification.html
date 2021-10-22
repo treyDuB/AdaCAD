@@ -1123,7 +1123,7 @@
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { D } from &#x27;@angular/cdk/keycodes&#x27;;
+        <pre><code class="hljs javascript">import { D, E } from &#x27;@angular/cdk/keycodes&#x27;;
 import { Injectable, Input } from &#x27;@angular/core&#x27;;
 import { Cell } from &#x27;../../core/model/cell&#x27;;
 import { Draft } from &quot;../../core/model/draft&quot;;
@@ -1131,6 +1131,8 @@ import { VaeService} from &quot;../../core/provider/vae.service&quot;
 import { PatternfinderService} from &quot;../../core/provider/patternfinder.service&quot;
 import utilInstance from &#x27;../../core/model/util&#x27;;
 import { Loom } from &#x27;../../core/model/loom&#x27;;
+import { input } from &#x27;@tensorflow/tfjs-layers&#x27;;
+import { findIndex } from &#x27;lodash&#x27;;
 
 export interface OperationParams {
   name: string,
@@ -1529,64 +1531,64 @@ export class OperationService {
       }        
     }
 
-    // const reverse: Operation &#x3D; {
-    //   name: &#x27;reverse section&#x27;,
-    //   dx: &#x27;uses the second draft input to reverse the first image. &#x27;,
-    //   params: [
-    //     {name: &#x27;left offset&#x27;,
-    //     min: 0,
-    //     max: 10000,
-    //     value: 0,
-    //     dx: &quot;the amount to offset the added inputs from the left&quot;
-    //     },
-    //     {name: &#x27;top offset&#x27;,
-    //     min: 0,
-    //     max: 10000,
-    //     value: 0,
-    //     dx: &quot;the amount to offset the overlaying inputs from the top&quot;
-    //     }
-    //   ],
-    //   max_inputs: 100,
-    //   perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;):Array&lt;Draft&gt; &#x3D;&gt; {
+    const knockout: Operation &#x3D; {
+      name: &#x27;knockout&#x27;,
+      dx: &#x27;overlays the input drafts. Flips the value of overlapping cells of the same value, effectively knocking out the image of the second draft upon the first&#x27;,
+      params: [
+        {name: &#x27;left offset&#x27;,
+        min: 0,
+        max: 10000,
+        value: 0,
+        dx: &quot;the amount to offset the added inputs from the left&quot;
+        },
+        {name: &#x27;top offset&#x27;,
+        min: 0,
+        max: 10000,
+        value: 0,
+        dx: &quot;the amount to offset the overlaying inputs from the top&quot;
+        }
+      ],
+      max_inputs: 100,
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;)&#x3D;&gt; {
 
-    //     if(inputs.length &lt; 1) return [];
+        if(inputs.length &lt; 1) return Promise.resolve([]);
 
-    //     const first: Draft &#x3D; inputs.shift();
+        const first: Draft &#x3D; inputs.shift();
 
-    //     const outputs: Array&lt;Draft&gt; &#x3D; [];
+        const outputs: Array&lt;Draft&gt; &#x3D; [];
 
 
-    //     let width: number &#x3D; utilInstance.getMaxWarps(inputs) + input_params[0];
-    //     let height: number &#x3D; utilInstance.getMaxWefts(inputs) + input_params[1];
-    //     if(first.warps &gt; width) width &#x3D; first.warps;
-    //     if(first.wefts &gt; height) height &#x3D; first.wefts;
+        let width: number &#x3D; utilInstance.getMaxWarps(inputs) + input_params[0];
+        let height: number &#x3D; utilInstance.getMaxWefts(inputs) + input_params[1];
+        if(first.warps &gt; width) width &#x3D; first.warps;
+        if(first.wefts &gt; height) height &#x3D; first.wefts;
 
-    //     //initialize the base container with the first draft at 0,0, unset for anythign wider
-    //     const init_draft: Draft &#x3D; new Draft({wefts: height, warps: width});
+        //initialize the base container with the first draft at 0,0, unset for anythign wider
+        const init_draft: Draft &#x3D; new Draft({wefts: height, warps: width});
           
-    //     first.pattern.forEach((row, i) &#x3D;&gt; {
-    //         row.forEach((cell, j) &#x3D;&gt; {
-    //           init_draft.pattern[i][j].setHeddle(cell.getHeddle());
-    //         });
-    //       });
+        first.pattern.forEach((row, i) &#x3D;&gt; {
+            row.forEach((cell, j) &#x3D;&gt; {
+              init_draft.pattern[i][j].setHeddle(cell.getHeddle());
+            });
+          });
 
-    //     //now merge in all of the additional inputs offset by the inputs
-    //     const d: Draft &#x3D; inputs.reduce((acc, input) &#x3D;&gt; {
-    //       input.pattern.forEach((row, i) &#x3D;&gt; {
-    //         row.forEach((cell, j) &#x3D;&gt; {
-    //           //if i or j is less than input params 
-    //           const adj_i: number &#x3D; i+input_params[1];
-    //           const adj_j: number &#x3D; j+input_params[0];
-    //           acc.pattern[adj_i][adj_j].setHeddle(utilInstance.computeFilter(&#x27;neq&#x27;, cell.getHeddle(), acc.pattern[adj_i][adj_j].getHeddle()));
-    //         });
-    //       });
-    //       return acc;
+        //now merge in all of the additional inputs offset by the inputs
+        const d: Draft &#x3D; inputs.reduce((acc, input) &#x3D;&gt; {
+          input.pattern.forEach((row, i) &#x3D;&gt; {
+            row.forEach((cell, j) &#x3D;&gt; {
+              //if i or j is less than input params 
+              const adj_i: number &#x3D; i+input_params[1];
+              const adj_j: number &#x3D; j+input_params[0];
+              acc.pattern[adj_i][adj_j].setHeddle(utilInstance.computeFilter(&#x27;neq&#x27;, cell.getHeddle(), acc.pattern[adj_i][adj_j].getHeddle()));
+            });
+          });
+          return acc;
 
-    //     }, init_draft);
-    //     outputs.push(d);
-    //     return outputs;
-    //   }        
-    // }
+        }, init_draft);
+        outputs.push(d);
+        return Promise.resolve(outputs);
+      }        
+    }
 
     const mask: Operation &#x3D; {
       name: &#x27;mask&#x27;,
@@ -1987,6 +1989,64 @@ export class OperationService {
       }
           
     }
+
+    const crop: Operation &#x3D; {
+      name: &#x27;crop&#x27;,
+      dx: &#x27;crops to a region of the input draft. The crop size and placement is given by the parameters&#x27;,
+      params: [
+        {name: &#x27;left&#x27;,
+        min: 0,
+        max: 10000,
+        value: 0,
+        dx: &#x27;number of pics from the left to start the cut&#x27;
+        },
+        {name: &#x27;top&#x27;,
+        min: 0,
+        max: 10000,
+        value: 0,
+        dx: &#x27;number of pics from the top to start the cut&#x27;
+        },
+        {name: &#x27;width&#x27;,
+        min: 1,
+        max: 10000,
+        value: 10,
+        dx: &#x27;total width of cut&#x27;
+        },
+        {name: &#x27;height&#x27;,
+        min: 1,
+        max: 10000,
+        value: 10,
+        dx: &#x27;height of the cutting box&#x27;
+        }
+      ],
+      max_inputs: 1,
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+
+
+
+        const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
+            const new_warps &#x3D; input_params[2];
+            const new_wefts &#x3D; input_params[3];
+
+            const d: Draft &#x3D; new Draft({warps: new_warps, wefts: new_wefts});
+
+            //unset all cells to default
+            d.pattern.forEach((row, i) &#x3D;&gt; {
+              row.forEach((cell, j) &#x3D;&gt; {
+
+                if((i+input_params[1] &gt;&#x3D; input.pattern.length) || (j+input_params[0] &gt;&#x3D; input.pattern[0].length)) cell.setHeddle(null);
+                else cell.setHeddle(input.pattern[i+input_params[1]][j+input_params[0]].getHeddle());
+               
+              });
+            });
+
+            return d;
+        });
+
+        return Promise.resolve(outputs);
+      }
+          
+    }
     
     const rib: Operation &#x3D; {
       name: &#x27;rib&#x27;,
@@ -2196,7 +2256,7 @@ export class OperationService {
       }
     }
 
-    const mirrorx: Operation &#x3D; {
+    const flipx: Operation &#x3D; {
       name: &#x27;flip horiz&#x27;,
       dx: &#x27;generates an output that is the left-right mirror of the input&#x27;,
       params: [],
@@ -2211,7 +2271,7 @@ export class OperationService {
       }
     }
 
-    const mirrory: Operation &#x3D; {
+    const flipy: Operation &#x3D; {
       name: &#x27;flip vert&#x27;,
       dx: &#x27;generates an output that is the top-bottom mirror of the input&#x27;,
       params: [],
@@ -2316,9 +2376,9 @@ export class OperationService {
     }
 
 
-    const mirror: Operation &#x3D; {
-      name: &#x27;mirror&#x27;,
-      dx: &#x27;generates an linked copy of the input draft, changes to the input draft will then populate on the mirrored draft&#x27;,
+    const replicate: Operation &#x3D; {
+      name: &#x27;replicate&#x27;,
+      dx: &#x27;generates an linked copy of the input draft, changes to the input draft will then populate on the replicated draft&#x27;,
       params: [ {
         name: &#x27;copies&#x27;,
         min: 1,
@@ -2342,6 +2402,35 @@ export class OperationService {
         }
         return  Promise.resolve(outputs);
       }
+    }
+
+    const variants: Operation &#x3D; {
+      name: &#x27;variants&#x27;,
+      dx: &#x27;for any input draft, create the shifted and flipped values as well&#x27;,
+      params: [],
+      max_inputs: 1, 
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+        
+        if(inputs.length &#x3D;&#x3D; 0)  return  Promise.resolve([]);
+
+        const functions: Array&lt;Promise&lt;Array&lt;Draft&gt;&gt;&gt; &#x3D; [
+        this.getOp(&#x27;flip horiz&#x27;).perform(inputs, input_params),
+        this.getOp(&#x27;invert&#x27;).perform(inputs, input_params)]
+
+        for(let i &#x3D; 1; i &lt; inputs[0].warps; i+&#x3D;2){
+          functions.push(this.getOp(&#x27;shift left&#x27;).perform(inputs, [i]))
+        }
+
+        for(let i &#x3D; 1; i &lt; inputs[0].wefts; i+&#x3D;2){
+          functions.push(this.getOp(&#x27;shift up&#x27;).perform(inputs, [i]))
+        }
+        return Promise.all(functions)
+        .then(allDrafts &#x3D;&gt; allDrafts
+          .reduce((acc, drafts) &#x3D;&gt; acc.concat(drafts), [])
+         )        
+      }
+
+
     }
 
     const bindweftfloats: Operation &#x3D; {
@@ -2504,6 +2593,39 @@ export class OperationService {
           
     }
 
+    const jointop: Operation &#x3D; {
+      name: &#x27;join top&#x27;,
+      dx: &#x27;attaches inputs toether into one draft in a column orientation&#x27;,
+      params: [],
+      max_inputs: 100, 
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+          
+        const total:number &#x3D; inputs.reduce((acc, draft)&#x3D;&gt;{
+            return acc + draft.wefts;
+        }, 0);
+
+        const max_warps:number &#x3D; utilInstance.getMaxWarps(inputs);
+        
+        const combined: {d: Draft, n: number} &#x3D; inputs.reduce((acc, input, ndx) &#x3D;&gt; {
+
+          input.pattern.forEach((row, i) &#x3D;&gt; {
+            row.forEach((cell, j) &#x3D;&gt; {
+              acc.d.pattern[acc.n + i][j].setHeddle(cell.getHeddle());
+            });
+          });
+
+          acc.n &#x3D; input.pattern.length;
+          return acc;
+
+        }, {d: new Draft({warps: max_warps, wefts: total}), n: 0});
+
+
+        return Promise.resolve([combined.d]);
+        
+      }
+    }
+
+
     const joinleft: Operation &#x3D; {
       name: &#x27;join left&#x27;,
       dx: &#x27;attaches inputs toether into one draft with each iniput side by side&#x27;,
@@ -2625,7 +2747,93 @@ export class OperationService {
                   })
                 )
           }
-        }    
+        }  
+        
+        
+        const makeloom: Operation &#x3D; {
+          name: &#x27;floor loom&#x27;,
+          dx: &#x27;uses the input draft as drawdown and generates a threading, tieup and treadling pattern&#x27;,
+          params: [
+
+          ],
+          max_inputs: 1,
+          perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+            if(inputs.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve([]);
+            
+            const l:Loom &#x3D; new Loom(inputs[0], 8, 10);
+            l.recomputeLoom(inputs[0]);
+
+            const threading: Draft &#x3D; new Draft({warps: inputs[0].warps, wefts: l.num_frames});
+            threading.name &#x3D; &quot;threading_&quot;+inputs[0].name;
+
+            l.threading.forEach((frame, j) &#x3D;&gt;{
+              console.log(&quot;looping&quot;, frame, j)
+              if(frame !&#x3D;&#x3D; -1) threading.pattern[frame][j].setHeddle(true);
+            });
+
+            const treadling: Draft &#x3D; new Draft({warps:l.num_treadles, wefts: inputs[0].wefts});
+            console.log(treadling);
+            l.treadling.forEach((treadle_num, i) &#x3D;&gt;{
+              if(treadle_num !&#x3D;&#x3D; -1) treadling.pattern[i][treadle_num].setHeddle(true);
+            });
+            treadling.name &#x3D; &quot;treadling_&quot;+inputs[0].name;
+
+            const tieup: Draft &#x3D; new Draft({warps: l.num_treadles, wefts: l.num_frames});
+            l.tieup.forEach((row, i) &#x3D;&gt; {
+              row.forEach((val, j) &#x3D;&gt; {
+                tieup.pattern[i][j].setHeddle(val);
+              })
+            });
+            tieup.name &#x3D; &quot;tieup_&quot;+inputs[0].name;
+
+
+            return Promise.resolve([threading, tieup, treadling]);
+
+            }
+
+
+            
+
+          } 
+          
+          const drawdown: Operation &#x3D; {
+            name: &#x27;drawdown&#x27;,
+            dx: &#x27;create a drawdown from the input drafts (order 1. threading, 2. tieup, 3.treadling)&#x27;,
+            params: [
+  
+            ],
+            max_inputs: 3,
+            perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+              if(inputs.length &lt; 3) return Promise.resolve([]);
+
+              
+              const threading: Array&lt;number&gt; &#x3D; [];
+              for(let j &#x3D; 0; j &lt; inputs[0].warps; j++){
+                const col: Array&lt;Cell&gt; &#x3D;  inputs[0].pattern.reduce((acc, row, ndx) &#x3D;&gt; {
+                  acc[ndx] &#x3D; row[j];
+                  return acc;
+                }, []);
+
+                threading[j] &#x3D; col.findIndex(cell &#x3D;&gt; cell.getHeddle());
+
+              }
+            
+              const treadling: Array&lt;number&gt; &#x3D; inputs[2].pattern
+              .map(row &#x3D;&gt; row.findIndex(cell &#x3D;&gt; cell.getHeddle()));
+
+              const tieup &#x3D; inputs[1].pattern.map(row &#x3D;&gt; {
+                return row.map(cell &#x3D;&gt; cell.getHeddle());
+              });
+
+              const drawdown: Draft &#x3D; new Draft({warps: inputs[0].warps, wefts: inputs[2].wefts});
+              drawdown.recalculateDraft(tieup, treadling, threading);
+              return Promise.resolve([drawdown]);
+  
+              }
+  
+  
+  
+            }
     
 
 
@@ -2639,9 +2847,9 @@ export class OperationService {
     this.ops.push(random);
     this.ops.push(interlace);
     this.ops.push(invert);
-    this.ops.push(mirror); //this doesn&#x27;t really work unless we have multiple outputs allowed on a subdraft
-    this.ops.push(mirrorx);
-    this.ops.push(mirrory);
+    this.ops.push(replicate);
+    this.ops.push(flipx);
+    this.ops.push(flipy);
     this.ops.push(shiftx);
     this.ops.push(shifty);
     this.ops.push(layer);
@@ -2649,6 +2857,7 @@ export class OperationService {
     this.ops.push(bindweftfloats);
     this.ops.push(bindwarpfloats);
     this.ops.push(joinleft);
+    this.ops.push(jointop);
     this.ops.push(slope);
     this.ops.push(tile);
     this.ops.push(stretch);
@@ -2664,7 +2873,11 @@ export class OperationService {
     this.ops.push(mask);
     this.ops.push(germanify);
     this.ops.push(crackleify);
-    // this.ops.push(reverse);
+    this.ops.push(variants);
+    this.ops.push(knockout);
+    this.ops.push(crop);
+    this.ops.push(makeloom);
+    this.ops.push(drawdown);
 
 
     //** Give it a classification here */
@@ -2676,22 +2889,28 @@ export class OperationService {
 
     this.classification.push(
       {category: &#x27;structures&#x27;,
-      ops: [tabby, twill, satin, basket, rib, random]}
+      ops: [tabby, twill, satin, basket, rib, random, variants]}
     );
 
     this.classification.push(
       {category: &#x27;transformations&#x27;,
-      ops: [fill, invert, mirrorx, mirrory, shiftx, shifty, rotate, slope, stretch, resize, margin]}
+      ops: [fill, invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, resize, margin, crop]}
     );
 
     this.classification.push(
       {category: &#x27;compose&#x27;,
-      ops: [mirror, interlace, layer, tile, joinleft, selvedge,atop, overlay, mask, bindweftfloats, bindwarpfloats]}
+      ops: [replicate, interlace, layer, tile, joinleft, jointop, selvedge, atop, overlay, mask, knockout, bindweftfloats, bindwarpfloats]}
     );
 
     this.classification.push(
       {category: &#x27;machine learning&#x27;,
       ops: [germanify, crackleify]}
+    );
+
+
+    this.classification.push(
+      {category: &#x27;frame loom support&#x27;,
+      ops: [makeloom, drawdown]}
     );
 
   }
