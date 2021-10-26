@@ -2352,33 +2352,33 @@ export class OperationService {
     }
 
 
-    const replicate: Operation &#x3D; {
-      name: &#x27;replicate&#x27;,
-      dx: &#x27;generates an linked copy of the input draft, changes to the input draft will then populate on the replicated draft&#x27;,
-      params: [ {
-        name: &#x27;copies&#x27;,
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: &#x27;the number of mirrors to produce&#x27;
-      }],
-      max_inputs: 1, 
-      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+    // const replicate: Operation &#x3D; {
+    //   name: &#x27;replicate&#x27;,
+    //   dx: &#x27;generates an linked copy of the input draft, changes to the input draft will then populate on the replicated draft&#x27;,
+    //   params: [ {
+    //     name: &#x27;copies&#x27;,
+    //     min: 1,
+    //     max: 100,
+    //     value: 1,
+    //     dx: &#x27;the number of mirrors to produce&#x27;
+    //   }],
+    //   max_inputs: 1, 
+    //   perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         
         
 
-        let outputs:Array&lt;Draft&gt; &#x3D; [];
+    //     let outputs:Array&lt;Draft&gt; &#x3D; [];
 
-        for(let i &#x3D; 0; i &lt; input_params[0]; i++){
-            const ds:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
-              const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-              return d;
-            });
-            outputs &#x3D; outputs.concat(ds);
-        }
-        return  Promise.resolve(outputs);
-      }
-    }
+    //     for(let i &#x3D; 0; i &lt; input_params[0]; i++){
+    //         const ds:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
+    //           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
+    //           return d;
+    //         });
+    //         outputs &#x3D; outputs.concat(ds);
+    //     }
+    //     return  Promise.resolve(outputs);
+    //   }
+    // }
 
     const variants: Operation &#x3D; {
       name: &#x27;variants&#x27;,
@@ -2823,7 +2823,7 @@ export class OperationService {
     this.ops.push(random);
     this.ops.push(interlace);
     this.ops.push(invert);
-    this.ops.push(replicate);
+ //  this.ops.push(replicate);
     this.ops.push(flipx);
     this.ops.push(flipy);
     this.ops.push(shiftx);
@@ -2875,7 +2875,7 @@ export class OperationService {
 
     this.classification.push(
       {category: &#x27;compose&#x27;,
-      ops: [replicate, interlace, layer, tile, joinleft, jointop, selvedge, atop, overlay, mask, knockout, bindweftfloats, bindwarpfloats]}
+      ops: [interlace, layer, tile, joinleft, jointop, selvedge, atop, overlay, mask, knockout, bindweftfloats, bindwarpfloats]}
     );
 
     this.classification.push(
