@@ -2517,11 +2517,10 @@ export class OperationService {
           }
 
 
-          this.getOp(&#x27;interlace&#x27;).perform(inputs, [])
+          return this.getOp(&#x27;interlace&#x27;).perform(inputs, [])
             .then(overlay &#x3D;&gt; {
               const d: Draft &#x3D; new Draft({warps: max_warps*layers, wefts: max_wefts*layers});
               d.fill(pattern, &quot;original&quot;);
-              console.log(&#x27;filledd draft&#x27;, d);
   
               overlay[0].pattern.forEach((row, ndx) &#x3D;&gt; {
                 const layer_id:number &#x3D; ndx % layers;
