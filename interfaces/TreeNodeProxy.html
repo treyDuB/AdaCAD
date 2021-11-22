@@ -430,9 +430,6 @@
                                     <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/Node.html" >Node</a>
-                                </li>
-                                <li class="link">
                                     <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
                                 </li>
                                 <li class="link">
@@ -926,9 +923,6 @@
                                            <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/Node.html" >Node</a>
-                                       </li>
-                                       <li class="link">
                                            <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
                                        </li>
                                        <li class="link">
@@ -1169,9 +1163,9 @@ import { PatternService } from &#x27;./pattern.service&#x27;;
  export interface NodeComponentProxy{
   node_id: number,
   type: string,
-  active: boolean,
   bounds: Bounds; 
   draft_id: number;
+  draft_visible: boolean;
  }
 
  export interface TreeNodeProxy{
@@ -1227,18 +1221,18 @@ export interface LoadResponse{
 
 
 interface Fileloader{
-  ada: (data: any) &#x3D;&gt; LoadResponse,
-  wif: (data: any) &#x3D;&gt; LoadResponse,
-  bmp: (data: any) &#x3D;&gt; LoadResponse,
-  jpg: (data: any) &#x3D;&gt; LoadResponse,
-  form: (data: any) &#x3D;&gt; LoadResponse
+  ada: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  wif: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  bmp: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  jpg: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  form: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;
 }
 
 interface FileSaver{
-  ada: (type: string, drafts: Array&lt;Draft&gt;, looms: Array&lt;Loom&gt;, for_timeline:boolean) &#x3D;&gt; string,
-  wif: (draft: Draft, loom: Loom) &#x3D;&gt; string,
-  bmp: (canvas: HTMLCanvasElement) &#x3D;&gt; string,
-  jpg: (canvas: HTMLCanvasElement) &#x3D;&gt; string
+  ada: (type: string, drafts: Array&lt;Draft&gt;, looms: Array&lt;Loom&gt;, for_timeline:boolean) &#x3D;&gt; Promise&lt;string&gt;,
+  wif: (draft: Draft, loom: Loom) &#x3D;&gt; Promise&lt;string&gt;,
+  bmp: (canvas: HTMLCanvasElement) &#x3D;&gt; Promise&lt;string&gt;,
+  jpg: (canvas: HTMLCanvasElement) &#x3D;&gt; Promise&lt;string&gt;
 }
 
 
@@ -1274,7 +1268,7 @@ export class FileService {
 
   const dloader: Fileloader &#x3D; {
 
-    ada: (data: any) : LoadResponse &#x3D;&gt; {
+     ada: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1288,12 +1282,11 @@ export class FileService {
       //handle old file types that didn&#x27;t separate out drafts
       if(data.drafts &#x3D;&#x3D;&#x3D; undefined) data.drafts &#x3D; [data];
 
-      
-
 
       drafts &#x3D; data.drafts.map(draftdata &#x3D;&gt; {
         const draft: Draft &#x3D;  new Draft({wefts: draftdata.wefts, warps: draftdata.warps, pattern: draftdata.pattern});
         if(draftdata.id !&#x3D;&#x3D; undefined) draft.overloadId(draftdata.id);
+        if(draftdata.name !&#x3D;&#x3D; undefined) draft.overloadName(draftdata.name);
         
         if(draftdata.shuttles !&#x3D;&#x3D; undefined){
             //if there is only one draft here we are loading into the mixer and should add materials
@@ -1383,11 +1376,11 @@ export class FileService {
         ops: ops
       }
 
-      return {data: envt, status: 0}; 
+      return Promise.resolve({data: envt, status: 0}); 
 
 
     }, 
-    wif: (data: any) : LoadResponse &#x3D;&gt; {
+    wif: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1455,25 +1448,31 @@ export class FileService {
     draft.recalculateDraft(tieups, treadling, threading);
 
 
+    const proxies &#x3D; this.tree.getNewDraftProxies(draft, []);
+
+    
     const f: FileObj &#x3D; {
       drafts: drafts,
       looms: looms,
-      nodes: [], 
-      treenodes: [],
+      nodes: [proxies.node], 
+      treenodes: [proxies.treenode],
       ops: []
     }
 
-    return {data: f ,status: 0};
+
+    return Promise.resolve({data: f ,status: 0});
     },
     /**
      * takes in a jpg, creates as many drafts as there are unique colors in the image. 
      * @param data 
      * @returns 
      */
-    jpg: (data: any) : LoadResponse &#x3D;&gt; {
+    jpg: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
       console.log(&quot;processing JPG data&quot;)
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
+      let nodes: Array&lt;NodeComponentProxy&gt; &#x3D; [];
+      let treenodes: Array&lt;TreeNodeProxy&gt; &#x3D; [];
 
       this.ns.resetNotes(); 
       this.ps.resetPatterns();
@@ -1558,9 +1557,9 @@ export class FileService {
         ops: []
       }
   
-      return {data: f ,status: 0};  
+      return Promise.resolve({data: f ,status: 0});  
     },
-    bmp: (data: any) : LoadResponse &#x3D;&gt; {
+    bmp: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1592,25 +1591,27 @@ export class FileService {
       }
   
       const draft: Draft &#x3D; new Draft({warps: warps, wefts: wefts, pattern: pattern});
-      drafts.push(draft);
+      drafts&#x3D; [ draft];
       
       //create a blank loom to accompany this
       const loom:Loom &#x3D; new Loom(draft, 8, 10);
       loom.overloadType(&#x27;jacquard&#x27;);
       looms.push(loom);
 
+      const proxies &#x3D; this.tree.getNewDraftProxies(draft, []);
 
+    
       const f: FileObj &#x3D; {
         drafts: drafts,
         looms: looms,
-        nodes: [], 
-        treenodes: [],
+        nodes: [proxies.node], 
+        treenodes: [proxies.treenode],
         ops: []
       }
   
-      return {data: f ,status: 0};    
+      return Promise.resolve({data: f ,status: 0});  
     },
-    form: (f:any):LoadResponse &#x3D;&gt;{
+    form: async (f:any):Promise&lt;LoadResponse&gt; &#x3D;&gt;{
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1664,16 +1665,20 @@ export class FileService {
       loom.overloadEpi(epi);
       loom.overloadUnits(units);
     
+
+      const proxies &#x3D; this.tree.getNewDraftProxies(draft, []);
+
     
       const envt: FileObj &#x3D; {
         drafts: drafts,
         looms: looms,
-        nodes: [],
-        treenodes: [],
+        nodes: [proxies.node], 
+        treenodes: [proxies.treenode],
         ops: []
       }
+    
 
-      return {data: envt, status: 0};
+      return Promise.resolve({data: envt, status: 0});
     }
   }
 
@@ -1686,7 +1691,7 @@ export class FileService {
   
 
   const dsaver: FileSaver &#x3D; {
-    ada:  (type: string, drafts: Array&lt;Draft&gt;, looms: Array&lt;Loom&gt;,  for_timeline: boolean) : string &#x3D;&gt; {
+     ada:  async (type: string, drafts: Array&lt;Draft&gt;, looms: Array&lt;Loom&gt;,  for_timeline: boolean) : Promise&lt;string&gt; &#x3D;&gt; {
       //eventually need to add saved patterns here as well
       const out: SaveObj &#x3D; {
         type: type,
@@ -1701,12 +1706,12 @@ export class FileService {
       }
 
       var theJSON &#x3D; JSON.stringify(out);
-      if(for_timeline) return theJSON;
+      if(for_timeline) return Promise.resolve(theJSON);
 
       const href:string &#x3D; &quot;data:application/json;charset&#x3D;UTF-8,&quot; + encodeURIComponent(theJSON);
       return href;
     },
-    wif: (draft: Draft, loom: Loom) : string &#x3D;&gt; {
+    wif: async (draft: Draft, loom: Loom) : Promise&lt;string&gt; &#x3D;&gt; {
       const shuttles: Array&lt;Shuttle&gt; &#x3D; this.ms.getShuttles();
         //will need to import the obj for draft2wif.ts and then use it and pass this.weave for fileContents
       var fileContents &#x3D; &quot;[WIF]\nVersion&#x3D;1.1\nDate&#x3D;November 6, 2020\nDevelopers&#x3D;Unstable Design Lab at the University of Colorado Boulder\nSource Program&#x3D;AdaCAD\nSource Version&#x3D;3.0\n[CONTENTS]&quot;;
@@ -1812,14 +1817,14 @@ export class FileService {
       }
 
       const href:string &#x3D; &quot;data:&quot; + fileType +&quot;;base64,&quot; + btoa(fileContents);
-      return href;
+      return Promise.resolve(href);
     },
-    bmp: (canvas:HTMLCanvasElement) : string &#x3D;&gt; {
-      return canvas.toDataURL(&quot;image/jpg&quot;);
+    bmp: async (canvas:HTMLCanvasElement) : Promise&lt;string&gt; &#x3D;&gt; {
+      return Promise.resolve(canvas.toDataURL(&quot;image/jpg&quot;));
 
     },
-    jpg: (canvas:HTMLCanvasElement) : string &#x3D;&gt; {
-      return canvas.toDataURL(&quot;image/jpg&quot;);
+    jpg: async (canvas:HTMLCanvasElement) : Promise&lt;string&gt; &#x3D;&gt; {
+      return Promise.resolve(canvas.toDataURL(&quot;image/jpg&quot;));
     }
   }
 

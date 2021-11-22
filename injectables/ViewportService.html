@@ -430,9 +430,6 @@
                                     <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/Node.html" >Node</a>
-                                </li>
-                                <li class="link">
                                     <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
                                 </li>
                                 <li class="link">
@@ -924,9 +921,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/Node.html" >Node</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
@@ -1653,14 +1647,9 @@
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
         <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { thresholdFreedmanDiaconis } from &#x27;d3&#x27;;
-import { Observable } from &#x27;rxjs&#x27;;
 import { Bounds, Interlacement, Point } from &#x27;../../core/model/datatypes&#x27;;
 
 
-const locations &#x3D; new Observable((observer) &#x3D;&gt; {
-  let watchId: number;
-});
 
 @Injectable({
   providedIn: &#x27;root&#x27;

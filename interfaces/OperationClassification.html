@@ -430,9 +430,6 @@
                                     <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/Node.html" >Node</a>
-                                </li>
-                                <li class="link">
                                     <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
                                 </li>
                                 <li class="link">
@@ -926,9 +923,6 @@
                                            <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/Node.html" >Node</a>
-                                       </li>
-                                       <li class="link">
                                            <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
                                        </li>
                                        <li class="link">
@@ -1107,8 +1101,6 @@ import { VaeService} from &quot;../../core/provider/vae.service&quot;
 import { PatternfinderService} from &quot;../../core/provider/patternfinder.service&quot;
 import utilInstance from &#x27;../../core/model/util&#x27;;
 import { Loom } from &#x27;../../core/model/loom&#x27;;
-import { input } from &#x27;@tensorflow/tfjs-layers&#x27;;
-import { findIndex } from &#x27;lodash&#x27;;
 
 export interface OperationParams {
   name: string,
@@ -1197,7 +1189,7 @@ export class OperationService {
             d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping);
             d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
           }
-          return d;
+          return  d;
         });
         return Promise.resolve(outputs);
       }        
@@ -1420,6 +1412,7 @@ export class OperationService {
         let height: number &#x3D; utilInstance.getMaxWefts(inputs) + input_params[1];
         if(first.warps &gt; width) width &#x3D; first.warps;
         if(first.wefts &gt; height) height &#x3D; first.wefts;
+
 
         //initialize the base container with the first draft at 0,0, unset for anythign wider
         const init_draft: Draft &#x3D; new Draft({wefts: height, warps: width});
@@ -2100,14 +2093,22 @@ export class OperationService {
         max: 100,
         value: 3,
         dx: &#x27;number of weft overs&#x27;
+        },
+        {name: &#x27;direction&#x27;,
+        min: 0,
+        max: 1,
+        value: 0,
+        dx: &#x27;0 for S, 1 for Z&#x27;
         }
       ],
       max_inputs: 1,
       perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
 
-        const sum: number &#x3D; input_params.reduce( (acc, val) &#x3D;&gt; {
+        let sum: number &#x3D; input_params.reduce( (acc, val) &#x3D;&gt; {
             return val + acc;
         }, 0);
+
+        sum -&#x3D; input_params[2];
 
         const pattern:Array&lt;Array&lt;Cell&gt;&gt; &#x3D; [];
         for(let i &#x3D; 0; i &lt; sum; i++){
@@ -2129,7 +2130,11 @@ export class OperationService {
           });
         }
 
-        return Promise.resolve(outputs);
+        if(input_params[2] &#x3D;&#x3D;&#x3D; 1){
+          return this.getOp(&#x27;flip horiz&#x27;).perform(outputs, []);
+        }else{
+          return Promise.resolve(outputs);
+        }
       }        
     }
 
@@ -2352,33 +2357,33 @@ export class OperationService {
     }
 
 
-    // const replicate: Operation &#x3D; {
-    //   name: &#x27;replicate&#x27;,
-    //   dx: &#x27;generates an linked copy of the input draft, changes to the input draft will then populate on the replicated draft&#x27;,
-    //   params: [ {
-    //     name: &#x27;copies&#x27;,
-    //     min: 1,
-    //     max: 100,
-    //     value: 1,
-    //     dx: &#x27;the number of mirrors to produce&#x27;
-    //   }],
-    //   max_inputs: 1, 
-    //   perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+    const replicate: Operation &#x3D; {
+      name: &#x27;mirror&#x27;,
+      dx: &#x27;generates an linked copy of the input draft, changes to the input draft will then populate on the replicated draft&#x27;,
+      params: [ {
+        name: &#x27;copies&#x27;,
+        min: 1,
+        max: 100,
+        value: 1,
+        dx: &#x27;the number of mirrors to produce&#x27;
+      }],
+      max_inputs: 1, 
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         
         
 
-    //     let outputs:Array&lt;Draft&gt; &#x3D; [];
+        let outputs:Array&lt;Draft&gt; &#x3D; [];
 
-    //     for(let i &#x3D; 0; i &lt; input_params[0]; i++){
-    //         const ds:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
-    //           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-    //           return d;
-    //         });
-    //         outputs &#x3D; outputs.concat(ds);
-    //     }
-    //     return  Promise.resolve(outputs);
-    //   }
-    // }
+        for(let i &#x3D; 0; i &lt; input_params[0]; i++){
+            const ds:Array&lt;Draft&gt; &#x3D; inputs.map(input &#x3D;&gt; {
+              const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
+              return d;
+            });
+            outputs &#x3D; outputs.concat(ds);
+        }
+        return  Promise.resolve(outputs);
+      }
+    }
 
     const variants: Operation &#x3D; {
       name: &#x27;variants&#x27;,
@@ -2822,7 +2827,7 @@ export class OperationService {
     this.ops.push(random);
     this.ops.push(interlace);
     this.ops.push(invert);
- //  this.ops.push(replicate);
+   this.ops.push(replicate);
     this.ops.push(flipx);
     this.ops.push(flipy);
     this.ops.push(shiftx);
