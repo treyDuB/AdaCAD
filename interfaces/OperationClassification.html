@@ -2144,30 +2144,56 @@ export class OperationService {
       name: &#x27;satin&#x27;,
       dx: &#x27;generates or fills with a satin structure described by the inputs&#x27;,
       params: [
-        {name: &#x27;unders&#x27;,
-        min: 1,
+        {name: &#x27;repeat&#x27;,
+        min: 5,
         max: 100,
-        value: 1,
-        dx: &#x27;number of weft unders (this would typically be 1 with satin, but why not play with it&#x27;
+        value: 5,
+        dx: &#x27;the width and height of the pattern&#x27;
         },
-        {name: &#x27;overs&#x27;,
+        {name: &#x27;move&#x27;,
         min: 1,
         max: 100,
-        value: 4,
-        dx: &#x27;number of weft overs&#x27;
+        value: 2,
+        dx: &#x27;the move number on each row&#x27;
         }
       ],
       max_inputs: 1,
       perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
        
-        const shift: number &#x3D; Math.ceil(input_params[1]/2);
 
-        this.getOp(&#x27;twill&#x27;).perform(inputs, input_params)
-          .then(d &#x3D;&gt; {
-            return Promise.resolve(this.getOp(&#x27;slope&#x27;).perform(d, [shift, 1]));
-          })
+        const pattern:Array&lt;Array&lt;Cell&gt;&gt; &#x3D; [];
+        for(let i &#x3D; 0; i &lt; input_params[0]; i++){
+          pattern.push([]);
+          for(let j &#x3D; 0; j &lt; input_params[0]; j++){
+            pattern[i][j] &#x3D; (j&#x3D;&#x3D;&#x3D;(i*input_params[1])%input_params[0]) ? new Cell(true) : new Cell(false);
+          }
+        }
+
+        let outputs: Array&lt;Draft&gt; &#x3D; [];
+        if(inputs.length &#x3D;&#x3D;&#x3D; 0){
+          const d: Draft &#x3D; new Draft({warps: input_params[0], wefts: input_params[0], pattern: pattern});
+          outputs.push(d);
+        }else{
+           outputs &#x3D; inputs.map(input &#x3D;&gt; {
+            const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
+            d.fill(pattern, &#x27;mask&#x27;);
+            return d;
+          });
+        }
+              
+      
+        return Promise.resolve(outputs);
+        // return inputs.map(input &#x3D;&gt; {
+        //   return input;
+        // })
+
+        // const shift: number &#x3D; Math.ceil(input_params[1]/2);
+
+        // return this.getOp(&#x27;twill&#x27;).perform(inputs, input_params)
+        //   .then(d &#x3D;&gt; {
+        //     return Promise.resolve(this.getOp(&#x27;slope&#x27;).perform(d, [shift, 1]));
+        //   })
         
-          return Promise.resolve([]);
       }        
     }
 
