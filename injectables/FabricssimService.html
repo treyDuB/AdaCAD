@@ -196,7 +196,7 @@
                                     <a href="../components/SystemsComponent.html" >SystemsComponent</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/TabComponent.html"  class="active" >TabComponent</a>
+                                    <a href="../components/TabComponent.html" >TabComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/TopbarComponent.html" >TopbarComponent</a>
@@ -323,7 +323,7 @@
                                     <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                    <a href="../injectables/FabricssimService.html"  class="active" >FabricssimService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/FileService.html" >FileService</a>
@@ -704,7 +704,7 @@
                                            <a href="../components/SystemsComponent.html" >SystemsComponent</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/TabComponent.html"  class="active" >TabComponent</a>
+                                           <a href="../components/TabComponent.html" >TabComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/TopbarComponent.html" >TopbarComponent</a>
@@ -831,7 +831,7 @@
                                            <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                           <a href="../injectables/FabricssimService.html"  class="active" >FabricssimService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/FileService.html" >FileService</a>
@@ -1030,417 +1030,241 @@
                    
                    </nav>
                </div>
-               <div class="content component">
+               <div class="content injectable">
                    <div class="content-data">
 
 
+
+
 <ol class="breadcrumb">
-  <li>Components</li>
-  <li>TabComponent</li>
+  <li>Injectables</li>
+  <li>FabricssimService</li>
 </ol>
 
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+    </li>
+    <li>
+        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+    </li>
+</ul>
 
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-        </li>
-        <li>
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="infos"><p class="comment">
-    <h3>File</h3>
-</p>
-<p class="comment">
-    <code>src/app/weaver/tool/tab/tab.component.ts</code>
-</p>
-
-
-
-<section>
-    <h3>Metadata</h3>
-    <table class="table table-sm table-hover">
-        <tbody>
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="infos">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/provider/fabricssim.service.ts</code>
+        </p>
 
 
+            <section>
+                <h3 id="constructor">Constructor</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>constructor(materials: <a href="../injectables/MaterialsService.html" >MaterialsService</a>)</code>
+                                </td>
+                            </tr>
+            
+                        </tbody>
+                    </table>
+            </section>
 
+            <section>
+                <h3 id="methods">Methods</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> resetWarpMap</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>resetWarpMap()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description"><p>A function that creates a series of line paths representing the position and path of different pics in this draft<br>creates a new warp map of size equal to the number of warps in the input draft<br>sets all starting values to zero</p>
+            </div>
+                                        <div class="io-description">
+                                                <b>Parameters :</b>
+                                                <ul class="jsdoc-params">
+                                                        <li>
+                                                            <div>
+                                                                <b>draft</b>
+                                                            </div>
+                                                            <div>
+                                                                <ul>
+            <li>the draft (or subsection of a draft) to draw</li>
+            </ul>
+            
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div>
+                                                                <b>loom</b>
+                                                            </div>
+                                                            <div>
+                                                                <ul>
+            <li>the current loom settings</li>
+            </ul>
+            
+                                                            </div>
+                                                        </li>
+                                                </ul>
+                                        </div>
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>void</code>
+            
+                                        </div>
+                                            <div class="io-description">
+                                                <p>a list of paths to draw</p>
+            
+                                            </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
 
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> draft</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>draft:     <code><a href="../classes/Draft.html" target="_self" >Draft</a></code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> loom</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>loom:     <code><a href="../classes/Loom.html" target="_self" >Loom</a></code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> warp_map</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>warp_map:     <code>number[]</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+    <div class="tab-pane fade tab-source-code" id="source">
+        <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { Draft } from &#x27;../model/draft&#x27;;
+import { Loom } from &#x27;../model/loom&#x27;;
+import { MaterialsService } from &#x27;./materials.service&#x27;;
+import { YarnPath, Vertex } from &#x27;../model/datatypes&#x27;;
 
-
-
-
-
-
-
-
-            <tr>
-                <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>app-tab</code></td>
-            </tr>
-
-            <tr>
-                <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>tab.component.scss</code></td>
-            </tr>
-
-
-
-            <tr>
-                <td class="col-md-3">templateUrl</td>
-                <td class="col-md-9"><code>tab.component.html</code></td>
-            </tr>
-
-
-        </tbody>
-    </table>
-</section>
-
-    <section>
-        <h3 id="inputs">Inputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collapsed</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collection</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collections</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>generativeMode</code>
-                        </td>
-                        <td class="col-md-10">
-                            <p>
-                              <em>Default value: </em><code>false</code>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="outputs">Outputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onCollectionNamesChange</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onDraftSelected</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onGenerativeModeChange</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="constructor">Constructor</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>constructor(ref: <a href="https://angular.io/docs/ts/latest/api/core/index/ChangeDetectorRef-class.html" target="_blank" >ChangeDetectorRef</a>, dialog: MatDialog, collectionSrvc: <a href="../injectables/CollectionService.html" >CollectionService</a>)</code>
-                        </td>
-                    </tr>
-    
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="methods">Methods</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> generativeModeChange</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>generativeModeChange()</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> openMlDialog</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>openMlDialog()</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="inputs">Properties</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> button_color</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>button_color:     <code>string</code>
-    </bcode>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Default value: </i><code>#ff4081</code>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> centroids</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>centroids:     <code>any</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> collectionsData</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>collectionsData:     <code>any</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> generated_drafts</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>generated_drafts:     <code><a href="../classes/Draft.html" target="_self" >Draft[]</a></code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> selected</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>selected:     <code>number</code>
-    </bcode>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Default value: </i><code>0</code>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-    </section>
-</div>
-        <div class="tab-pane fade tab-source-code" id="source">
-            <pre><code class="hljs javascript">import { Component, OnInit, Input, Output, EventEmitter, HostListener } from &#x27;@angular/core&#x27;;
-import { MatDialog, MatDialogConfig } from &quot;@angular/material/dialog&quot;;
-import { MlModal } from &#x27;../../../core/modal/ml/ml.modal&#x27;;
-import { NgForm } from &#x27;@angular/forms&#x27;;
-import * as _ from &#x27;lodash&#x27;;
-import { ChangeDetectorRef } from &#x27;@angular/core&#x27;;
-import { Draft } from &#x27;../../../core/model/draft&#x27;;
-import { CollectionService } from &#x27;../../../core/provider/collection.service&#x27;;
-
-
-
-@Component({
-  selector: &#x27;app-tab&#x27;,
-  templateUrl: &#x27;./tab.component.html&#x27;,
-  styleUrls: [&#x27;./tab.component.scss&#x27;]
+@Injectable({
+  providedIn: &#x27;root&#x27;
 })
+export class FabricssimService {
 
 
-export class TabComponent implements OnInit {
+  warp_map: Array&lt;number&gt;; //the current height of the fabric at each warp
+  draft: Draft;
+  loom: Loom;
 
-  @Output() onGenerativeModeChange: any &#x3D; new EventEmitter();
-  @Output() onDraftSelected: any &#x3D; new EventEmitter();
-  @Output() onCollectionNamesChange: any &#x3D; new EventEmitter();
-  @Input() collection;
-  @Input() collections;
-  @Input()  collapsed;
-  @Input() generativeMode &#x3D; false;
-  
+  constructor(materials: MaterialsService) { }
 
 
-  button_color &#x3D; &quot;#ff4081&quot;;
+  /**
+   * A function that creates a series of line paths representing the position and path of different pics in this draft
+   * @param draft - the draft (or subsection of a draft) to draw
+   * @param loom - the current loom settings
+   * @returns a list of paths to draw
+   */
+  // generateSimulation(draft: Draft, loom: Loom) : Array&lt;YarnPath&gt;{
+
+    
+  //   this.resetWarpMap();
+
+  //   const yarnPaths: Array&lt;YarnPath&gt;  &#x3D; [];
+    
+  //   yarnPaths.push(
+  //     {
+  //       draft_ndx: draft.pattern.length-1,
+  //       material_id: draft.rowShuttleMapping[draft.pattern.length-1],
+  //       verticies: [{x_pcent:0, y:0}, {x_pcent: 100, y: 0 }]
+  //     }
+  //   );
+
+  //   this.warp_map &#x3D; this.warp_map.map(el &#x3D;&gt; el +&#x3D; 100);
 
 
-  selected &#x3D; 0;
-
-  collectionsData: any &#x3D; [];
-  
-  centroids: any &#x3D; [];
-
-  generated_drafts : Array&lt;Draft&gt;;
 
 
-  constructor(private ref: ChangeDetectorRef, private dialog: MatDialog, private collectionSrvc: CollectionService) { 
-    this.collections &#x3D; [];
-    this.collection &#x3D; {name: &quot;&quot;};
-    collectionSrvc.getCollectionNames().then((value) &#x3D;&gt; {
-      this.collections &#x3D; value;
-      this.collection &#x3D; this.collections[0];
-    })
+
+  //   return [];
+  // }
+
+  /**
+   * creates a new warp map of size equal to the number of warps in the input draft
+   * sets all starting values to zero
+   */
+  resetWarpMap(){
+    this.warp_map &#x3D; this.draft.colShuttleMapping.map(el &#x3D;&gt; 0);
   }
 
-  ngOnInit() {
 
-  }
 
-  generativeModeChange() {
-    this.generativeMode &#x3D; !this.generativeMode;
-    if (this.generativeMode) {
-      var allLowerCollectionName &#x3D; this.collection.name.charAt(0).toLowerCase() + this.collection.name.slice(1)
-      this.collectionSrvc.getCollection(allLowerCollectionName).then((value) &#x3D;&gt; {
-        this.collectionsData &#x3D; value;
-        var obj: any &#x3D; {};
-        obj.collection &#x3D; this.collection.name;
-        obj.warpSize &#x3D; this.collectionsData.warpSize;
-        obj.weftSize &#x3D; this.collectionsData.weftSize;
-        this.onGenerativeModeChange.emit(obj);
+  // public redrawYarnSimulation(){
 
-      })
-    }
-  }
+  //   //keep a height map on each warp. 
 
-  openMlDialog() {
-    const dialogRef &#x3D; this.dialog.open(MlModal);
-
-  }
-
-  // loadGeneratedDraft(id: number){
-  //   console.log(&#x27;hi&#x27;+id);
-  //   //scan through generated_dafts and get the one with this id. 
-  //   const draft: Draft &#x3D; this.generated_drafts.find(el &#x3D;&gt; el.id &#x3D;&#x3D; id);
-
-  //   //emit that draft ot the parent and tell the parent to load it. 
-  //   if(draft !&#x3D; undefined) this.onDraftSelected.emit(draft);
+  //   //starting from bottom up
+  //   //set cur_weave_height height to first material height
+  //   //compare next row to last row. 
+  //   //identify &quot;HARD&quot;, &quot;SOFT&quot;, and &quot;UNDER&quot; crossings as index points with height based on type of crossing
+  //   //draw the line created by the points
+  //   //set materal height to the max point
+    
 
 
   // }
 
+
+
 }
 </code></pre>
-        </div>
     </div>
-
-
-
+</div>
 
 
 

@@ -323,7 +323,13 @@
                                     <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/FileService.html" >FileService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/InkService.html" >InkService</a>
@@ -374,6 +380,9 @@
                             >
                                 <li class="link">
                                     <a href="../interfaces/Bounds.html" >Bounds</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Crossing.html" >Crossing</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -466,7 +475,13 @@
                                     <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../interfaces/Vertex.html" >Vertex</a>
+                                </li>
+                                <li class="link">
                                     <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                 </li>
                         </ul>
                     </li>
@@ -816,7 +831,13 @@
                                            <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/FileService.html" >FileService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/InkService.html" >InkService</a>
@@ -867,6 +888,9 @@
                    >
                                        <li class="link">
                                            <a href="../interfaces/Bounds.html" >Bounds</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Crossing.html" >Crossing</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -959,7 +983,13 @@
                                            <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../interfaces/Vertex.html" >Vertex</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                        </li>
                                </ul>
                            </li>
@@ -1311,6 +1341,30 @@
                             </tr>
                         </tbody>
                     </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getFirstShuttle</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getFirstShuttle()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/Shuttle.html" target="_self" >Shuttle</a></code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
             </section>
 
             <section>
@@ -1394,7 +1448,7 @@ export class MaterialsService {
    * @returns the offset of the new ids to the old ones
    */
   addShuttles(shuttles: Array&lt;Shuttle&gt;) : Array&lt;MaterialMap&gt;{
-    console.log(shuttles);
+
     const map: Array&lt;MaterialMap&gt; &#x3D; [];
 
     const offset: number &#x3D; this.materials.length;
@@ -1449,6 +1503,11 @@ export class MaterialsService {
 
   exportForSaving() : Array&lt;Shuttle&gt; {
     return this.materials;
+  }
+
+  getFirstShuttle()  : Shuttle {
+    if(this.materials.length &#x3D;&#x3D;&#x3D; 0) return null;
+    return this.materials[0];
   }
 
 }

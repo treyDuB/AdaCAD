@@ -323,7 +323,13 @@
                                     <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/FileService.html" >FileService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/InkService.html" >InkService</a>
@@ -374,6 +380,9 @@
                             >
                                 <li class="link">
                                     <a href="../interfaces/Bounds.html" >Bounds</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Crossing.html" >Crossing</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -466,7 +475,13 @@
                                     <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../interfaces/Vertex.html" >Vertex</a>
+                                </li>
+                                <li class="link">
                                     <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                 </li>
                         </ul>
                     </li>
@@ -816,7 +831,13 @@
                                            <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/FileService.html" >FileService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/InkService.html" >InkService</a>
@@ -867,6 +888,9 @@
                    >
                                        <li class="link">
                                            <a href="../interfaces/Bounds.html" >Bounds</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Crossing.html" >Crossing</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -959,7 +983,13 @@
                                            <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../interfaces/Vertex.html" >Vertex</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                        </li>
                                </ul>
                            </li>
@@ -1091,27 +1121,10 @@
                             <code>draft</code>
                         </td>
                         <td class="col-md-10">
-                            <div><p>The Draft object containing the pattern and shuttle information.<br>It is defined and inputed from the HTML declaration of the WeaveDirective.</p>
+                            <div><p>Contains the name of the brush being used to manipulate the weave draft.<br>It is defined and inputed from the HTML declaration of the WeaveDirective.<br>The Draft object containing the pattern and shuttle information.<br>It is defined and inputed from the HTML declaration of the WeaveDirective.</p>
 </div>
                               <p>
                                 <em>Type:</em>    <code><a href="../classes/Draft.html" target="_self" >Draft</a></code>
-
-                              </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>generative_mode</code>
-                        </td>
-                        <td class="col-md-10">
-                            <div><p>Contains the name of the brush being used to manipulate the weave draft.<br>It is defined and inputed from the HTML declaration of the WeaveDirective.<br>Contains the current state as generative mode engaged or not</p>
-</div>
-                              <p>
-                                <em>Type:</em>    <code>boolean</code>
 
                               </p>
                         </td>
@@ -1180,6 +1193,21 @@
 </div>
                               <p>
                                 <em>Type:</em>    <code>any</code>
+
+                              </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>viewonly</code>
+                        </td>
+                        <td class="col-md-10">
+                              <p>
+                                <em>Type:</em>    <code>boolean</code>
 
                               </p>
                         </td>
@@ -2411,6 +2439,32 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b> drawCrossingCell</b>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+    <code>drawCrossingCell(cx: any, i: any, i_next: any, j: any, type: any)</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>This view renders cells based on the relationships with their neighbords </p>
+    </div>
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>void</code>
+    
+                                </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b><span class="modifier">Private</span> redrawRow</b>
                         </td>
                     </tr>
@@ -2464,6 +2518,59 @@
                                     <b>Returns: </b>    <code>void</code>
     
                                 </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b><span class="modifier">Public</span> drawWeft</b>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <span class="modifier-icon method fa fa-play circle">
+                                    <span class="fa fa-circle"></span>
+                                </span>
+                            <code>drawWeft(top: number, shuttle: <a href="../classes/Shuttle.html" >Shuttle</a>)</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <ul class="jsdoc-params">
+                                                <li>
+                                                    <div>
+                                                        <b>top</b>
+                                                    </div>
+                                                    <div>
+                                                        <p>the index of this weft row</p>
+    
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div>
+                                                        <b>shuttle</b>
+                                                    </div>
+                                                    <div>
+                                                        <p>the shuttle assigned to this row</p>
+    
+                                                    </div>
+                                                </li>
+                                        </ul>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>void</code>
+    
+                                </div>
+                                    <div class="io-description">
+                                        
+                                    </div>
                         </td>
                     </tr>
                 </tbody>
@@ -3101,6 +3208,40 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b><span class="modifier">Public</span> redrawCrossings</b>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <span class="modifier-icon method fa fa-play circle">
+                                    <span class="fa fa-circle"></span>
+                                </span>
+                            <code>redrawCrossings()</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Highlights intersections between yarns, when they cross from front to back</p>
+    </div>
+                                <div class="io-description">
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>void</code>
+    
+                                </div>
+                                    <div class="io-description">
+                                        
+                                    </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b><span class="modifier">Public</span> redrawVisualView</b>
                         </td>
                     </tr>
@@ -3543,33 +3684,6 @@
                                     <span class="fa fa-circle"></span>
                                 </span>
                             <code>deleteCol(i: any)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b><span class="modifier">Public</span> toggleViewFrames</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <span class="modifier-icon method fa fa-play circle">
-                                    <span class="fa fa-circle"></span>
-                                </span>
-                            <code>toggleViewFrames()</code>
                         </td>
                     </tr>
     
@@ -4354,17 +4468,20 @@ import { Subscription, Subject, fromEvent } from &#x27;rxjs&#x27;;
 import { Render } from &#x27;../model/render&#x27;;
 import { Selection } from &#x27;../model/selection&#x27;;
 import { Cell } from &#x27;../model/cell&#x27;;
-import { DesignMode, Interlacement } from &#x27;../model/datatypes&#x27;;
+import { Crossing, DesignMode, Interlacement } from &#x27;../model/datatypes&#x27;;
 import { Draft } from &#x27;../model/draft&#x27;;
 import { Loom } from &#x27;../model/loom&#x27;;
 import { Pattern } from &#x27;../model/pattern&#x27;;
-import {cloneDeep, now} from &#x27;lodash&#x27;;
+import {cloneDeep, forEach, now} from &#x27;lodash&#x27;;
 import { FileService } from &#x27;../provider/file.service&#x27;;
 import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material&#x27;;
 import { SelectionComponent } from &#x27;./selection/selection.component&#x27;;
 import { DesignmodesService } from &#x27;../provider/designmodes.service&#x27;;
 import { PatternService } from &#x27;../provider/pattern.service&#x27;;
 import { MaterialsService } from &#x27;../provider/materials.service&#x27;;
+import { FabricssimService } from &#x27;../provider/fabricssim.service&#x27;;
+import { Shuttle } from &#x27;../model/shuttle&#x27;;
+import { cross } from &#x27;d3-array&#x27;;
 
 @Component({
   selector: &#x27;app-draftviewer&#x27;,
@@ -4393,12 +4510,6 @@ export class DraftviewerComponent implements OnInit {
    * @property {string}
    */
   //  @Input(&#x27;design_mode&#x27;) design_mode: any;
-
-   /**
-   * Contains the current state as generative mode engaged or not
-   * @property {boolean}
-   */
-    @Input(&#x27;generative_mode&#x27;) generative_mode: boolean;
 
    /**
     * The Draft object containing the pattern and shuttle information.
@@ -4432,7 +4543,7 @@ export class DraftviewerComponent implements OnInit {
    */
    @Input(&#x27;timeline&#x27;) timeline: any;
  
- 
+   @Input() viewonly: boolean;
  
    @Input() copy: Pattern;
  
@@ -4695,12 +4806,15 @@ export class DraftviewerComponent implements OnInit {
   setPosAndDraw(target:HTMLElement, shift: boolean, currentPos:Interlacement){
 
       if (target &amp;&amp; target.id &#x3D;&#x3D;&#x27;treadling&#x27;) {
+        if(this.viewonly) return;
         currentPos.i &#x3D; this.render.visibleRows[currentPos.i];
         this.drawOnTreadling(currentPos);
       } else if (target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; &#x27;tieups&#x27;) {
+        if(this.viewonly) return;
         currentPos.i &#x3D; this.loom.frame_mapping[currentPos.i];
         this.drawOnTieups(currentPos);
       } else if (target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; (&#x27;threading&#x27;)) {
+        if(this.viewonly) return;
         currentPos.i &#x3D; this.loom.frame_mapping[currentPos.i];
         this.drawOnThreading(currentPos);
       } else if(target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; (&#x27;weft-systems&#x27;)){
@@ -4714,6 +4828,7 @@ export class DraftviewerComponent implements OnInit {
       }else if(target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; (&#x27;warp-materials&#x27;)){
         this.drawOnWarpMaterials(currentPos);
       } else{
+        if(this.viewonly) return;
         currentPos.i &#x3D; this.render.visibleRows[currentPos.i];
         this.drawOnDrawdown(currentPos, shift);
       }
@@ -4757,15 +4872,47 @@ export class DraftviewerComponent implements OnInit {
       };
 
 
-      if(event.target &amp;&amp; event.target.id&#x3D;&#x3D;&#x3D;&quot;drawdown&quot;){
-        currentPos.si -&#x3D;1;
-        currentPos.i -&#x3D;1;
-        currentPos.j -&#x3D;1;
+      if(!event.target) return;
+
+      //reject out of bounds requests
+      switch(event.target.id){
+        case &#x27;drawdown&#x27;:
+          currentPos.si -&#x3D;1;
+          currentPos.i -&#x3D;1;
+          currentPos.j -&#x3D;1;
+          if(currentPos.i &lt; 0 || currentPos.i &gt;&#x3D; this.render.visibleRows.length) return;
+          if(currentPos.j &lt; 0 || currentPos.j &gt;&#x3D; this.weave.warps) return;    
+          break;
+
+        case &#x27;threading&#x27;:
+          if(currentPos.i &lt; 0 || currentPos.i &gt;&#x3D; this.loom.num_frames) return;
+          if(currentPos.j &lt; 0 || currentPos.j &gt;&#x3D; this.weave.warps) return;    
+          break; 
+
+        case &#x27;treadling&#x27;:
+          if(currentPos.i &lt; 0 || currentPos.i &gt;&#x3D; this.render.visibleRows.length) return;
+          if(currentPos.j &lt; 0 || currentPos.j &gt;&#x3D; this.loom.num_treadles) return;    
+          break;
+
+        case &#x27;tieups&#x27;:
+          if(currentPos.i &lt; 0 || currentPos.i &gt;&#x3D; this.loom.num_frames) return;
+          if(currentPos.j &lt; 0 || currentPos.j &gt;&#x3D; this.loom.num_treadles) return;    
+        break;
+
+        case &#x27;warp-materials&#x27;:
+        case &#x27;warp-systems&#x27;:
+          if(currentPos.j &lt; 0 || currentPos.j &gt;&#x3D; this.weave.warps) return;    
+          break;
+
+        case &#x27;weft-materials&#x27;:
+        case &#x27;weft-systems&#x27;:
+          if(currentPos.i &lt; 0 || currentPos.i &gt;&#x3D; this.render.visibleRows.length) return;
+          break;
       }
 
-      if(currentPos.i &lt; 0 || currentPos.i &gt;&#x3D; this.render.visibleRows.length) return;
-      if(currentPos.j &lt; 0 || currentPos.j &gt;&#x3D; this.weave.warps) return;
-      
+
+
+
 
       // Save temp pattern
       this.tempPattern &#x3D; cloneDeep(this.weave.pattern);
@@ -5545,7 +5692,7 @@ export class DraftviewerComponent implements OnInit {
       // }
 
       if(!this.dm.isSelected(&#x27;material&#x27;, &#x27;draw_modes&#x27;))   
-        if(this.render.showingFrames()) this.loom.updateLoomFromDraft(currentPos, this.weave);
+        if(this.loom.isFrame()) this.loom.updateLoomFromDraft(currentPos, this.weave);
       
       this.redraw({drawdown:true, loom:true});
       
@@ -5595,6 +5742,8 @@ export class DraftviewerComponent implements OnInit {
    * @returns {void}
    */
   private drawOnThreading( currentPos: Interlacement ) {
+
+
     if (!this.cxThreading || !currentPos) { return; }
     
 
@@ -5820,6 +5969,51 @@ export class DraftviewerComponent implements OnInit {
 
   }
 
+  /**This view renders cells based on the relationships with their neighbords */
+  drawCrossingCell(cx, i, i_next, j, type){
+    var base_dims &#x3D; this.render.getCellDims(&quot;base&quot;);
+    var base_fill &#x3D; this.render.getCellDims(&quot;base_fill&quot;);
+    var top &#x3D; 0; 
+    var left &#x3D; 0;
+
+    var right_edge: boolean;
+    var right_bot_to_top: boolean;
+    var bottom_edge: boolean;
+    var bottom_bot_to_top: boolean;
+
+
+    right_edge &#x3D; (this.weave.isUp(i, j) !&#x3D;&#x3D; this.weave.isUp(i, j+1)) ? true : false;
+
+    if(right_edge){
+      right_bot_to_top &#x3D; (this.weave.isUp(i, j) &amp;&amp; !this.weave.isUp(i, j+1)) ? true : false;
+    }
+
+
+    bottom_edge &#x3D; (this.weave.isUp(i, j) !&#x3D;&#x3D; this.weave.isUp(i_next, j)) ? true : false;
+    if(bottom_edge){
+      bottom_bot_to_top &#x3D; (this.weave.isUp(i, j) &amp;&amp; !this.weave.isUp(i_next, j)) ? true : false;
+    }
+
+    j++;
+    i++;
+    
+    if(right_edge){
+      cx.strokeStyle &#x3D; (right_bot_to_top) ? &quot;#FF0000&quot; : &quot;#00FF00&quot;;
+      cx.beginPath();
+      cx.moveTo(left+j*base_dims.w + base_fill.w , top+i*base_dims.h);
+      cx.lineTo(left+j*base_dims.w + base_fill.w , top+i*base_dims.h + base_fill.h);
+      cx.stroke();
+    }
+
+    if(bottom_edge){
+      cx.strokeStyle &#x3D; (bottom_bot_to_top) ? &quot;#0000FF&quot; : &quot;#FFA500&quot;;
+      cx.beginPath();
+      cx.moveTo(left+j*base_dims.w , top+i*base_dims.h + base_fill.h);
+      cx.lineTo(left+j*base_dims.w+ base_fill.w, top+i*base_dims.h + base_fill.h);
+      cx.stroke();
+    }
+  }
+
   /**
    * Redraws one row to avoid drawing the entire canvas.
    * @extends WeaveDirective
@@ -5841,6 +6035,35 @@ export class DraftviewerComponent implements OnInit {
   }
 
 
+
+  /**
+   * 
+   * @param top  the index of this weft row
+   * @param shuttle the shuttle assigned to this row
+   */
+  public drawWeft(top:number, shuttle:Shuttle){
+    var dims &#x3D; this.render.getCellDims(&quot;base&quot;);
+    var cx &#x3D; this.cx;
+    var view &#x3D; this.render.getCurrentView();
+
+
+    const left &#x3D; 0;
+    top &#x3D;  (top + 1) * dims.h;
+
+    top +&#x3D; dims.h/2;
+
+
+    cx.lineWidth &#x3D; shuttle.getThickness()/100 * .9*dims.h;
+    cx.strokeStyle &#x3D; (view &#x3D;&#x3D;&#x3D; &quot;yarn&quot; &amp;&amp; shuttle.type &#x3D;&#x3D;&#x3D; 0) ? shuttle.getColor()+&quot;10&quot; : shuttle.getColor();
+    cx.shadowColor &#x3D; &#x27;white&#x27;;
+    cx.shadowOffsetX &#x3D; .5;
+    cx.shadowOffsetY &#x3D; 0;
+
+    cx.beginPath();
+    cx.moveTo(left+dims.w/2,top+dims.h/2);
+    cx.lineTo(left+this.weave.warps * dims.w,top+dims.h/2);
+    cx.stroke();
+  }
 
 
   public drawWeftLeftUp(top, left, shuttle){
@@ -6162,10 +6385,75 @@ public drawWeftEnd(top, left, shuttle){
 
   
 
+  
+
+
+
+  //public redrawYarnView(){
+
+    //draw from bottom to top 
+
+
+  //   //first, just draw all the wefts 
+  //  const shuttles: Array&lt;number&gt; &#x3D;  this.render.visibleRows.map(el &#x3D;&gt; this.weave.rowShuttleMapping[el]);
+
+  //  shuttles.forEach((shuttle, i) &#x3D;&gt; {
+  //     this.drawWeft(i, this.ms.getShuttle(shuttle));
+  //  });
+
+  //   const crossings: Array&lt;Array&lt;Crossing&gt;&gt; &#x3D; this.weave.getRelationalDraft();
+  //   const visible_crossings &#x3D; crossings.filter((el, i) &#x3D;&gt; this.render.visibleRows.find(el &#x3D;&gt; el &#x3D;&#x3D; i) !&#x3D;&#x3D; -1);
+
+  //   visible_crossings.forEach((row, i) &#x3D;&gt;{
+
+  //     let cur_j &#x3D; 0;
+  //     let cur_state: boolean &#x3D; false;
+
+  //     row.forEach(crossing &#x3D;&gt; {
+
+  //       if(cur_j &lt; crossing.j){
+  //         cur_state &#x3D; crossing.type.t;
+  //       }
+
+  //     });
+
+
+  //   });  
+
+
+
+    // let started:boolean &#x3D; false;
+
+    // for(let i &#x3D; 0; i &lt; this.render.visibleRows.length; i++){
+
+    //   let index_row &#x3D; this.render.visibleRows[i];
+
+    //   let row_values &#x3D; this.weave.pattern[index_row];
+
+    //   let shuttle_id &#x3D; this.weave.rowShuttleMapping[index_row];
+
+    //   let s &#x3D; this.ms.getShuttle(shuttle_id);
+
+    //   //iterate through the rows
+    //   for(let j &#x3D; 0; j &lt; row_values.length; j++){
+        
+    //     let p &#x3D; row_values[j];
+
+    //   //   if(p.isEastWest())  this.drawWeftOver(i,j,s);
+    //   //   if(p.isSouthWest()) this.drawWeftBottomLeft(i,j,s);
+    //   //  // if(p.isNorthSouth())this.drawWeftUp(i, j, s);
+    //   //   if(p.isSouthEast()) this.drawWeftBottomRight(i,j,s);
+    //   //   if(p.isNorthWest()) this.drawWeftLeftUp(i,j,s);
+    //   //   if(p.isNorthEast()) this.drawWeftRightUp(i, j, s);
+
+    //   }
+    // }
+
+  //}
+
 
   public redrawYarnView(){
 
-    let started:boolean &#x3D; false;
 
     for(let i &#x3D; 0; i &lt; this.render.visibleRows.length; i++){
 
@@ -6292,6 +6580,8 @@ public drawWeftEnd(top, left, shuttle){
   }
 
 public drawDrawdown(){
+  console.log(&quot;this.render.getCurrentView&quot;, this.render.getCurrentView())
+
    switch(this.render.getCurrentView()){
       case &#x27;pattern&#x27;:
       this.redrawDraft();
@@ -6303,6 +6593,10 @@ public drawDrawdown(){
 
       case &#x27;visual&#x27;:
       this.redrawVisualView();
+      break;
+
+      case &#x27;crossing&#x27;:
+      this.redrawCrossings();
       break;
     }
 }
@@ -6341,7 +6635,7 @@ public redraw(flags:any){
       this.drawWarpMaterials(this.cxWarpMaterials, this.warpMaterialsCanvas);
     }
 
-    if(flags.loom !&#x3D;&#x3D; undefined &amp;&amp; this.render.showingFrames()){
+    if(flags.loom !&#x3D;&#x3D; undefined &amp;&amp; this.loom.isFrame()){
        this.redrawLoom();
     }
 
@@ -6430,7 +6724,29 @@ public redraw(flags:any){
   }
 
 
+ /**
+   * Highlights intersections between yarns, when they cross from front to back
+   * @extends WeaveDirective
+   * @returns {void}
+   */
+  public redrawCrossings() {
 
+    console.log(&#x27;redraw crossings&#x27;)
+
+    var base_dims &#x3D; this.render.getCellDims(&quot;base&quot;);
+    this.cx.fillStyle &#x3D; &quot;white&quot;;
+    this.cx.fillRect(base_dims.w,base_dims.h,this.canvasEl.width - base_dims.w*2,this.canvasEl.height-base_dims.h*2);
+
+    var i,j;
+
+    var color &#x3D; &#x27;#000000&#x27;;
+    this.cx.fillStyle &#x3D; color;
+    for (i &#x3D; 0; i &lt; this.render.visibleRows.length; i++) {
+      for(j &#x3D; 0; j &lt; this.weave.warps; j ++){
+        this.drawCrossingCell(this.cx, this.render.visibleRows[i], this.render.getNextVisibleRow(i), j, &#x27;crossings&#x27;);
+      }
+    }
+  }
 
 
   /**
@@ -6439,6 +6755,10 @@ public redraw(flags:any){
    * @returns {void}
    */
   public redrawVisualView() {
+
+    console.log(&quot;drawing visual view&quot;);
+
+    this.weave.computeYarnPaths(this.ms.getShuttles());
 
     this.cx.fillStyle &#x3D; &quot;#3d3d3d&quot;;
     this.cx.fillRect(0,0,this.canvasEl.width,this.canvasEl.height);
@@ -6501,7 +6821,7 @@ public redraw(flags:any){
     context.fillRect(0,0,b.width,b.height);
     
     //use this to solve 0 width errors on drawIMage
-    if(this.render.showingFrames()){
+    if(this.loom.isFrame()){
 
       context.drawImage(this.threadingCanvas, 0, dims.h*3);
       context.drawImage(this.tieupsCanvas, (this.weave.warps +1)* dims.w, 3*dims.h);
@@ -6672,18 +6992,6 @@ public redraw(flags:any){
     this.timeline.addHistoryState(this.weave);
   }
 
-  public toggleViewFrames(){
-
-    this.render.toggleViewFrames();
-
-    if(this.render.view_frames &amp;&amp; this.loom.type &#x3D;&#x3D; &quot;frame&quot;){
-      this.recomputeLoom();
-    }
-
-    this.redraw({loom:true});
-   
-  }
-
 
   /**
    * Tell the weave directive to fill selection with pattern.
@@ -6697,7 +7005,7 @@ public redraw(flags:any){
     
     this.weave.fillArea(this.selection, p, &#x27;original&#x27;, this.render.visibleRows, this.loom);
 
-    if(this.render.showingFrames()) this.loom.recomputeLoom(this.weave);
+    if(this.loom.isFrame()) this.loom.recomputeLoom(this.weave);
 
     if(this.render.isYarnBasedView()) this.weave.computeYarnPaths(this.ms.getShuttles());
     
@@ -6721,7 +7029,7 @@ public redraw(flags:any){
 
     this.weave.fillArea(this.selection, p, &#x27;original&#x27;, this.render.visibleRows, this.loom)
 
-    if(this.render.showingFrames()) this.loom.recomputeLoom(this.weave);
+    if(this.loom.isFrame())this.loom.recomputeLoom(this.weave);
 
     if(this.render.isYarnBasedView()) this.weave.computeYarnPaths(this.ms.getShuttles());
 
@@ -6758,7 +7066,7 @@ public redraw(flags:any){
     switch(this.selection.getTargetId()){    
       case &#x27;drawdown&#x27;:
         //if you do this when updates come from loom, it will erase those updates
-        if(this.render.showingFrames()) this.loom.recomputeLoom(this.weave);
+        if(this.loom.isFrame()) this.loom.recomputeLoom(this.weave);
        break;
       
     }

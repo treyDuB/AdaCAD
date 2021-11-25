@@ -196,7 +196,7 @@
                                     <a href="../components/SystemsComponent.html" >SystemsComponent</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/TabComponent.html"  class="active" >TabComponent</a>
+                                    <a href="../components/TabComponent.html" >TabComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/TopbarComponent.html" >TopbarComponent</a>
@@ -382,7 +382,7 @@
                                     <a href="../interfaces/Bounds.html" >Bounds</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/Crossing.html" >Crossing</a>
+                                    <a href="../interfaces/Crossing.html"  class="active" >Crossing</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -704,7 +704,7 @@
                                            <a href="../components/SystemsComponent.html" >SystemsComponent</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/TabComponent.html"  class="active" >TabComponent</a>
+                                           <a href="../components/TabComponent.html" >TabComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/TopbarComponent.html" >TopbarComponent</a>
@@ -890,7 +890,7 @@
                                            <a href="../interfaces/Bounds.html" >Bounds</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/Crossing.html" >Crossing</a>
+                                           <a href="../interfaces/Crossing.html"  class="active" >Crossing</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -1030,420 +1030,309 @@
                    
                    </nav>
                </div>
-               <div class="content component">
+               <div class="content interface">
                    <div class="content-data">
 
 
+
+
+
+
+
 <ol class="breadcrumb">
-  <li>Components</li>
-  <li>TabComponent</li>
+  <li>Interfaces</li>
+  <li>Crossing</li>
 </ol>
 
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+    </li>
+    <li>
+        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+    </li>
+</ul>
 
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-        </li>
-        <li>
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-        </li>
-    </ul>
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="infos">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/model/datatypes.ts</code>
+        </p>
 
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="infos"><p class="comment">
-    <h3>File</h3>
-</p>
-<p class="comment">
-    <code>src/app/weaver/tool/tab/tab.component.ts</code>
-</p>
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>A yarn cross describes the relationship betwen two draft cells<br>read from top to bottom. This is used within the sparce<br>draft representation, stores only &quot;warp&quot; crossings</p>
 
-
-
-<section>
-    <h3>Metadata</h3>
-    <table class="table table-sm table-hover">
-        <tbody>
-
-
-
+            </p>
 
 
 
 
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>j</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>j:     <code>number</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>number</code>
+
+                                        </td>
+                                    </tr>
 
 
 
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>type</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>type:     <code>crossType</code>
+</bcode>
+                                    </td>
+                                </tr>
 
 
-            <tr>
-                <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>app-tab</code></td>
-            </tr>
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>crossType</code>
 
-            <tr>
-                <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>tab.component.scss</code></td>
-            </tr>
-
-
-
-            <tr>
-                <td class="col-md-3">templateUrl</td>
-                <td class="col-md-9"><code>tab.component.html</code></td>
-            </tr>
-
-
-        </tbody>
-    </table>
-</section>
-
-    <section>
-        <h3 id="inputs">Inputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collapsed</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collection</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collections</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>generativeMode</code>
-                        </td>
-                        <td class="col-md-10">
-                            <p>
-                              <em>Default value: </em><code>false</code>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="outputs">Outputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onCollectionNamesChange</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onDraftSelected</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onGenerativeModeChange</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="constructor">Constructor</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>constructor(ref: <a href="https://angular.io/docs/ts/latest/api/core/index/ChangeDetectorRef-class.html" target="_blank" >ChangeDetectorRef</a>, dialog: MatDialog, collectionSrvc: <a href="../injectables/CollectionService.html" >CollectionService</a>)</code>
-                        </td>
-                    </tr>
-    
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="methods">Methods</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> generativeModeChange</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>generativeModeChange()</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> openMlDialog</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>openMlDialog()</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="inputs">Properties</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> button_color</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>button_color:     <code>string</code>
-    </bcode>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Default value: </i><code>#ff4081</code>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> centroids</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>centroids:     <code>any</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> collectionsData</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>collectionsData:     <code>any</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> generated_drafts</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>generated_drafts:     <code><a href="../classes/Draft.html" target="_self" >Draft[]</a></code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> selected</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>selected:     <code>number</code>
-    </bcode>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Default value: </i><code>0</code>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-    </section>
-</div>
-        <div class="tab-pane fade tab-source-code" id="source">
-            <pre><code class="hljs javascript">import { Component, OnInit, Input, Output, EventEmitter, HostListener } from &#x27;@angular/core&#x27;;
-import { MatDialog, MatDialogConfig } from &quot;@angular/material/dialog&quot;;
-import { MlModal } from &#x27;../../../core/modal/ml/ml.modal&#x27;;
-import { NgForm } from &#x27;@angular/forms&#x27;;
-import * as _ from &#x27;lodash&#x27;;
-import { ChangeDetectorRef } from &#x27;@angular/core&#x27;;
-import { Draft } from &#x27;../../../core/model/draft&#x27;;
-import { CollectionService } from &#x27;../../../core/provider/collection.service&#x27;;
+                                        </td>
+                                    </tr>
 
 
 
-@Component({
-  selector: &#x27;app-tab&#x27;,
-  templateUrl: &#x27;./tab.component.html&#x27;,
-  styleUrls: [&#x27;./tab.component.scss&#x27;]
-})
-
-
-export class TabComponent implements OnInit {
-
-  @Output() onGenerativeModeChange: any &#x3D; new EventEmitter();
-  @Output() onDraftSelected: any &#x3D; new EventEmitter();
-  @Output() onCollectionNamesChange: any &#x3D; new EventEmitter();
-  @Input() collection;
-  @Input() collections;
-  @Input()  collapsed;
-  @Input() generativeMode &#x3D; false;
-  
-
-
-  button_color &#x3D; &quot;#ff4081&quot;;
-
-
-  selected &#x3D; 0;
-
-  collectionsData: any &#x3D; [];
-  
-  centroids: any &#x3D; [];
-
-  generated_drafts : Array&lt;Draft&gt;;
-
-
-  constructor(private ref: ChangeDetectorRef, private dialog: MatDialog, private collectionSrvc: CollectionService) { 
-    this.collections &#x3D; [];
-    this.collection &#x3D; {name: &quot;&quot;};
-    collectionSrvc.getCollectionNames().then((value) &#x3D;&gt; {
-      this.collections &#x3D; value;
-      this.collection &#x3D; this.collections[0];
-    })
-  }
-
-  ngOnInit() {
-
-  }
-
-  generativeModeChange() {
-    this.generativeMode &#x3D; !this.generativeMode;
-    if (this.generativeMode) {
-      var allLowerCollectionName &#x3D; this.collection.name.charAt(0).toLowerCase() + this.collection.name.slice(1)
-      this.collectionSrvc.getCollection(allLowerCollectionName).then((value) &#x3D;&gt; {
-        this.collectionsData &#x3D; value;
-        var obj: any &#x3D; {};
-        obj.collection &#x3D; this.collection.name;
-        obj.warpSize &#x3D; this.collectionsData.warpSize;
-        obj.weftSize &#x3D; this.collectionsData.weftSize;
-        this.onGenerativeModeChange.emit(obj);
-
-      })
-    }
-  }
-
-  openMlDialog() {
-    const dialogRef &#x3D; this.dialog.open(MlModal);
-
-  }
-
-  // loadGeneratedDraft(id: number){
-  //   console.log(&#x27;hi&#x27;+id);
-  //   //scan through generated_dafts and get the one with this id. 
-  //   const draft: Draft &#x3D; this.generated_drafts.find(el &#x3D;&gt; el.id &#x3D;&#x3D; id);
-
-  //   //emit that draft ot the parent and tell the parent to load it. 
-  //   if(draft !&#x3D; undefined) this.onDraftSelected.emit(draft);
-
-
-  // }
-
-}
-</code></pre>
-        </div>
+                        </tbody>
+                    </table>
+            </section>
     </div>
+    <div class="tab-pane fade tab-source-code" id="source">
+        <pre><code class="hljs javascript">import { type } from &quot;os&quot;;
+import { Cell } from &quot;./cell&quot;;
+
+/**
+ * describes a point using x,y coordinates
+ * often used for referencing mouse and/or screen drawing positions
+ */
+interface Point {
+  x: number;
+  y: number;
+}
+
+/**
+ * represents a location within a draft.
+ * @param i is the row/weft number (0 being at the top of the drawdown)
+ * @param j is the column/warp number (0 being at the far left of the drawdown)
+ * @param si is the location of this cell within the current view (where the view may be hiding some rows)
+ *        this value can be de-indexed to absolute position in the rows using draft.visibleRows array
+ * @example const i: number &#x3D; draft.visibleRows[si];
+ */
+interface Interlacement {
+  i: number;  
+  j: number;  
+  si: number; 
+}
+
+/**
+ * represents a location within a draft as well as the value to be placed at that location
+ * used by Loom to stage updates before settting them
+ * @param i is the row/weft number (0 being at the top of the drawdown)
+ * @param j is the column/warp number (0 being at the far left of the drawdown)
+ * @param val the value to be assigned at the given location
+ */
+
+ interface InterlacementVal {
+  i: number;  
+  j: number 
+  val: boolean; 
+}
+
+
+/**
+ * returns the assignments of frames and treadles for a given interlacement, as well as the drawdown for context
+ */
+interface LoomCoords{
+  ndx: Interlacement
+  frame: number,
+  treadle:number,
+  drawdown: Array&lt;Array&lt;Cell&gt;&gt;
+}
 
 
 
 
+/**
+ * Describes a rectangle on the screen.
+ * @param topleft - position of this rectanble
+ * @param width - the width of the rectangle
+ * @param height - the height of this rectanble.
+ */
+interface Bounds {
+  topleft: Point;  //row on draft
+  width: number;  //column on draft 
+  height: number; //corresponding screen row
+}
+
+/**
+ * A type to communicate locations on the loom that have been updated in response to a given action
+ */
+interface LoomUpdate {
+  threading: Array&lt;InterlacementVal&gt;,
+  treadling: Array&lt;InterlacementVal&gt;,
+  tieup: Array&lt;Array&lt;InterlacementVal&gt;&gt;
+}
+
+interface LoomTypes {
+  value: string;
+  viewValue: string;
+}
+
+interface MaterialTypes {
+  value: number;
+  viewValue: string;
+}
+
+interface DensityUnits {
+  value: string;
+  viewValue: string;
+}
 
 
+interface ViewModes {
+  value: string;
+  viewValue: string;
+}
+
+/**
+ * this stores a list of drafts created with associated component ids for those drafts, 
+ * or -1 if the component for this draft has not been generated yet. 
+ */
+interface DraftMap{
+  component_id: number;
+  draft: any;
+}
+
+/**
+ * Stores the icons and language for determining different 
+ * modes within which the mouse points are handled
+ * @param value - reference 
+ * @param viewValue - text shown to users
+ * @param icon
+ * @param children, menu to nest within this
+ * @param selected boolean to show if it is selected
+ */
+interface DesignMode{
+  value: string;
+  viewValue: string;
+  icon: string;
+  children: Array&lt;DesignMode&gt;;
+  selected: boolean;
+}
+
+/**
+ * Used to draw on screen paths, refers to x, y coordiantes relative to the draft simulation
+ * Used only in yarn sim
+ * @param x - x position rendered as a % of the total width
+ * @param y - y position
+ */
+ interface Vertex{
+  x_pcent: number;
+  y: number;
+}
+
+/**
+ * Used to draw on screen paths, refers to x, y coordiantes relative to the draft simulation
+ * Used only in yarn sim
+ * @param draft_ndx - the row id within the draft of this yarn
+ * @param material_id the material id at this row
+ * @param verticies - list of points that form this path
+ */
+ interface YarnPath{
+  draft_ndx: number;
+  material_id: number;
+  verticies: Array&lt;Vertex&gt;;
+}
+
+/**
+ * describes the relationship between weft rows along the same warp
+ */
+type crossType &#x3D; {t:boolean, b:boolean} |
+   {t:null, b:null} | //&quot;FLOAT&quot;,
+   {t:null, b:true} | //&quot;UNSET_UNDER&quot;
+  {t:null, b:false} | //&quot;UNSET_OVER&quot;
+  {t:true, b:null} | //&quot;UNDER_UNSET&quot;
+  {t:false, b:null} | //&quot;OVER_UNSET&quot;
+  {t:false, b:true} | //&quot;OVER_UNDER&quot;,
+  {t:true, b:false}; //&quot;UNDER_OVER&quot;, 
+
+
+/**
+ * A yarn cross describes the relationship betwen two draft cells
+ * read from top to bottom. This is used within the sparce 
+ * draft representation, stores only &quot;warp&quot; crossings
+ */
+interface Crossing{
+  j: number, 
+  type: crossType;
+}
+
+
+
+
+// interface ToolModes{
+//   value: string; 
+//   viewValue: string;
+//   icon: string;
+//   menu: string;
+
+// }
+
+export{
+  Point,
+  Interlacement,
+  InterlacementVal,
+  Bounds,
+  LoomCoords,
+  LoomUpdate,
+  LoomTypes,
+  DensityUnits,
+  ViewModes,
+  MaterialTypes,
+  DraftMap,
+  DesignMode,
+  Vertex,
+  YarnPath,
+  crossType,
+  Crossing
+}
+
+
+</code></pre>
+    </div>
+</div>
 
 
 

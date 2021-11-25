@@ -323,7 +323,13 @@
                                     <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/FileService.html" >FileService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/InkService.html" >InkService</a>
@@ -374,6 +380,9 @@
                             >
                                 <li class="link">
                                     <a href="../interfaces/Bounds.html" >Bounds</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Crossing.html" >Crossing</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -466,7 +475,13 @@
                                     <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../interfaces/Vertex.html" >Vertex</a>
+                                </li>
+                                <li class="link">
                                     <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                 </li>
                         </ul>
                     </li>
@@ -816,7 +831,13 @@
                                            <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/FileService.html" >FileService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/InkService.html" >InkService</a>
@@ -867,6 +888,9 @@
                    >
                                        <li class="link">
                                            <a href="../interfaces/Bounds.html" >Bounds</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Crossing.html" >Crossing</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -959,7 +983,13 @@
                                            <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../interfaces/Vertex.html" >Vertex</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                        </li>
                                </ul>
                            </li>
@@ -1093,7 +1123,7 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <code>constructor(dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, dialogRef: any, data: any)</code>
+                            <code>constructor(global_loom: <a href="../injectables/GloballoomService.html" >GloballoomService</a>, dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, dialogRef: any, data: any)</code>
                         </td>
                     </tr>
     
@@ -1560,6 +1590,26 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b> type</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>type:     <code>string</code>
+    </bcode>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value: </i><code>local</code>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b> units</b>
                         </td>
                     </tr>
@@ -1667,6 +1717,7 @@ import { DesignmodesService } from &#x27;../../provider/designmodes.service&#x27
 import { DesignMode } from &#x27;../../model/datatypes&#x27;;
 import { NgForm } from &#x27;@angular/forms&#x27;;
 import { Draft } from &#x27;../../model/draft&#x27;;
+import { GloballoomService } from &#x27;../../provider/globalloom.service&#x27;;
 
 @Component({
   selector: &#x27;app-loom-modal&#x27;,
@@ -1704,22 +1755,31 @@ export class LoomModal implements OnInit {
   density_units:Array&lt;DesignMode&gt; &#x3D; [];
   warp_locked:boolean &#x3D; false;
   width:number &#x3D; 0; 
+  type: string &#x3D; &#x27;local&#x27;;
 
   constructor(
+             private global_loom: GloballoomService,
              private dm: DesignmodesService,
              private dialogRef: MatDialogRef&lt;LoomModal&gt;,
              @Inject(MAT_DIALOG_DATA) public data: any) {
 
-     const loom:Loom  &#x3D;  data.loom;
-     this.draft &#x3D; data.draft;
-     this.loom  &#x3D; loom;
-     this.epi &#x3D; loom.epi;
-     this.warps &#x3D; loom.threading.length;
-     this.wefts &#x3D; loom.treadling.length;
-     this.units &#x3D; loom.units;
-     this.frames &#x3D; loom.min_frames;
-     this.treadles &#x3D; loom.min_treadles;
-     this.loomtype &#x3D; loom.type;
+
+     this.type &#x3D; data.type;
+
+     if(this.type &#x3D;&#x3D;&#x3D; &#x27;local&#x27;){
+      const loom:Loom  &#x3D;  data.loom;
+      this.draft &#x3D; data.draft;
+      this.loom  &#x3D; loom;
+      this.warps &#x3D; data.draft.warps;
+      this.wefts &#x3D; data.draft.wefts;
+     }
+    
+     this.epi &#x3D; global_loom.epi;
+    
+     this.units &#x3D; global_loom.units;
+     this.frames &#x3D; global_loom.min_frames;
+     this.treadles &#x3D; global_loom.min_treadles;
+     this.loomtype &#x3D; global_loom.type;
 
      this.width &#x3D; (this.units &#x3D;&#x3D;&#x27;cm&#x27;) ? this.warps / this.epi * 10 : this.warps / this.epi;
 
@@ -1751,33 +1811,43 @@ export class LoomModal implements OnInit {
     } 
 
     f.value.treadles &#x3D; Math.ceil(f.value.treadles);
-    this.loom.setMinTreadles( f.value.treadles);
+    this.global_loom.min_treadles&#x3D; f.value.treadles;
 
     this.onChange.emit();
   }
 
   updateMinFrames(f: NgForm){
+    
     if(!f.value.frames){
       f.value.frames &#x3D; 2; 
       this.frames &#x3D; f.value.frames;
 
-    } 
+    }
+     
+
     f.value.frames &#x3D; Math.ceil(f.value.frames);
-    this.loom.setMinFrames(f.value.frames);
+    console.log(&quot;min frames&quot;, f.value.frames);   
+    this.global_loom.min_frames &#x3D; f.value.frames;
+    
+    //this.loom.setMinFrames(f.value.frames);
+    
     this.onChange.emit();
 
   }
 
 
   loomChange(e:any){
-    this.loom.overloadType(e.value.loomtype);
+    this.global_loom.type &#x3D; e.value.loomtype;
     this.dm.selectDesignMode(e.value.loomtype, &#x27;loom_types&#x27;);
     this.onChange.emit();
+
 
   }
 
   unitChange(e:any){
-    this.loom.overloadUnits(e.value.units);
+    this.global_loom.units &#x3D; e.value.units;
+    //this.loom.overloadUnits(e.value.units);
+    this.onChange.emit();
 
   }
 
@@ -1882,20 +1952,23 @@ export class LoomModal implements OnInit {
       this.epi &#x3D; f.value.epi;
     } 
     
-    this.loom.overloadEpi(f.value.epi);
+    //this.loom.overloadEpi(f.value.epi);
+    this.global_loom.epi &#x3D; f.value.epi;
 
-    if(this.warp_locked){
-      //change the width
-      this.width &#x3D; (this.units &#x3D;&#x3D;&#x27;cm&#x27;) ? f.value.warps / f.value.epi * 10 : f.value.warps / f.value.epi;
-      f.value.width &#x3D; this.width;
-      
-    }else{
-      var new_warps &#x3D; (this.units &#x3D;&#x3D;&#x3D; &quot;in&quot;) 
-      ? Math.ceil(f.value.width * f.value.epi) : 
-      Math.ceil((10 * f.value.warps / f.value.width));
-      f.value.warps &#x3D; new_warps;
-      this.warps &#x3D; new_warps;
-      this.warpNumChange({warps: new_warps});
+    if(this.type &#x3D;&#x3D;&#x3D; &quot;local&quot;){
+      if(this.warp_locked){
+        //change the width
+        this.width &#x3D; (this.units &#x3D;&#x3D;&#x27;cm&#x27;) ? f.value.warps / f.value.epi * 10 : f.value.warps / f.value.epi;
+        f.value.width &#x3D; this.width;
+        
+      }else{
+        var new_warps &#x3D; (this.units &#x3D;&#x3D;&#x3D; &quot;in&quot;) 
+        ? Math.ceil(f.value.width * f.value.epi) : 
+        Math.ceil((10 * f.value.warps / f.value.width));
+        f.value.warps &#x3D; new_warps;
+        this.warps &#x3D; new_warps;
+        this.warpNumChange({warps: new_warps});
+      }
     }
 
 

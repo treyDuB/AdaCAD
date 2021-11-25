@@ -323,7 +323,13 @@
                                     <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/FileService.html" >FileService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/InkService.html" >InkService</a>
@@ -374,6 +380,9 @@
                             >
                                 <li class="link">
                                     <a href="../interfaces/Bounds.html" >Bounds</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Crossing.html" >Crossing</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -466,7 +475,13 @@
                                     <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../interfaces/Vertex.html" >Vertex</a>
+                                </li>
+                                <li class="link">
                                     <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                 </li>
                         </ul>
                     </li>
@@ -816,7 +831,13 @@
                                            <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/FileService.html" >FileService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/InkService.html" >InkService</a>
@@ -867,6 +888,9 @@
                    >
                                        <li class="link">
                                            <a href="../interfaces/Bounds.html" >Bounds</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Crossing.html" >Crossing</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -959,7 +983,13 @@
                                            <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../interfaces/Vertex.html" >Vertex</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                        </li>
                                </ul>
                            </li>
@@ -1082,7 +1112,7 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <code>constructor(dialogRef: any, data: any, scroll: ScrollDispatcher, inks: <a href="../injectables/InkService.html" >InkService</a>, dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, ops: <a href="../injectables/OperationService.html" >OperationService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>)</code>
+                            <code>constructor(dialogRef: any, data: any, scroll: ScrollDispatcher, inks: <a href="../injectables/InkService.html" >InkService</a>, dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, ops: <a href="../injectables/OperationService.html" >OperationService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, gl: <a href="../injectables/GloballoomService.html" >GloballoomService</a>)</code>
                         </td>
                     </tr>
     
@@ -1355,6 +1385,26 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b> viewonly</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>viewonly:     <code>boolean</code>
+    </bcode>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Default value: </i><code>false</code>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b> weaver</b>
                         </td>
                     </tr>
@@ -1379,6 +1429,7 @@ import { OperationService } from &#x27;../../provider/operation.service&#x27;;
 import { DesignmodesService } from &#x27;../../../core/provider/designmodes.service&#x27;;
 import { WeaverComponent } from &#x27;../../../weaver/weaver.component&#x27;;
 import { MaterialsService } from &#x27;../../../core/provider/materials.service&#x27;;
+import { GloballoomService } from &#x27;../../../core/provider/globalloom.service&#x27;;
 
 
 /**
@@ -1414,6 +1465,7 @@ export class DraftdetailComponent implements OnInit {
 
   scrollingSubscription: any;
 
+  viewonly: boolean &#x3D; false;
 
 
   constructor(private dialogRef: MatDialogRef&lt;DraftdetailComponent&gt;,
@@ -1422,7 +1474,8 @@ export class DraftdetailComponent implements OnInit {
              private inks: InkService,
              private dm: DesignmodesService,
              private ops: OperationService,
-             private ms: MaterialsService) { 
+             private ms: MaterialsService,
+             private gl: GloballoomService) { 
 
               this.scrollingSubscription &#x3D; this.scroll
               .scrolled()
@@ -1432,21 +1485,13 @@ export class DraftdetailComponent implements OnInit {
 
                this.draft &#x3D; data.draft;
                this.ink &#x3D; data.ink;
+               this.loom &#x3D; data.loom;
+               this.viewonly &#x3D; data.viewonly;
                console.log(&#x27;this.ink:&#x27;, this.ink);
 
-               this.draft.computeYarnPaths(this.ms.getShuttles());
 
 
-
-              //default loom
-               this.loom &#x3D; new Loom(this.draft, 8, 10);
-               this.dm.selectDesignMode(&#x27;jacquard&#x27;, &#x27;loom_types&#x27;);
-               this.loom.type &#x3D; &quot;jacquard&quot;;
-
-
-               //this.loom.recomputeLoom(this.draft);
-
-              
+          
                
     
 

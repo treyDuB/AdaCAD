@@ -196,7 +196,7 @@
                                     <a href="../components/SystemsComponent.html" >SystemsComponent</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/TabComponent.html"  class="active" >TabComponent</a>
+                                    <a href="../components/TabComponent.html" >TabComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/TopbarComponent.html" >TopbarComponent</a>
@@ -329,7 +329,7 @@
                                     <a href="../injectables/FileService.html" >FileService</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../injectables/GloballoomService.html" >GloballoomService</a>
+                                    <a href="../injectables/GloballoomService.html"  class="active" >GloballoomService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/InkService.html" >InkService</a>
@@ -704,7 +704,7 @@
                                            <a href="../components/SystemsComponent.html" >SystemsComponent</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/TabComponent.html"  class="active" >TabComponent</a>
+                                           <a href="../components/TabComponent.html" >TabComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/TopbarComponent.html" >TopbarComponent</a>
@@ -837,7 +837,7 @@
                                            <a href="../injectables/FileService.html" >FileService</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../injectables/GloballoomService.html" >GloballoomService</a>
+                                           <a href="../injectables/GloballoomService.html"  class="active" >GloballoomService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/InkService.html" >InkService</a>
@@ -1030,417 +1030,297 @@
                    
                    </nav>
                </div>
-               <div class="content component">
+               <div class="content injectable">
                    <div class="content-data">
 
 
+
+
 <ol class="breadcrumb">
-  <li>Components</li>
-  <li>TabComponent</li>
+  <li>Injectables</li>
+  <li>GloballoomService</li>
 </ol>
 
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+    </li>
+    <li>
+        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+    </li>
+</ul>
 
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-        </li>
-        <li>
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="infos"><p class="comment">
-    <h3>File</h3>
-</p>
-<p class="comment">
-    <code>src/app/weaver/tool/tab/tab.component.ts</code>
-</p>
-
-
-
-<section>
-    <h3>Metadata</h3>
-    <table class="table table-sm table-hover">
-        <tbody>
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="infos">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/provider/globalloom.service.ts</code>
+        </p>
 
 
+            <section>
+                <h3 id="constructor">Constructor</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>constructor()</code>
+                                </td>
+                            </tr>
+            
+                        </tbody>
+                    </table>
+            </section>
 
+            <section>
+                <h3 id="methods">Methods</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier"></span> inferData</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <span class="modifier-icon method fa fa-play ">
+                                            <span class="fa fa-"></span>
+                                        </span>
+                                    <code>inferData(looms: <a href="../classes/Loom.html" >Loom[]</a>)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description"><p>given an array of looms, infers the data from what is most commonly used<br>this assumes that most exports will have common loom data</p>
+            </div>
+                                        <div class="io-description">
+                                                <b>Parameters :</b>
+                                                <ul class="jsdoc-params">
+                                                        <li>
+                                                            <div>
+                                                                <b>looms</b>
+                                                            </div>
+                                                            <div>
+                                                                
+                                                            </div>
+                                                        </li>
+                                                </ul>
+                                        </div>
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>any</code>
+            
+                                        </div>
+                                            <div class="io-description">
+                                                
+                                            </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
 
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> epi</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>epi:     <code>number</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>10</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> min_frames</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>min_frames:     <code>number</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>8</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> min_treadles</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>min_treadles:     <code>number</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>10</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> show_errors</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>show_errors:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>true</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> type</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>type:     <code>string</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>jacquard</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> units</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>units:     <code>string</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>in</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+    <div class="tab-pane fade tab-source-code" id="source">
+        <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { Loom } from &#x27;../model/loom&#x27;;
+import utilInstance from &#x27;../model/util&#x27;;
 
-
-
-
-
-
-
-
-            <tr>
-                <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>app-tab</code></td>
-            </tr>
-
-            <tr>
-                <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>tab.component.scss</code></td>
-            </tr>
-
-
-
-            <tr>
-                <td class="col-md-3">templateUrl</td>
-                <td class="col-md-9"><code>tab.component.html</code></td>
-            </tr>
-
-
-        </tbody>
-    </table>
-</section>
-
-    <section>
-        <h3 id="inputs">Inputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collapsed</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collection</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>collections</code>
-                        </td>
-                        <td class="col-md-10">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>generativeMode</code>
-                        </td>
-                        <td class="col-md-10">
-                            <p>
-                              <em>Default value: </em><code>false</code>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="outputs">Outputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onCollectionNamesChange</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onDraftSelected</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onGenerativeModeChange</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code>any</code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="constructor">Constructor</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>constructor(ref: <a href="https://angular.io/docs/ts/latest/api/core/index/ChangeDetectorRef-class.html" target="_blank" >ChangeDetectorRef</a>, dialog: MatDialog, collectionSrvc: <a href="../injectables/CollectionService.html" >CollectionService</a>)</code>
-                        </td>
-                    </tr>
-    
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="methods">Methods</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> generativeModeChange</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>generativeModeChange()</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> openMlDialog</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>openMlDialog()</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="inputs">Properties</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> button_color</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>button_color:     <code>string</code>
-    </bcode>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Default value: </i><code>#ff4081</code>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> centroids</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>centroids:     <code>any</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> collectionsData</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>collectionsData:     <code>any</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> generated_drafts</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>generated_drafts:     <code><a href="../classes/Draft.html" target="_self" >Draft[]</a></code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> selected</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>selected:     <code>number</code>
-    </bcode>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Default value: </i><code>0</code>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-    </section>
-</div>
-        <div class="tab-pane fade tab-source-code" id="source">
-            <pre><code class="hljs javascript">import { Component, OnInit, Input, Output, EventEmitter, HostListener } from &#x27;@angular/core&#x27;;
-import { MatDialog, MatDialogConfig } from &quot;@angular/material/dialog&quot;;
-import { MlModal } from &#x27;../../../core/modal/ml/ml.modal&#x27;;
-import { NgForm } from &#x27;@angular/forms&#x27;;
-import * as _ from &#x27;lodash&#x27;;
-import { ChangeDetectorRef } from &#x27;@angular/core&#x27;;
-import { Draft } from &#x27;../../../core/model/draft&#x27;;
-import { CollectionService } from &#x27;../../../core/provider/collection.service&#x27;;
-
-
-
-@Component({
-  selector: &#x27;app-tab&#x27;,
-  templateUrl: &#x27;./tab.component.html&#x27;,
-  styleUrls: [&#x27;./tab.component.scss&#x27;]
+@Injectable({
+  providedIn: &#x27;root&#x27;
 })
 
+/**
+ * for each mixer, you can define defaults for the loom
+ */
+export class GloballoomService {
 
-export class TabComponent implements OnInit {
-
-  @Output() onGenerativeModeChange: any &#x3D; new EventEmitter();
-  @Output() onDraftSelected: any &#x3D; new EventEmitter();
-  @Output() onCollectionNamesChange: any &#x3D; new EventEmitter();
-  @Input() collection;
-  @Input() collections;
-  @Input()  collapsed;
-  @Input() generativeMode &#x3D; false;
-  
-
-
-  button_color &#x3D; &quot;#ff4081&quot;;
+  min_frames: number &#x3D; 8; 
+  min_treadles: number &#x3D; 10;
+  type: string &#x3D; &#x27;jacquard&#x27;;
+  show_errors: boolean &#x3D; true;
+  epi: number &#x3D; 10;
+  units: string &#x3D; &#x27;in&#x27;;
 
 
-  selected &#x3D; 0;
 
-  collectionsData: any &#x3D; [];
-  
-  centroids: any &#x3D; [];
-
-  generated_drafts : Array&lt;Draft&gt;;
+  constructor() { }
 
 
-  constructor(private ref: ChangeDetectorRef, private dialog: MatDialog, private collectionSrvc: CollectionService) { 
-    this.collections &#x3D; [];
-    this.collection &#x3D; {name: &quot;&quot;};
-    collectionSrvc.getCollectionNames().then((value) &#x3D;&gt; {
-      this.collections &#x3D; value;
-      this.collection &#x3D; this.collections[0];
-    })
+
+
+
+  /**
+   * given an array of looms, infers the data from what is most commonly used
+   * this assumes that most exports will have common loom data
+   * @param looms 
+   */
+  async inferData(looms: Array&lt;Loom&gt;) : Promise&lt;any&gt; {
+    console.log(&quot;loading looms&quot;, looms)
+    if(looms.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve(&quot;no looms&quot;);
+
+    //filter out null or undefined looms
+    looms &#x3D; looms.filter(el &#x3D;&gt; !(el &#x3D;&#x3D;&#x3D; undefined || el &#x3D;&#x3D;&#x3D; null)); 
+
+
+    this.min_frames &#x3D; utilInstance.getMostCommon(
+      looms.map(el &#x3D;&gt; el.min_frames)
+    );
+    console.log(&quot;min frames&quot;, this.min_frames);
+
+    this.min_treadles &#x3D; utilInstance.getMostCommon(
+      looms.map(el &#x3D;&gt; el.min_treadles)
+    );
+    console.log(&quot;min tread&quot;, this.min_treadles);
+
+    this.type &#x3D; utilInstance.getMostCommon(
+      looms.map(el &#x3D;&gt; el.type)
+    );
+    console.log(&quot; type&quot;, this.type);
+
+    this.units &#x3D; utilInstance.getMostCommon(
+      looms.map(el &#x3D;&gt; el.units)
+    );
+    console.log(&quot;units&quot;, this.units);
+
+    this.epi &#x3D; utilInstance.getMostCommon(
+      looms.map(el &#x3D;&gt; el.epi)
+    );
+    console.log(&quot;epi&quot;, this.epi);
+
+    return &quot;done&quot;;
   }
-
-  ngOnInit() {
-
-  }
-
-  generativeModeChange() {
-    this.generativeMode &#x3D; !this.generativeMode;
-    if (this.generativeMode) {
-      var allLowerCollectionName &#x3D; this.collection.name.charAt(0).toLowerCase() + this.collection.name.slice(1)
-      this.collectionSrvc.getCollection(allLowerCollectionName).then((value) &#x3D;&gt; {
-        this.collectionsData &#x3D; value;
-        var obj: any &#x3D; {};
-        obj.collection &#x3D; this.collection.name;
-        obj.warpSize &#x3D; this.collectionsData.warpSize;
-        obj.weftSize &#x3D; this.collectionsData.weftSize;
-        this.onGenerativeModeChange.emit(obj);
-
-      })
-    }
-  }
-
-  openMlDialog() {
-    const dialogRef &#x3D; this.dialog.open(MlModal);
-
-  }
-
-  // loadGeneratedDraft(id: number){
-  //   console.log(&#x27;hi&#x27;+id);
-  //   //scan through generated_dafts and get the one with this id. 
-  //   const draft: Draft &#x3D; this.generated_drafts.find(el &#x3D;&gt; el.id &#x3D;&#x3D; id);
-
-  //   //emit that draft ot the parent and tell the parent to load it. 
-  //   if(draft !&#x3D; undefined) this.onDraftSelected.emit(draft);
-
-
-  // }
 
 }
 </code></pre>
-        </div>
     </div>
-
-
-
+</div>
 
 
 

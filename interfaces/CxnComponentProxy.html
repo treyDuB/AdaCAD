@@ -323,7 +323,13 @@
                                     <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/FileService.html" >FileService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/InkService.html" >InkService</a>
@@ -374,6 +380,9 @@
                             >
                                 <li class="link">
                                     <a href="../interfaces/Bounds.html" >Bounds</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Crossing.html" >Crossing</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/CxnComponentProxy.html"  class="active" >CxnComponentProxy</a>
@@ -466,7 +475,13 @@
                                     <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../interfaces/Vertex.html" >Vertex</a>
+                                </li>
+                                <li class="link">
                                     <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                 </li>
                         </ul>
                     </li>
@@ -816,7 +831,13 @@
                                            <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/FileService.html" >FileService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/InkService.html" >InkService</a>
@@ -867,6 +888,9 @@
                    >
                                        <li class="link">
                                            <a href="../interfaces/Bounds.html" >Bounds</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Crossing.html" >Crossing</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/CxnComponentProxy.html"  class="active" >CxnComponentProxy</a>
@@ -959,7 +983,13 @@
                                            <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../interfaces/Vertex.html" >Vertex</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                        </li>
                                </ul>
                            </li>
@@ -1274,13 +1304,13 @@ export class FileService {
       });
 
 
-      if(data.looms &#x3D;&#x3D;&#x3D; undefined &amp;&amp; data.loom !&#x3D;&#x3D; undefined) data.looms &#x3D; [data.loom];
-      else data.looms &#x3D; [];
+      console.log(&quot;data looms in fileloader&quot;, data.looms);
+      if(data.looms &#x3D;&#x3D;&#x3D; undefined || data.looms.length &#x3D;&#x3D;&#x3D; 0) data.looms &#x3D; [];
+
       looms &#x3D; data.looms.map((data, ndx) &#x3D;&gt; {
 
         let draft: Draft &#x3D; null;
-        if(data.draft_id !&#x3D;&#x3D; undefined) draft &#x3D; drafts.find(draft &#x3D;&gt; draft.id &#x3D;&#x3D; data.id);
-        else draft &#x3D; drafts[ndx];
+        if(data.draft_id !&#x3D;&#x3D; undefined) draft &#x3D; drafts.find(draft &#x3D;&gt; draft.id &#x3D;&#x3D;&#x3D; data.draft_id);
 
         const frames: number &#x3D; (data.min_frames &#x3D;&#x3D;&#x3D; undefined) ? 8 : data.min_frames;
         const treadles: number &#x3D; (data.min_treadles &#x3D;&#x3D;&#x3D; undefined) ? 8 : data.min_treadles;
@@ -1652,6 +1682,7 @@ export class FileService {
         notes: this.ns.exportForSaving(),
         materials: this.ms.exportForSaving()
       }
+
 
       var theJSON &#x3D; JSON.stringify(out);
       if(for_timeline) return Promise.resolve(theJSON);

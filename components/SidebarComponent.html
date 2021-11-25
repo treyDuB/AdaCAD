@@ -323,7 +323,13 @@
                                     <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/FileService.html" >FileService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/InkService.html" >InkService</a>
@@ -374,6 +380,9 @@
                             >
                                 <li class="link">
                                     <a href="../interfaces/Bounds.html" >Bounds</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/Crossing.html" >Crossing</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -466,7 +475,13 @@
                                     <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../interfaces/Vertex.html" >Vertex</a>
+                                </li>
+                                <li class="link">
                                     <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                 </li>
                         </ul>
                     </li>
@@ -816,7 +831,13 @@
                                            <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/FabricssimService.html" >FabricssimService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/FileService.html" >FileService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/GloballoomService.html" >GloballoomService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/InkService.html" >InkService</a>
@@ -867,6 +888,9 @@
                    >
                                        <li class="link">
                                            <a href="../interfaces/Bounds.html" >Bounds</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/Crossing.html" >Crossing</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/CxnComponentProxy.html" >CxnComponentProxy</a>
@@ -959,7 +983,13 @@
                                            <a href="../interfaces/TreeNodeProxy.html" >TreeNodeProxy</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../interfaces/Vertex.html" >Vertex</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../interfaces/ViewModes.html" >ViewModes</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../interfaces/YarnPath.html" >YarnPath</a>
                                        </li>
                                </ul>
                            </li>
@@ -1124,6 +1154,17 @@
                     </tr>
                 </tbody>
             </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>viewonly</code>
+                        </td>
+                        <td class="col-md-10">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
     </section>
 
     <section>
@@ -1133,6 +1174,19 @@
                     <tr>
                         <td class="col-md-2">
                             <code>onDesignModeChange</code>
+                        </td>
+                        <td class="col-md-10">
+                            <em><code>$event</code> type:</em>    <code>any</code>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>onGlobalLoomChange</code>
                         </td>
                         <td class="col-md-10">
                             <em><code>$event</code> type:</em>    <code>any</code>
@@ -1759,6 +1813,30 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b> openGlobalLoomModal</b>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+    <code>openGlobalLoomModal()</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>void</code>
+    
+                                </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b> openOps</b>
                         </td>
                     </tr>
@@ -2053,6 +2131,21 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b> global_loom_modal</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>global_loom_modal:     <code>any</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b> materials_modal</b>
                         </td>
                     </tr>
@@ -2250,6 +2343,7 @@ export class SidebarComponent implements OnInit {
   @Input() timeline;
   @Input() render;
   @Input() source;
+  @Input() viewonly;
 
   @Output() onUndo: any &#x3D; new EventEmitter();
   @Output() onRedo: any &#x3D; new EventEmitter();
@@ -2262,6 +2356,7 @@ export class SidebarComponent implements OnInit {
   @Output() onShowWeftSystem: any &#x3D; new EventEmitter();
   @Output() onHideWeftSystem: any &#x3D; new EventEmitter();
   @Output() onLoomChange: any &#x3D; new EventEmitter();
+  @Output() onGlobalLoomChange: any &#x3D; new EventEmitter();
   @Output() onOperationAdded: any &#x3D; new EventEmitter();
   @Output() onImport: any &#x3D; new EventEmitter();
   @Output() onViewPortMove: any &#x3D; new EventEmitter();
@@ -2292,6 +2387,7 @@ export class SidebarComponent implements OnInit {
   materials_modal: MatDialogRef&lt;MaterialModal, any&gt;;
   patterns_modal: MatDialogRef&lt;PatternModal, any&gt;;
   equipment_modal: MatDialogRef&lt;LoomModal, any&gt;;
+  global_loom_modal: MatDialogRef&lt;LoomModal, any&gt;;
   upload_modal: MatDialogRef&lt;InitModal, any&gt;;
   ml_modal: MatDialogRef&lt;MlModal, any&gt;;
 
@@ -2403,7 +2499,6 @@ export class SidebarComponent implements OnInit {
     } else{
       this.onViewChange.emit(&#x27;pattern&#x27;);
       this.dm.selectDesignMode(&#x27;pattern&#x27;, &#x27;view_modes&#x27;);
-
     }     
 
   }
@@ -2488,7 +2583,7 @@ openLoomModal(){
     {disableClose: true,
       maxWidth:350, 
       hasBackdrop: false,
-      data: {loom: this.loom, draft:this.draft}});
+      data: {loom: this.loom, draft:this.draft, type: &quot;local&quot;}});
 
 
       this.equipment_modal.componentInstance.onChange.subscribe(event &#x3D;&gt; { this.onLoomChange.emit();});
@@ -2496,6 +2591,27 @@ openLoomModal(){
   
       this.equipment_modal.afterClosed().subscribe(result &#x3D;&gt; {
         this.onLoomChange.emit();
+       // dialogRef.componentInstance.onChange.removeSubscription();
+    });
+}
+
+openGlobalLoomModal(){
+
+  if(this.global_loom_modal !&#x3D; undefined &amp;&amp; this.global_loom_modal.componentInstance !&#x3D; null) return;
+
+
+  this.global_loom_modal &#x3D;   this.dialog.open(LoomModal,
+    {disableClose: true,
+      maxWidth:350, 
+      hasBackdrop: false,
+      data: {loom: this.loom, draft:this.draft, type: &quot;global&quot;}});
+
+
+      this.global_loom_modal.componentInstance.onChange.subscribe(event &#x3D;&gt; { this.onGlobalLoomChange.emit();});
+
+  
+      this.global_loom_modal.afterClosed().subscribe(result &#x3D;&gt; {
+        this.onGlobalLoomChange.emit();
        // dialogRef.componentInstance.onChange.removeSubscription();
     });
 }
