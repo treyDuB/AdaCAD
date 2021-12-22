@@ -353,6 +353,9 @@
                                     <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/TreeService.html" >TreeService</a>
                                 </li>
                                 <li class="link">
@@ -864,6 +867,9 @@
                                            <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/TreeService.html" >TreeService</a>
                                        </li>
                                        <li class="link">
@@ -1225,9 +1231,8 @@ export class OperationService {
           d.fill(inputs[0].pattern, &#x27;original&#x27;);
           d.updateWarpShuttlesFromPattern(inputs[0].colShuttleMapping);
           d.updateWeftShuttlesFromPattern(inputs[0].rowShuttleMapping);
-          d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping, inputs[0].warp_systems);
-          d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping, inputs[0].weft_systems);
-
+          d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping);
+          d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
         }
 
 
@@ -1249,8 +1254,8 @@ export class OperationService {
           if(inputs.length &gt; 0){
             d.updateWarpShuttlesFromPattern(inputs[0].colShuttleMapping);
             d.updateWeftShuttlesFromPattern(inputs[0].rowShuttleMapping);
-            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping, inputs[0].warp_systems);
-            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping, inputs[0].weft_systems);
+            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping);
+            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
           }
           return  d;
         });
@@ -1277,8 +1282,8 @@ export class OperationService {
           if(inputs.length &gt; 0){
             d.updateWarpShuttlesFromPattern(inputs[0].colShuttleMapping);
             d.updateWeftShuttlesFromPattern(inputs[0].rowShuttleMapping);
-            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping, inputs[0].warp_systems);
-            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping, inputs[0].weft_systems);
+            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping);
+            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
           }
           return d;
         });
@@ -1303,8 +1308,8 @@ export class OperationService {
           if(inputs.length &gt; 0){
             d.updateWarpShuttlesFromPattern(inputs[0].colShuttleMapping);
             d.updateWeftShuttlesFromPattern(inputs[0].rowShuttleMapping);
-            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping, inputs[0].warp_systems);
-            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping, inputs[0].weft_systems);
+            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping);
+            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
           }
           return d;
         });
@@ -1332,8 +1337,8 @@ export class OperationService {
           if(inputs.length &gt; 0){
             d.updateWarpShuttlesFromPattern(inputs[0].colShuttleMapping);
             d.updateWeftShuttlesFromPattern(inputs[0].rowShuttleMapping);
-            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping, inputs[0].warp_systems);
-            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping, inputs[0].weft_systems);
+            d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping);
+            d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
           }
 
           return d;
@@ -1342,7 +1347,6 @@ export class OperationService {
       }        
     }
 
-    /**TO DO - handle materials */
     const interlace:Operation &#x3D; {
       name: &#x27;interlace&#x27;,
       dx: &#x27;interlace the input drafts together in alternating lines&#x27;,
@@ -1354,16 +1358,20 @@ export class OperationService {
 
         const max_wefts:number &#x3D; utilInstance.getMaxWefts(inputs);
         const max_warps:number &#x3D; utilInstance.getMaxWarps(inputs);
+
         const rowSystems: Array&lt;Array&lt;number&gt;&gt; &#x3D; inputs.map(el &#x3D;&gt; el.rowSystemMapping);
        
         const uniqueSystemRows: Array&lt;Array&lt;number&gt;&gt; &#x3D; utilInstance.makeSystemsUnique(rowSystems);
+
 
         //create a draft to hold the merged values
         const d:Draft &#x3D; new Draft({warps: max_warps, wefts:(max_wefts * inputs.length)});
 
         d.pattern.forEach((row, ndx) &#x3D;&gt; {
+
             const select_array: number &#x3D; ndx % inputs.length; 
             const select_row: number &#x3D; Math.floor(ndx / inputs.length);
+
             row.forEach((cell, j) &#x3D;&gt;{
                 if(inputs[select_array].hasCell(select_row, j)){
                     cell.setHeddle(inputs[select_array].pattern[select_row][j].getHeddle());
@@ -1429,8 +1437,8 @@ export class OperationService {
             if(inputs.length &gt; 0){
               d.updateWarpShuttlesFromPattern(inputs[0].colShuttleMapping);
               d.updateWeftShuttlesFromPattern(inputs[0].rowShuttleMapping);
-              d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping, inputs[0].warp_systems);
-              d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping, inputs[0].weft_systems);
+              d.updateWarpSystemsFromPattern(inputs[0].colSystemMapping);
+              d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
             }
             for(let i &#x3D; 0; i &lt; input.wefts; i++){
               for(let j &#x3D; 0; j &lt; input.warps; j++){

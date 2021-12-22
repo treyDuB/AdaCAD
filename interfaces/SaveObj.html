@@ -353,6 +353,9 @@
                                     <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/TreeService.html" >TreeService</a>
                                 </li>
                                 <li class="link">
@@ -864,6 +867,9 @@
                                            <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/TreeService.html" >TreeService</a>
                                        </li>
                                        <li class="link">
@@ -1322,8 +1328,10 @@ import { Pattern } from &#x27;../model/pattern&#x27;;
 import { Shuttle } from &#x27;../model/shuttle&#x27;;
 import utilInstance from &#x27;../model/util&#x27;;
 import { MaterialMap, MaterialsService } from &#x27;./materials.service&#x27;;
+import { SystemsService } from &#x27;./systems.service&#x27;;
 import { Note, NotesService } from &#x27;./notes.service&#x27;;
 import { PatternService } from &#x27;./pattern.service&#x27;;
+import { System } from &#x27;../model/system&#x27;;
 
 
  export interface NodeComponentProxy{
@@ -1424,7 +1432,8 @@ export class FileService {
     private tree: TreeService, 
     private ns: NotesService,
     private ps: PatternService,
-    private ms: MaterialsService) { 
+    private ms: MaterialsService,
+    private ss: SystemsService) { 
   
   this.status &#x3D; [
     {id: 0, message: &#x27;success&#x27;, success: true},
@@ -1479,9 +1488,13 @@ export class FileService {
           }
         }
        
-        if(data.weft_systems !&#x3D;&#x3D; undefined) draft.overloadWeftSystems(data.weft_systems); 
-        if(data.warp_systems !&#x3D;&#x3D; undefined) draft.overloadWarpSystems(data.warp_systems); 
-       
+        if(data.weft_systems !&#x3D;&#x3D; undefined){
+          data.weft_systems.forEach(el &#x3D;&gt; this.ss.addWeftSystem(el));
+        }
+
+        if(data.weft_systems !&#x3D;&#x3D; undefined){
+          data.warp_systems.forEach(el &#x3D;&gt; this.ss.addWarpSystem(el));
+        }
         if(data.rowShuttleMapping !&#x3D;&#x3D; undefined) draft.overloadRowShuttleMapping(data.rowShuttleMapping); 
         if(data.colShuttleMapping !&#x3D;&#x3D; undefined) draft.overloadColShuttleMapping(data.colShuttleMapping); 
         if(data.rowSystemMapping !&#x3D;&#x3D; undefined) draft.overloadRowSystemMapping(data.rowSystemMapping); 

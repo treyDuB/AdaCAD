@@ -353,6 +353,9 @@
                                     <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/TreeService.html" >TreeService</a>
                                 </li>
                                 <li class="link">
@@ -864,6 +867,9 @@
                                            <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/TreeService.html" >TreeService</a>
                                        </li>
                                        <li class="link">
@@ -1166,7 +1172,7 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <code>constructor(ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, dialog: MatDialog, dialogRef: any, data: any)</code>
+                            <code>constructor(ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, ss: <a href="../injectables/SystemsService.html" >SystemsService</a>, dialog: MatDialog, dialogRef: any, data: any)</code>
                         </td>
                     </tr>
     
@@ -1646,6 +1652,7 @@ import {MatAutocompleteSelectedEvent, MatAutocomplete} from &#x27;@angular/mater
 import {MatChipInputEvent} from &#x27;@angular/material/chips&#x27;;
 import { Draft } from &#x27;../../model/draft&#x27;;
 import { MaterialsService } from &#x27;../../provider/materials.service&#x27;;
+import { SystemsService } from &#x27;../../provider/systems.service&#x27;;
 
 @Component({
   selector: &#x27;app-actions&#x27;,
@@ -1711,7 +1718,10 @@ export class ActionsComponent implements OnInit {
    @Output() onUpdateWeftShuttles: any &#x3D; new EventEmitter();
 
 
-  constructor(private ms: MaterialsService, private dialog: MatDialog,
+  constructor(
+    private ms: MaterialsService, 
+    private ss: SystemsService,
+    private dialog: MatDialog,
     private dialogRef: MatDialogRef&lt;ActionsComponent&gt;,
              @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -1757,7 +1767,7 @@ export class ActionsComponent implements OnInit {
 
         let warp_sys_id &#x3D; this.idFromString((value || &#x27;&#x27;).trim());
         console.log(&quot;value is &quot;, warp_sys_id);
-        if (warp_sys_id &gt;&#x3D; 0 &amp;&amp; warp_sys_id &lt; this.draft.warp_systems.length) {
+        if (warp_sys_id &gt;&#x3D; 0 &amp;&amp; warp_sys_id &lt; this.ss.warp_systems.length) {
           this.draft.colSystemPattern.push(this.idFromString(value.trim()));
         }
         this.warpSystemCtrl.setValue(null);
@@ -1782,7 +1792,7 @@ export class ActionsComponent implements OnInit {
       case &#x27;wesy&#x27;:
 
         let weft_sys_id &#x3D; this.idFromString((value || &#x27;&#x27;).trim());
-        if (weft_sys_id &gt;&#x3D; 0 &amp;&amp; weft_sys_id &lt; this.draft.warp_systems.length) {
+        if (weft_sys_id &gt;&#x3D; 0 &amp;&amp; weft_sys_id &lt; this.ss.warp_systems.length) {
           this.draft.rowSystemPattern.push(weft_sys_id);
         }
         this.weftSystemCtrl.setValue(null);

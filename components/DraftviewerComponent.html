@@ -353,6 +353,9 @@
                                     <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                </li>
+                                <li class="link">
                                     <a href="../injectables/TreeService.html" >TreeService</a>
                                 </li>
                                 <li class="link">
@@ -864,6 +867,9 @@
                                            <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../injectables/SystemsService.html" >SystemsService</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../injectables/TreeService.html" >TreeService</a>
                                        </li>
                                        <li class="link">
@@ -1245,7 +1251,7 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <code>constructor(fs: <a href="../injectables/FileService.html" >FileService</a>, dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, ps: <a href="../injectables/PatternService.html" >PatternService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>)</code>
+                            <code>constructor(fs: <a href="../injectables/FileService.html" >FileService</a>, dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, ps: <a href="../injectables/PatternService.html" >PatternService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, ss: <a href="../injectables/SystemsService.html" >SystemsService</a>)</code>
                         </td>
                     </tr>
     
@@ -4480,14 +4486,15 @@ import { Loom } from &#x27;../model/loom&#x27;;
 import { Pattern } from &#x27;../model/pattern&#x27;;
 import {cloneDeep, forEach, now} from &#x27;lodash&#x27;;
 import { FileService } from &#x27;../provider/file.service&#x27;;
-import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material&#x27;;
 import { SelectionComponent } from &#x27;./selection/selection.component&#x27;;
 import { DesignmodesService } from &#x27;../provider/designmodes.service&#x27;;
 import { PatternService } from &#x27;../provider/pattern.service&#x27;;
 import { MaterialsService } from &#x27;../provider/materials.service&#x27;;
+import { SystemsService } from &#x27;../provider/systems.service&#x27;;
 import { FabricssimService } from &#x27;../provider/fabricssim.service&#x27;;
 import { Shuttle } from &#x27;../model/shuttle&#x27;;
 import { cross } from &#x27;d3-array&#x27;;
+import { System } from &#x27;../model/system&#x27;;
 
 @Component({
   selector: &#x27;app-draftviewer&#x27;,
@@ -4717,7 +4724,8 @@ export class DraftviewerComponent implements OnInit {
     private fs: FileService,
     private dm: DesignmodesService,
     private ps: PatternService,
-    private ms: MaterialsService
+    private ms: MaterialsService,
+    private ss: SystemsService
     ) { 
 
     this.flag_recompute &#x3D; false;
@@ -5150,12 +5158,12 @@ export class DraftviewerComponent implements OnInit {
     if(this.selection.getTargetId() &#x3D;&#x3D;&#x3D; &#x27;weft-systems&#x27;){
       for(var i &#x3D; 0; i &lt; h; i++){
         temp_copy.push([]);
-        for(var j &#x3D; 0; j &lt; this.weave.weft_systems.length; j++){
+        for(var j &#x3D; 0; j &lt; this.ss.weft_systems.length; j++){
           temp_copy[i].push(false);
         }
       }
     }else if(this.selection.getTargetId()&#x3D;&#x3D;&#x3D; &#x27;warp-systems&#x27;){
-      for(var i &#x3D; 0; i &lt; this.weave.warp_systems.length; i++){
+      for(var i &#x3D; 0; i &lt; this.ss.warp_systems.length; i++){
         temp_copy.push([]);
         for(var j &#x3D; 0; j &lt; w; j++){
           temp_copy[i].push(false);
@@ -5320,7 +5328,9 @@ export class DraftviewerComponent implements OnInit {
          
          cx.fillStyle &#x3D; &quot;#ffffff&quot;;  
          cx.font &#x3D; &quot;10px Arial&quot;;
-         cx.fillText(this.weave.getWeftSystemCode(i, this.render.visibleRows), dims.w/3, (dims.h*i)+3*dims.h/4);
+
+         const sys &#x3D; this.weave.getWeftSystemId(i, this.render.visibleRows);
+         cx.fillText(this.ss.getWeftSystemCode(sys), dims.w/3, (dims.h*i)+3*dims.h/4);
 
   }
 
@@ -5360,7 +5370,9 @@ export class DraftviewerComponent implements OnInit {
   
          cx.fillStyle &#x3D; &quot;#ffffff&quot;;  
          cx.font &#x3D; &quot;10px Arial&quot;;
-         cx.fillText(this.weave.getWarpSystemCode(j),(dims.w*j)+dims.w/3, dims.w-(margin*3));
+
+         const sys &#x3D; this.weave.getWarpSystemId(j);
+         cx.fillText(this.ss.getWeftSystemCode(sys),(dims.w*j)+dims.w/3, dims.w-(margin*3));
 
 
   }
@@ -5505,11 +5517,11 @@ export class DraftviewerComponent implements OnInit {
 
     if(screen_row &lt; 0){ return; }
 
-    var newSystem &#x3D; this.weave.getNextWeftSystem(draft_row);
+    var newSystem &#x3D; this.ss.getNextWeftSystem(draft_row, this.weave);
 
     this.weave.rowSystemMapping[draft_row] &#x3D; newSystem;
 
-    this.weave.updateSystemVisibility(&#x27;weft&#x27;);
+    //this.weave.updateSystemVisibility(&#x27;weft&#x27;);
 
     this.redraw({weft_systems: true});
 
@@ -5565,11 +5577,11 @@ export class DraftviewerComponent implements OnInit {
 
     if(col &lt; 0){ return; }
 
-    var newSystem &#x3D; this.weave.getNextWarpSystem(col);
+    var newSystem &#x3D; this.ss.getNextWarpSystem(col, this.weave);
 
     this.weave.colSystemMapping[col] &#x3D; newSystem;
 
-    this.weave.updateSystemVisibility(&#x27;warp&#x27;);
+    //this.weave.updateSystemVisibility(&#x27;warp&#x27;);
     this.drawWarpSelectorCell(this.cxWarpSystems,(col));
     this.redraw({warp_systems: true});
   }
@@ -6381,7 +6393,7 @@ public drawWeftEnd(top, left, shuttle){
         for(var o in overs){
             const shuttle_id &#x3D; this.weave.colShuttleMapping[overs[o]];
             const system_id &#x3D; this.weave.colSystemMapping[overs[o]];
-            if(this.weave.warp_systems[system_id].isVisible()) this.drawWeftUp(i, overs[o], this.ms.getShuttle(shuttle_id));
+            if(this.ss.warp_systems[system_id].isVisible()) this.drawWeftUp(i, overs[o], this.ms.getShuttle(shuttle_id));
         }
 
     }
@@ -6673,7 +6685,7 @@ public redraw(flags:any){
      for (var x &#x3D; 0; x &lt; this.weave.colShuttleMapping.length; x++) {
      
       var id &#x3D; this.weave.colShuttleMapping[x];
-      var system &#x3D; this.weave.warp_systems[this.weave.colSystemMapping[x]];
+      var system &#x3D; this.ss.warp_systems[this.weave.colSystemMapping[x]];
       var shuttle &#x3D; this.ms.getShuttle(id);
 
         if(!system.visible){
@@ -6705,7 +6717,7 @@ public redraw(flags:any){
     for (var x &#x3D; 0; x &lt; this.weave.colShuttleMapping.length; x++) {
      
       var id &#x3D; this.weave.colShuttleMapping[x];
-      var system &#x3D; this.weave.warp_systems[this.weave.colSystemMapping[x]];
+      var system &#x3D; this.ss.warp_systems[this.weave.colSystemMapping[x]];
       var shuttle &#x3D; this.ms.getShuttle(id);
 
       if(system.visible){
