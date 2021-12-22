@@ -439,6 +439,9 @@
                                     <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../interfaces/Model.html" >Model</a>
+                                </li>
+                                <li class="link">
                                     <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
                                 </li>
                                 <li class="link">
@@ -947,6 +950,9 @@
                                            <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../interfaces/Model.html" >Model</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
                                        </li>
                                        <li class="link">
@@ -1070,6 +1076,12 @@
                                 </td>
                             </tr>
             
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description"><p>add models on load</p>
+            </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
             </section>
@@ -1080,23 +1092,20 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b><span class="modifier"></span> loadModels</b>
+                                    <b> getModel</b>
                                 </td>
                             </tr>
             
                             <tr>
                                 <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play ">
-                                            <span class="fa fa-"></span>
-                                        </span>
-                                    <code>loadModels(collection: string)</code>
+            <code>getModel(name: string)</code>
                                 </td>
                             </tr>
             
                             <tr>
                                 <td class="col-md-4">
                                         <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
+                                            <b>Returns: </b>    <code>Model</code>
             
                                         </div>
                                 </td>
@@ -1113,7 +1122,7 @@
             
                             <tr>
                                 <td class="col-md-4">
-            <code>printDecoder()</code>
+            <code>printDecoder(collection: string)</code>
                                 </td>
                             </tr>
             
@@ -1164,7 +1173,7 @@
                                         <span class="modifier-icon method fa fa-play ">
                                             <span class="fa fa-"></span>
                                         </span>
-                                    <code>generateFromSeed(draft: any)</code>
+                                    <code>generateFromSeed(draft: any, collection: any)</code>
                                 </td>
                             </tr>
             
@@ -1206,42 +1215,12 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> decoder</b>
+                                    <b><span class="modifier">Private</span> collections</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <span class="modifier-icon fa fa-lock"></span><code>decoder:     <code>any</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> encoder_log_var</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <span class="modifier-icon fa fa-lock"></span><code>encoder_log_var:     <code>any</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> encoder_mean</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <span class="modifier-icon fa fa-lock"></span><code>encoder_mean:     <code>any</code>
+                                    <span class="modifier-icon fa fa-lock"></span><code>collections:     <code>string[]</code>
             </bcode>
                                 </td>
                             </tr>
@@ -1262,6 +1241,21 @@
                             </tr>
                         </tbody>
                     </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b><span class="modifier">Private</span> models</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <span class="modifier-icon fa fa-lock"></span><code>models:     <code>Model[]</code>
+            </bcode>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
             </section>
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
@@ -1269,27 +1263,70 @@
 import { std, mean } from &#x27;mathjs&#x27;
 import { Injectable } from &#x27;@angular/core&#x27;;
 
+
+interface Model{
+    name: string,
+    decoder: any,
+    encoder_log_var: any, 
+    encoder_mean: any
+}
+
+
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
 export class VaeService {
   private epsilons: any &#x3D; [];
   private batch_size: number &#x3D; 16;
-  private decoder;
-  private encoder_log_var;
-  private encoder_mean;
+  private models: Array&lt;Model&gt; &#x3D; [];
+  private collections: Array&lt;string&gt; &#x3D; [&#x27;crackle_weave&#x27;, &#x27;german&#x27;];
   
-  constructor() { }
+  /**
+   * add models on load
+   */
+  constructor() { 
 
-  async loadModels(collection: string) {
-      console.log(&quot;collection&quot;, collection);
-    this.decoder &#x3D; await tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/decoder/model.json&#x27;);
-    this.encoder_log_var &#x3D; await tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/encoder_log_var/model.json&#x27;);
-    this.encoder_mean &#x3D; await tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/encoder_mean/model.json&#x27;);
-}
 
-printDecoder(){
-    console.log(this.decoder);
+    this.collections.forEach(
+        collection &#x3D;&gt;  {
+
+            return Promise.all(
+                [tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/decoder/model.json&#x27;), 
+                tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/encoder_log_var/model.json&#x27;),
+                tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/encoder_mean/model.json&#x27;)
+            ]).then(model &#x3D;&gt; {
+                 this.models.push(&lt;Model&gt; {
+                    name: collection,
+                    decoder: model[0],
+                    encoder_log_var:model [1],
+                    encoder_mean: model[2]
+                });
+                }
+            ).catch(console.error);
+
+           
+        }
+    ) 
+
+  
+
+ 
+
+
+
+  }
+
+  getModel(name: string) : Model {
+      const m &#x3D; this.models.find(el &#x3D;&gt; el.name &#x3D;&#x3D;&#x3D; name);
+      if(m &#x3D;&#x3D;&#x3D; undefined) console.error(&quot;cannot find model with name &quot;, name);
+      return m;
+  }
+
+
+printDecoder(collection: string){
+    
+    const m: Model &#x3D; this.getModel(collection);
+    console.log(m.decoder);
 }
 
 cleanDraft(draft) {
@@ -1310,7 +1347,10 @@ cleanDraft(draft) {
     return thresholded_draft;
 }
 
-async generateFromSeed(draft) {
+async generateFromSeed(draft, collection) {
+
+    const m: Model &#x3D; this.getModel(collection);
+
     var newDraft &#x3D; [];
     for (var i &#x3D; 0; i &lt; draft.length; i++) {
         newDraft.push([]);
@@ -1318,8 +1358,11 @@ async generateFromSeed(draft) {
             newDraft[i].push([draft[i][j]]);
         }
     }
-    let mean &#x3D; this.encoder_mean.predict(tf.tensor([newDraft]));
-    let log_var &#x3D; this.encoder_log_var.predict(tf.tensor([newDraft]));
+
+    console.log(&quot;new draft is&quot;, newDraft);
+
+    let mean &#x3D; m.encoder_mean.predict(tf.tensor([newDraft]));
+    let log_var &#x3D; m.encoder_log_var.predict(tf.tensor([newDraft]));
 
     let epsilon_shape &#x3D; mean.shape;
     this.epsilons.push([]);
@@ -1332,7 +1375,7 @@ async generateFromSeed(draft) {
     
     var z_sample &#x3D; tf.add(tf.add(mean, tf.exp(log_var)), this.epsilons[this.epsilons.length-1]);
     let tile_multiple &#x3D; [this.batch_size, 1];
-    let x_decoded &#x3D; this.decoder.predict(tf.tile(z_sample, tile_multiple), this.batch_size);
+    let x_decoded &#x3D; m.decoder.predict(tf.tile(z_sample, tile_multiple), this.batch_size);
     var draftSuggestions &#x3D; [];
     await x_decoded.array().then(array &#x3D;&gt; 
         {

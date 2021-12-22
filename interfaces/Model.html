@@ -350,7 +350,7 @@
                                     <a href="../injectables/PatternService.html" >PatternService</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../injectables/PatternfinderService.html"  class="active" >PatternfinderService</a>
+                                    <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/TreeService.html" >TreeService</a>
@@ -439,7 +439,7 @@
                                     <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../interfaces/Model.html" >Model</a>
+                                    <a href="../interfaces/Model.html"  class="active" >Model</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
@@ -861,7 +861,7 @@
                                            <a href="../injectables/PatternService.html" >PatternService</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../injectables/PatternfinderService.html"  class="active" >PatternfinderService</a>
+                                           <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/TreeService.html" >TreeService</a>
@@ -950,7 +950,7 @@
                                            <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/Model.html" >Model</a>
+                                           <a href="../interfaces/Model.html"  class="active" >Model</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/NodeComponentProxy.html" >NodeComponentProxy</a>
@@ -1036,15 +1036,18 @@
                    
                    </nav>
                </div>
-               <div class="content injectable">
+               <div class="content interface">
                    <div class="content-data">
 
 
 
 
+
+
+
 <ol class="breadcrumb">
-  <li>Injectables</li>
-  <li>PatternfinderService</li>
+  <li>Interfaces</li>
+  <li>Model</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -1062,643 +1065,280 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/app/core/provider/patternfinder.service.ts</code>
+            <code>src/app/core/provider/vae.service.ts</code>
         </p>
 
 
+
+
+
             <section>
-                <h3 id="constructor">Constructor</h3>
+                <h3 id="inputs">Properties</h3>
                     <table class="table table-sm table-bordered">
                         <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>constructor()</code>
-                                </td>
-                            </tr>
-            
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>decoder</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>decoder:     <code>any</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>any</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>encoder_log_var</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>encoder_log_var:     <code>any</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>any</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>encoder_mean</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>encoder_mean:     <code>any</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>any</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <b>name</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>name:     <code>string</code>
+</bcode>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string</code>
+
+                                        </td>
+                                    </tr>
+
+
+
                         </tbody>
                     </table>
             </section>
-
-            <section>
-                <h3 id="methods">Methods</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> getThreadingFromArr</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>getThreadingFromArr(arr: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> getTreadlingFromArr</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>getTreadlingFromArr(arr: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findBasePatternString</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findBasePatternString(subsection: string)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findBasePatternArray</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findBasePatternArray(pattern: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> toString</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>toString(pattern: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> toArray</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>toArray(pattern: string)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> countOccurances</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>countOccurances(arr: any, item: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findPatterns</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findPatterns(sequence: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findDraftPatterns</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findDraftPatterns(treadlingPatterns: any, treadling: any, threadingPatterns: any, threading: any, draft: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> computePatterns</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>computePatterns(threading: any, treadling: any, draft: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </section>
-
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
+        <pre><code class="hljs javascript">import * as tf from &#x27;@tensorflow/tfjs&#x27;
+import { std, mean } from &#x27;mathjs&#x27;
+import { Injectable } from &#x27;@angular/core&#x27;;
+
+
+interface Model{
+    name: string,
+    decoder: any,
+    encoder_log_var: any, 
+    encoder_mean: any
+}
+
 
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
-export class PatternfinderService {
+export class VaeService {
+  private epsilons: any &#x3D; [];
+  private batch_size: number &#x3D; 16;
+  private models: Array&lt;Model&gt; &#x3D; [];
+  private collections: Array&lt;string&gt; &#x3D; [&#x27;crackle_weave&#x27;, &#x27;german&#x27;];
+  
+  /**
+   * add models on load
+   */
+  constructor() { 
 
-  constructor() { }
 
-  public getThreadingFromArr(arr) {
-    var marked_strings: number[][] &#x3D; [];
-    var marked_strings_frame_tracker: number[] &#x3D; [];
-    var threading: number[][] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; arr.length; i++) {
-        threading.push([]);
-        for (var j &#x3D; 0; j &lt; arr[i].length; j++) {
-            threading[i].push(0);
-        }
-    }
-    var frame_count: number &#x3D; 0;
+    this.collections.forEach(
+        collection &#x3D;&gt;  {
 
-    for (var c &#x3D; 0; c &lt; arr.length; c++) {
-        if (!marked_strings.includes(arr[c])) {
-            marked_strings.push(arr[c]);
-            marked_strings_frame_tracker.push(frame_count);
-            threading[frame_count][c] &#x3D; 1;
-            frame_count +&#x3D; 1;
-        } else {
-            for (var s &#x3D; 0; s &lt; marked_strings.length; s++) {
-                if (marked_strings[s] &#x3D;&#x3D; arr[c]) {
-                    threading[marked_strings_frame_tracker[s]][c] &#x3D; 1;
+            return Promise.all(
+                [tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/decoder/model.json&#x27;), 
+                tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/encoder_log_var/model.json&#x27;),
+                tf.loadLayersModel(&#x27;../../../assets/&#x27; + collection + &#x27;/encoder_mean/model.json&#x27;)
+            ]).then(model &#x3D;&gt; {
+                 this.models.push(&lt;Model&gt; {
+                    name: collection,
+                    decoder: model[0],
+                    encoder_log_var:model [1],
+                    encoder_mean: model[2]
+                });
                 }
-            }
-        }
-    }
+            ).catch(console.error);
 
-    var max_idx &#x3D; 0;
-    for (var i &#x3D; threading.length-1; i &gt;&#x3D; 0; i--) {
-        if (threading[i].find(elmt &#x3D;&gt; elmt &#x3D;&#x3D; 1)) {
-            for (var j &#x3D; 0; j &lt; threading[i].length; j++) {
-                if (threading[i][j] &#x3D;&#x3D; 0) {
-                    var allZero: boolean &#x3D; true;
-                    for (var k &#x3D; j+1; k &lt; threading[i].length; k++) {
-                        if (threading[i][k] &#x3D;&#x3D; 1) {
-                            allZero &#x3D; false;
-                        }
-                    }
-                    if (allZero &amp;&amp; max_idx &lt; j) {
-                        max_idx &#x3D; j;
-                    }
-                }
-            }
-        } else {
-            threading.splice(i, 1);
+           
         }
-    }
+    ) 
 
-    for (var i &#x3D; 0; i &lt; threading.length; i++) {
-        threading[i].splice(max_idx+1, threading[i].length-max_idx+1);
-    }
-    var toRetThreading: number[] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; threading.length; i++) {
-        for (var j &#x3D; 0; j &lt; threading[i].length; j++) {
-            if (threading[i][j] &#x3D;&#x3D; 1) {
-                toRetThreading.push(j);
-                break;
-            }
-        }
-    }
-    return toRetThreading;
+  
+
+ 
+
+
+
+  }
+
+  getModel(name: string) : Model {
+      const m &#x3D; this.models.find(el &#x3D;&gt; el.name &#x3D;&#x3D;&#x3D; name);
+      if(m &#x3D;&#x3D;&#x3D; undefined) console.error(&quot;cannot find model with name &quot;, name);
+      return m;
+  }
+
+
+printDecoder(collection: string){
+    
+    const m: Model &#x3D; this.getModel(collection);
+    console.log(m.decoder);
 }
 
-public getTreadlingFromArr(arr) {
-    var marked_strings: number[][] &#x3D; [];
-    var marked_strings_col_tracker: number[] &#x3D; [];
-    var treadling: number[][] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; arr.length; i++) {
-        treadling.push([]);
-        for (var j &#x3D; 0; j &lt; arr[i].length; j++) {
-            treadling[i].push(0);
-        }
-    }
-    var treadle_count: number &#x3D; 0;
-
-    for (var r &#x3D; 0; r &lt; arr.length; r++) {
-        if (!marked_strings.includes(arr[r])) {
-            marked_strings.push(arr[r]);
-            marked_strings_col_tracker.push(treadle_count);
-            treadling[r][treadle_count] &#x3D; 1;
-            treadle_count +&#x3D; 1;
-        } else {
-            for (var s &#x3D; 0; s &lt; marked_strings.length; s++) {
-                if (marked_strings[s] &#x3D;&#x3D; arr[r]) {
-                    treadling[r][marked_strings_col_tracker[s]] &#x3D; 1;
-                }
+cleanDraft(draft) {
+    let std_dev &#x3D; std(draft);
+    let mean_val &#x3D; mean(draft);
+    var thresholded_draft &#x3D; JSON.parse(JSON.stringify(draft)); //making deep copy of the draft
+    
+    for (var weft &#x3D; 0; weft &lt; draft.length; weft++) {
+        for (var warp &#x3D; 0; warp &lt; draft[weft].length; warp++) {
+            if (draft[weft][warp] &gt;&#x3D; mean_val-0.08*std_dev) {
+                thresholded_draft[weft][warp] &#x3D; 1;
+            } else {
+                thresholded_draft[weft][warp] &#x3D; 0;
             }
         }
     }
 
-    var max_idx &#x3D; 0;
-    for (var i &#x3D; treadling.length-1; i &gt;&#x3D; 0; i--) {
-        if (treadling[i].find(elmt &#x3D;&gt; elmt &#x3D;&#x3D; 1)) {
-            for (var j &#x3D; 0; j &lt; treadling[i].length; j++) {
-                if (treadling[i][j] &#x3D;&#x3D; 0) {
-                    var allZero: boolean &#x3D; true;
-                    for (var k &#x3D; j+1; k &lt; treadling[i].length; k++) {
-                        if (treadling[i][k] &#x3D;&#x3D; 1) {
-                            allZero &#x3D; false;
-                        }
-                    }
-                    if (allZero &amp;&amp; max_idx &lt; j) {
-                        max_idx &#x3D; j;
-                    }
-                }
-            }
-        } else {
-            treadling.splice(i, 1);
-        }
-    }
-
-    for (var i &#x3D; 0; i &lt; treadling.length; i++) {
-        treadling[i].splice(max_idx+1, treadling[i].length-max_idx+1);
-    }
-    var toRetTreadling: number[] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; treadling.length; i++) {
-        for (var j &#x3D; 0; j &lt; treadling[i].length; j++) {
-            if (treadling[i][j] &#x3D;&#x3D; 1) {
-                toRetTreadling.push(j);
-                break;
-            }
-        }
-    }
-    return toRetTreadling;
+    return thresholded_draft;
 }
 
-private findBasePatternString(subsection: string) {
-    var str: string &#x3D; &quot;&quot;;
-    var pattern: any &#x3D; [];
-    for (var i &#x3D; 0; i &lt; subsection.length; i++) {
-        let currentChar &#x3D; subsection[i]
-        if (currentChar &#x3D;&#x3D; &quot;,&quot;) {
-            pattern.push(parseInt(str));
-            str &#x3D; &quot;&quot;;
-        } else {
-            str +&#x3D; currentChar;
+async generateFromSeed(draft, collection) {
+
+    const m: Model &#x3D; this.getModel(collection);
+
+    var newDraft &#x3D; [];
+    for (var i &#x3D; 0; i &lt; draft.length; i++) {
+        newDraft.push([]);
+        for (var j &#x3D; 0; j &lt; draft[i].length; j++) {
+            newDraft[i].push([draft[i][j]]);
         }
     }
-    return this.findBasePatternArray(pattern)
-}
 
-private findBasePatternArray(pattern: any) {
-    for (var i &#x3D; 2; i &lt; pattern.length; i++) {
-        if (pattern.length % i &#x3D;&#x3D; 0) {
-            var match &#x3D; true;
-            for (var j &#x3D; 1; j &lt; i; j++) {
-                if (pattern.slice(0, pattern.length/i) !&#x3D; pattern.slice((pattern.length/i)*j,(pattern.length/i)*(j+1))) {
-                    match &#x3D; false;
-                }
-                if (match) {
-                    return this.findBasePatternArray(pattern.slice(0, pattern.length/i));
-                }
-            }
+    console.log(&quot;new draft is&quot;, newDraft);
+
+    let mean &#x3D; m.encoder_mean.predict(tf.tensor([newDraft]));
+    let log_var &#x3D; m.encoder_log_var.predict(tf.tensor([newDraft]));
+
+    let epsilon_shape &#x3D; mean.shape;
+    this.epsilons.push([]);
+    for (var i &#x3D; 0; i &lt; epsilon_shape[0]; i++) {
+        this.epsilons[this.epsilons.length-1].push([]);
+        for (var j &#x3D; 0; j &lt; epsilon_shape[1]; j++) {
+            this.epsilons[this.epsilons.length-1][i].push(Math.random());
         }
-    }
-    return pattern;
-}
-
-private toString(pattern: any) {
-    var strPattern: string &#x3D; &quot;&quot;;
-    for (var i &#x3D; 0; i &lt; pattern.length; i++) {
-        var num: number &#x3D; pattern[i];
-        strPattern +&#x3D; num.toString();
-        strPattern +&#x3D; &quot;,&quot;;
-    }
-    return strPattern.slice(0, -1);
-}
-
-private toArray(pattern: string) {
-    var arrayPattern: any &#x3D; [];
-    var temp: string &#x3D; &quot;&quot;;
-    for (var i &#x3D; 0; i &lt; pattern.length; i++) {
-        var currentChar &#x3D; pattern[i];
-        if (currentChar !&#x3D; &quot;,&quot;) {
-            temp +&#x3D; currentChar;
-            if (i &#x3D;&#x3D; pattern.length - 1) {
-                arrayPattern.push(parseInt(temp));
-            }
-        } else if (currentChar &#x3D;&#x3D; &quot;,&quot;) {
-            arrayPattern.push(parseInt(temp));
-            temp &#x3D; &quot;&quot;;
-        } 
-    }
-    return arrayPattern;
-}
-
-private countOccurances(arr, item) {
-    var count &#x3D; 0;
-    for (var i in arr) {
-        if (i &#x3D;&#x3D; item) {
-            count +&#x3D; 1;
-        }
-    }
-    return count;
-}
-
-private findPatterns(sequence) {
-    for (var i &#x3D; 0; i &lt; sequence.length; i++) {
-        if (sequence[i] &#x3D;&#x3D; -1) {
-            var allEmpty &#x3D; true;
-            for (var j &#x3D; i+1; j &lt; sequence.length; j++) {
-                if (sequence[j] !&#x3D; -1) {
-                    allEmpty &#x3D; false;
-                }
-            }
-            if (allEmpty) {
-                break;
-            }
-        }
-    }
-    if (allEmpty) {
-        sequence.splice(i, sequence.length - i);
-    }
-    var singles &#x3D; {};
-
-    for (var i &#x3D; 0; i &lt; sequence.length; i++) {
-        var count &#x3D; 0;
-        sequence.forEach(element &#x3D;&gt; {
-            if (element &#x3D;&#x3D; sequence[i]) {
-                count +&#x3D; 1;
-            }
-        });
-        singles[sequence[i]] &#x3D; count;
-    }
-    for (var key in singles) {
-        if (singles[key] &#x3D;&#x3D; 1) {
-            delete singles[key];
-        }
-    }
-    if (Object.keys(singles).length &#x3D;&#x3D; 0) {
-        return sequence;
     }
     
-    for (var size &#x3D; 1; size &lt; sequence.length; size++) {
-        for (var i &#x3D; 0; i &lt; sequence.length-1-size; size++) {
-            let key &#x3D; sequence.slice(i, i+size);
-            var repeat &#x3D; true;
-            for (var j &#x3D; i+size; j &lt; sequence.length-1-size; j+&#x3D; size) {
-                if (JSON.stringify(sequence.slice(j, j+size))!&#x3D; JSON.stringify(key)) {
-                    repeat &#x3D; false;
+    var z_sample &#x3D; tf.add(tf.add(mean, tf.exp(log_var)), this.epsilons[this.epsilons.length-1]);
+    let tile_multiple &#x3D; [this.batch_size, 1];
+    let x_decoded &#x3D; m.decoder.predict(tf.tile(z_sample, tile_multiple), this.batch_size);
+    var draftSuggestions &#x3D; [];
+    await x_decoded.array().then(array &#x3D;&gt; 
+        {
+            let x_decoded_arr &#x3D; array;
+            for (var i &#x3D; 0; i &lt; x_decoded_arr.length; i++) {
+                var unclean_draft &#x3D; [];
+                for (var j &#x3D; 0; j &lt; x_decoded_arr[i].length; j++) {
+                    unclean_draft.push([]);
+                    for (var k &#x3D; 0; k &lt; x_decoded_arr[i][j].length; k++) {
+                        unclean_draft[j].push(x_decoded_arr[i][j][k][0]);
+                    }
+                }
+                draftSuggestions.push(this.cleanDraft(unclean_draft));
+            }
+
+
+            var toDelete &#x3D; [];
+            for (var i &#x3D; 0; i &lt; draftSuggestions.length; i++) {
+                for (var j &#x3D; i+1; j &lt; draftSuggestions.length; j++) {
+                    if (JSON.stringify(draftSuggestions[i]) &#x3D;&#x3D;&#x3D; JSON.stringify(draftSuggestions[j])) {
+                        if (!toDelete.includes(j)) {
+                            toDelete.push(j);
+                        }
+                    } 
                 }
             }
-            if (repeat) {
-                return key;
+
+            for (var i &#x3D; 0; i &lt; toDelete.length; i++) {
+                let idx &#x3D; toDelete.length-1-i;
+                draftSuggestions.splice(idx, 1);
             }
-        }
-    }
-    return sequence;
+        });
+        return draftSuggestions;
+
 }
 
-private findDraftPatterns(treadlingPatterns, treadling, threadingPatterns, threading, draft) {
-    var treadlingString: string &#x3D; this.toString(treadling);
-    var threadingString: string &#x3D; this.toString(threading);
 
-
-    var treadlingRanges &#x3D; [];
-    var threadingRanges &#x3D; [];
-
-
-    let idxTreadling &#x3D; treadlingString.indexOf(treadlingPatterns);
-    var length &#x3D; -1;
-
-    for (var j &#x3D; 0; j &lt; treadlingString.length; j++) {
-        if (j &#x3D;&#x3D; idxTreadling) {
-            length +&#x3D; 1;
-            break;
-        }
-        if (treadlingString[j] &#x3D;&#x3D; &quot;,&quot;) {
-            length +&#x3D; 1;
-        }
-    }
-    treadlingRanges.push([length, treadlingPatterns.length]);
-
-    let idxThreading &#x3D; threadingString.indexOf(threadingPatterns);
-    var length &#x3D; -1;
-
-    for (var j &#x3D; 0; j &lt; threadingString.length; j++) {
-        if (j &#x3D;&#x3D; idxThreading) {
-            length +&#x3D; 1;
-            break;
-        }
-        if (threadingString[j] &#x3D;&#x3D; &quot;,&quot;) {
-            length +&#x3D; 1;
-        }
-    }
-    threadingRanges.push([length, threadingPatterns.length]);
-
-    var draftPatterns &#x3D; [];
-    for (var i &#x3D; 0; i &lt; treadlingRanges.length; i++) {
-        for (var j &#x3D; 0; j &lt; threadingRanges.length; j++) {
-            var pattern &#x3D; [];
-            var counter &#x3D; -1;
-            for (var idxWeft &#x3D; treadlingRanges[i][0]; idxWeft &lt; treadlingRanges[i][1]; idxWeft +&#x3D; 1) {
-                counter +&#x3D; 1;
-                pattern.push([]);
-                for (var idxWarp &#x3D; threadingRanges[j][0]; idxWarp &lt; threadingRanges[j][1]; idxWarp +&#x3D; 1) {
-                    pattern[counter].push(draft[idxWeft][idxWarp]);
-                }
-            }
-            draftPatterns.push(pattern);
-        }
-    }
-    var transformedDraftPatterns &#x3D; [];
-
-    for (var i &#x3D; 0; i &lt; draftPatterns.length; i++) {
-        transformedDraftPatterns.push([]);
-        for (var j &#x3D; 0; j &lt; draftPatterns[i].length; j++) {                
-            transformedDraftPatterns[i].push([]);
-            for(var k &#x3D; 0; k &lt; draftPatterns[i][j].length; k++) {
-                if (draftPatterns[i][j][k] &#x3D;&#x3D; 1 || draftPatterns[i][j][k].is_up) {
-                    transformedDraftPatterns[i][j].push(1);
-                } else {
-                    transformedDraftPatterns[i][j].push(0);
-                }
-            }
-        }
-    }
-    return transformedDraftPatterns[0];
-}
-
-  public computePatterns(threading, treadling, draft) {
-
-      let threadingPatterns &#x3D; this.findPatterns(threading);
-      let treadlingPatterns &#x3D; this.findPatterns(treadling);
-
-      return this.findDraftPatterns(treadlingPatterns, treadling, threadingPatterns, threading, draft);
-  }
 }
 </code></pre>
     </div>
 </div>
-
-
-
 
 
 
