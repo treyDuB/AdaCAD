@@ -1169,6 +1169,7 @@ import { VaeService} from &quot;../../core/provider/vae.service&quot;
 import { PatternfinderService} from &quot;../../core/provider/patternfinder.service&quot;
 import utilInstance from &#x27;../../core/model/util&#x27;;
 import { Loom } from &#x27;../../core/model/loom&#x27;;
+import { SystemsService } from &#x27;../../core/provider/systems.service&#x27;;
 
 export interface OperationParams {
   name: string,
@@ -1201,7 +1202,10 @@ export class OperationService {
   ops: Array&lt;Operation&gt; &#x3D; [];
   classification: Array&lt;OperationClassification&gt; &#x3D; [];
 
-  constructor(private vae: VaeService, private pfs: PatternfinderService) { 
+  constructor(
+    private vae: VaeService, 
+    private pfs: PatternfinderService,
+    private ss: SystemsService) { 
 
     const rect: Operation &#x3D; {
       name: &#x27;rectangle&#x27;,
@@ -1361,8 +1365,8 @@ export class OperationService {
 
         const rowSystems: Array&lt;Array&lt;number&gt;&gt; &#x3D; inputs.map(el &#x3D;&gt; el.rowSystemMapping);
        
-        const uniqueSystemRows: Array&lt;Array&lt;number&gt;&gt; &#x3D; utilInstance.makeSystemsUnique(rowSystems);
-
+        const uniqueSystemRows: Array&lt;Array&lt;number&gt;&gt; &#x3D; this.ss.makeWeftSystemsUnique(rowSystems);
+        console.log(&quot;Unique systems&quot;, uniqueSystemRows);
 
         //create a draft to hold the merged values
         const d:Draft &#x3D; new Draft({warps: max_warps, wefts:(max_wefts * inputs.length)});
