@@ -1092,6 +1092,102 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b> getWeftSystem</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getWeftSystem(id: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/System.html" target="_self" >System</a></code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getWarpSystem</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getWarpSystem(id: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/System.html" target="_self" >System</a></code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> addWeftSystemFromId</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>addWeftSystemFromId(id: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>void</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> addWarpSystemFromId</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>addWarpSystemFromId(id: number)</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code>void</code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b> addWeftSystem</b>
                                 </td>
                             </tr>
@@ -1350,6 +1446,29 @@ export class SystemsService {
   warp_systems: Array&lt;System&gt; &#x3D; [new System()];
 
   constructor() { }
+
+  getWeftSystem(id: number) : System{
+    return this.weft_systems.find(el &#x3D;&gt; el.id &#x3D;&#x3D;&#x3D; id);
+  }
+
+  getWarpSystem(id: number) : System{
+    return this.warp_systems.find(el &#x3D;&gt; el.id &#x3D;&#x3D;&#x3D; id);
+  }
+
+  addWeftSystemFromId(id: number) {
+    const system &#x3D; new System();
+    system.setID(id);
+    system.setVisible(true);
+    this.weft_systems.push(system);
+  }
+
+  addWarpSystemFromId(id: number) {
+    const system &#x3D; new System();
+    system.setID(id);
+    system.setVisible(true);
+    this.warp_systems.push(system);
+  }
+
 
   addWeftSystem(system) {
     system.setID(this.weft_systems.length);

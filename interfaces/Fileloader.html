@@ -1356,6 +1356,7 @@ export class FileService {
 
       drafts &#x3D; data.drafts.map(draftdata &#x3D;&gt; {
         const draft: Draft &#x3D;  new Draft({wefts: draftdata.wefts, warps: draftdata.warps, pattern: draftdata.pattern});
+       
         if(draftdata.id !&#x3D;&#x3D; undefined) draft.overloadId(draftdata.id);
         if(draftdata.name !&#x3D;&#x3D; undefined) draft.overloadName(draftdata.name);
         
@@ -1383,25 +1384,41 @@ export class FileService {
             }
           }
         }
-       
-        if(data.weft_systems !&#x3D;&#x3D; undefined){
-          data.weft_systems.forEach(el &#x3D;&gt; this.ss.addWeftSystem(el));
-        }
 
-        if(data.weft_systems !&#x3D;&#x3D; undefined){
-          data.warp_systems.forEach(el &#x3D;&gt; this.ss.addWarpSystem(el));
-        }
-        if(data.rowShuttleMapping !&#x3D;&#x3D; undefined) draft.overloadRowShuttleMapping(data.rowShuttleMapping); 
-        if(data.colShuttleMapping !&#x3D;&#x3D; undefined) draft.overloadColShuttleMapping(data.colShuttleMapping); 
-        if(data.rowSystemMapping !&#x3D;&#x3D; undefined) draft.overloadRowSystemMapping(data.rowSystemMapping); 
-        if(data.colSystemMapping !&#x3D;&#x3D; undefined) draft.overloadColSystemMapping(data.colSystemMapping);
-        if(data.notes !&#x3D;&#x3D; undefined) draft.overloadNotes(data.notes);
-        if(data.name !&#x3D;&#x3D; undefined) draft.overloadName(data.name);
+        //scan the systems and add any that need to be added
+        if(draftdata.rowSystemMapping !&#x3D;&#x3D; undefined){
+          
+          draftdata.rowSystemMapping.forEach(el &#x3D;&gt; {
+            if(this.ss.getWeftSystem(el) &#x3D;&#x3D;&#x3D; undefined) this.ss.addWeftSystemFromId(el);
+          });
+
+          draft.overloadRowSystemMapping(draftdata.rowSystemMapping);
+        }  
+
+          //scan the systems and add any that need to be added
+          if(draftdata.colSystemMapping !&#x3D;&#x3D; undefined){
+          
+            draftdata.colSystemMapping.forEach(el &#x3D;&gt; {
+              if(this.ss.getWarpSystem(el) &#x3D;&#x3D;&#x3D; undefined) this.ss.addWarpSystemFromId(el);
+            });
+  
+            draft.overloadColSystemMapping(draftdata.rowSystemMapping);
+          }  
+  
+
+        console.log(&quot;draft data&quot;, draftdata);
+
+        if(draftdata.rowShuttleMapping !&#x3D;&#x3D; undefined) draft.overloadRowShuttleMapping(draftdata.rowShuttleMapping); 
+        if(draftdata.colShuttleMapping !&#x3D;&#x3D; undefined) draft.overloadColShuttleMapping(draftdata.colShuttleMapping); 
+        // if(draftdata.rowSystemMapping !&#x3D;&#x3D; undefined) draft.overloadRowSystemMapping(draftdata.rowSystemMapping); 
+        // if(draftdata.colSystemMapping !&#x3D;&#x3D; undefined) draft.overloadColSystemMapping(draftdata.colSystemMapping);
+        if(draftdata.notes !&#x3D;&#x3D; undefined) draft.overloadNotes(draftdata.notes);
+
         return draft; 
+
       });
 
 
-      console.log(&quot;data looms in fileloader&quot;, data.looms);
       if(data.looms &#x3D;&#x3D;&#x3D; undefined || data.looms.length &#x3D;&#x3D;&#x3D; 0) data.looms &#x3D; [];
 
       looms &#x3D; data.looms.map((data, ndx) &#x3D;&gt; {
