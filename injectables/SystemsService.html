@@ -1411,7 +1411,7 @@
             
                             <tr>
                                 <td class="col-md-4">
-                                        <div class="io-description"><p>takes system maps and makes them all unique by adding a base value to the n+1th map. This helps when interlacing<br>drafts that have different system mappings, and making sure they are each unique.</p>
+                                        <div class="io-description"><p>takes system maps and makes them all unique by adding a base value to the n+1th map. This helps when interlacing<br>drafts that have different system mappings, and making sure they are each unique.<br>This function will also return standard sized arrays = to the maximum sized input</p>
             </div>
                                         <div class="io-description">
                                                 <b>Parameters :</b>
@@ -1525,6 +1525,7 @@
     <div class="tab-pane fade tab-source-code" id="source">
         <pre><code class="hljs javascript">import { I } from &#x27;@angular/cdk/keycodes&#x27;;
 import { Injectable } from &#x27;@angular/core&#x27;;
+import { symbolSquare } from &#x27;d3-shape&#x27;;
 import { Draft } from &#x27;../model/draft&#x27;;
 import { System } from &#x27;../model/system&#x27;;
 import utilInstance from &#x27;../model/util&#x27;;
@@ -1674,15 +1675,16 @@ export class SystemsService {
 
  /**
    * takes system maps and makes them all unique by adding a base value to the n+1th map. This helps when interlacing 
-   * drafts that have different system mappings, and making sure they are each unique.
+   * drafts that have different system mappings, and making sure they are each unique. 
+   * This function will also return standard sized arrays &#x3D; to the maximum sized input
    * @param systems the system mappings to compare
    */
   private makeSystemsUnique(systems: Array&lt;Array&lt;number&gt;&gt;) : Array&lt;Array&lt;number&gt;&gt; {
    
     if(systems.length &#x3D;&#x3D;&#x3D; 0) return [];
 
+
     const max_in_systems: Array&lt;number&gt; &#x3D; systems.map(el &#x3D;&gt; utilInstance.getArrayMax(el));
-    let max_total: number &#x3D; utilInstance.getArrayMax(max_in_systems);
    
     let last_max &#x3D; 0;
     const unique_systems &#x3D; systems.map((sys, ndx) &#x3D;&gt; {
@@ -1694,6 +1696,22 @@ export class SystemsService {
       }
     });  
 
+     //standardize teh lengths of all the returned arrays 
+     const max_length:number &#x3D; unique_systems.reduce((acc, el) &#x3D;&gt; {
+      const len &#x3D; el.length;
+      if(len &gt; acc) return len;
+      else return acc;
+    }, 0);
+
+
+    unique_systems.forEach((sys, ndx) &#x3D;&gt; {
+      if(sys.length &lt; max_length){
+        for(let i &#x3D; sys.length; i &lt; max_length; i++){
+          sys.push(sys[0]);
+        }
+      }
+    });
+
     return unique_systems;
   }
 
@@ -1701,11 +1719,13 @@ export class SystemsService {
 
     const unique &#x3D; this.makeSystemsUnique(systems);
 
+    //add any weft systems required
     unique.forEach(system &#x3D;&gt; {
       system.forEach(el &#x3D;&gt; {
         if(this.getWeftSystem(el) &#x3D;&#x3D;&#x3D; undefined) this.addWeftSystemFromId(el);
       })
     })
+
 
     return unique;
   }

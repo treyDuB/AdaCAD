@@ -1136,6 +1136,7 @@
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
         <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
+import * as _ from &#x27;lodash&#x27;;
 import { ShuttlesModal } from &#x27;../modal/shuttles/shuttles.modal&#x27;;
 import { Shuttle } from &#x27;../model/shuttle&#x27;;
 
@@ -1250,6 +1251,35 @@ export class MaterialsService {
   getFirstShuttle()  : Shuttle {
     if(this.materials.length &#x3D;&#x3D;&#x3D; 0) return null;
     return this.materials[0];
+  }
+
+  /**
+   * given a list of material mappings, returns a list where they are all teh same size, 
+   * @param systems the system mappings to compare
+   */
+  standardizeLists(shuttles: Array&lt;Array&lt;number&gt;&gt;) : Array&lt;Array&lt;number&gt;&gt; {
+   
+    if(shuttles.length &#x3D;&#x3D;&#x3D; 0) return [];
+
+    const standard &#x3D; _.cloneDeep(shuttles);
+
+     //standardize teh lengths of all the returned arrays 
+     const max_length:number &#x3D; standard.reduce((acc, el) &#x3D;&gt; {
+      const len &#x3D; el.length;
+      if(len &gt; acc) return len;
+      else return acc;
+    }, 0);
+
+
+    standard.forEach((sys, ndx) &#x3D;&gt; {
+      if(sys.length &lt; max_length){
+        for(let i &#x3D; sys.length; i &lt; max_length; i++){
+          sys.push(sys[0]);
+        }
+      }
+    });
+
+    return standard;
   }
 
 }

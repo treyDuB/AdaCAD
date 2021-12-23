@@ -1170,6 +1170,7 @@ import { PatternfinderService} from &quot;../../core/provider/patternfinder.serv
 import utilInstance from &#x27;../../core/model/util&#x27;;
 import { Loom } from &#x27;../../core/model/loom&#x27;;
 import { SystemsService } from &#x27;../../core/provider/systems.service&#x27;;
+import { MaterialsService } from &#x27;../../core/provider/materials.service&#x27;;
 
 export interface OperationParams {
   name: string,
@@ -1205,6 +1206,7 @@ export class OperationService {
   constructor(
     private vae: VaeService, 
     private pfs: PatternfinderService,
+    private ms: MaterialsService,
     private ss: SystemsService) { 
 
     const rect: Operation &#x3D; {
@@ -1358,15 +1360,21 @@ export class OperationService {
       max_inputs: 100,
       perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         
+        if(inputs.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve([]);
         const outputs: Array&lt;Draft&gt; &#x3D; [];
 
         const max_wefts:number &#x3D; utilInstance.getMaxWefts(inputs);
         const max_warps:number &#x3D; utilInstance.getMaxWarps(inputs);
 
         const rowSystems: Array&lt;Array&lt;number&gt;&gt; &#x3D; inputs.map(el &#x3D;&gt; el.rowSystemMapping);
-       
+        const colSystems: Array&lt;Array&lt;number&gt;&gt; &#x3D; inputs.map(el &#x3D;&gt; el.colSystemMapping);
         const uniqueSystemRows: Array&lt;Array&lt;number&gt;&gt; &#x3D; this.ss.makeWeftSystemsUnique(rowSystems);
-        console.log(&quot;Unique systems&quot;, uniqueSystemRows);
+        const uniqueSystemCols: Array&lt;Array&lt;number&gt;&gt; &#x3D; this.ss.makeWarpSystemsUnique(colSystems);
+     
+        const rowShuttles: Array&lt;Array&lt;number&gt;&gt; &#x3D; inputs.map(el &#x3D;&gt; el.rowShuttleMapping);
+        const colShuttles: Array&lt;Array&lt;number&gt;&gt; &#x3D; inputs.map(el &#x3D;&gt; el.colShuttleMapping);
+        const standardShuttleRows: Array&lt;Array&lt;number&gt;&gt; &#x3D; this.ms.standardizeLists(rowShuttles);
+        const standardShuttleCols: Array&lt;Array&lt;number&gt;&gt; &#x3D; this.ms.standardizeLists(colShuttles);
 
         //create a draft to hold the merged values
         const d:Draft &#x3D; new Draft({warps: max_warps, wefts:(max_wefts * inputs.length)});
@@ -1383,16 +1391,25 @@ export class OperationService {
                     cell.setHeddle(null);
                 }
 
-                d.colShuttleMapping[j] &#x3D; inputs[select_array].colShuttleMapping[j];
-                d.colSystemMapping[j] &#x3D; inputs[select_array].colSystemMapping[j];
-
                 //this should throw an error if all drafts are using different warp colorings.
             });
-            d.rowShuttleMapping[ndx] &#x3D; inputs[select_array].rowShuttleMapping[select_row];
+
+          
             d.rowSystemMapping[ndx] &#x3D; uniqueSystemRows[select_array][select_row];
+            d.rowShuttleMapping[ndx] &#x3D; standardShuttleRows[select_array][select_row];
 
         });
 
+        //extend systems out so they fit 
+        
+
+        d.colShuttleMapping &#x3D; standardShuttleCols.shift();
+        d.colSystemMapping &#x3D; uniqueSystemCols.shift();
+
+        
+
+
+        console.log(&quot;created draft &quot;, d);
         outputs.push(d);
         return Promise.resolve(outputs);
       }     
