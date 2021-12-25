@@ -1201,7 +1201,7 @@
                             <tr>
                                 <td class="col-md-4">
                                         <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
+                                            <b>Returns: </b>    <code>number</code>
             
                                         </div>
                                 </td>
@@ -1225,7 +1225,7 @@
                             <tr>
                                 <td class="col-md-4">
                                         <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
+                                            <b>Returns: </b>    <code>number</code>
             
                                         </div>
                                 </td>
@@ -1567,16 +1567,18 @@ export class SystemsService {
   }
 
 
-  addWeftSystem(system) {
+  addWeftSystem(system) : number {
     system.setID(this.weft_systems.length);
     system.setVisible(true);
     this.weft_systems.push(system);
+    return system.id;
   }
 
-  addWarpSystem(system) {
+  addWarpSystem(system) : number {
     system.setID(this.warp_systems.length);
     system.setVisible(true);
     this.warp_systems.push(system);
+    return system.id;
   }
 
 
