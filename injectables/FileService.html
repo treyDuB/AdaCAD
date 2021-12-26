@@ -1201,6 +1201,7 @@ import { System } from &#x27;../model/system&#x27;;
  }
 
 export interface FileObj{
+ filename: string,
  nodes: Array&lt;NodeComponentProxy&gt;,
  treenodes: Array&lt;TreeNodeProxy&gt;,
  drafts: Array&lt;Draft&gt;,
@@ -1222,10 +1223,10 @@ export interface LoadResponse{
 
 
 interface Fileloader{
-  ada: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
-  wif: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
-  bmp: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
-  jpg: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  ada: (filename: string, data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  wif: (filename: string, data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  bmp: (filename: string, data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
+  jpg: (filename: string, data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;,
   form: (data: any) &#x3D;&gt; Promise&lt;LoadResponse&gt;
 }
 
@@ -1270,7 +1271,7 @@ export class FileService {
 
   const dloader: Fileloader &#x3D; {
 
-     ada: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
+     ada: async (filename: string, data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1392,6 +1393,7 @@ export class FileService {
 
 
       const envt: FileObj &#x3D; {
+        filename: filename,
         drafts: drafts,
         looms: looms,
         nodes: (data.nodes &#x3D;&#x3D;&#x3D; undefined) ? [] : data.nodes,
@@ -1403,7 +1405,7 @@ export class FileService {
 
 
     }, 
-    wif: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
+    wif: async (filename: string, data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1475,6 +1477,7 @@ export class FileService {
 
     
     const f: FileObj &#x3D; {
+      filename: filename,
       drafts: drafts,
       looms: looms,
       nodes: [proxies.node], 
@@ -1490,7 +1493,7 @@ export class FileService {
      * @param data 
      * @returns 
      */
-    jpg: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
+    jpg: async (filename: string, data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
       console.log(&quot;processing JPG data&quot;)
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1573,6 +1576,7 @@ export class FileService {
 
 
       const f: FileObj &#x3D; {
+        filename: filename,
         drafts: drafts,
         looms: looms,
         nodes: [], 
@@ -1582,7 +1586,7 @@ export class FileService {
   
       return Promise.resolve({data: f ,status: 0});  
     },
-    bmp: async (data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
+    bmp: async (filename: string, data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
       let looms: Array&lt;Loom&gt; &#x3D; [];
@@ -1625,6 +1629,7 @@ export class FileService {
 
     
       const f: FileObj &#x3D; {
+        filename: filename,
         drafts: drafts,
         looms: looms,
         nodes: [proxies.node], 
@@ -1693,6 +1698,7 @@ export class FileService {
 
     
       const envt: FileObj &#x3D; {
+        filename: &quot;adacad mixer&quot;,
         drafts: drafts,
         looms: looms,
         nodes: [proxies.node], 
