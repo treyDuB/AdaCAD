@@ -1331,6 +1331,28 @@ export class OperationService {
       }        
     }
 
+
+    const apply_mats: Operation &#x3D; {
+      name: &#x27;apply materials&#x27;,
+      dx: &quot;applies the materials from the second draft onto the first draft. If they are uneven sizes, it will repeat the materials as a pattern&quot;,
+      params: [],
+      max_inputs: 2,
+      perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
+        
+        if(inputs.length &lt; 2) return Promise.resolve(inputs);
+        const d: Draft &#x3D; new Draft({warps: inputs[0].wefts, wefts:inputs[0].warps});
+        inputs[0].pattern.forEach((row, i) &#x3D;&gt; {
+          row.forEach((cell, j) &#x3D;&gt; {
+            d.pattern[i][j] &#x3D; new Cell(cell.getHeddle());
+          });
+        });
+
+        this.transferSystemsAndShuttles(d, inputs, input_params, &#x27;materialsonly&#x27;);
+        return Promise.resolve([d]);
+      }        
+    }
+
+
     const rotate: Operation &#x3D; {
       name: &#x27;rotate&#x27;,
       dx: &quot;this turns the draft by 90 degrees but leaves materials in same place&quot;,
@@ -3379,6 +3401,7 @@ export class OperationService {
     this.ops.push(makeloom);
     this.ops.push(drawdown);
     this.ops.push(erase_blank);
+    this.ops.push(apply_mats);
 
 
     //** Give it a classification here */
@@ -3439,6 +3462,12 @@ export class OperationService {
       ops: [makeloom, drawdown]}
     );
 
+    this.classification.push(
+      {category: &#x27;aesthetics&#x27;,
+      dx: &quot;2 inputs, i output: applys pattern information from second draft onto the first. To be used for specifiying color repeats&quot;,
+      ops: [apply_mats]}
+    );
+
   }
 
   /**
@@ -3469,6 +3498,11 @@ export class OperationService {
           d.updateWarpSystemsFromPattern(input_to_use.colSystemMapping);
           d.updateWeftSystemsFromPattern(input_to_use.rowSystemMapping);
           break;
+
+      case &#x27;materialsonly&#x27;:
+          d.updateWarpShuttlesFromPattern(inputs[1].colShuttleMapping);
+          d.updateWeftShuttlesFromPattern(inputs[1].rowShuttleMapping);
+        break;
 
       case &#x27;interlace&#x27;:
       case &#x27;layer&#x27;:
