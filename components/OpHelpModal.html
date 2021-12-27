@@ -1131,88 +1131,6 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <b><span class="modifier">Private</span> findDocumentation</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <span class="modifier-icon method fa fa-play lock">
-                                    <span class="fa fa-lock"></span>
-                                </span>
-                            <code>findDocumentation(name: string, element: any)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description"><p>traverses all divs in the &quot;body&quot; in search of the element that matches this name</p>
-    </div>
-                                <div class="io-description">
-                                        <b>Parameters :</b>
-                                        <ul class="jsdoc-params">
-                                                <li>
-                                                    <div>
-                                                        <b>name</b>
-                                                    </div>
-                                                    <div>
-                                                        
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div>
-                                                        <b>element</b>
-                                                    </div>
-                                                    <div>
-                                                        <p>the &quot;html&quot; element of the returned page</p>
-    
-                                                    </div>
-                                                </li>
-                                        </ul>
-                                </div>
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                                    <div class="io-description">
-                                        <p>a string of the contained documentation</p>
-    
-                                    </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b><span class="modifier">Private</span> extractDocumentationFromDiv</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <span class="modifier-icon method fa fa-play lock">
-                                    <span class="fa fa-lock"></span>
-                                </span>
-                            <code>extractDocumentationFromDiv(el: any)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>string</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
                             <b> close</b>
                         </td>
                     </tr>
@@ -1288,18 +1206,18 @@ export class OpHelpModal implements OnInit {
         
         this.name &#x3D; data.op.name;
 
-        const ngHtmlParser &#x3D; require(&#x27;angular-html-parser&#x27;);
+        // const ngHtmlParser &#x3D; require(&#x27;angular-html-parser&#x27;);
 
-            //** need to write a note here to locate the text we are interested in. */
+        //     //** need to write a note here to locate the text we are interested in. */
 
-        (async () &#x3D;&gt; {
-          const response &#x3D; await fetch(&#x27;https://unstabledesign.github.io/docs&#x27;);
-          const text &#x3D; await response.text();
-          const { rootNodes, errors } &#x3D; ngHtmlParser.parse(text);
-          this.findDocumentation(this.name, rootNodes[2]);
-          const el: HTMLElement &#x3D; document.getElementById(&quot;docs&quot;);
-          el.innerHTML &#x3D; this.documenation;
-        })();
+        // (async () &#x3D;&gt; {
+        //   const response &#x3D; await fetch(&#x27;https://unstabledesign.github.io/docs&#x27;);
+        //   const text &#x3D; await response.text();
+        //   const { rootNodes, errors } &#x3D; ngHtmlParser.parse(text);
+        //   this.findDocumentation(this.name, rootNodes[2]);
+        //   const el: HTMLElement &#x3D; document.getElementById(&quot;docs&quot;);
+        //   el.innerHTML &#x3D; this.documenation;
+        // })();
 
     }
 
@@ -1309,38 +1227,38 @@ export class OpHelpModal implements OnInit {
    * @param element the &quot;html&quot; element of the returned page
    * @returns a string of the contained documentation
    */
-  private findDocumentation (name: string, element: any){
+  // private findDocumentation (name: string, element: any){
 
 
-    element.children.forEach(child &#x3D;&gt; {
-      if(child.name &#x3D;&#x3D; &quot;body&quot; || child.name &#x3D;&#x3D; &quot;div&quot; || child.name &#x3D;&#x3D; &quot;section&quot;) {
+  //   element.children.forEach(child &#x3D;&gt; {
+  //     if(child.name &#x3D;&#x3D; &quot;body&quot; || child.name &#x3D;&#x3D; &quot;div&quot; || child.name &#x3D;&#x3D; &quot;section&quot;) {
 
-        if(child.attrs.findIndex(at &#x3D;&gt; (at.name &#x3D;&#x3D; &quot;id&quot; &amp;&amp; at.value.toString() &#x3D;&#x3D; name.toString())) !&#x3D; -1){
-          this.documenation &#x3D; this.extractDocumentationFromDiv(child);
-        }else{
-          this.findDocumentation(name, child);
-        }
+  //       if(child.attrs.findIndex(at &#x3D;&gt; (at.name &#x3D;&#x3D; &quot;id&quot; &amp;&amp; at.value.toString() &#x3D;&#x3D; name.toString())) !&#x3D; -1){
+  //         this.documenation &#x3D; this.extractDocumentationFromDiv(child);
+  //       }else{
+  //         this.findDocumentation(name, child);
+  //       }
 
-      }
+  //     }
 
-    });
+  //   });
 
 
-  }
+  // }
 
-  private extractDocumentationFromDiv(el: any): string{
-    console.log(&quot;extract called on&quot;, el);
-    let docs:string &#x3D; &quot;&quot;;
-    const ndx: number &#x3D; el.children.findIndex(child &#x3D;&gt; child.name&#x3D;&#x3D;&quot;div&quot;);
-    console.log(&quot;found div at &quot;, ndx);
-    if(ndx &#x3D;&#x3D; -1) return docs;
+  // private extractDocumentationFromDiv(el: any): string{
+  //   console.log(&quot;extract called on&quot;, el);
+  //   let docs:string &#x3D; &quot;&quot;;
+  //   const ndx: number &#x3D; el.children.findIndex(child &#x3D;&gt; child.name&#x3D;&#x3D;&quot;div&quot;);
+  //   console.log(&quot;found div at &quot;, ndx);
+  //   if(ndx &#x3D;&#x3D; -1) return docs;
 
-    const div: any &#x3D; el.children[ndx];
-    docs &#x3D; div.children[0].value;
-    console.log(docs, div.children[0]);
+  //   const div: any &#x3D; el.children[ndx];
+  //   docs &#x3D; div.children[0].value;
+  //   console.log(docs, div.children[0]);
 
-    return docs;
-  }
+  //   return docs;
+  // }
 
   ngOnInit() {
   }
