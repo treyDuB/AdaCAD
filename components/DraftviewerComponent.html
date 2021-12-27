@@ -4832,14 +4832,19 @@ export class DraftviewerComponent implements OnInit {
         currentPos.i &#x3D; this.loom.frame_mapping[currentPos.i];
         this.drawOnThreading(currentPos);
       } else if(target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; (&#x27;weft-systems&#x27;)){
+        if(this.viewonly) return;
         currentPos.i &#x3D; this.render.visibleRows[currentPos.i];
         this.drawOnWeftSelectors(currentPos);
       }else if(target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; (&#x27;warp-systems&#x27;)){
+        if(this.viewonly) return;
         this.drawOnWarpSelectors(currentPos);
       }else if(target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; (&#x27;weft-materials&#x27;)){
+        if(this.viewonly) return;
         currentPos.i &#x3D; this.render.visibleRows[currentPos.i];
+        if(this.viewonly) return;
         this.drawOnWeftMaterials(currentPos);
       }else if(target &amp;&amp; target.id &#x3D;&#x3D;&#x3D; (&#x27;warp-materials&#x27;)){
+        if(this.viewonly) return;
         this.drawOnWarpMaterials(currentPos);
       } else{
         if(this.viewonly) return;
