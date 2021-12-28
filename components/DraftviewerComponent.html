@@ -3461,33 +3461,6 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <b><span class="modifier">Public</span> onSave</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <span class="modifier-icon method fa fa-play circle">
-                                    <span class="fa fa-circle"></span>
-                                </span>
-                            <code>onSave(e: any)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
                             <b><span class="modifier">Public</span> insertRow</b>
                         </td>
                     </tr>
@@ -3506,35 +3479,9 @@
                                 <div class="io-description"><p>inserts an empty row just below the clicked row</p>
     </div>
                                 <div class="io-description">
-                                        <b>Parameters :</b>
-                                        <ul class="jsdoc-params">
-                                                <li>
-                                                    <div>
-                                                        <b>si</b>
-                                                    </div>
-                                                    <div>
-                                                        <p>the screen index of the row we&#39;ll insert</p>
-    
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div>
-                                                        <b>i</b>
-                                                    </div>
-                                                    <div>
-                                                        <p>the absolute (not screen) index of the row we&#39;ll insert</p>
-    
-                                                    </div>
-                                                </li>
-                                        </ul>
-                                </div>
-                                <div class="io-description">
                                     <b>Returns: </b>    <code>void</code>
     
                                 </div>
-                                    <div class="io-description">
-                                        
-                                    </div>
                         </td>
                     </tr>
                 </tbody>
@@ -6689,9 +6636,14 @@ public redraw(flags:any){
 
      for (var x &#x3D; 0; x &lt; this.weave.colShuttleMapping.length; x++) {
      
+      let system;
+
       var id &#x3D; this.weave.colShuttleMapping[x];
-      var system &#x3D; this.ss.warp_systems[this.weave.colSystemMapping[x]];
+      if(id &#x3D;&#x3D;&#x3D; undefined) system &#x3D; this.ss.getFirstWarpSystem();
+      else system &#x3D; this.ss.getWarpSystem(id);
       var shuttle &#x3D; this.ms.getShuttle(id);
+
+
 
         if(!system.visible){
           var c &#x3D; &quot;#3d3d3d&quot;;
@@ -6721,8 +6673,11 @@ public redraw(flags:any){
     var schematic &#x3D; (this.render.getCurrentView() &#x3D;&#x3D;&#x3D; &quot;yarn&quot;);
     for (var x &#x3D; 0; x &lt; this.weave.colShuttleMapping.length; x++) {
      
+      let system;
       var id &#x3D; this.weave.colShuttleMapping[x];
-      var system &#x3D; this.ss.warp_systems[this.weave.colSystemMapping[x]];
+      if(id &#x3D;&#x3D;&#x3D; undefined) system &#x3D; this.ss.getFirstWarpSystem();
+      else system &#x3D; this.ss.getWarpSystem(id);
+
       var shuttle &#x3D; this.ms.getShuttle(id);
 
       if(system.visible){
@@ -6897,33 +6852,33 @@ public redraw(flags:any){
    *
    *
    */
-    public onSave(e: any) {
+    // public onSave(e: any) {
 
-      e.bitmap &#x3D; this.bitmap;
+    //   e.bitmap &#x3D; this.bitmap;
   
-      if (e.type &#x3D;&#x3D;&#x3D; &quot;bmp&quot;){
-        let link &#x3D; e.downloadLink.nativeElement;
-        link.href &#x3D; this.fs.saver.bmp(this.getBMPCanvas(e));
-        link.download &#x3D; e.name + &quot;.jpg&quot;; //Canvas2Bitmap  seems to be broken now
-      } 
-      else if (e.type &#x3D;&#x3D;&#x3D; &quot;ada&quot;){
-        let link &#x3D; e.downloadLink.nativeElement;
-        link.href &#x3D; this.fs.saver.ada(&#x27;draft&#x27;, [this.weave], [this.loom],  false);
-        link.download &#x3D; e.name + &quot;.ada&quot;;
-      } 
-      else if (e.type &#x3D;&#x3D;&#x3D; &quot;wif&quot;){
-        let link &#x3D; e.downloadLink.nativeElement;
-        link.href&#x3D; this.fs.saver.wif(this.weave, this.loom);
-        link.download &#x3D; e.filename +&quot;.wif&quot;;
+    //   if (e.type &#x3D;&#x3D;&#x3D; &quot;bmp&quot;){
+    //     let link &#x3D; e.downloadLink.nativeElement;
+    //     link.href &#x3D; this.fs.saver.bmp(this.getBMPCanvas(e));
+    //     link.download &#x3D; e.name + &quot;.jpg&quot;; //Canvas2Bitmap  seems to be broken now
+    //   } 
+    //   else if (e.type &#x3D;&#x3D;&#x3D; &quot;ada&quot;){
+    //     let link &#x3D; e.downloadLink.nativeElement;
+    //     link.href &#x3D; this.fs.saver.ada(&#x27;draft&#x27;, [this.weave], [this.loom],  false, 5);
+    //     link.download &#x3D; e.name + &quot;.ada&quot;;
+    //   } 
+    //   else if (e.type &#x3D;&#x3D;&#x3D; &quot;wif&quot;){
+    //     let link &#x3D; e.downloadLink.nativeElement;
+    //     link.href&#x3D; this.fs.saver.wif(this.weave, this.loom);
+    //     link.download &#x3D; e.filename +&quot;.wif&quot;;
   
-      } 
-      else if (e.type &#x3D;&#x3D;&#x3D; &quot;jpg&quot;){
-        let link &#x3D; e.downloadLink.nativeElement;
-        link.href &#x3D; this.fs.saver.jpg(this.getPrintableCanvas(e));
-        link.download &#x3D; e.name + &quot;.jpg&quot;;
-      } 
+    //   } 
+    //   else if (e.type &#x3D;&#x3D;&#x3D; &quot;jpg&quot;){
+    //     let link &#x3D; e.downloadLink.nativeElement;
+    //     link.href &#x3D; this.fs.saver.jpg(this.getPrintableCanvas(e));
+    //     link.download &#x3D; e.name + &quot;.jpg&quot;;
+    //   } 
       
-    }
+    // }
 
     /**
    * inserts an empty row just below the clicked row

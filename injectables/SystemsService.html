@@ -1140,6 +1140,54 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b> getFirstWarpSystem</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getFirstWarpSystem()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/System.html" target="_self" >System</a></code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> getFirstWeftSystem</b>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+            <code>getFirstWeftSystem()</code>
+                                </td>
+                            </tr>
+            
+                            <tr>
+                                <td class="col-md-4">
+                                        <div class="io-description">
+                                            <b>Returns: </b>    <code><a href="../classes/System.html" target="_self" >System</a></code>
+            
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b> addWeftSystemFromId</b>
                                 </td>
                             </tr>
@@ -1550,6 +1598,14 @@ export class SystemsService {
 
   getWarpSystem(id: number) : System{
     return this.warp_systems.find(el &#x3D;&gt; el.id &#x3D;&#x3D;&#x3D; id);
+  }
+
+  getFirstWarpSystem() : System {
+    return this.warp_systems[0];
+  }
+
+  getFirstWeftSystem() : System {
+    return this.weft_systems[0];
   }
 
   addWeftSystemFromId(id: number) {

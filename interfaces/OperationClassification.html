@@ -1309,20 +1309,27 @@ export class OperationService {
     const unset: Operation &#x3D; {
       name: &#x27;set down to unset&#x27;,
       dx: &quot;this sets all down heddles in this draft to unset&quot;,
-      params: [],
+      params: [
+        {name: &#x27;up/down&#x27;,
+        min: 0,
+        max: 1,
+        value: 1,
+        dx: &quot;toggles which values to map to unselected)&quot;
+      }],
       max_inputs: 1,
       perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         const outputs: Array&lt;Draft&gt; &#x3D; inputs.map(draft &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: draft.warps, wefts:draft.wefts});
           draft.pattern.forEach((row, i) &#x3D;&gt; {
             row.forEach((cell, j) &#x3D;&gt; {
-              if(!cell.isUp() &amp;&amp; cell.isSet()) d.pattern[i][j] &#x3D; new Cell(null);
+              if(input_params[0] &#x3D;&#x3D;&#x3D; 1 &amp;&amp; !cell.isUp() &amp;&amp; cell.isSet()) d.pattern[i][j] &#x3D; new Cell(null);
+              else if(input_params[0] &#x3D;&#x3D;&#x3D; 0 &amp;&amp; cell.isUp() &amp;&amp; cell.isSet()) d.pattern[i][j] &#x3D; new Cell(null);
               else d.pattern[i][j] &#x3D; new Cell(cell.getHeddle());
             });
           });
           if(inputs.length &gt; 0){
             this.transferSystemsAndShuttles(d, inputs, input_params, &#x27;first&#x27;);
-            d.name &#x3D; this.formatName(inputs, &quot;down-&gt;unset&quot;);
+            d.name &#x3D; this.formatName(inputs, &quot;unset&quot;);
 
           }
           return d;
@@ -1340,7 +1347,7 @@ export class OperationService {
       perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
         
         if(inputs.length &lt; 2) return Promise.resolve(inputs);
-        const d: Draft &#x3D; new Draft({warps: inputs[0].wefts, wefts:inputs[0].warps});
+        const d: Draft &#x3D; new Draft({warps: inputs[0].warps, wefts:inputs[0].wefts});
         inputs[0].pattern.forEach((row, i) &#x3D;&gt; {
           row.forEach((cell, j) &#x3D;&gt; {
             d.pattern[i][j] &#x3D; new Cell(cell.getHeddle());
@@ -1431,7 +1438,7 @@ export class OperationService {
       name: &#x27;splice in wefts&#x27;,
       dx: &#x27;splices the second draft into the first every nth row&#x27;,
       params: [  
-        {name: &#x27;separation&#x27;,
+        {name: &#x27;distance&#x27;,
         min: 1,
         max: 100,
         value: 1,
