@@ -1189,10 +1189,30 @@
             
                             <tr>
                                 <td class="col-md-4">
+                                        <div class="io-description"><p>returns the color of the shuttle at this index</p>
+            </div>
+                                        <div class="io-description">
+                                                <b>Parameters :</b>
+                                                <ul class="jsdoc-params">
+                                                        <li>
+                                                            <div>
+                                                                <b>index</b>
+                                                            </div>
+                                                            <div>
+                                                                <p>the id of the shuttly to get</p>
+            
+                                                            </div>
+                                                        </li>
+                                                </ul>
+                                        </div>
                                         <div class="io-description">
                                             <b>Returns: </b>    <code>void</code>
             
                                         </div>
+                                            <div class="io-description">
+                                                <p>the color or white if null</p>
+            
+                                            </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -1519,9 +1539,15 @@ export class MaterialsService {
     return map;
   }
 
-  getColor(index: number,) {
+  /**
+   * returns the color of the shuttle at this index
+   * @param index  the id of the shuttly to get
+   * @returns the color or white if null
+   */
+  getColor(index: number) {
 
     const s: Shuttle &#x3D; this.getShuttle(index);
+    if(s &#x3D;&#x3D;&#x3D; null) return &quot;#ffffff&quot;;
     return s.color;
   }
 
