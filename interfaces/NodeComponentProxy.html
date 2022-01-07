@@ -1826,9 +1826,7 @@ export class FileService {
 
   const dsaver: FileSaver &#x3D; {
      ada:  async (type: string, drafts: Array&lt;Draft&gt;, looms: Array&lt;Loom&gt;,  for_timeline: boolean, current_scale: number) : Promise&lt;{json: string, file: SaveObj}&gt; &#x3D;&gt; {
-      
-      console.log(&quot;on save&quot;, this.ns.exportForSaving())
-     
+           
       const out: SaveObj &#x3D; {
         type: type,
         drafts: drafts,

@@ -1389,8 +1389,6 @@ async generateFromSeed(draft, collection) {
         }
     }
 
-    console.log(&quot;new draft is&quot;, newDraft);
-
     let mean &#x3D; m.encoder_mean.predict(tf.tensor([newDraft]));
     let log_var &#x3D; m.encoder_log_var.predict(tf.tensor([newDraft]));
 

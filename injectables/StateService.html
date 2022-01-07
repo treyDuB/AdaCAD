@@ -1240,7 +1240,7 @@
                                         <span class="modifier-icon method fa fa-play circle">
                                             <span class="fa fa-circle"></span>
                                         </span>
-                                    <code>addMixerHistoryState(ada: any)</code>
+                                    <code>addMixerHistoryState(ada: { json: string; file: SaveObj; })</code>
                                 </td>
                             </tr>
             
@@ -1331,7 +1331,7 @@
                                         <div class="io-description">
                                         </div>
                                         <div class="io-description">
-                                            <b>Returns: </b>    <code>string</code>
+                                            <b>Returns: </b>    <code>SaveObj</code>
             
                                         </div>
                                             <div class="io-description">
@@ -1401,7 +1401,7 @@
                                         <div class="io-description">
                                         </div>
                                         <div class="io-description">
-                                            <b>Returns: </b>    <code>string</code>
+                                            <b>Returns: </b>    <code>SaveObj</code>
             
                                         </div>
                                             <div class="io-description">
@@ -1589,13 +1589,14 @@ import { map } from &#x27;mathjs&#x27;;
 import {getDatabase, ref as fbref, set as fbset, onValue} from &#x27;@angular/fire/database&#x27;
 import { authInstanceFactory } from &#x27;@angular/fire/auth/auth.module&#x27;;
 import { AuthService } from &#x27;./auth.service&#x27;;
+import { SaveObj } from &#x27;./file.service&#x27;;
 /**
  * stores a state within the undo/redo timeline
  * weaver uses draft, mixer uses ada
  */
  interface HistoryState {
   draft: Draft;
-  ada: string;
+  ada: SaveObj;
 }
 
 @Injectable({
@@ -1615,11 +1616,6 @@ export class StateService {
   constructor(firestore: Firestore, public auth: AuthService) {
 
     const db &#x3D; getDatabase();
-    const starCountRef &#x3D; fbref(db, &#x27;users/alovelace&#x27;);
-    onValue(starCountRef, (snapshot) &#x3D;&gt; {
-      const data &#x3D; snapshot.val();
-      console.log(&quot;data in&quot;, data);
-    });
 
     this.active_id &#x3D; 0;
     this.timeline &#x3D; [];
@@ -1701,14 +1697,14 @@ export class StateService {
  * used in mixer - adds an ada file to the history state
  * @param ada 
  */
-  public addMixerHistoryState(ada:any):void{
-    console.log(&quot;adding history&quot;);
+  public addMixerHistoryState(ada:{json: string, file: SaveObj}):void{
 
     var state &#x3D; {
       draft: null,
-      ada: cloneDeep(ada),
+      ada: cloneDeep(ada.file),
     }
 
+    //write this to database, overwritting what was previously there
     this.writeUserData(ada.file);
 
 
@@ -1744,7 +1740,6 @@ export class StateService {
 
   	this.active_id--;
 
-    console.log(&#x27;restoring state&#x27;, this.active_id);
     if(this.active_id &#x3D;&#x3D; 0) this.redo_disabled &#x3D; true;
 
     return this.timeline[this.active_id].draft;
@@ -1756,13 +1751,12 @@ export class StateService {
  * called on redo in mixer
  * @returns returns the ada file to reload
  */  
-public restoreNextMixerHistoryState(): string{
+public restoreNextMixerHistoryState(): SaveObj{
 
     if(this.active_id &#x3D;&#x3D; 0) return; 
 
   	this.active_id--;
 
-    console.log(&#x27;restoring state&#x27;, this.active_id);
     if(this.active_id &#x3D;&#x3D; 0) this.redo_disabled &#x3D; true;
 
     return this.timeline[this.active_id].ada;
@@ -1785,7 +1779,6 @@ public restoreNextMixerHistoryState(): string{
         return null; 
      } 
 
-     console.log(&quot;restoring state &quot;, this.active_id);
      this.redo_disabled &#x3D; false;
      return this.timeline[this.active_id].draft;
       
@@ -1795,7 +1788,7 @@ public restoreNextMixerHistoryState(): string{
    * called on undo in mixer
    * @returns returns the draft to load
    */
-     public restorePreviousMixerHistoryState():string{
+     public restorePreviousMixerHistoryState():SaveObj{
 
       this.active_id++;
  
@@ -1806,7 +1799,6 @@ public restoreNextMixerHistoryState(): string{
          return null; 
       } 
  
-      console.log(&quot;restoring state &quot;, this.active_id);
       this.redo_disabled &#x3D; false;
       return this.timeline[this.active_id].ada;
        

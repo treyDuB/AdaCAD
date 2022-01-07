@@ -1255,6 +1255,26 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b> isLoggedIn</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>isLoggedIn:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>false</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b> showLoginButton</b>
                                 </td>
                             </tr>
@@ -1394,10 +1414,10 @@ export class AuthService {
 
   showLoginButton &#x3D; false;
   showLogoutButton &#x3D; false;
+  isLoggedIn &#x3D; false;
 
   public uid:string;
   public username: string &#x3D; &quot;&quot;;
-
 
   constructor(@Optional() private auth: Auth) {
 
@@ -1410,6 +1430,7 @@ export class AuthService {
       ).subscribe(isLoggedIn &#x3D;&gt; {
         this.showLoginButton &#x3D; !isLoggedIn;
         this.showLogoutButton &#x3D; isLoggedIn;
+        this.isLoggedIn &#x3D; isLoggedIn;
         
       });
 
