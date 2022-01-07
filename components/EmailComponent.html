@@ -112,7 +112,7 @@
                                     <a href="../components/DraftviewerComponent.html" >DraftviewerComponent</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/EmailComponent.html" >EmailComponent</a>
+                                    <a href="../components/EmailComponent.html"  class="active" >EmailComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/ImageComponent.html" >ImageComponent</a>
@@ -237,7 +237,7 @@
                                 id="xs-directives-links"
                             >
                                 <li class="link">
-                                    <a href="../directives/MarqueeComponent.html"  class="active" >MarqueeComponent</a>
+                                    <a href="../directives/MarqueeComponent.html" >MarqueeComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
@@ -638,7 +638,7 @@
                                            <a href="../components/DraftviewerComponent.html" >DraftviewerComponent</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/EmailComponent.html" >EmailComponent</a>
+                                           <a href="../components/EmailComponent.html"  class="active" >EmailComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/ImageComponent.html" >ImageComponent</a>
@@ -763,7 +763,7 @@
                                        id="directives-links"
                    >
                                        <li class="link">
-                                           <a href="../directives/MarqueeComponent.html"  class="active" >MarqueeComponent</a>
+                                           <a href="../directives/MarqueeComponent.html" >MarqueeComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
@@ -1066,280 +1066,186 @@
                    
                    </nav>
                </div>
-               <div class="content directive">
+               <div class="content component">
                    <div class="content-data">
 
 
-
 <ol class="breadcrumb">
-  <li>Directives</li>
-  <li>MarqueeComponent</li>
+  <li>Components</li>
+  <li>EmailComponent</li>
 </ol>
 
-<ul class="nav nav-tabs" role="tablist">
-    <li class="active">
-        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-    </li>
-    <li>
-        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-    </li>
-</ul>
 
-<div class="tab-content">
-    <div class="tab-pane fade active in" id="infos">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/app/mixer/palette/marquee/marquee.component.ts</code>
-        </p>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+        </li>
+        <li>
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="infos"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/core/email/email.component.ts</code>
+</p>
 
 
 
-        <section>
-            <h3>Metadata</h3>
-            <table class="table table-sm table-hover">
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-email</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>email.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>email.component.html</code></td>
+            </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+    <section>
+        <h3 id="constructor">Constructor</h3>
+            <table class="table table-sm table-bordered">
                 <tbody>
-
                     <tr>
-                        <td class="col-md-3">selector</td>
-                        <td class="col-md-9"><code>app-marquee</code></td>
+                        <td class="col-md-4">
+                            <code>constructor(authService: <a href="../injectables/AuthService.html" >AuthService</a>)</code>
+                        </td>
                     </tr>
-
+    
                 </tbody>
             </table>
-        </section>
+    </section>
 
+    <section>
+        <h3 id="methods">Methods</h3>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> onSubmit</b>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+    <code>onSubmit(formData: any)</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>void</code>
+    
+                                </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
 
+    <section>
+        <h3 id="inputs">Properties</h3>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> email</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>email:     <code>string</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> password</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>password:     <code>string</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
+</div>
+        <div class="tab-pane fade tab-source-code" id="source">
+            <pre><code class="hljs javascript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { AuthService } from &#x27;../provider/auth.service&#x27;;
 
-
-            <section>
-                <h3 id="methods">Methods</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> getDraftId</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>getDraftId()</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> setPositionAndSize</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>setPositionAndSize(bounds: Bounds)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </section>
-
-            <section>
-                <h3 id="inputs">Properties</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> active</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>active:     <code>boolean</code>
-            </bcode>
-                                </td>
-                            </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <i>Default value: </i><code>false</code>
-                                    </td>
-                                </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> bounds</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>bounds:     <code>Bounds</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> draft</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>draft:     <code><a href="../classes/Draft.html" target="_self" >Draft</a></code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> filter</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>filter:     <code>string</code>
-            </bcode>
-                                </td>
-                            </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <i>Default value: </i><code>or</code>
-                                    </td>
-                                </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> id</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>id:     <code>number</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> scale</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>scale:     <code>number</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> start</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>start:     <code>Interlacement</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </section>
-
-    </div>
-    <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Directive, OnInit } from &#x27;@angular/core&#x27;;
-import { Draft } from &#x27;../../../core/model/draft&#x27;;
-import { Point, Bounds, Interlacement } from &#x27;../../../core/model/datatypes&#x27;;
-
-@Directive({
-  selector: &#x27;app-marquee&#x27;
+@Component({
+  selector: &#x27;app-email&#x27;,
+  templateUrl: &#x27;./email.component.html&#x27;,
+  styleUrls: [&#x27;./email.component.scss&#x27;]
 })
+export class EmailComponent implements OnInit {
 
+  email: string &#x3D; &quot;&quot;;
+  password: string &#x3D; &quot;&quot;;
 
-export class MarqueeComponent implements OnInit{
+  constructor(private authService: AuthService) { }
 
-  id: number;
-  draft: Draft &#x3D; new Draft({name: &quot;selection&quot;});
-
-  bounds:Bounds &#x3D; {
-    topleft: {x: 0, y:0},
-    width: 0,
-    height: 0
+  ngOnInit() {
   }
 
-  start:Interlacement &#x3D; {i: 0, j:0, si: 0};
-  active &#x3D; false;
-  scale: number; 
-  filter &#x3D; &quot;or&quot;
-
-  ngOnInit(){
-    console.log(this.draft.id);
-    console.log(&quot;created directive selection&quot;);
+  onSubmit(formData) {
+    // if (formData.valid) {
+    //   console.log(formData.value);
+    //   this.authService.login(
+    //     formData.value.email,
+    //     formData.value.password
+    //   );
+    // }
   }
-
-  public getDraftId(){
-    return this.draft.id;
-  }
-
-
-  public setPositionAndSize(bounds: Bounds){
-    this.bounds  &#x3D; bounds;
-    console.log(&quot;set bounds to&quot;, this.bounds);
-
-
-  }
-
-
 
 }
 </code></pre>
+        </div>
     </div>
-</div>
+
+
 
 
 

@@ -121,7 +121,7 @@
                                     <a href="../components/InitModal.html" >InitModal</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/LoginComponent.html" >LoginComponent</a>
+                                    <a href="../components/LoginComponent.html"  class="active" >LoginComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/LoomComponent.html" >LoomComponent</a>
@@ -237,7 +237,7 @@
                                 id="xs-directives-links"
                             >
                                 <li class="link">
-                                    <a href="../directives/MarqueeComponent.html"  class="active" >MarqueeComponent</a>
+                                    <a href="../directives/MarqueeComponent.html" >MarqueeComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
@@ -647,7 +647,7 @@
                                            <a href="../components/InitModal.html" >InitModal</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/LoginComponent.html" >LoginComponent</a>
+                                           <a href="../components/LoginComponent.html"  class="active" >LoginComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/LoomComponent.html" >LoomComponent</a>
@@ -763,7 +763,7 @@
                                        id="directives-links"
                    >
                                        <li class="link">
-                                           <a href="../directives/MarqueeComponent.html"  class="active" >MarqueeComponent</a>
+                                           <a href="../directives/MarqueeComponent.html" >MarqueeComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
@@ -1066,280 +1066,226 @@
                    
                    </nav>
                </div>
-               <div class="content directive">
+               <div class="content component">
                    <div class="content-data">
 
 
-
 <ol class="breadcrumb">
-  <li>Directives</li>
-  <li>MarqueeComponent</li>
+  <li>Components</li>
+  <li>LoginComponent</li>
 </ol>
 
-<ul class="nav nav-tabs" role="tablist">
-    <li class="active">
-        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-    </li>
-    <li>
-        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-    </li>
-</ul>
 
-<div class="tab-content">
-    <div class="tab-pane fade active in" id="infos">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/app/mixer/palette/marquee/marquee.component.ts</code>
-        </p>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+        </li>
+        <li>
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="infos"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/core/login/login.component.ts</code>
+</p>
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Error when invalid control is dirty, touched, or submitted. </p>
+
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
 
 
 
-        <section>
-            <h3>Metadata</h3>
-            <table class="table table-sm table-hover">
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-login</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>login.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>login.component.html</code></td>
+            </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+    <section>
+        <h3 id="methods">Methods</h3>
+            <table class="table table-sm table-bordered">
                 <tbody>
-
                     <tr>
-                        <td class="col-md-3">selector</td>
-                        <td class="col-md-9"><code>app-marquee</code></td>
+                        <td class="col-md-4">
+                            <b> isErrorState</b>
+                        </td>
                     </tr>
-
+    
+                    <tr>
+                        <td class="col-md-4">
+    <code>isErrorState(control: <a href="https://angular.io/docs/ts/latest/api/forms/index/FormControl-class.html" target="_blank" >FormControl</a>, form: FormGroupDirective | NgForm)</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>boolean</code>
+    
+                                </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-        </section>
+    </section>
 
+</div>
+        <div class="tab-pane fade tab-source-code" id="source">
+            <pre><code class="hljs javascript">import { Component, Inject, OnInit } from &#x27;@angular/core&#x27;;
+import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material/dialog&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { e } from &#x27;mathjs&#x27;;
+import { AuthService } from &#x27;../provider/auth.service&#x27;;
+import {FormControl, FormGroupDirective, NgForm, Validators} from &#x27;@angular/forms&#x27;;
+import {ErrorStateMatcher} from &#x27;@angular/material/core&#x27;;
 
+/** Error when invalid control is dirty, touched, or submitted. */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted &#x3D; form &amp;&amp; form.submitted;
+    return !!(control &amp;&amp; control.invalid &amp;&amp; (control.dirty || control.touched || isSubmitted));
+  }
+}
 
-
-            <section>
-                <h3 id="methods">Methods</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> getDraftId</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>getDraftId()</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> setPositionAndSize</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>setPositionAndSize(bounds: Bounds)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </section>
-
-            <section>
-                <h3 id="inputs">Properties</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> active</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>active:     <code>boolean</code>
-            </bcode>
-                                </td>
-                            </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <i>Default value: </i><code>false</code>
-                                    </td>
-                                </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> bounds</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>bounds:     <code>Bounds</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> draft</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>draft:     <code><a href="../classes/Draft.html" target="_self" >Draft</a></code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> filter</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>filter:     <code>string</code>
-            </bcode>
-                                </td>
-                            </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <i>Default value: </i><code>or</code>
-                                    </td>
-                                </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> id</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>id:     <code>number</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> scale</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>scale:     <code>number</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b> start</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>start:     <code>Interlacement</code>
-            </bcode>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </section>
-
-    </div>
-    <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Directive, OnInit } from &#x27;@angular/core&#x27;;
-import { Draft } from &#x27;../../../core/model/draft&#x27;;
-import { Point, Bounds, Interlacement } from &#x27;../../../core/model/datatypes&#x27;;
-
-@Directive({
-  selector: &#x27;app-marquee&#x27;
+@Component({
+  selector: &#x27;app-login&#x27;,
+  templateUrl: &#x27;./login.component.html&#x27;,
+  styleUrls: [&#x27;./login.component.scss&#x27;]
 })
+export class LoginComponent implements OnInit {
+  emailFormControl &#x3D; new FormControl(&#x27;&#x27;, [Validators.required, Validators.email]);
+  passwordFormControl &#x3D; new FormControl(&#x27;&#x27;, [Validators.required]);
+  matcher &#x3D; new MyErrorStateMatcher();
 
+  useemail: boolean &#x3D; false;
+  error: string &#x3D;&quot;&quot;;
 
-export class MarqueeComponent implements OnInit{
+  constructor(private router: Router, private auth: AuthService, private dialogRef: MatDialogRef&lt;LoginComponent&gt;,
+    @Inject(MAT_DIALOG_DATA) private data: any) { }
 
-  id: number;
-  draft: Draft &#x3D; new Draft({name: &quot;selection&quot;});
-
-  bounds:Bounds &#x3D; {
-    topleft: {x: 0, y:0},
-    width: 0,
-    height: 0
-  }
-
-  start:Interlacement &#x3D; {i: 0, j:0, si: 0};
-  active &#x3D; false;
-  scale: number; 
-  filter &#x3D; &quot;or&quot;
-
-  ngOnInit(){
-    console.log(this.draft.id);
-    console.log(&quot;created directive selection&quot;);
-  }
-
-  public getDraftId(){
-    return this.draft.id;
+  ngOnInit() {
   }
 
 
-  public setPositionAndSize(bounds: Bounds){
-    this.bounds  &#x3D; bounds;
-    console.log(&quot;set bounds to&quot;, this.bounds);
+  onEmailLogin(){
+    console.log(&quot;sign in with &quot;, this.emailFormControl.value, this.passwordFormControl.value);
 
+    this.auth.emailSignIn(this.emailFormControl.value, this.passwordFormControl.value).then(res &#x3D;&gt; {
+      if(res &#x3D;&#x3D;&#x3D; &#x27;&#x27;){
+        this.dialogRef.close(&#x27;Created and Logged In New User!&#x27;);
+      }else{
+        console.log(&quot;res&quot;, res);
+        switch(res){
+          case &quot;auth/user-not-found&quot; :
+            this.error &#x3D; &quot;there is no user at that email address, did you mean to hit sign up?&quot;
+          break;
+          case &quot;auth/wrong-password&quot;:
+            this.error &#x3D; &quot;wrong password&quot;
+          break;
+          default:
+            this.error &#x3D; res;
+        }
+      }
+    })
+  }
 
+  onEmailSignUp(){
+    console.log(&quot;sign up with &quot;, this.emailFormControl.value, this.passwordFormControl.value);
+
+    this.auth.emailSignUp(this.emailFormControl.value, this.passwordFormControl.value).then(res &#x3D;&gt; {
+      if(res &#x3D;&#x3D;&#x3D; &#x27;&#x27;){
+        this.dialogRef.close(&#x27;Created and Logged In New User!&#x27;);
+      }else{
+        console.log(&quot;res&quot;, res);
+        switch(res){
+          case &quot;auth/weak-password&quot; :
+            this.error &#x3D; &quot;please use a stronger password (with symbols or numbers)&quot;
+          break;
+          case &quot;auth/email-already-in-use&quot;:
+            this.error &#x3D; &quot;this email is already associated with an existing account&quot;
+          break;
+          default:
+            this.error &#x3D; res;
+        }
+      }
+    });
   }
 
 
+
+  // onEmailSubmit() {
+    
+  // }
+
+  loginGoogle() {
+
+
+    this.auth.login().then(logged_in &#x3D;&gt; {
+      this.dialogRef.close(&#x27;Log In Via Google Success!&#x27;);
+    }, not_logged_in &#x3D;&gt; {
+      console.log(Error)
+    });
+
+  }
+
+  openEmailLogin(){
+    this.router.navigateByUrl(&#x27;/email-login&#x27;);
+  }
+
+  createNewEmailUser(){
+    this.router.navigateByUrl(&#x27;/signup&#x27;);
+  }
+
+  
 
 }
 </code></pre>
+        </div>
     </div>
-</div>
+
+
 
 
 
