@@ -3257,7 +3257,9 @@ export class OperationService {
       params: [],
       max_inputs: 100, 
       perform: (inputs: Array&lt;Draft&gt;, input_params: Array&lt;number&gt;) &#x3D;&gt; {
-          
+        
+        console.log(&quot;joining left&quot;)
+
         const outputs: Array&lt;Draft&gt; &#x3D; [];
         const total:number &#x3D; inputs.reduce((acc, draft)&#x3D;&gt;{
             return acc + draft.warps;
@@ -3290,18 +3292,23 @@ export class OperationService {
             });
         }
       
-      
+        console.log(&quot;joining left, col system map&quot;)
+
         d.colSystemMapping &#x3D; inputs.reduce((acc, draft) &#x3D;&gt; {
           return acc.concat(draft.colSystemMapping);
         }, []);
-        
+        console.log(&quot;joining left, col shuttle map&quot;)
+
         d.colShuttleMapping &#x3D; inputs.reduce((acc, draft) &#x3D;&gt; {
           return acc.concat(draft.colShuttleMapping);
         }, []);
              
+        console.log(&quot;transfer systems&quot;)
+
         this.transferSystemsAndShuttles(d, inputs, input_params, &#x27;joinleft&#x27;);
         d.gen_name &#x3D; this.formatName(inputs, &quot;left&quot;);
         outputs.push(d);
+
         return Promise.resolve(outputs);
         
       }
@@ -3623,7 +3630,7 @@ export class OperationService {
           break;
 
           case &#x27;joinleft&#x27;:
-
+          console.log(&quot;join left&quot;);
             //if there are multiple inputs, 
             d.updateWeftShuttlesFromPattern(inputs[0].rowShuttleMapping);
             d.updateWeftSystemsFromPattern(inputs[0].rowSystemMapping);
@@ -3706,6 +3713,8 @@ export class OperationService {
       
                 
     }
+
+    console.log(&quot;transfered&quot;);
 
 
 
