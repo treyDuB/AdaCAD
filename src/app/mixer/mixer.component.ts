@@ -272,7 +272,7 @@ export class MixerComponent implements OnInit {
           if(located_loom === undefined) console.error("could not find loom with this draft id ", draft_node.draft_id);
           else l = located_loom;
           
-          l.recomputeLoom(d);
+          //l.recomputeLoom(d);
 
         }else{
           console.error("draft node could not be found")
@@ -293,7 +293,7 @@ export class MixerComponent implements OnInit {
 
       console.log("seed nodes mapped ", seeds);
 
-
+      const loom_fns = seeds.map(seed => seed.loom.recomputeLoom(seed.draft));
       
       const seed_fns = seeds.map(seed => this.tree.loadDraftData(seed.entry, seed.draft, seed.loom));
      
@@ -302,7 +302,7 @@ export class MixerComponent implements OnInit {
         return this.tree.loadOpData(entry, op.name, op.params)
       });
       
-      return Promise.all([seed_fns, op_fns]);
+      return Promise.all([seed_fns, op_fns, loom_fns]);
 
     })
     .then(el => {

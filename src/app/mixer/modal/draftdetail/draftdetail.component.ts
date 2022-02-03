@@ -9,6 +9,7 @@ import { DesignmodesService } from '../../../core/provider/designmodes.service';
 import { WeaverComponent } from '../../../weaver/weaver.component';
 import { MaterialsService } from '../../../core/provider/materials.service';
 import { GloballoomService } from '../../../core/provider/globalloom.service';
+import { ClassifierService } from '../../../core/provider/classifier.service';
 
 
 /**
@@ -46,6 +47,8 @@ export class DraftdetailComponent implements OnInit {
 
   viewonly: boolean = false;
 
+  classification: any;
+
 
   constructor(private dialogRef: MatDialogRef<DraftdetailComponent>,
              @Inject(MAT_DIALOG_DATA) private data: any, 
@@ -54,7 +57,8 @@ export class DraftdetailComponent implements OnInit {
              private dm: DesignmodesService,
              private ops: OperationService,
              private ms: MaterialsService,
-             public gl: GloballoomService) { 
+             public gl: GloballoomService,
+             public classifier: ClassifierService) { 
 
               this.scrollingSubscription = this.scroll
               .scrolled()
@@ -116,7 +120,7 @@ export class DraftdetailComponent implements OnInit {
 
   ngAfterViewInit(){
 
-
+    this.classification = this.classifier.predictDraft(this.draft);
    
   }
 

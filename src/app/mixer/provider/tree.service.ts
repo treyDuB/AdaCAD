@@ -1006,8 +1006,8 @@ removeOperationNode(id:number) : Array<Node>{
       out.forEach((output, ndx) => {
         console.log("before set draft", output, ndx)
 
-        this.setDraft(output, res[ndx],null);
-        touched.push(output);
+        this.setDraft(output, res[ndx],null).then(el => {touched.push(output);});
+      
       });
     }else if(out.length > res.length){
       for(let i = res.length; i < out.length; i++){
@@ -1540,7 +1540,9 @@ removeOperationNode(id:number) : Array<Node>{
  * @param temp the draft to add
  * @param loom  the loom to add (or null if a loom should be generated)
  */
-  setDraft(id: number, temp: Draft, loom: Loom) {
+setDraft(id: number, temp: Draft, loom: Loom) : Promise<any> {
+
+    const loom_fns = [];
 
     const dn = <DraftNode> this.getNode(id);
     let ud_name = temp.ud_name;
@@ -1560,7 +1562,7 @@ removeOperationNode(id:number) : Array<Node>{
 
     if(loom === null){
       dn.loom = new Loom(temp, this.globalloom.min_frames, this.globalloom.min_treadles);
-      //dn.loom.recomputeLoom(temp); //this is too expansive to do synchronously
+      //loom_fns.push(dn.loom.recomputeLoom(temp))
     } 
     else dn.loom = loom;
     dn.loom.draft_id = id;
@@ -1568,6 +1570,7 @@ removeOperationNode(id:number) : Array<Node>{
     dn.dirty = true;
     if(dn.component !== null) (<SubdraftComponent> dn.component).draft = temp;
 
+    return Promise.all(loom_fns);
 
   }
 

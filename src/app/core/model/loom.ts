@@ -934,7 +934,7 @@ getConfig(ndx:Interlacement, drawdown: Array<Array<Cell>>):LoomCoords{
   }
 
    //this recomputes the state of the frames, treadles and threading from the draft
-   recomputeLoom(draft:Draft){
+   recomputeLoom(draft:Draft) : Promise<any>{
 
     let mock = [];
 
@@ -960,7 +960,9 @@ getConfig(ndx:Interlacement, drawdown: Array<Array<Cell>>):LoomCoords{
           }
       }
     }
+    return Promise.resolve(true);
   }
+
 
 
 }//end class
