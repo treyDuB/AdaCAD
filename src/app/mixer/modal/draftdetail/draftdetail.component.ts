@@ -47,6 +47,10 @@ export class DraftdetailComponent implements OnInit {
 
   viewonly: boolean = false;
 
+  /**
+   * The textile sensor classification object.
+   * @property {Classification}
+   */
   classification: any;
 
 
@@ -119,9 +123,10 @@ export class DraftdetailComponent implements OnInit {
 
 
   ngAfterViewInit(){
-
-    this.classification = this.classifier.predictDraft(this.draft);
-   
+    this.classifier.predictDraft(this.draft)
+    .then(results => {
+      this.classification = results;
+    });
   }
 
 

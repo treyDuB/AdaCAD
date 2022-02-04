@@ -58,6 +58,7 @@ import { SignupComponent } from './signup/signup.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EmailComponent } from './email/email.component';
 import { AuthService } from './provider/auth.service';
+import { ClassifierService } from './provider/classifier.service';
 
 @NgModule({
     imports: [
@@ -121,7 +122,8 @@ import { AuthService } from './provider/auth.service';
         FileService,
         VaeService,
         PatternfinderService,
-        AuthService
+        AuthService,
+        ClassifierService
     ],
     exports: [
         CommonModule,
