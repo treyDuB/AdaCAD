@@ -46,7 +46,6 @@ import { NoteComponent } from './palette/note/note.component';
         ImageComponent,
         MixerInitComponent,
         DraftdetailComponent,
-        NoteComponent,
-    ]
+        NoteComponent    ]
 })
 export class MixerModule { }

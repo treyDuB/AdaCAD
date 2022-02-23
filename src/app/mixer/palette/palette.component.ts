@@ -572,6 +572,7 @@ export class PaletteComponent implements OnInit{
 
 
   
+  
 
   /**
    * loads a subdraft component from data

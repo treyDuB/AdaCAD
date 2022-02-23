@@ -32,7 +32,7 @@ export class StateService {
   timeline: Array<HistoryState>; //new states are always pushed to front of draft
   // private itemDoc: AngularFirestoreDocument<Item>;
   
-  constructor(firestore: Firestore, public auth: AuthService) {
+  constructor(public auth: AuthService) {
 
     const db = getDatabase();
 
@@ -57,9 +57,11 @@ export class StateService {
     if(this.auth.uid === undefined) return;
 
     const db = getDatabase();
+
+  
     fbset(fbref(db, 'users/' + this.auth.uid), {
       timestamp: Date.now(),
-      ada: cur_state
+      ada: cur_state,
     });
   }
 

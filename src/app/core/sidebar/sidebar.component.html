@@ -1,6 +1,9 @@
 
 <!-- UNDO / REDO -->
 <div class="sidebar">
+    Pedal Online? {{pedals.pedal_state.online}}
+
+
     <!--on both weaver and mixer-->
     <div class="tool-chunk" *ngIf="source !== 'weaver'">
         <button #undoEvent 
