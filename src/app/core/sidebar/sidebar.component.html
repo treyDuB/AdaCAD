@@ -1,8 +1,8 @@
 
 <!-- UNDO / REDO -->
 <div class="sidebar">
-    Pedal Online? {{pedals.pedal_state.online}}
-
+    <p>Pedals: {{pedals.pi_online.val}}</p>
+    <button id="vacuum-test" (click)="toggleWeaving();">Weave?</button>
 
     <!--on both weaver and mixer-->
     <div class="tool-chunk" *ngIf="source !== 'weaver'">

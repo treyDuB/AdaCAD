@@ -4,7 +4,16 @@ Author(s): S
 
 Any directory paths assume that `/` is the root of the local AdaCAD repository.
 
-# notes from 2/23/22 meeting
+# notes from 2/28/22 meeting w/ Emma
+Workflow for AdaCAD ML
+1. Locally trained the model, saved model weights (output of training) to JSON -- still not in AdaCAD repo
+2. add JSON to AdaCAD assets folder in repo
+3. Service that uses model weights to predict
+    - generates draft for VAE (style transfer)
+    - classifier returns number
+4. Putting on interface? Laura did it
+
+# notes from 2/23/22 meeting w/ Laura
 ## Rules of thumb for modifying code
 - **Components** are responsible for rendering *views* into the design. They should NOT do any computation on the design data.
 - **Services** do the actual data manipulation and are placed in folders named `provider`

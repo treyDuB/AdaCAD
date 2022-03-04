@@ -95,6 +95,10 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  toggleWeaving() {
+    this.pedals.toggleWeaving();
+  }
+
   select(){
     var obj: any = {};
      obj.name = "select";

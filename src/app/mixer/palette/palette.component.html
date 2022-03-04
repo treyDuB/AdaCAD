@@ -2,6 +2,18 @@
 
 <ng-container #vc>
 <div id="palette"  class="palette-container" [class.no-pointer]="!pointer_events" [style.width.px]="viewport.getAbsoluteWidth()"  [style.height.px]="viewport.getAbsoluteHeight()">
+
+  <p>{{pedals.pi_online.val}}</p>
+  <p>{{pedals.loom_online.val}}</p>
+  <p>{{pedals.vacuum_on.val}}</p>
+  <p>{{pedals.active_draft.val}}</p>
+  <p>{{pedals.num_pedals.val}}</p>
+  <p>{{pedals.pedal_states.val}}</p>
+  <p>{{pedals.loom_ready.val}}</p>
+  <p>{{pedals.num_picks.val}}</p>
+  <p>{{pedals.pick_data.val}}</p>
+
+  
 </div>
 <canvas id="scratch" [style.z-index]="canvas_zndx" [class.no-pointer]="!pointer_events" [style.left.px]="viewport.vp.topleft.x" [style.top.px]="viewport.vp.topleft.y"></canvas>
 </ng-container>

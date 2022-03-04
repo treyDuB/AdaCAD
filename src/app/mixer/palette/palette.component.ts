@@ -21,6 +21,7 @@ import { ViewportService } from '../provider/viewport.service';
 import { NoteComponent } from './note/note.component';
 import { Note, NotesService } from '../../core/provider/notes.service';
 import { StateService } from '../../core/provider/state.service';
+import { PedalsService } from '../../core/provider/pedals.service';
 
 @Component({
   selector: 'app-palette',
@@ -165,6 +166,7 @@ export class PaletteComponent implements OnInit{
     private _snackBar: MatSnackBar,
     public viewport: ViewportService,
     private notes: NotesService,
+    public pedals: PedalsService,
     private ss: StateService) { 
     this.shape_vtxs = [];
     this.pointer_events = true;
