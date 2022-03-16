@@ -83,6 +83,7 @@ export class SubdraftComponent implements OnInit {
   @Output() onConnectionStarted:any = new EventEmitter<any>();
   @Output() onSubdraftViewChange:any = new EventEmitter<any>();
   @Output() onNameChange:any = new EventEmitter<any>();
+  @Output() onDraftToPlayer = new EventEmitter<any>();
 
   @ViewChild('bitmapImage') bitmap: any;
 
@@ -177,6 +178,10 @@ export class SubdraftComponent implements OnInit {
     this.rescale();
     this.updateViewport(this.bounds);
 
+  }
+
+  sendDraftToPlayer() {
+    this.onDraftToPlayer.emit(this._draft);
   }
 
   nameFocusOut(){

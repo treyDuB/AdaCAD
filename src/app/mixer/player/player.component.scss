@@ -1,0 +1,12 @@
+.pedal-array, .active-draft, .status-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.pedal-box, #active-draft-canvas {
+  padding: 10px;
+}
+
+.pedal-field, .pedal-field-label {
+  padding: 2px;
+}

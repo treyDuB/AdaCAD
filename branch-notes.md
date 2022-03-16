@@ -4,6 +4,23 @@ Author(s): S
 
 Any directory paths assume that `/` is the root of the local AdaCAD repository.
 
+# 3/11/22
+Adding DraftPlayer into a new `Player` component underneath `mixer`.
+Icon refs: https://fontawesome.com/search?q=play&m=free&s=solid%2Cregular%2Cbrands (which I used for the "play" button icon);
+
+## Routing from SubDraft Component to Player  
+
+1. Added "play" button in `[FILE] subdraft.component.html`
+2. Added event emitter `onDraftToPlayer` in `[FILE] subdraft.component.ts`
+3. Added function `sendDraftToPlayer()` that is called on `(click)`. Tells event emitter to emit the draft of the subdraft component (`this._draft: Draft`)
+4. The `palette` component is the parent component of the subdraft, so it receives the event. Added an event emitter also called `onDraftToPlayer` in `[FILE] palette.component.ts` that passes on the `Draft` object.
+5. Added method to handle the event, `this.subdraftToPlayer()`
+6. Added subscription to this event in `setSubdraftSubscriptions` method in `[FILE] palette.component.ts`
+7. The `mixer` component is the parent of `palette`. Added a new property `playerSubscription` to `[FILE] mixer.component.ts` with type `Subscription`.
+8. Added method `this.draftToPlayer()` to handle the palette event, setting the active draft of `player` to the draft that has been passed up from the subdraft component. The method also tells `player` to draw the draft.
+9. Added line in `ngAfterViewInit()` that assigns the subscription for the palette event to the handler method.
+
+
 # notes from 2/28/22 meeting w/ Emma
 Workflow for AdaCAD ML
 1. Locally trained the model, saved model weights (output of training) to JSON -- still not in AdaCAD repo

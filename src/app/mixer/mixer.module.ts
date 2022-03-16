@@ -20,6 +20,7 @@ import { MixerInitComponent } from './modal/mixerinit/mixerinit.component';
 import { DraftdetailComponent } from './modal/draftdetail/draftdetail.component';
 import { WeaverModule } from '../weaver/weaver.module';
 import { NoteComponent } from './palette/note/note.component';
+import { PlayerComponent } from './player/player.component';
 
 
 
@@ -46,6 +47,7 @@ import { NoteComponent } from './palette/note/note.component';
         ImageComponent,
         MixerInitComponent,
         DraftdetailComponent,
-        NoteComponent    ]
+        NoteComponent,
+        PlayerComponent    ]
 })
 export class MixerModule { }

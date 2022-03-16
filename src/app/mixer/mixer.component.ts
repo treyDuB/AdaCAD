@@ -21,6 +21,8 @@ import { HttpClient } from '@angular/common/http';
 import { InitModal } from '../core/modal/init/init.modal';
 import { MatDialog } from '@angular/material/dialog';
 
+import { PlayerComponent } from '../mixer/player/player.component';
+import { DraftPlayerService } from './provider/draftplayer.service';
 
 //disables some angular checking mechanisms
 //enableProdMode();
@@ -39,6 +41,7 @@ export class MixerComponent implements OnInit {
 
   @ViewChild(PaletteComponent) palette;
   @ViewChild(SidebarComponent) view_tool;
+  @ViewChild(PlayerComponent) player;
 
 
   filename = "adacad_mixer";
@@ -60,6 +63,8 @@ export class MixerComponent implements OnInit {
 
   scrollingSubscription: any;
 
+  playerSubscription: any;
+
   scale: number = 5;
 
   /// ANGULAR FUNCTIONS
@@ -80,6 +85,7 @@ export class MixerComponent implements OnInit {
     private gl: GloballoomService,
     private notes: NotesService,
     private ss: StateService,
+    private dps: DraftPlayerService,
     private dialog: MatDialog) {
 
     //this.dialog.open(MixerInitComponent, {width: '600px'});
@@ -89,6 +95,7 @@ export class MixerComponent implements OnInit {
           .subscribe((data: any) => {
             this.onWindowScroll(data);
     });
+
     
     this.vp.setAbsolute(16380, 16380); //max size of canvas, evenly divisible by default cell size
    
@@ -97,7 +104,12 @@ export class MixerComponent implements OnInit {
 
   }
 
-
+  /** mixer receives palette event for setting draft active, directs player component */
+  draftToPlayer(d: Draft) {
+    this.dps.setDraft(d);
+    this.player.drawDraft();
+    // this.player.draft_set = true;
+  }
 
   private onWindowScroll(data: any) {
     if(!this.manual_scroll){
@@ -396,6 +408,11 @@ export class MixerComponent implements OnInit {
       if(loadResponse !== undefined) this.loadNewFile(loadResponse);
 
    });
+
+   // event originates in subdraft component -> palette (parent) -> mixer (parent)
+   // mixer then sends to player
+   // this subscription has to be created after view init
+   this.playerSubscription = this.palette.onDraftToPlayer.subscribe(this.draftToPlayer.bind(this));
 
   }
 

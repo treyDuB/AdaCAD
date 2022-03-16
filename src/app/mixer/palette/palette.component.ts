@@ -38,6 +38,7 @@ export class PaletteComponent implements OnInit{
    */ 
   @Input() patterns: Array<Pattern>;
   @Output() onDesignModeChange: any = new EventEmitter();  
+  @Output() onDraftToPlayer: any = new EventEmitter();
 
   /**
    * A container that supports the automatic generation and removal of the components inside of it
@@ -473,6 +474,13 @@ export class PaletteComponent implements OnInit{
     this.subdraftSubscriptions.push(sd.onDesignAction.subscribe(this.onSubdraftAction.bind(this)));
     this.subdraftSubscriptions.push(sd.onSubdraftViewChange.subscribe(this.onSubdraftViewChange.bind(this)));
     this.subdraftSubscriptions.push(sd.onNameChange.subscribe(this.onSubdraftNameChange.bind(this)));
+    this.subdraftSubscriptions.push(sd.onDraftToPlayer.subscribe(this.subdraftToPlayer.bind(this)));
+  }
+
+  subdraftToPlayer(d: Draft) {
+    console.log("subdraft sending to player");
+    console.log(d);
+    this.onDraftToPlayer.emit(d);
   }
 
   /**

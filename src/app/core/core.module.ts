@@ -59,6 +59,10 @@ import { ProfileComponent } from './profile/profile.component';
 import { EmailComponent } from './email/email.component';
 import { AuthService } from './provider/auth.service';
 
+import { PlayerComponent } from '../mixer/player/player.component';
+import { DraftPlayerService } from '../mixer/provider/draftplayer.service';
+import { PedalsService } from './provider/pedals.service';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -121,7 +125,8 @@ import { AuthService } from './provider/auth.service';
         FileService,
         VaeService,
         PatternfinderService,
-        AuthService
+        AuthService,
+        PedalsService
     ],
     exports: [
         CommonModule,

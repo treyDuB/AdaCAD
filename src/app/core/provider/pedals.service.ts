@@ -1,16 +1,19 @@
 import { Injectable, Query } from '@angular/core';
-import { Draft } from "../../core/model/draft";
-import { Operation, OperationService } from '../../mixer/provider/operation.service';
+import { DraftPlayerService, WeavingPick } from "../../mixer/provider/draftplayer.service";
+import { Operation } from '../../mixer/provider/operation.service';
 import { EventEmitter } from 'events';
-import { getDatabase, child, ref, set, get, query, onValue, DatabaseReference, onChildAdded, onChildChanged, onChildRemoved} from "firebase/database";
+import { getDatabase } from "firebase/database";
 import { Database } from '@angular/fire/database';
 import { DBListener, OnlineStatus, DBWriter, DBListenerArray } from './dbnodes.service';
-import { T } from '@angular/cdk/keycodes';
 
 export interface Pedal {
   id: number,
   name: string,
-  op: Operation,
+  u_name?: string,
+  auto_name?: string,
+  dbnode: DBListener,
+  state: any,
+  op?: Operation
 }
 
 export class PedalStatus extends EventEmitter {
@@ -94,7 +97,6 @@ export class PedalsService {
   dbNodes: Array<any>;
 
   // status data
-  activeDraft: Draft;
   status: PedalStatus;
   //  default = {
   //     pi_online: false,     // is the pi online?
@@ -105,33 +107,51 @@ export class PedalsService {
   //     pedal_states: {},
   //     loom_ready: false     // is the loom requesting a draft row?
   // };
+  pedals: Array<Pedal> = [];
 
   constructor() { 
     // init: start listening to changes in Firebase DB from the Pi
+    console.log("pedals service constructor");
     this.db = getDatabase();
     this.status = new PedalStatus(this.db);
     // console.log(this.status);
     
+    // if pi_online = "true" at start-up, just make sure
+    console.log("are you alive?");
+    this.pi_online.checkAlive();
+    this.loomPedals(false);
+
     // listens for changes in pi online status
     // if online, enable everything
-    this.pi_online.on('change', (state) => {
-      if (state) {
-        this.enableLoomPedals();
-      } else {
-        this.disableLoomPedals();
-      }
-    });
+    this.pi_online.on('change', (state) =>
+      this.loomPedals(state));
 
     // other listeners
-    this.loom_online.on('change', (state) => {
+    this.loom_online.on('change', (state) => 
+      this.loomListeners(state));
+
+    this.pedal_array.on('ready', (state) => 
+      this.weavingWriters(state));
+
+    this.pedal_array.on('child-added', (newNode) => {
+      this.pedals.push(this.nodeToPedal(newNode))
+    })
+
+    /** @todo */
+    this.pedal_array.on('child-change', (e) => {
+      console.log("child change ", e);
+      this.pedals[e.id].state = e.val;
+      // e = {id: which pedal's id, val: pedal state}
+      // call pedal.execute or whatever it ends up being
+      // this.player.onPedal(e.id, e.val);
+    });
+
+    /** @todo */
+    this.loom_ready.on('change', (state) => {
       if (state) {
-        this.vacuum_on.attach();
-        this.loom_ready.attach();
-      } else {
-        this.vacuum_on.detach();
-        this.loom_ready.detach();
+        // send the next weaving row to DB
+        // update num_picks and pick_data accordingly
       }
-      this.updateWeavingReady();
     });
   }
 
@@ -144,23 +164,34 @@ export class PedalsService {
   get loom_ready() { return this.status.loom_ready; }
   get num_picks() { return this.status.num_picks; }
   get pick_data() { return this.status.pick_data; }
-  get readyToWeave() { return (this.loom_online.val && this.num_pedals.val > 0); }
+  get pedal_array() { return this.status.pedal_array; }
+  
+  get readyToWeave() { return (this.loom_online.val && this.pedal_array.ready); }
 
   // attach all listeners to other values in DB
-  enableLoomPedals() {
-    this.loom_online.attach();
-    this.num_pedals.attach();
-    this.pedal_states.attach();
+  loomPedals(state: boolean) {
+    if (state) {
+      this.loom_online.attach();
+      this.pedal_array.attach();
+    } else {
+      this.loom_online.detach();
+      this.pedal_array.detach();
+    }
   }
 
-  disableLoomPedals() {
-    this.loom_online.detach();
-    this.num_pedals.detach();
-    this.pedal_states.detach();
+  loomListeners(state: boolean) {
+    if (state) {
+      this.vacuum_on.attach();
+      this.loom_ready.attach();
+    } else {
+      this.vacuum_on.detach();
+      this.loom_ready.detach();
+    }
+    this.weavingWriters(this.readyToWeave);
   }
 
-  updateWeavingReady() {
-    if (this.readyToWeave) {
+  weavingWriters(state: boolean) {
+    if (state) {
       this.active_draft.attach();
       this.num_picks.attach();
       this.pick_data.attach();
@@ -172,14 +203,22 @@ export class PedalsService {
   }
 
   toggleWeaving() {
-    this.active_draft.attach();
-    console.log("toggle weaving");
+    // this.active_draft.attach();
+    // console.log("toggle weaving");
     let vac = !this.vacuum_on.val;
     console.log("vacuum is turning ", vac);
-    this.status.active_draft.setVal(vac);
+    this.active_draft.setVal(vac);
   }
 
-  sendDraftRow() {
+  /** @todo */
+  sendDraftRow(r: WeavingPick) {
+    this.num_picks.setVal(r.pickNum);
+    this.pick_data.setVal(r.rowData);
+  }
 
+  nodeToPedal(node) {
+    console.log(node);
+    let p: Pedal = { id: node.id, name: node.name, dbnode: node, state: node.val };
+    return p;
   }
 }
