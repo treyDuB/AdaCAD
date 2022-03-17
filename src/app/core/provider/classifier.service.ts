@@ -66,7 +66,6 @@ export class ClassifierService {
           pinch: model[0],
           force:model [1]
         }
-
         var newDraft = [];
         for (var i = 0; i < draft.pattern.length; i++) {
           newDraft.push([]);
