@@ -2410,8 +2410,6 @@ flipDraft(draft: Draft) : Draft{
   const node &#x3D; &lt;OpNode&gt; this.getNode(id);
   const op &#x3D; this.ops.getOp(node.name);
 
-
-
   const drafts_in &#x3D; this.getNonCxnInputs(id);
   const all_inputs &#x3D; this.getInputsWithNdx(id);
   
@@ -2430,7 +2428,8 @@ flipDraft(draft: Draft) : Draft{
       const draft_node_in &#x3D; el.tn.inputs[0].tn;
       const drafts_in &#x3D; (draft_node_in.node.type &#x3D;&#x3D;&#x3D; &quot;draft&quot;) ? (&lt;DraftNode&gt;draft_node_in.node).draft : null;
       if(drafts_in !&#x3D; null){
-      inputs.push({op_name:&#x27;child&#x27;, drafts: [this.flipDraft(drafts_in)], inlet: el.ndx ,params: [node.inlets[el.ndx]]});
+      //inputs.push({op_name:&#x27;child&#x27;, drafts: [this.flipDraft(drafts_in)], inlet: el.ndx ,params: [node.inlets[el.ndx]]});
+      inputs.push({op_name:&#x27;child&#x27;, drafts: [drafts_in], inlet: el.ndx ,params: [node.inlets[el.ndx]]});
       }
     })
 
@@ -2440,8 +2439,8 @@ flipDraft(draft: Draft) : Draft{
     .map(input &#x3D;&gt; (&lt;DraftNode&gt; this.getNode(input)))
     .filter(el &#x3D;&gt; el !&#x3D;&#x3D; null &amp;&amp; el !&#x3D;&#x3D; undefined)
     .map(input_node &#x3D;&gt; input_node.draft)
-    .filter(el &#x3D;&gt; el !&#x3D;&#x3D; null &amp;&amp; el !&#x3D;&#x3D; undefined)
-    .map(el &#x3D;&gt; this.flipDraft(el));
+    .filter(el &#x3D;&gt; el !&#x3D;&#x3D; null &amp;&amp; el !&#x3D;&#x3D; undefined);
+    // .map(el &#x3D;&gt; this.flipDraft(el));
 
     inputs.push({op_name: &#x27;&#x27;, drafts: drafts_coming_in, inlet: 0, params: node.params});
 
