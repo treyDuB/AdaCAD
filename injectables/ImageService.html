@@ -1247,11 +1247,12 @@ export class ImageService {
     
     //const data &#x3D; ids.map(id &#x3D;&gt; this.upSvc.getDownloadData(id));
     return this.upSvc.getDownloadData(id).then(obj &#x3D;&gt;{
+        if(obj &#x3D;&#x3D;&#x3D; &#x27;&#x27;) return Promise.resolve(null)
         url &#x3D; obj;
         return  this.processImage(obj);
       
     }).then(data &#x3D;&gt; {
-  
+      if(data &#x3D;&#x3D; null) return Promise.reject(&#x27;nulldata&#x27;);
       var canvas &#x3D; document.createElement(&#x27;canvas&#x27;);
       var ctx &#x3D; canvas.getContext(&#x27;2d&#x27;);
       var image &#x3D; new Image();
@@ -1261,11 +1262,9 @@ export class ImageService {
       return image.decode().then(() &#x3D;&gt; {
         canvas.width &#x3D; image.naturalWidth;
         canvas.height &#x3D; image.naturalHeight; 
-            
-        // ctx.mozImageSmoothingEnabled &#x3D; false;
-        // ctx.webkitImageSmoothingEnabled &#x3D; false;
-        // ctx.msImageSmoothingEnabled &#x3D; false;
-        // ctx.imageSmoothingEnabled &#x3D; false;
+
+        if(image.naturalWidth &gt; 10000) Promise.reject(&#x27;width error&#x27;);
+        if(image.naturalHeight &gt; 10000) Promise.reject(&#x27;height error&#x27;);
 
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
@@ -1295,7 +1294,10 @@ export class ImageService {
         
         let filewarning &#x3D; &quot;&quot;;
         let image_map: Array&lt;Array&lt;number&gt;&gt; &#x3D; [];
-        if(unique.length &gt; 100) filewarning &#x3D; &quot;this image contains &quot;+unique.length+&quot; color and will take too much time to process, consider indexing to a smaller color space&quot;
+        if(unique.length &gt; 100){
+          filewarning &#x3D; &quot;this image contains &quot;+unique.length+&quot; color and will take too much time to process, consider indexing to a smaller color space&quot;
+          Promise.reject(&#x27;color&#x27;);
+        } 
         else{
           const image_map_flat: Array&lt;number&gt; &#x3D; all_colors.map(color &#x3D;&gt; unique.findIndex(el &#x3D;&gt; el &#x3D;&#x3D;&#x3D; color));
 
@@ -1333,9 +1335,7 @@ export class ImageService {
   
 
   getImageData(id: string){
-    console.log(&quot;images&quot;, id, this.images)
     return this.images.find(el &#x3D;&gt; el.id &#x3D;&#x3D;&#x3D; id);
-  
   }
 
   setImageData(id: string, data: any){

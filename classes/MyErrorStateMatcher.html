@@ -1340,17 +1340,24 @@ export class OperationComponent implements OnInit {
       const obj &#x3D; this.imageService.getImageData(this.op_inputs[0].value);
       if(obj &#x3D;&#x3D;&#x3D; undefined) return;
 
+      console.log(&quot;obj data image&quot;, obj.data.image);
+
       this.has_image_preview &#x3D; true;
       const image_div &#x3D;  document.getElementById(&#x27;param-image-&#x27;+this.id);
       image_div.style.display &#x3D; &#x27;flex&#x27;;
-      
+
+      const dims_div &#x3D;  document.getElementById(&#x27;param-image-dims-&#x27;+this.id);
+      dims_div.innerHTML&#x3D;obj.data.width+&quot;px x &quot;+obj.data.height+&quot;px&quot;;
+
       const canvas: HTMLCanvasElement &#x3D;  &lt;HTMLCanvasElement&gt; document.getElementById(&#x27;preview_canvas-&#x27;+this.id);
       const ctx &#x3D; canvas.getContext(&#x27;2d&#x27;);
 
       const max_dim &#x3D; (obj.data.width &gt; obj.data.height) ? obj.data.width : obj.data.height;
-
+      canvas.width &#x3D; obj.data.width / max_dim * 100;
+      canvas.height &#x3D; obj.data.height / max_dim * 100;
       ctx.drawImage(obj.data.image, 0, 0, obj.data.width / max_dim * 100, obj.data.height / max_dim * 100);
-  }
+     
+    }
 
 
   getInputName(id: number) : string {
@@ -1567,6 +1574,8 @@ export class OperationComponent implements OnInit {
           opnode.params[id] &#x3D; obj.id;
 
 
+
+
           obj.colors.forEach(hex &#x3D;&gt; {
 
             //add any new colors
@@ -1590,6 +1599,14 @@ export class OperationComponent implements OnInit {
             opnode.inlets.splice(removeid, 1);
             this.inlets.splice(removeid, 1);
           });
+
+
+          //now update the default parameters to the original size 
+          this.op_inputs[1].setValue(obj.data.width/10);
+          this.op_inputs[2].setValue(obj.data.height/10);
+          opnode.params[1] &#x3D; obj.data.width/10;
+          opnode.params[2] &#x3D; obj.data.height/10;
+
           this.drawImagePreview();
 
 

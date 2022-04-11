@@ -1154,7 +1154,6 @@ import { SystemsService } from &#x27;../../core/provider/systems.service&#x27;;
 import { MaterialsService } from &#x27;../../core/provider/materials.service&#x27;;
 import * as _ from &#x27;lodash&#x27;;
 import { ImageService } from &#x27;../../core/provider/image.service&#x27;;
-import { IFFT } from &#x27;@tensorflow/tfjs&#x27;;
 
 
 export interface OperationParams {
@@ -1487,6 +1486,7 @@ export class OperationService {
                 const select_col &#x3D; (factor_in_repeats &#x3D;&#x3D;&#x3D; 1) ? j % op_input.drafts[select_array].warps : j;
                 if(op_input.drafts[select_array].hasCell(select_row, select_col)){
                     const pattern &#x3D; op_input.drafts[select_array].pattern;
+                    //console.log(&quot;in interlace&quot;, cell, pattern, select_row, select_col);
                     cell.setHeddle(pattern[select_row][select_col].getHeddle());
                 }else{
                     cell.setHeddle(null);
@@ -3325,6 +3325,7 @@ export class OperationService {
       max_inputs: 1, 
       perform: (op_inputs: Array&lt;OpInput&gt;) &#x3D;&gt; {
         const op_input &#x3D; op_inputs[0];
+        console.log(&quot;recomputing flip horiz with &quot;, op_input)
 
           const outputs:Array&lt;Draft&gt; &#x3D;op_input.drafts.map(input &#x3D;&gt; {
           const d: Draft &#x3D; new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
@@ -3891,6 +3892,14 @@ export class OperationService {
         if(image_data &#x3D;&#x3D;&#x3D; undefined) return Promise.resolve([]);
         const data &#x3D; image_data.data;
 
+        //we need to flip the image map here because it will be flipped back on return. 
+
+        const fliped_image &#x3D; [];
+        data.image_map.forEach(row &#x3D;&gt; {
+          fliped_image.unshift(row);
+        })
+
+
         const color_to_drafts &#x3D; data.colors.map((color, ndx) &#x3D;&gt; {
           const child_of_color &#x3D; child_inputs.find(input &#x3D;&gt; (input.params.findIndex(param &#x3D;&gt; param &#x3D;&#x3D;&#x3D; color) !&#x3D;&#x3D; -1));
           if(child_of_color &#x3D;&#x3D;&#x3D; undefined) return {color: color, draft: null};
@@ -3909,8 +3918,9 @@ export class OperationService {
             const map_i &#x3D; Math.floor(i * i_ratio);
             const map_j &#x3D; Math.floor(j * j_ratio);
 
-            const color_ndx &#x3D; data.image_map[map_i][map_j];
+            const color_ndx &#x3D; fliped_image[map_i][map_j]; //
             const color_draft &#x3D; color_to_drafts[color_ndx].draft;
+
             if(color_draft &#x3D;&#x3D;&#x3D; null) pattern[i].push(new Cell(false));
             else {
               const draft_i &#x3D; i % color_draft.wefts;
@@ -4032,18 +4042,18 @@ export class OperationService {
       perform: (op_inputs: Array&lt;OpInput&gt;) &#x3D;&gt; {
         const op_input &#x3D; op_inputs[0];
 
-        const total:number &#x3D;op_input.drafts.reduce((acc, draft)&#x3D;&gt;{
+        const total_wefts:number &#x3D;op_input.drafts.reduce((acc, draft)&#x3D;&gt;{
             return acc + draft.wefts;
         }, 0);
 
         const max_warps:number &#x3D; utilInstance.getMaxWarps(op_input.drafts);
-        const draft: Draft &#x3D; new Draft({warps: max_warps, wefts: total});
+        const draft: Draft &#x3D; new Draft({warps: max_warps, wefts: total_wefts});
         //make a array of the values from col j
         for(let j &#x3D; 0; j &lt; max_warps; j++){
           
           const col_as_row: Array&lt;Cell&gt; &#x3D;op_input.drafts.reduce((acc, input, arr_ndx) &#x3D;&gt; {
               let c &#x3D; [];
-              if(j &lt; input.pattern.length){
+              if(j &lt; input.pattern[0].length){
                  c &#x3D; input.pattern.map(el &#x3D;&gt; el[j]);
               }else{
                 const d &#x3D; new Draft({warps: 1, wefts: input.wefts});
@@ -4053,7 +4063,7 @@ export class OperationService {
               return acc.concat(c);
           }, []);
 
-         for(let i &#x3D; 0; i &lt; total; i++){
+         for(let i &#x3D; 0; i &lt; total_wefts; i++){
            draft.pattern[i][j].setHeddle(col_as_row[i].getHeddle());
          }
 
@@ -4184,7 +4194,7 @@ export class OperationService {
 
         const section_draft_map: Array&lt;any&gt; &#x3D; child_inputs.map(el &#x3D;&gt; { return {section: el.inlet-1, draft: el.drafts.shift()}}); 
         const first_draft: Draft &#x3D; section_draft_map[0].draft;
-
+        if(first_draft &#x3D;&#x3D;&#x3D; undefined ) return Promise.resolve([]);
         const d:Draft &#x3D; new Draft({
           warps:total_width, 
           wefts:total_warps,
