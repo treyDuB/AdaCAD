@@ -4,11 +4,23 @@ Author(s): S
 
 Any directory paths assume that `/` is the root of the local AdaCAD repository.
 
+# 3/17/22
+
+## Service to Component
+1. We will take an Angular Service, which creates and updates a data structure that represents some external input (e.g. ML model, database entries), and create a Component for AdaCAD where a user can interact with and edit it.
+2. 
+
+# 3/16/22
+Adding common references: 
+- Angular Material components and general API - https://material.angular.io/components/
+- HTML (and other) elements - https://developer.mozilla.org/en-US/docs/Web/API/Element
+- Promises for async functions - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
 # 3/11/22
 Adding DraftPlayer into a new `Player` component underneath `mixer`.
 Icon refs: https://fontawesome.com/search?q=play&m=free&s=solid%2Cregular%2Cbrands (which I used for the "play" button icon);
 
-## Routing from SubDraft Component to Player  
+## Routing Draft from SubDraft Component to Player  
 
 1. Added "play" button in `[FILE] subdraft.component.html`
 2. Added event emitter `onDraftToPlayer` in `[FILE] subdraft.component.ts`

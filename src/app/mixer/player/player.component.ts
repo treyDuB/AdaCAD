@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnInit} from '@angular/core';
 import { DraftPlayerService } from '../provider/draftplayer.service';
 // import { PedalsService } from '../../core/provider/pedals.service';
-import { OperationService, Operation } from '../provider/operation.service';
+import { OperationService } from '../provider/operation.service';
 import { MaterialsService } from '../../core/provider/materials.service';
 // import { TreeService, DraftNode  } from '../provider/tree.service';
 import { Draft } from '../../core/model/draft';
@@ -26,7 +26,10 @@ export class PlayerComponent implements OnInit {
   // }
   // private _active_draft: Draft = null;
 
+  playOpen: boolean = false;
   draft_set: boolean = false;
+  ownElement: HTMLElement;
+  mixerElement: HTMLElement;
   draftCanvas: HTMLCanvasElement;
   cx: any;
   ink = 'neq'; //can be or, and, neq, not, splice
@@ -36,31 +39,43 @@ export class PlayerComponent implements OnInit {
     private ms: MaterialsService, 
     private oss: OperationService
   ) { 
-    this.default_cell = 5;
+    this.default_cell = 10;
   }
 
   ngOnInit(): void {
     // console.log("ng on init, pedals: ", this.pls.pedals);
     /** FOR TESTING ONLY: generate random draft and set it at start-up */
-    const random = this.oss.getOp('random');
-    random.perform([], [7, 7, 50]).then((result) => {
+    const startPattern = this.oss.getOp('tabby');
+    startPattern.perform([], [1]).then((result) => {
       this.pls.setDraft(result[0]);
       this.drawDraft();
     });
+    this.ownElement = document.getElementById('player-container');
+    this.mixerElement = document.querySelector('.mat-drawer-container');
+    console.log("init w/ element refs ", this.ownElement, this.mixerElement);
   }
 
   ngAfterViewInit() {
-    console.log("ng after view init, pedals: ", this.pls.pedals);
+    // console.log("ng after view init, pedals: ", this.pls.pedals);
     this.draftCanvas = <HTMLCanvasElement> document.getElementById('active-draft-canvas');
     this.cx = this.draftCanvas.getContext("2d");
-    this.drawDraft(); //force call here because it likely didn't render previously. 
+    // this.drawDraft(); //force call here because it likely didn't render previously. 
+    this.resizeContainer();
     // this.rescale();
     // this.updateViewport(this.bounds);
     this.pls.redraw.on('redraw', () => {
       console.log("redrawing ", this.pls.state);
       this.drawDraft();
+      this.resizeContainer();
     });
 
+  }
+
+  resizeContainer() {
+    let h = this.ownElement.getBoundingClientRect().height;
+    let t = document.querySelector("app-topbar").getBoundingClientRect().height;
+    console.log("player height is " + h.toString());
+    this.mixerElement.style.height = 'calc(100vh - '+ (h+t).toString() + 'px)';
   }
 
   /**
@@ -68,7 +83,7 @@ export class PlayerComponent implements OnInit {
    * draw whetever is stored in the this.pls.draft object to the screen
    * @returns 
    */
-   drawDraft() {
+   drawDraft(flipY: boolean = true) {
 
     if(this.draftCanvas === undefined) return;
     this.cx = this.draftCanvas.getContext("2d");
@@ -79,12 +94,15 @@ export class PlayerComponent implements OnInit {
 
     } else {
       this.draft_set = true;
-      this.draftCanvas.width = this.pls.draft.warps * this.default_cell;
+      this.draftCanvas.width = (this.pls.draft.warps+2) * this.default_cell;
       this.draftCanvas.height = this.pls.draft.wefts * this.default_cell;
 
       for (let i = 0; i < this.pls.draft.wefts; i++) {
         for (let j = 0; j < this.pls.draft.warps; j++) {
-          this.drawCell(this.default_cell, i, j, false);
+          this.drawCell(this.default_cell, i, j, false, flipY);
+        }
+        if (i == this.pls.state.row) {
+          this.drawProgressBar(this.default_cell, i, this.pls.draft.warps, flipY);
         }
       }
     }
@@ -92,7 +110,7 @@ export class PlayerComponent implements OnInit {
     // return "complete";
   }
 
-  drawCell(cell_size, i, j, usecolor){
+  drawCell(cell_size: number, i: number, j: number, usecolor: boolean, flipY: boolean = true){
     let is_up = this.pls.draft.isUp(i,j);
     let is_set = this.pls.draft.isSet(i, j);
     let color = "#ffffff"
@@ -109,12 +127,20 @@ export class PlayerComponent implements OnInit {
         }
         this.cx.fillStyle = color;
       }
-    } else{
+    } else {
       this.cx.fillStyle =  '#0000000d';
     // this.cx.fillStyle =  '#ff0000';
 
     }
-    this.cx.fillRect(j*cell_size, i*cell_size, cell_size, cell_size);
+    let y = flipY ? this.pls.draft.wefts-1 - i : i;
+    this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
+  }
+
+  drawProgressBar(cell_size: number, i: number, width: number, flipY: boolean = true) {
+    this.cx.fillStyle =  '#ffff00';
+    let y = flipY ? this.pls.draft.wefts-1 - i : i;
+    this.cx.fillRect(0, y*cell_size, cell_size, cell_size);
+    this.cx.fillRect((width+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
 
 }

@@ -1871,7 +1871,7 @@ drawStarted(){
     //there must be at least one cell selected
     if(warps < 1 || wefts < 1){
       this.scratch_pad = undefined;
-      return;
+      return Promise.resolve(false);
     } 
 
 

@@ -134,7 +134,8 @@ export class PedalsService {
       this.weavingWriters(state));
 
     this.pedal_array.on('child-added', (newNode) => {
-      this.pedals.push(this.nodeToPedal(newNode))
+      this.pedals.push(this.nodeToPedal(newNode));
+      this.pedal_array.emit('pedal-added', this.pedals.length);
     })
 
     /** @todo */
