@@ -118,7 +118,7 @@ import { PedalsService } from './provider/pedals.service';
         SignupComponent,
         ProfileComponent,
         EmailComponent
-    ],
+        ],
     providers: [
         PatternService,
         UploadService,

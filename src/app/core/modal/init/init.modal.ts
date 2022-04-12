@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import {getDatabase, ref as fbref, get as fbget, child} from '@angular/fire/database'
 import {AuthService} from '../../provider/auth.service'
 import {FileService} from '../../provider/file.service'
+import { getAnalytics, logEvent } from "@angular/fire/analytics";
+
 interface StartOptions {
   value: string;
   viewValue: string;
@@ -27,7 +29,7 @@ export class InitModal implements OnInit {
   opts: StartOptions[] = [
       {value: 'example', viewValue: 'Load an Example', mixeronly: true},
       {value: 'ada', viewValue: 'AdaCAD (.ada) File', mixeronly: true},
-      {value: 'bmp', viewValue: 'Two Color Image (.bmp, .jpg, .png) File', mixeronly: false},
+     // {value: 'bmp', viewValue: 'Two Color Image (.bmp, .jpg, .png) File', mixeronly: false},
       // {value: 'wif', viewValue: 'WIF (.wif) File', mixeronly: false},   
       {value: 'new', viewValue: 'Empty Draft', mixeronly: false}
 
@@ -45,8 +47,8 @@ export class InitModal implements OnInit {
 
 
   constructor(
-    private auth: AuthService,
     private fls: FileService,
+    private auth: AuthService,
     private dm: DesignmodesService, 
     private http: HttpClient,
     private dialogRef: MatDialogRef<InitModal>, 
@@ -92,12 +94,16 @@ export class InitModal implements OnInit {
   }
 
   selectionMade(selection: any){
-    if(selection === 'recover'){
-      this.loadSavedFile();
-    }
+
   }
 
   loadExample(filename: string){
+    
+    const analytics = getAnalytics();
+    logEvent(analytics, 'onloadexample', {
+      items: [{ uid: this.auth.uid, name: filename }]
+    });
+
     console.log("loading example: ", filename);
     this.http.get('assets/examples/'+filename+".ada", {observe: 'response'}).subscribe((res) => {
 
@@ -108,28 +114,7 @@ export class InitModal implements OnInit {
     }); 
   }
 
-  loadSavedFile(){
-    this.auth.user.subscribe(user => {
-      if(user !== null){
-
-        const db = fbref(getDatabase());
-
-
-        fbget(child(db, `users/${this.auth.uid}/ada`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            this.fls.loader.ada("recovered draft", snapshot.val()).then(lr => {
-              this.dialogRef.close(lr)
-            });
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
-  
-    }
-  
-});
-
-  }
+ 
 
 
 

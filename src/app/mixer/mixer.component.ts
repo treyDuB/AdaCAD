@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, ɵNOT_FOUND_CHECK_ONLY_ELEMENT_INJECTOR } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, ɵNOT_FOUND_CHECK_ONLY_ELEMENT_INJECTOR, enableProdMode } from '@angular/core';
 import { PatternService } from '../core/provider/pattern.service';
 import { DesignmodesService } from '../core/provider/designmodes.service';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
@@ -6,7 +6,7 @@ import { Pattern } from '../core/model/pattern';
 import {Subject} from 'rxjs';
 import { PaletteComponent } from './palette/palette.component';
 import { Draft } from '../core/model/draft';
-import { TreeService, TreeNode, DraftNode } from './provider/tree.service';
+import { TreeService, TreeNode, DraftNode, IOTuple } from './provider/tree.service';
 import { FileObj, FileService, LoadResponse, NodeComponentProxy, OpComponentProxy, SaveObj, TreeNodeProxy } from '../core/provider/file.service';
 import { SidebarComponent } from '../core/sidebar/sidebar.component';
 import { ViewportService } from './provider/viewport.service';
@@ -20,12 +20,18 @@ import { SystemsService } from '../core/provider/systems.service';
 import { HttpClient } from '@angular/common/http';
 import { InitModal } from '../core/modal/init/init.modal';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../core/provider/auth.service';
+import {getDatabase, ref as fbref, get as fbget, child} from '@angular/fire/database'
+import {getAnalytics, logEvent} from '@angular/fire/analytics'
+import { InputSpec } from '@tensorflow/tfjs';
+import { ImageService } from '../core/provider/image.service';
+import { OperationService } from './provider/operation.service';
 
 import { PlayerComponent } from '../mixer/player/player.component';
 import { DraftPlayerService } from './provider/draftplayer.service';
 
 //disables some angular checking mechanisms
-//enableProdMode();
+enableProdMode();
 
 
 
@@ -75,6 +81,7 @@ export class MixerComponent implements OnInit {
    * dialog - Anglar Material dialog module. Used to control the popup modals.
    */
   constructor(public dm: DesignmodesService, 
+    private auth: AuthService,
     private ms: MaterialsService,
     private sys: SystemsService,
     private ps: PatternService, 
@@ -86,7 +93,9 @@ export class MixerComponent implements OnInit {
     private notes: NotesService,
     private ss: StateService,
     private dps: DraftPlayerService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private image: ImageService,
+    private ops: OperationService) {
 
     //this.dialog.open(MixerInitComponent, {width: '600px'});
 
@@ -170,10 +179,45 @@ export class MixerComponent implements OnInit {
    */
    importNewFile(result: LoadResponse){
     
-    console.log("imported new file", result, result.data);
     this.processFileData(result.data).then(
       this.palette.changeDesignmode('move')
     );
+  }
+
+
+  printTreeStatus(name: string, treenode: Array<TreeNode>){
+    console.log("PRINTING TREE STATUS FOR ", name);
+
+    treenode.forEach(tn => {
+      if(tn === undefined){
+        console.log("Undefined Node", tn); 
+        return;
+      }
+
+      if(tn.inputs === undefined){
+        console.log("Undefined Inputs", tn); 
+        return;  
+      }
+
+      if(tn.outputs === undefined){
+        console.log("Undefined Outputs", tn); 
+        return;  
+      }
+      
+      switch(tn.node.type){
+        case 'cxn':
+          if(tn.inputs.length !== 1 || tn.outputs.length !== 1)
+          console.log("Invalid Number of Inputs/Outputs on Connection", tn); 
+          break;
+
+        case 'draft':
+            if(tn.inputs.length > 1)
+            console.log("Invalid Number of Inputs/Outputs on Draft", tn); 
+            break;
+      }
+
+
+    });
   }
 
 
@@ -197,29 +241,67 @@ export class MixerComponent implements OnInit {
    * @returns an array of treenodes and the map associated at each tree node
    */
   async loadTreeNodes(id_map: Array<{prev_id: number, cur_id:number}>, tns: Array<TreeNodeProxy>) : Promise<Array<{tn:TreeNode,entry:{prev_id: number, cur_id: number}}>> {
+    
 
-
-    //map the old ids to the new ids
     const updated_tnp: Array<TreeNodeProxy> = tns.map(tn => {
+     
+      //we need these here because firebase does not store arrays of size 0
+      if(tn.inputs === undefined) tn.inputs = [];
+      if(tn.outputs === undefined) tn.outputs = [];
 
 
-      tn.node = id_map.find(el => el.prev_id === tn.node).cur_id;
-      tn.parent = (tn.parent === null || tn.parent === -1) ? -1 : id_map.find(el => el.prev_id === tn.parent).cur_id;
+      const input_list = tn.inputs.map(input => {
+        if(typeof input === 'number'){
+          const input_in_map = id_map.find(el => el.prev_id === input);
+
+          if(input_in_map !== undefined){
+            return {tn: input_in_map.cur_id, ndx: 0};
+          }else{
+            console.error("could not find matching node");
+          }
+
+        }else{
+          const input_in_map = id_map.find(el => el.prev_id === input.tn);
+          if(input_in_map !== undefined){
+            return {tn: input_in_map.cur_id, ndx: input.ndx};
+          }else{
+            console.error("could not find matching node");
+          }
+        } 
+
+       
+      });
+
+      const output_list:Array<any> = tn.outputs.map(output => {
+          //handle files of old type, before inputs were broken into two fields
+          if(typeof output === 'number'){
+            const output_map = id_map.find(el => el.prev_id === output);
+            if(output_map !== undefined){
+             return {tn: output_map.cur_id, ndx: 0};
+            }else{
+              console.error("could not find matching node"); 
+            }
+          }else{
+            const output_map = id_map.find(el => el.prev_id === output.tn);
+            if(output_map !== undefined){
+             return {tn: output_map.cur_id, ndx: output.ndx};
+            }else{
+              console.error("could not find matching node"); 
+            }
+          } 
+      });
       
-      if(tn.inputs === undefined){
-        tn.inputs = [];
-      }else{
-        tn.inputs = tn.inputs.map(input => id_map.find(el => el.prev_id === input).cur_id);
-      }
 
-      if(tn.outputs === undefined){
-        tn.outputs =[];
-      }else{
-        tn.outputs = tn.outputs.map(output => id_map.find(el => el.prev_id === output).cur_id);
 
+      const new_tn: TreeNodeProxy = {
+        node: id_map.find(el => el.prev_id === tn.node).cur_id,
+        parent: (tn.parent === null || tn.parent === -1) ? -1 : id_map.find(el => el.prev_id === tn.parent).cur_id,
+        inputs: input_list,
+        outputs: output_list
       }
       
-      return tn;
+      //console.log("new tn is ", new_tn);
+      return new_tn;
     })
 
     const functions = updated_tnp.map(tn => this.tree.loadTreeNodeData(id_map, tn.node, tn.parent, tn.inputs, tn.outputs));
@@ -241,8 +323,22 @@ export class MixerComponent implements OnInit {
         this.palette.loadNote(note);
     });
 
+    //start processing images first thing 
+    const images_to_load = [];
+    data.ops.forEach(op => {
+      const internal_op = this.ops.getOp(op.name); 
+      if(internal_op === undefined) return;
+      const param_types = internal_op.params.map(el => el.type);
+      param_types.forEach((p, ndx) => {
+        if(p === 'file') images_to_load.push(op.params[ndx]);
+      });
+    })
 
-    this.gl.inferData(data.looms.concat(this.tree.getLooms()))
+
+    this.image.loadFiles(images_to_load).then(el => {
+        this.gl.inferData(data.looms.concat(this.tree.getLooms()))
+      
+    })
     .then(el => {     
       return this.loadNodes(data.nodes)
     })
@@ -252,6 +348,7 @@ export class MixerComponent implements OnInit {
       }
     ).then(treenodes => {
 
+      //this.printTreeStatus("after load", this.tree.tree);
 
       const seednodes: Array<{prev_id: number, cur_id: number}> = treenodes
         .filter(tn => this.tree.isSeedDraft(tn.tn.node.id))
@@ -303,7 +400,6 @@ export class MixerComponent implements OnInit {
         }
       });
 
-      console.log("seed nodes mapped ", seeds);
 
 
       
@@ -311,9 +407,9 @@ export class MixerComponent implements OnInit {
      
       const op_fns = data.ops.map(op => {
         const entry = entry_mapping.find(el => el.prev_id == op.node_id);
-        return this.tree.loadOpData(entry, op.name, op.params)
+        return this.tree.loadOpData(entry, op.name, op.params, op.inlets);
       });
-      
+
       return Promise.all([seed_fns, op_fns]);
 
     })
@@ -321,7 +417,7 @@ export class MixerComponent implements OnInit {
         return this.tree.validateNodes();
     })
     .then(el => {
-      console.log("performing top level ops");
+      //console.log("performing top level ops");
 
        return  this.tree.performTopLevelOps();
     })
@@ -345,15 +441,16 @@ export class MixerComponent implements OnInit {
         if(!(node.component === null || node.component === undefined)) return;
 
         const entry = entry_mapping.find(el => el.cur_id === node.id);
+        if(entry === undefined) return;
 
         switch (node.type){
           case 'draft':
-        
+            
             this.palette.loadSubDraft(node.id, this.tree.getDraft(node.id), data.nodes.find(el => el.node_id === entry.prev_id), data.scale);
             break;
           case 'op':
             const op = this.tree.getOpNode(node.id);
-            this.palette.loadOperation(op.id, op.name, op.params, data.nodes.find(el => el.node_id === entry.prev_id).bounds, data.scale);
+            this.palette.loadOperation(op.id, op.name, op.params, op.inlets, data.nodes.find(el => el.node_id === entry.prev_id).bounds, data.scale);
             break;
         }
       })
@@ -365,7 +462,7 @@ export class MixerComponent implements OnInit {
         if(!(node.component === null || node.component === undefined)) return;
         switch (node.type){
           case 'cxn':
-            this.palette.loadConnection(node.id, this.tree.getConnectionInput(node.id), this.tree.getConnectionOutput(node.id))
+            this.palette.loadConnection(node.id)
             break;
         }
       })
@@ -395,19 +492,83 @@ export class MixerComponent implements OnInit {
 
   
   ngOnInit(){
+    const analytics = getAnalytics();
+    logEvent(analytics, 'onload', {
+      items: [{ uid: this.auth.uid }]
+    });
     
   }
 
   ngAfterViewInit() {
 
-    const dialogRef = this.dialog.open(InitModal, {
-      data: {source: 'mixer'}
-    });
 
-    dialogRef.afterClosed().subscribe(loadResponse => {
-      if(loadResponse !== undefined) this.loadNewFile(loadResponse);
+      this.auth.user.subscribe(user => {
 
-   });
+        if(user === null){
+
+          const dialogRef = this.dialog.open(InitModal, {
+            data: {source: 'mixer'}
+          });
+
+
+          dialogRef.afterClosed().subscribe(loadResponse => {
+            this.palette.changeDesignmode('move');
+            if(loadResponse !== undefined) this.loadNewFile(loadResponse);
+          
+      
+         });
+        }else{
+
+          //in the case someone logs in mid way through, don't replace their work. 
+          if(this.tree.nodes.length > 0) return;
+         
+
+          const db = fbref(getDatabase());
+
+
+                  fbget(child(db, `users/${this.auth.uid}/ada`)).then((snapshot) => {
+                    if (snapshot.exists()) {
+                      this.fs.loader.ada("recovered draft", snapshot.val()).then(lr => {
+                        this.loadNewFile(lr);
+                      });
+                    }
+                  }).catch((error) => {
+                    console.error(error);
+                  });
+
+        }
+      });
+  
+    //console.log(this.auth, this.auth.isLoggedIn);
+
+
+
+
+
+
+  }
+
+
+  loadSavedFile(){
+  //   this.auth.user.subscribe(user => {
+  //       if(user !== null){
+
+  //         const db = fbref(getDatabase());
+
+
+  //         fbget(child(db, `users/${this.auth.uid}/ada`)).then((snapshot) => {
+  //           if (snapshot.exists()) {
+  //             this.fls.loader.ada("recovered draft", snapshot.val()).then(lr => {
+  //               this.dialogRef.close(lr)
+  //             });
+  //           }
+  //         }).catch((error) => {
+  //           console.error(error);
+  //         });
+    
+  //     }
+    
+  // });
 
    // event originates in subdraft component -> palette (parent) -> mixer (parent)
    // mixer then sends to player
