@@ -93,7 +93,8 @@ source="mixer"
   [style.width.px]='vp.getAbsoluteWidth()' 
   [style.height.px]='vp.getAbsoluteHeight()' 
   #palette  id="scrollable-container"
-  (onDesignModeChange)="designModeChange($event)" >
+  (onDesignModeChange)="designModeChange($event)"
+  (onDraftToPlayer)="draftToPlayer($event)">
   </app-palette>
 
 

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Bounds, DesignMode, DraftMap, Interlacement, Point } from '../../../core/model/datatypes';
 import utilInstance from '../../../core/model/util';
-import { OperationService, Operation, DynamicOperation } from '../../provider/operation.service';
+import { OperationService, ServiceOp, DynamicOperation } from '../../provider/operation.service';
 import { OpHelpModal } from '../../modal/ophelp/ophelp.modal';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Form, FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
@@ -88,7 +88,7 @@ export class OperationComponent implements OnInit {
      height: 60
    };
    
-   op:Operation | DynamicOperation;
+   op: ServiceOp | DynamicOperation;
 
    //for input params form control
    loaded_inputs: Array<number> = [];

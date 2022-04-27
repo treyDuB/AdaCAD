@@ -4,6 +4,24 @@ Author(s): S
 
 Any directory paths assume that `/` is the root of the local AdaCAD repository.
 
+# 4/17/22
+## Architecture of Operations
+Mentally mapping, operations are actions (functions) that can take input drafts (0, 1, or N) and create output drafts (1 or N). The Operation class should really just be a wrapper for the perform() function.
+
+perform: (input_drafts: Array<Draft> | Draft | null, params?: Array<OpParams>) => output_drafts: Array<Draft> | Draft;
+
+If operation A outputs a draft that gets inputted into operation B, then operation B is 'downstream' or a 'child' operation of operation A / A is 'upstream' or a 'parent' of B. You can also say that A and B are in 'series' or in 'sequence'.
+
+Operations are in 'parallel' if they share one or more (a set) of input drafts.
+
+An operation can also have inputs which are not drafts: parameters, which affect how they generate output drafts. These are equivalent to extra arguments in the perform() function.
+
+Operations and I/O drafts are organized as nodes of a Tree.
+
+Two operations in series (A is parent to B) should function like B.perform(A.perform(A.input_drafts))
+
+This line of code should be possible: ResultDrafts = StartingDrafts.opA(paramsA).opB(paramsB)
+
 # 3/17/22
 
 ## Service to Component

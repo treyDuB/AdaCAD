@@ -5,6 +5,7 @@ import { OperationService } from '../provider/operation.service';
 import { MaterialsService } from '../../core/provider/materials.service';
 // import { TreeService, DraftNode  } from '../provider/tree.service';
 import { Draft } from '../../core/model/draft';
+import { T } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-player',
@@ -26,7 +27,7 @@ export class PlayerComponent implements OnInit {
   // }
   // private _active_draft: Draft = null;
 
-  playOpen: boolean = false;
+  playOpen: boolean = true;
   draft_set: boolean = false;
   ownElement: HTMLElement;
   mixerElement: HTMLElement;
@@ -36,33 +37,37 @@ export class PlayerComponent implements OnInit {
 
   constructor(
     public pls: DraftPlayerService,
-    private ms: MaterialsService, 
-    private oss: OperationService
+    private ms: MaterialsService
   ) { 
     this.default_cell = 10;
   }
 
   ngOnInit(): void {
-    // console.log("ng on init, pedals: ", this.pls.pedals);
+    console.log("ng on init, pedals: ", this.pls.pedals);
     /** FOR TESTING ONLY: generate random draft and set it at start-up */
-    const startPattern = this.oss.getOp('tabby');
-    startPattern.perform([], [1]).then((result) => {
-      this.pls.setDraft(result[0]);
-      this.drawDraft();
-    });
-    this.ownElement = document.getElementById('player-container');
-    this.mixerElement = document.querySelector('.mat-drawer-container');
-    console.log("init w/ element refs ", this.ownElement, this.mixerElement);
   }
 
   ngAfterViewInit() {
-    // console.log("ng after view init, pedals: ", this.pls.pedals);
+    console.log("ng after view init, pedals: ", this.pls.pedals);
+    // const startPattern = this.oss.getOp('tabby');
+    // startPattern.perform([]).then((result) => {
+    //   this.pls.setDraft(result[0]);
+    //   this.drawDraft();
+    // });
+    this.ownElement = document.getElementById('player-container');
+    this.mixerElement = document.querySelector('.mat-drawer-container');
+    console.log("init w/ element refs ", this.ownElement, this.mixerElement);
     this.draftCanvas = <HTMLCanvasElement> document.getElementById('active-draft-canvas');
     this.cx = this.draftCanvas.getContext("2d");
     // this.drawDraft(); //force call here because it likely didn't render previously. 
+
+    // let expansionPanel = document.querySelector('mat-expansion-panel');
+    // expansionPanel.close();
+
+    this.playOpen = false;
     this.resizeContainer();
-    // this.rescale();
-    // this.updateViewport(this.bounds);
+    this.drawDraft();
+
     this.pls.redraw.on('redraw', () => {
       console.log("redrawing ", this.pls.state);
       this.drawDraft();
@@ -74,7 +79,7 @@ export class PlayerComponent implements OnInit {
   resizeContainer() {
     let h = this.ownElement.getBoundingClientRect().height;
     let t = document.querySelector("app-topbar").getBoundingClientRect().height;
-    console.log("player height is " + h.toString());
+    // console.log("player height is " + h.toString());
     this.mixerElement.style.height = 'calc(100vh - '+ (h+t).toString() + 'px)';
   }
 

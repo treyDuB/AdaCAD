@@ -8,7 +8,7 @@ import { GloballoomService } from '../../core/provider/globalloom.service';
 import { ConnectionComponent } from '../palette/connection/connection.component';
 import { OperationComponent } from '../palette/operation/operation.component';
 import { SubdraftComponent } from '../palette/subdraft/subdraft.component';
-import { OperationService, OpInput, DynamicOperation } from './operation.service';
+import { OperationService, OpInput, DynamicOperation, ServiceOp } from './operation.service';
 import utilInstance from '../../core/model/util';
 import { UploadService } from '../../core/uploads/upload.service';
 
@@ -126,7 +126,7 @@ export class TreeService {
     });
 
     ///also check to see that all connections exist
-    const cxns = this.getUnusuedConnections();
+    const cxns = this.getUnusedConnections();
 
    // console.log("unusued connections found", cxns);
     cxns.forEach(el => this.removeNode(el));
@@ -1258,84 +1258,74 @@ flipDraft(draft: Draft) : Promise<Draft>{
  * returns the list of draft ids affected by this calculation
  * @param op_id the operation triggering this series of update
  */
- async performOp(id:number) : Promise<Array<number>> {
+async performOp(id:number) : Promise<Array<number>> {
 
   const opnode = <OpNode> this.getNode(id);
-  const op = this.ops.getOp(opnode.name);
 
   const drafts_in = this.getNonCxnInputs(id);
   const all_inputs = this.getInputsWithNdx(id);
-  
 
   let inputs: Array<OpInput> = [];
 
   if(this.ops.isDynamic(opnode.name)){
+    const op = <DynamicOperation> this.ops.getOp(opnode.name);
     
     //first push the parent params
-
     inputs.push({op_name: op.name, drafts: [], inlet: 0, params: opnode.params});
 
-      const flip_fns = [];
-      const draft_id_to_ndx = [];
-      all_inputs.filter(el => el !== undefined && el !== null).forEach((el) => {
-        const draft_tn = el.tn.inputs[0].tn;
-        const cxn_tn = el.tn;
-        const type = draft_tn.node.type;
-        if(type === 'draft'){
-          draft_id_to_ndx.push({ndx: el.ndx, draft_id: draft_tn.node.id})
-          flip_fns.push(this.flipDraft((<DraftNode>draft_tn.node).draft));
-        }
-      });
+    const flip_fns = [];
+    const draft_id_to_ndx = [];
+    all_inputs.filter(el => el !== undefined && el !== null).forEach((el) => {
+      const draft_tn = el.tn.inputs[0].tn;
+      const cxn_tn = el.tn;
+      const type = draft_tn.node.type;
+      if (type === 'draft') {
+        draft_id_to_ndx.push({ndx: el.ndx, draft_id: draft_tn.node.id})
+        flip_fns.push(this.flipDraft((<DraftNode>draft_tn.node).draft));
+      }
+    });
 
-
-   
     return Promise.all(flip_fns)
-    .then(flipped_drafts => {
-      const paraminputs = flipped_drafts.map(el =>  {
-        const node = draft_id_to_ndx.find(input => input.draft_id === el.id);
-        return {op_name:'child', drafts: [el], inlet: node.ndx ,params: [opnode.inlets[node.ndx]]}
-      })
+      .then(flipped_drafts => {
+        const paraminputs = flipped_drafts.map(el =>  {
+          const node = draft_id_to_ndx.find(input => input.draft_id === el.id);
+          return {op_name:'child', drafts: [el], inlet: node.ndx, params: [opnode.inlets[node.ndx]]}
+        });
 
-      inputs = inputs.concat(paraminputs);
-      return op.perform(inputs);
+        inputs = inputs.concat(paraminputs);
+        return op.perform(inputs) as Promise<Array<Draft>>;
 
-    })
-    .then(res => {
-          return Promise.all(res.map(el => this.flipDraft(el)));
       })
-    .then(flipped => {
-        opnode.dirty = false;
-        return this.updateDraftsFromResults(id, flipped);
+      .then(res => {
+            return Promise.all(res.map(el => this.flipDraft(el)));
+      })
+      .then(flipped => {
+          opnode.dirty = false;
+          return this.updateDraftsFromResults(id, flipped);
       });
-          
-
-    }else{
-      const drafts_coming_in: Array<any> =  drafts_in
+  } else {
+    const op = <ServiceOp> this.ops.getOp(opnode.name);
+    const drafts_coming_in =  
+      drafts_in
       .map(input => (<DraftNode> this.getNode(input)))
       .filter(el => el !== null && el !== undefined)
       .map(input_node => input_node.draft)
       .filter(el => el !== null && el !== undefined)
       .map(el => this.flipDraft(el));
 
-      return Promise.all(drafts_coming_in).then(drafts =>{
-          inputs.push({op_name: '', drafts: drafts, inlet: 0, params: opnode.params});
-          return op.perform(inputs)
-          .then(res => {
+    return Promise.all(drafts_coming_in)
+      .then(drafts => {
+        inputs.push({op_name: '', drafts: drafts, inlet: 0, params: opnode.params});
+        return op.perform(inputs)
+          .then( res => {
             return Promise.all(res.map(el => this.flipDraft(el)))
           }).then(flipped => {
             opnode.dirty = false;
             return this.updateDraftsFromResults(id, flipped)
-          })
-            
-        });
+          });
+      });
     }
-
-  
-
   }
-
-
-
 
   getDraftNodes():Array<DraftNode>{
     return this.nodes.filter(el => el.type === 'draft').map(el => <DraftNode> el);
@@ -1373,7 +1363,6 @@ flipDraft(draft: Draft) : Promise<Draft>{
     return (dn.draft.ud_name === "") ?  dn.draft.gen_name : dn.draft.ud_name; 
   }
 
-
   getConnections():Array<ConnectionComponent>{
     const draft_nodes: Array<Node> = this.nodes.filter(el => el.type === 'cxn');
     const draft_comps: Array<ConnectionComponent> = draft_nodes.map(el => <ConnectionComponent>el.component);
@@ -1396,7 +1385,7 @@ flipDraft(draft: Draft) : Promise<Draft>{
    * @returns an array of connections to delete
    */
 
-  getUnusuedConnections():Array<number>{
+  getUnusedConnections(): Array<number>{
     const comps: Array<Node> = this.nodes.filter(el => el.type === 'cxn');
     const nodes: Array<TreeNode> = comps.map(el => this.getTreeNode(el.id));
     const to_delete: Array<TreeNode> = [];
@@ -1421,7 +1410,6 @@ flipDraft(draft: Draft) : Promise<Draft>{
 
     return to_delete.map(el => el.node.id);
   }
-
 
   getTreeNode(id:number): TreeNode{
     const found =  this.tree.find(el => el.node.id === id);
@@ -1457,7 +1445,7 @@ flipDraft(draft: Draft) : Promise<Draft>{
   }
 
   /**
-   * this sets the parent of a subdraft to the operation that created iit
+   * this sets the parent of a subdraft to the operation that created it
    * @returns an array of the subdraft ids connected to this operation
    */
    setSubdraftParent(sd:number, op:number){
@@ -1466,8 +1454,6 @@ flipDraft(draft: Draft) : Promise<Draft>{
     sd_tn.parent = op_tn;
 
   }
-
-
 
   /**
    * this removes the given id from the tree
@@ -1556,11 +1542,11 @@ flipDraft(draft: Draft) : Promise<Draft>{
     return (tn.inputs.length > 0)
   }
 
-/**
- * returns the ids of all nodes connected to the input node that are not connection nodes
- * @param op_id 
- */
- getNonCxnInputs(id: number):Array<number>{
+  /**
+   * returns the ids of all nodes connected to the input node that are not connection nodes
+   * @param op_id 
+   */
+  getNonCxnInputs(id: number):Array<number>{
     const inputs: Array<number> = this.getInputs(id);
     const id_list:Array<number> = inputs
     .map(id => (this.getNode(id)))
@@ -1570,7 +1556,6 @@ flipDraft(draft: Draft) : Promise<Draft>{
     return id_list;
   }
 
-
   hasNdx(stored_input: number, input_to_function: number){
     if(input_to_function === -1) return false;
     if(stored_input === -1) return false;
@@ -1578,10 +1563,10 @@ flipDraft(draft: Draft) : Promise<Draft>{
   }
 
   /**
- * returns the ids of all nodes connected to the input node that are not connection nodes
- * in the case of dynamic ops, also provide the input index
- * @param op_id 
- */
+   * returns the ids of all nodes connected to the input node that are not connection nodes
+   * in the case of dynamic ops, also provide the input index
+   * @param op_id 
+   */
  getOpComponentInputs(op_id: number, ndx: number):Array<number>{
   const inputs: Array<IOTuple> = this.getInputsWithNdx(op_id);
   const id_list:Array<number> = inputs
@@ -1732,7 +1717,7 @@ flipDraft(draft: Draft) : Promise<Draft>{
   }
 
   /**
-   * for degugging, this "prints" a list of the tree by generations
+   * for debugging, this "prints" a list of the tree by generations
    */
   print(){
     const gens: Array<Array<number>> = this.convertTreeToGenerations();
@@ -1745,7 +1730,6 @@ flipDraft(draft: Draft) : Promise<Draft>{
     });
 
     console.log("tree: ", this.tree);
-
 
   }
 
@@ -1841,12 +1825,12 @@ flipDraft(draft: Draft) : Promise<Draft>{
     node.dirty = false;
   }
 
-/**
- * sets a new draft and loom at node specified by id. 
- * @param id the node to update
- * @param temp the draft to add
- * @param loom  the loom to add (or null if a loom should be generated)
- */
+  /**
+   * sets a new draft and loom at node specified by id. 
+   * @param id the node to update
+   * @param temp the draft to add
+   * @param loom  the loom to add (or null if a loom should be generated)
+   */
   setDraft(id: number, temp: Draft, loom: Loom) {
 
     const dn = <DraftNode> this.getNode(id);
@@ -1955,10 +1939,10 @@ flipDraft(draft: Draft) : Promise<Draft>{
 
   }
 
-   /**
- * exports only the drafts that have not been generated by other values
- * @returns an array of objects that describe nodes
- */
+  /**
+   * exports only the drafts that have not been generated by other values
+   * @returns an array of objects that describe nodes
+   */
   // exportSeedDraftsForSaving() : Array<DraftNode> {
 
   //     const objs: Array<any> = []; 
@@ -1973,7 +1957,7 @@ flipDraft(draft: Draft) : Promise<Draft>{
   
   //   }
   
-     /**
+  /**
    * exports TopLevel drafts associated with this tree
    * @returns an array of Drafts
    */
@@ -1990,18 +1974,15 @@ flipDraft(draft: Draft) : Promise<Draft>{
   
     }
 
-         /**
+  /**
    * exports TopLevel looms associated with this tree
    * @returns an array of Drafts
    */
-    exportLoomsForSaving() : Array<Loom> {
+  exportLoomsForSaving() : Array<Loom> {
 
-      return this.getDraftNodes()
-      .filter(el => this.getSubdraftParent(el.id) === -1)
-      .map(el => el.loom);
-  
-    }
+    return this.getDraftNodes()
+    .filter(el => this.getSubdraftParent(el.id) === -1)
+    .map(el => el.loom);
 
-
- 
+  }
 }
