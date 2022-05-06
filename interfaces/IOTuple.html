@@ -1438,7 +1438,6 @@ export class TreeService {
   loadDraftData(entry: {prev_id: number, cur_id: number}, draft: Draft, loom: Loom) : Promise&lt;{dn: DraftNode, entry:{prev_id: number, cur_id: number}}&gt;{
 
     const nodes &#x3D; this.nodes.filter(el &#x3D;&gt; el.id &#x3D;&#x3D;&#x3D; entry.cur_id);
-    console.log(&quot;loading draft to &quot;, nodes);
 
     if(nodes.length !&#x3D;&#x3D; 1) return Promise.reject(&quot;found 0 or more than 1 nodes at id &quot;+entry.cur_id);
 
@@ -1449,11 +1448,13 @@ export class TreeService {
 
 
    if(loom &#x3D;&#x3D;&#x3D; null){
-   (&lt;DraftNode&gt; nodes[0]).loom &#x3D; new Loom(draft, this.globalloom.min_frames, this.globalloom.min_treadles);
+   (&lt;DraftNode&gt; nodes[0]).loom &#x3D; new Loom(draft, this.globalloom.type, this.globalloom.min_frames, this.globalloom.min_treadles);
+
    (&lt;DraftNode&gt; nodes[0]).loom.recomputeLoom(draft);
    }else{
     (&lt;DraftNode&gt; nodes[0]).loom &#x3D; loom;
    }
+
 
 
    return Promise.resolve({dn: &lt;DraftNode&gt; nodes[0], entry});
@@ -2274,7 +2275,7 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
     for(let i &#x3D; res.length; i &lt; out.length; i++){
       const dn &#x3D; &lt;DraftNode&gt; this.getNode(out[i]);
       dn.draft &#x3D; new Draft({wefts:1, warps:1, pattern:[[new Cell(false)]]});
-      dn.loom &#x3D; new Loom(dn.draft, this.globalloom.min_frames, this.globalloom.min_treadles);
+      dn.loom &#x3D; new Loom(dn.draft, this.globalloom.type, this.globalloom.min_frames, this.globalloom.min_treadles);
       dn.dirty &#x3D; true;
       touched.push(out[i]);
     }
@@ -2993,8 +2994,8 @@ flipDraft(draft: Draft) : Promise&lt;Draft&gt;{
     if(ud_name !&#x3D;&#x3D; &#x27;&#x27;) dn.draft.overloadName(ud_name);
 
     if(loom &#x3D;&#x3D;&#x3D; null){
-      dn.loom &#x3D; new Loom(temp, this.globalloom.min_frames, this.globalloom.min_treadles);
-      //dn.loom.recomputeLoom(temp); //this is too expansive to do synchronously
+      dn.loom &#x3D; new Loom(temp,this.globalloom.type, this.globalloom.min_frames, this.globalloom.min_treadles);
+      //dn.loom.recomputeLoom(temp); //this is too expensive to do synchronously
     } 
     else dn.loom &#x3D; loom;
     dn.loom.draft_id &#x3D; id;

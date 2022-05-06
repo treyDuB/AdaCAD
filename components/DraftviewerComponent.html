@@ -1225,7 +1225,7 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <code>constructor(fs: <a href="../injectables/FileService.html" >FileService</a>, dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, ps: <a href="../injectables/PatternService.html" >PatternService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, ss: <a href="../injectables/SystemsService.html" >SystemsService</a>, gl: <a href="../injectables/GloballoomService.html" >GloballoomService</a>, timeline: <a href="../injectables/StateService.html" >StateService</a>)</code>
+                            <code>constructor(fs: <a href="../injectables/FileService.html" >FileService</a>, dm: <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>, ps: <a href="../injectables/PatternService.html" >PatternService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, ss: <a href="../injectables/SystemsService.html" >SystemsService</a>, timeline: <a href="../injectables/StateService.html" >StateService</a>)</code>
                         </td>
                     </tr>
     
@@ -4103,21 +4103,6 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
-                            <b> gl</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>gl:     <code><a href="../injectables/GloballoomService.html" target="_self" >GloballoomService</a></code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
                             <b> hold_copy_for_paste</b>
                         </td>
                     </tr>
@@ -4418,7 +4403,7 @@ import { SystemsService } from &#x27;../provider/systems.service&#x27;;
 import { FabricssimService } from &#x27;../provider/fabricssim.service&#x27;;
 import { Shuttle } from &#x27;../model/shuttle&#x27;;
 import { System } from &#x27;../model/system&#x27;;
-import { GloballoomService } from &#x27;../provider/globalloom.service&#x27;;
+//import { GloballoomService } from &#x27;../provider/globalloom.service&#x27;;
 import { G } from &#x27;@angular/cdk/keycodes&#x27;;
 import { StateService } from &#x27;../provider/state.service&#x27;;
 
@@ -4640,7 +4625,7 @@ export class DraftviewerComponent implements OnInit {
     private ps: PatternService,
     private ms: MaterialsService,
     private ss: SystemsService,
-    public gl: GloballoomService,
+   // public gl: GloballoomService,
     public timeline: StateService
     ) { 
 
@@ -5710,13 +5695,8 @@ export class DraftviewerComponent implements OnInit {
 
       this.redraw({drawdown:true, loom:true});
 
-      //temporarily disabled, as it causes errors, for now, just redraw the whole state
-      // for(var u in updates){
-      //   this.drawCell(this.cxThreading,updates[u].i, updates[u].j, &quot;threading&quot;);
-      // }
-          
-     // if(unused) this.redrawLoom();
-
+     
+        
     }
   }
 
@@ -5902,6 +5882,12 @@ export class DraftviewerComponent implements OnInit {
      cx.fillStyle &#x3D; color;
      cx.fillRect(left+j*base_dims.w + base_fill.x, top+i*base_dims.h + base_fill.y, base_fill.w, base_fill.h);
 
+    if(type &#x3D;&#x3D;&#x27;threading&#x27;){
+      cx.font &#x3D; &quot;12px Arial&quot;;
+      cx.fillStyle &#x3D; &quot;white&quot;;
+      cx.fillText(this.loom.threading[j]+1, 4+ left+j*base_dims.w + base_fill.x, top+i*base_dims.h + base_fill.y + base_fill.h);
+      
+    }
 
   }
 
@@ -6446,6 +6432,7 @@ public drawWeftEnd(top, left, shuttle){
 
     for(var u in updates.threading){    
        this.drawCell( this.cxThreading, updates.threading[u].i, updates.threading[u].j, &quot;threading&quot;);
+       
     }
 
    
@@ -6495,7 +6482,6 @@ public drawWeftEnd(top, left, shuttle){
     //else this.drawBlank(this.cxTieups,this.tieupsCanvas);
     
 
-    console.log(&quot;this.loom.threading&quot;, this.loom.threading);
     for (var j &#x3D; 0; j &lt; this.loom.threading.length; j++) {
       this.drawCell(this.cxThreading, this.loom.threading[j], j, &quot;threading&quot;);
     }
@@ -6905,7 +6891,7 @@ public redraw(flags:any){
 
 
     //flip the index based on the flipped view
-    i &#x3D; (this.weave.warps + 1) - i;
+    i &#x3D; (this.weave.warps ) - i;
     
 
     this.weave.insertCol(i, shuttle,system);

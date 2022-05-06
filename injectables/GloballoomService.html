@@ -1147,6 +1147,26 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b> black_cell_up</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>black_cell_up:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>true</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b> epi</b>
                                 </td>
                             </tr>
@@ -1207,12 +1227,52 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
+                                    <b> number_threading</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>number_threading:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>false</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
                                     <b> show_errors</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
                                     <code>show_errors:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>true</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> show_materials</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>show_materials:     <code>boolean</code>
             </bcode>
                                 </td>
                             </tr>
@@ -1281,10 +1341,13 @@ export class GloballoomService {
 
   min_frames: number &#x3D; 8; 
   min_treadles: number &#x3D; 10;
-  type: string &#x3D; &#x27;jacquard&#x27;;
+  type: string &#x3D; &#x27;jacquard&#x27;; //&#x27;rigid&#x27;, &#x27;direct&#x27;, &#x27;frame&#x27;, &#x27;jacquard&#x27;
   show_errors: boolean &#x3D; true;
   epi: number &#x3D; 10;
   units: string &#x3D; &#x27;in&#x27;;
+  show_materials: boolean &#x3D; true;
+  black_cell_up: boolean &#x3D; true;
+  number_threading: boolean &#x3D; false;
 
 
 

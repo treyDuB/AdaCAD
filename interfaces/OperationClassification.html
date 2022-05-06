@@ -4253,7 +4253,7 @@ export class OperationService {
         if(op_input.drafts.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve([]);
         const inputDraft &#x3D;op_input.drafts[0]
 
-        const loom:Loom &#x3D; new Loom(inputDraft, 8, 10);
+        const loom:Loom &#x3D; new Loom(inputDraft, &#x27;frame&#x27;, 8, 10);
         loom.recomputeLoom(inputDraft);
         let pattern &#x3D; this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.pattern);
         const draft_seed &#x3D;  utilInstance.patternToSize(pattern, 48, 48);
@@ -4299,7 +4299,7 @@ export class OperationService {
           if(op_input.drafts.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve([]);
           const inputDraft &#x3D;op_input.drafts[0]
 
-          const loom:Loom &#x3D; new Loom(inputDraft, 8, 10);
+          const loom:Loom &#x3D; new Loom(inputDraft, &#x27;frame&#x27;, 8, 10);
           loom.recomputeLoom(inputDraft);
           let pattern &#x3D; this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.pattern);
         
@@ -4339,7 +4339,7 @@ export class OperationService {
 
             if(op_input.drafts.length &#x3D;&#x3D;&#x3D; 0) return Promise.resolve([]);
             
-            const l:Loom &#x3D; new Loom(op_input.drafts[0], 8, 10);
+            const l:Loom &#x3D; new Loom(op_input.drafts[0],&#x27;frame&#x27;, 8, 10);
             l.recomputeLoom(op_input.drafts[0]);
 
             const threading: Draft &#x3D; new Draft({warps:op_input.drafts[0].warps, wefts: l.num_frames});

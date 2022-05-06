@@ -1101,8 +1101,6 @@
                             <code>onChange</code>
                         </td>
                         <td class="col-md-10">
-                            <div><p>stores a copy of the submitted pattern, so as not to upddate the original</p>
-</div>
                             <em><code>$event</code> type:</em>    <code>any</code>
 
                         </td>
@@ -1514,6 +1512,21 @@
                 <tbody>
                     <tr>
                         <td class="col-md-4">
+                            <b> global_loom</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>global_loom:     <code><a href="../injectables/GloballoomService.html" target="_self" >GloballoomService</a></code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
                             <b> loom</b>
                         </td>
                     </tr>
@@ -1720,21 +1733,10 @@ import { GloballoomService } from &#x27;../../provider/globalloom.service&#x27;;
 })
 export class LoomModal implements OnInit {
 
-  /**
-   * stores a copy of the submitted pattern, so as not to upddate the original
-   */
+
+  @Output() onChange: any &#x3D; new EventEmitter();
   
 
-  //  @Output() onLoomTypeChange &#x3D; new EventEmitter();
-  //  @Output() onFrameChange &#x3D; new EventEmitter();
-  //  @Output() onTreadleChange &#x3D; new EventEmitter();
-  //  @Output() onWarpNumChange: any &#x3D; new EventEmitter();
-  //  @Output() onWeftNumChange: any &#x3D; new EventEmitter();
-  //  @Output() onEpiNumChange: any &#x3D; new EventEmitter();
-    @Output() onChange: any &#x3D; new EventEmitter();
-  
-  //  warp_locked &#x3D; false;
-  //  loom &#x3D; &quot;&quot;; 
 
   draft: Draft;
   loom:Loom
@@ -1752,7 +1754,7 @@ export class LoomModal implements OnInit {
   type: string &#x3D; &#x27;local&#x27;;
 
   constructor(
-             private global_loom: GloballoomService,
+             public global_loom: GloballoomService,
              private dm: DesignmodesService,
              private dialogRef: MatDialogRef&lt;LoomModal&gt;,
              @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -1805,7 +1807,9 @@ export class LoomModal implements OnInit {
     } 
 
     f.value.treadles &#x3D; Math.ceil(f.value.treadles);
-    this.global_loom.min_treadles&#x3D; f.value.treadles;
+   
+    if(this.type &#x3D;&#x3D; &quot;global&quot;) this.global_loom.min_treadles&#x3D; f.value.treadles;
+    else this.loom.setMinTreadles(f.value.treadles);
 
     this.onChange.emit();
   }
@@ -1820,10 +1824,11 @@ export class LoomModal implements OnInit {
      
 
     f.value.frames &#x3D; Math.ceil(f.value.frames);
-    console.log(&quot;min frames&quot;, f.value.frames);   
-    this.global_loom.min_frames &#x3D; f.value.frames;
+    console.log(&quot;min frames&quot;, f.value.frames);  
     
-    //this.loom.setMinFrames(f.value.frames);
+    if(this.type &#x3D;&#x3D; &quot;global&quot;)   this.global_loom.min_frames &#x3D; f.value.frames;
+    else  this.loom.setMinFrames(f.value.frames);
+    
     
     this.onChange.emit();
 
@@ -1831,7 +1836,9 @@ export class LoomModal implements OnInit {
 
 
   loomChange(e:any){
-    this.global_loom.type &#x3D; e.value.loomtype;
+    if(this.type &#x3D;&#x3D; &#x27;global&#x27;) this.global_loom.type &#x3D; e.value.loomtype;
+    else this.loom.changeType(e.value.loomtype);
+
     this.dm.selectDesignMode(e.value.loomtype, &#x27;loom_types&#x27;);
     this.onChange.emit();
 
@@ -1839,8 +1846,8 @@ export class LoomModal implements OnInit {
   }
 
   unitChange(e:any){
-    this.global_loom.units &#x3D; e.value.units;
-    //this.loom.overloadUnits(e.value.units);
+    if(this.type &#x3D;&#x3D; &#x27;global&#x27;) this.global_loom.units &#x3D; e.value.units;
+    else this.loom.overloadUnits(e.value.units);
     this.onChange.emit();
 
   }
