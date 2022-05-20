@@ -1903,7 +1903,6 @@ export class OperationService {
 
         const d: Draft &#x3D; utilInstance.interlace(all_drafts, factor_in_repeats, warp_system_draft);
      
-     
     
         this.transferSystemsAndShuttles(d,all_drafts,parent_input.params, &#x27;interlace&#x27;);
         d.gen_name &#x3D; this.formatName(all_drafts, &quot;ilace&quot;)
@@ -3553,7 +3552,7 @@ export class OperationService {
       }],
       perform: (op_inputs: Array&lt;OpInput&gt;) &#x3D;&gt; {
 
-                
+
         // //split the inputs into the input associated with 
         const parent_inputs: Array&lt;OpInput&gt; &#x3D; op_inputs.filter(el &#x3D;&gt; el.op_name &#x3D;&#x3D;&#x3D; &quot;layernotation&quot;);
         const child_inputs: Array&lt;OpInput&gt; &#x3D; op_inputs.filter(el &#x3D;&gt; el.op_name &#x3D;&#x3D;&#x3D; &quot;child&quot;);
@@ -3605,10 +3604,10 @@ export class OperationService {
         const d: Draft &#x3D; new Draft({
           warps: total_warps*system_map.drafts[0].warps, 
           wefts: total_wefts*system_map.drafts[0].wefts,
-          rowShuttleMapping: system_map.drafts[0].rowShuttleMapping,
-          rowSystemMapping: system_map.drafts[0].rowSystemMapping,
-          colShuttleMapping: system_map.drafts[0].colShuttleMapping,
-          colSystemMapping: system_map.drafts[0].colSystemMapping,
+          rowShuttleMapping: system_map.drafts[0].rowShuttleMapping.slice(),
+          rowSystemMapping: system_map.drafts[0].rowSystemMapping.slice(),
+          colShuttleMapping: system_map.drafts[0].colShuttleMapping.slice(),
+          colSystemMapping: system_map.drafts[0].colSystemMapping.slice(),
         });
 
         d.pattern &#x3D; [];

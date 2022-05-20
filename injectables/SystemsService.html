@@ -1661,7 +1661,6 @@ export class SystemsService {
 
   reset() {
 
-    console.log(&quot;RESET CALLED&quot;);
     this.weft_systems.forEach(el &#x3D;&gt; {
       el.in_use &#x3D; false;
       el.visible &#x3D; true;
@@ -1675,8 +1674,6 @@ export class SystemsService {
     this.weft_systems[0].in_use &#x3D; true;
     this.warp_systems[0].in_use &#x3D; true;
 
-
-   
   }
 
   getWeftSystem(id: number) : System{
@@ -1705,22 +1702,6 @@ export class SystemsService {
 
   }
 
-
-  // addWeftSystem(system) : number {
-  //   system.setID(this.weft_systems.length);
-  //   system.setVisible(true);
-  //   this.weft_systems.push(system);
-  //   return system.id;
-  // }
-
-  // addWarpSystem(system) : number {
-  //   system.setID(this.warp_systems.length);
-  //   system.setVisible(true);
-  //   this.warp_systems.push(system);
-  //   return system.id;
-  // }
-
-
   weftSystemIsVisible(id: number){
     return this.weft_systems[id].isVisible();
   }
@@ -1734,18 +1715,18 @@ export class SystemsService {
    * @param ndx 
    */
     getNextWarpSystemFrom(ndx: number): number{
-      const in_use &#x3D; this.warp_systems.filter(el &#x3D;&gt; el.in_use);
-      let use_ndx &#x3D; in_use.findIndex(el &#x3D;&gt; el.id &#x3D;&#x3D; ndx);
-      use_ndx++;
+      return ndx + 1 ;
+      // const in_use &#x3D; this.warp_systems.filter(el &#x3D;&gt; el.in_use);
+      // let use_ndx &#x3D; in_use.findIndex(el &#x3D;&gt; el.id &#x3D;&#x3D;&#x3D; ndx);
+      // use_ndx++;
   
-      console.log(in_use, use_ndx);
-      if(use_ndx &lt; in_use.length){
-        return in_use[use_ndx].id;
-      }else{
-        //get the last used number an dincrement one
-        this.warp_systems[use_ndx].in_use &#x3D; true;
-        return use_ndx;
-      }
+      // if(use_ndx &lt; in_use.length){
+      //   return in_use[use_ndx].id;
+      // }else{
+      //   //get the last used number an dincrement one
+      //   this.warp_systems[use_ndx].in_use &#x3D; true;
+      //   return use_ndx;
+      // }
 
     }
   
@@ -1755,17 +1736,18 @@ export class SystemsService {
    * @param ndx 
    */
   getNextWeftSystemFrom(ndx: number): number{
-    const in_use &#x3D; this.weft_systems.filter(el &#x3D;&gt; el.in_use);
-    let use_ndx &#x3D; in_use.findIndex(el &#x3D;&gt; el.id &#x3D;&#x3D; ndx);
-    use_ndx++;
+    return ndx + 1;
+    // const in_use &#x3D; this.weft_systems.filter(el &#x3D;&gt; el.in_use);
+    // let use_ndx &#x3D; in_use.findIndex(el &#x3D;&gt; el.id &#x3D;&#x3D; ndx);
+    // use_ndx++;
 
-    if(use_ndx &lt; in_use.length){
-      return in_use[use_ndx].id;
-    }else{
-      //get the last used number an dincrement one
-      this.weft_systems[use_ndx].in_use &#x3D; true;
-      return use_ndx;
-    }
+    // if(use_ndx &lt; in_use.length){
+    //   return in_use[use_ndx].id;
+    // }else{
+    //   //get the last used number an dincrement one
+    //   this.weft_systems[use_ndx].in_use &#x3D; true;
+    //   return use_ndx;
+    // }
   }
 
   /**
@@ -1775,8 +1757,7 @@ export class SystemsService {
    getNextWarpSystem(ndx: number, draft: Draft): number{
 
     var system_id &#x3D; draft.colSystemMapping[ndx];
-
-    //are any other rows assigned to this system or is this the first
+    // //are any other rows assigned to this system or is this the first
     const count: number &#x3D; draft.colSystemMapping.reduce((acc,val) &#x3D;&gt; {
       if(val &#x3D;&#x3D;&#x3D; system_id){
         acc &#x3D; acc + 1;
@@ -1800,7 +1781,6 @@ export class SystemsService {
    getNextWeftSystem(ndx: number, draft: Draft): number{
 
     var system_id &#x3D; draft.rowSystemMapping[ndx];
-
     //are any other rows assigned to this system or is this the first
     const count: number &#x3D; draft.rowSystemMapping.reduce((acc,val) &#x3D;&gt; {
       if(val &#x3D;&#x3D;&#x3D; system_id){
@@ -1840,7 +1820,8 @@ export class SystemsService {
    */
   private makeSystemsUnique(systems: Array&lt;Array&lt;number&gt;&gt;) : Array&lt;Array&lt;number&gt;&gt; {
    
-    if(systems.length &#x3D;&#x3D;&#x3D; 0) return [];
+
+     if(systems.length &#x3D;&#x3D;&#x3D; 0) return [];
 
 
     const max_in_systems: Array&lt;number&gt; &#x3D; systems.map(el &#x3D;&gt; utilInstance.getArrayMax(el));

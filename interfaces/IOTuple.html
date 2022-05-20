@@ -1247,21 +1247,16 @@ export class TreeService {
     
     async replaceOutdatedOps(nodes: Array&lt;any&gt;) : Promise&lt;Array&lt;any&gt;&gt;{
 
-      console.log(&quot;nodes&quot;, nodes);
       const correctedNodes &#x3D; nodes.map(node &#x3D;&gt; {
         if(this.ops.getOp(node.name) &#x3D;&#x3D;&#x3D; null){
           const op &#x3D;  this.ops.getOpByOldName(node.name);
-          console.log(&quot;got &quot;, node.name, &#x27; from &#x27;, op);
           node.name &#x3D; op.name
           node.inlets &#x3D; op.inlets;
         }
         return node;
       });
 
-      
-
-      console.log(&quot;nodes&quot;, nodes, correctedNodes);
-      return Promise.resolve(correctedNodes);
+            return Promise.resolve(correctedNodes);
     }
 
 
@@ -1788,7 +1783,6 @@ export class TreeService {
    */
   createNode(type: &#x27;draft&#x27;|&#x27;op&#x27;|&#x27;cxn&#x27;, component: SubdraftComponent | OperationComponent | ConnectionComponent, ref: ViewRef):number{
 
-    console.log(&quot;creating node of&quot;, type, component);
 
     let node: Node;
 
@@ -2137,7 +2131,6 @@ export class TreeService {
   if(id &#x3D;&#x3D;&#x3D; undefined) return;
 
 
-  console.log(&quot;REMOVING SUBDRAFT NODE&quot;, id);
 
 
   //get any input ops and connections
@@ -2751,7 +2744,6 @@ isValidIOTuple(io: IOTuple) : boolean {
     else{
       connection.forEach(connectionAtInlet &#x3D;&gt; {
         const non_cnx_inputs &#x3D; this.getInputs(connectionAtInlet.tn.node.id);
-        console.log(connectionAtInlet, from,non_cnx_inputs);
         const match_from &#x3D; non_cnx_inputs.find(el &#x3D;&gt; el &#x3D;&#x3D;&#x3D; from);
         if(match_from !&#x3D;&#x3D; undefined) found &#x3D;  connectionAtInlet.tn.node.id;
       });
