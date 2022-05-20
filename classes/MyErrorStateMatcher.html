@@ -118,6 +118,9 @@
                                     <a href="../components/InitModal.html" >InitModal</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../components/InletComponent.html" >InletComponent</a>
+                                </li>
+                                <li class="link">
                                     <a href="../components/LoginComponent.html" >LoginComponent</a>
                                 </li>
                                 <li class="link">
@@ -152,6 +155,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/PatternModal.html" >PatternModal</a>
@@ -237,9 +243,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/Loom.html" >Loom</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/MyErrorStateMatcher.html"  class="active" >MyErrorStateMatcher</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/MyErrorStateMatcher.html"  class="active" >MyErrorStateMatcher</a>
@@ -342,6 +345,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/VaeService.html" >VaeService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/VersionService.html" >VersionService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -449,9 +455,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/OperationParams.html" >OperationParams</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/Point.html" >Point</a>
@@ -623,6 +626,9 @@
                                            <a href="../components/InitModal.html" >InitModal</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../components/InletComponent.html" >InletComponent</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../components/LoginComponent.html" >LoginComponent</a>
                                        </li>
                                        <li class="link">
@@ -657,6 +663,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/PatternModal.html" >PatternModal</a>
@@ -742,9 +751,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/Loom.html" >Loom</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/MyErrorStateMatcher.html"  class="active" >MyErrorStateMatcher</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/MyErrorStateMatcher.html"  class="active" >MyErrorStateMatcher</a>
@@ -847,6 +853,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/VaeService.html" >VaeService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/VersionService.html" >VersionService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -956,9 +965,6 @@
                                            <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../interfaces/OperationParams.html" >OperationParams</a>
-                                       </li>
-                                       <li class="link">
                                            <a href="../interfaces/Point.html" >Point</a>
                                        </li>
                                        <li class="link">
@@ -1052,7 +1058,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/app/mixer/palette/operation/operation.component.ts</code>
+            <code>src/app/core/login/login.component.ts</code>
         </p>
 
             <p class="comment">
@@ -1095,592 +1101,112 @@
 
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Component, EventEmitter, HostListener, Input, OnInit, Output } from &#x27;@angular/core&#x27;;
-import { Bounds, DesignMode, DraftMap, Interlacement, Point } from &#x27;../../../core/model/datatypes&#x27;;
-import utilInstance from &#x27;../../../core/model/util&#x27;;
-import { OperationService, Operation, DynamicOperation } from &#x27;../../provider/operation.service&#x27;;
-import { OpHelpModal } from &#x27;../../modal/ophelp/ophelp.modal&#x27;;
-import { MatDialog, MAT_DIALOG_DATA } from &#x27;@angular/material/dialog&#x27;;
-import { Form, FormControl, FormGroupDirective, NgForm, Validators } from &#x27;@angular/forms&#x27;;
-import { ViewportService } from &#x27;../../provider/viewport.service&#x27;;
-import { OpNode, TreeService } from &#x27;../../provider/tree.service&#x27;;
-import { DesignmodesService } from &#x27;../../../core/provider/designmodes.service&#x27;;
-import { SubdraftComponent } from &#x27;../subdraft/subdraft.component&#x27;;
+        <pre><code class="hljs javascript">import { Component, Inject, OnInit } from &#x27;@angular/core&#x27;;
+import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material/dialog&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { e } from &#x27;mathjs&#x27;;
+import { AuthService } from &#x27;../provider/auth.service&#x27;;
+import {FormControl, FormGroupDirective, NgForm, Validators} from &#x27;@angular/forms&#x27;;
 import {ErrorStateMatcher} from &#x27;@angular/material/core&#x27;;
-import { ImageService } from &#x27;../../../core/provider/image.service&#x27;;
-import { SystemsService } from &#x27;../../../core/provider/systems.service&#x27;;
-
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    return !!(control &amp;&amp; control.invalid &amp;&amp; (control.dirty || control.touched));
+    const isSubmitted &#x3D; form &amp;&amp; form.submitted;
+    return !!(control &amp;&amp; control.invalid &amp;&amp; (control.dirty || control.touched || isSubmitted));
   }
 }
 
 @Component({
-  selector: &#x27;app-operation&#x27;,
-  templateUrl: &#x27;./operation.component.html&#x27;,
-  styleUrls: [&#x27;./operation.component.scss&#x27;]
+  selector: &#x27;app-login&#x27;,
+  templateUrl: &#x27;./login.component.html&#x27;,
+  styleUrls: [&#x27;./login.component.scss&#x27;]
 })
-export class OperationComponent implements OnInit {
+export class LoginComponent implements OnInit {
+  emailFormControl &#x3D; new FormControl(&#x27;&#x27;, [Validators.required, Validators.email]);
+  passwordFormControl &#x3D; new FormControl(&#x27;&#x27;, [Validators.required]);
+  matcher &#x3D; new MyErrorStateMatcher();
 
-   @Input() id: number; //generated from the tree service
-   @Input() name: string;
+  useemail: boolean &#x3D; false;
+  error: string &#x3D;&quot;&quot;;
 
-
-   @Input()
-   get scale(): number { return this._scale; }
-   set scale(value: number) {
-     this._scale &#x3D; value;
-     this.rescale();
-   }
-   private _scale:number &#x3D; 5;
- 
-
-
-   @Input() default_cell: number;
-   @Input() zndx: number;
-   @Output() onConnectionRemoved &#x3D; new EventEmitter &lt;any&gt;();
-   @Output() onConnectionMove &#x3D; new EventEmitter &lt;any&gt;();
-   @Output() onOperationMove &#x3D; new EventEmitter &lt;any&gt;(); 
-   @Output() onOperationParamChange &#x3D; new EventEmitter &lt;any&gt;(); 
-   @Output() deleteOp &#x3D; new EventEmitter &lt;any&gt;(); 
-   @Output() duplicateOp &#x3D; new EventEmitter &lt;any&gt;(); 
-   @Output() onInputAdded &#x3D; new EventEmitter &lt;any&gt; ();
-
-    /**
-    * reference to top, left positioin as absolute interlacement
-    */
-   interlacement:Interlacement;
-
-  /**
-  * reference to the height of this element in units of the base cell 
-  */
-  base_height:number;
-
-  /**
-  * flag to tell if this is being from a loaded from a saved file
-  */
-   loaded: boolean &#x3D; false;
-
-  /**
-    * flag to tell if this has been duplicated from another operation
-    */
-   duplicated: boolean &#x3D; false;
-
-
-  //   /**
-  //   * stores a lit of the subdraft ids 
-  //   */
-  //  outputs: Array&lt;number&gt;;  
-   
-   tooltip: string &#x3D; &quot;select drafts to input to this operation&quot;
-  
-   disable_drag: boolean &#x3D; false;
- 
-   bounds: Bounds &#x3D; {
-     topleft: {x: 60, y:60},
-     width: 200,
-     height: 60
-   };
-   
-   op:Operation | DynamicOperation;
-
-   //for input params form control
-   loaded_inputs: Array&lt;number&gt; &#x3D; [];
-
-   //these are the input parameters
-   op_inputs: Array&lt;FormControl&gt; &#x3D; [];
-
-   has_image_preview: boolean &#x3D; false;
-
-   //these are the drafts with any input parameters
-   inlets: Array&lt;FormControl&gt; &#x3D; [];
-
-
-  // has_connections_in: boolean &#x3D; false;
-   subdraft_visible: boolean &#x3D; true;
-
-   is_dynamic_op: boolean &#x3D; false;
-
-   textValidate: any;
-
-   filewarning: string &#x3D; &quot;&quot;;
-
-   all_system_codes: Array&lt;string&gt; &#x3D; [];
-
-  constructor(
-    private operations: OperationService, 
-    private dialog: MatDialog,
-    private viewport: ViewportService,
-    public tree: TreeService,
-    public dm: DesignmodesService,
-    private imageService: ImageService,
-    public systems: SystemsService) { 
-    
-      //this.outputs &#x3D; [];
-  
-      this.textValidate &#x3D; new MyErrorStateMatcher();
-
-      this.all_system_codes &#x3D; this.systems.weft_systems.map(el &#x3D;&gt; el.name);
-     
-
-  }
+  constructor(private router: Router, private auth: AuthService, private dialogRef: MatDialogRef&lt;LoginComponent&gt;,
+    @Inject(MAT_DIALOG_DATA) private data: any) { }
 
   ngOnInit() {
+  }
 
 
-    this.op &#x3D; this.operations.getOp(this.name);
-    this.is_dynamic_op &#x3D; this.operations.isDynamic(this.name);
+  onEmailLogin(){
+    console.log(&quot;sign in with &quot;, this.emailFormControl.value, this.passwordFormControl.value);
 
-    const graph_node &#x3D; &lt;OpNode&gt; this.tree.getNode(this.id);
-
-    this.op.params.forEach((val, ndx) &#x3D;&gt; {
-      if(ndx &lt; graph_node.params.length) this.op_inputs.push(new FormControl(graph_node.params[ndx], [Validators.required, Validators.pattern(&#x27;[1-9 ]*&#x27;)]));
-      else this.op_inputs.push(new FormControl(val.value));
-    });
-
-
-    /**
-     * Dynamic ops will always have one inlet, valued zero, and all additional inputs are added on top of that
-     * we do not draw the 0th element to the screen
-     */
-    if(this.is_dynamic_op){
-      //get the current param value and generate input slots
-      const dynamic_param: number &#x3D; (&lt;DynamicOperation&gt;this.op).dynamic_param_id;
-      const dynamic_type: string &#x3D; (&lt;DynamicOperation&gt;this.op).dynamic_param_type;
-      let dynamic_value: number &#x3D; 0;
-      const inlet_values: Array&lt;any&gt; &#x3D; graph_node.inlets.slice();
-
-      if(dynamic_type &#x3D;&#x3D;&#x3D; &#x27;color&#x27;){
-        dynamic_value &#x3D; inlet_values.length-1;
+    this.auth.emailSignIn(this.emailFormControl.value, this.passwordFormControl.value).then(res &#x3D;&gt; {
+      if(res &#x3D;&#x3D;&#x3D; &#x27;&#x27;){
+        this.dialogRef.close(&#x27;Created and Logged In New User!&#x27;);
       }else{
-        dynamic_value &#x3D; graph_node.params[dynamic_param];
-      }
-
-
-      //if inlet values is greater than 1, then we need to load the existing values in
-      if(inlet_values.length &gt; 1){
-        //push the first zero calue
-        inlet_values.forEach(inlet &#x3D;&gt; {
-
-          switch(dynamic_type){
-            case &#x27;system&#x27;:
-              this.inlets.push(new FormControl(this.systems.weft_systems[inlet].name));
-              this.systems.weft_systems[inlet].in_use &#x3D; true;
-              break;
-
-              default:
-                this.inlets.push(new FormControl(inlet));
-                break;
-          }
-        });
-
-      }else{
-        //we need to load the default values 
-        for(let i &#x3D; 0; i &lt; dynamic_value+1; i++){
-        
-          switch(dynamic_type){
-            case &#x27;color&#x27;:
-              this.inlets.push(new FormControl(i));
-              if(i &gt;&#x3D;graph_node.inlets.length) graph_node.inlets.push(i);
-              break;
-            case &#x27;number&#x27;:
-              this.inlets.push(new FormControl(i));
-              if(i &gt;&#x3D;graph_node.inlets.length) graph_node.inlets.push(i);
-              break;
-            case &#x27;system&#x27;:
-              let adj_i &#x3D; (i &gt; 0) ? i -1 : i;
-              this.inlets.push(new FormControl(this.systems.weft_systems[adj_i].name));
-              if(i &gt;&#x3D;graph_node.inlets.length) graph_node.inlets.push(adj_i);
-              this.systems.weft_systems[adj_i].in_use &#x3D; true;
-
-              break;
-          }
-
+        console.log(&quot;res&quot;, res);
+        switch(res){
+          case &quot;auth/user-not-found&quot; :
+            this.error &#x3D; &quot;there is no user at that email address, did you mean to hit sign up?&quot;
+          break;
+          case &quot;auth/wrong-password&quot;:
+            this.error &#x3D; &quot;wrong password&quot;
+          break;
+          default:
+            this.error &#x3D; res;
         }
-
       }
+    })
+  }
+
+  onEmailSignUp(){
+    console.log(&quot;sign up with &quot;, this.emailFormControl.value, this.passwordFormControl.value);
+
+    this.auth.emailSignUp(this.emailFormControl.value, this.passwordFormControl.value).then(res &#x3D;&gt; {
+      if(res &#x3D;&#x3D;&#x3D; &#x27;&#x27;){
+        this.dialogRef.close(&#x27;Created and Logged In New User!&#x27;);
+      }else{
+        console.log(&quot;res&quot;, res);
+        switch(res){
+          case &quot;auth/weak-password&quot; :
+            this.error &#x3D; &quot;please use a stronger password (with symbols or numbers)&quot;
+          break;
+          case &quot;auth/email-already-in-use&quot;:
+            this.error &#x3D; &quot;this email is already associated with an existing account&quot;
+          break;
+          default:
+            this.error &#x3D; res;
+        }
+      }
+    });
+  }
+
+
+
+  // onEmailSubmit() {
     
-    }else{
-      graph_node.inlets.forEach(inlet &#x3D;&gt; {
-        this.inlets.push(new FormControl(0));
-      });
-    }
-
-    if(graph_node.inlets.length !&#x3D; this.inlets.length ) console.error(&quot;inlets do not match&quot;, graph_node.inlets, this.inlets)
-
-
-
-
-    const tl: Point &#x3D; this.viewport.getTopLeft();
-    //offset it a bit so can hover and see options
-
-
-
-    if(this.bounds.topleft.x &#x3D;&#x3D; 0 &amp;&amp; this.bounds.topleft.y &#x3D;&#x3D; 0) this.setPosition(tl);
-    this.interlacement &#x3D; utilInstance.resolvePointToAbsoluteNdx(this.bounds.topleft, this.scale);
-
-    this.base_height &#x3D;  60 + 40 * this.op_inputs.length
-    this.bounds.height &#x3D; this.base_height;
-
-
-
-  }
-
-
-  ngAfterViewInit(){
-    this.rescale();
-    this.onOperationParamChange.emit({id: this.id});
-    if(this.name &#x3D;&#x3D; &#x27;imagemap&#x27;){
-      this.drawImagePreview();
-    }
-
-  }
-
-  drawImagePreview(){
-      const obj &#x3D; this.imageService.getImageData(this.op_inputs[0].value);
-      if(obj &#x3D;&#x3D;&#x3D; undefined) return;
-
-      console.log(&quot;obj data image&quot;, obj.data.image);
-
-      this.has_image_preview &#x3D; true;
-      const image_div &#x3D;  document.getElementById(&#x27;param-image-&#x27;+this.id);
-      image_div.style.display &#x3D; &#x27;flex&#x27;;
-
-      const dims_div &#x3D;  document.getElementById(&#x27;param-image-dims-&#x27;+this.id);
-      dims_div.innerHTML&#x3D;obj.data.width+&quot;px x &quot;+obj.data.height+&quot;px&quot;;
-
-      const canvas: HTMLCanvasElement &#x3D;  &lt;HTMLCanvasElement&gt; document.getElementById(&#x27;preview_canvas-&#x27;+this.id);
-      const ctx &#x3D; canvas.getContext(&#x27;2d&#x27;);
-
-      const max_dim &#x3D; (obj.data.width &gt; obj.data.height) ? obj.data.width : obj.data.height;
-      canvas.width &#x3D; obj.data.width / max_dim * 100;
-      canvas.height &#x3D; obj.data.height / max_dim * 100;
-      ctx.drawImage(obj.data.image, 0, 0, obj.data.width / max_dim * 100, obj.data.height / max_dim * 100);
-     
-    }
-
-
-  getInputName(id: number) : string {
-    const sd &#x3D; this.tree.getDraft(id);
-    if(sd &#x3D;&#x3D;&#x3D; null || sd &#x3D;&#x3D;&#x3D; undefined) return &quot;null draft&quot;
-    return sd.getName();
-  }
-
-
-  // setOutputs(dms: Array&lt;DraftMap&gt;){
-  //    // this.outputs &#x3D; dms.slice();
-
   // }
 
+  loginGoogle() {
 
 
-  setBounds(bounds:Bounds){
-    this.bounds.topleft &#x3D; {x: bounds.topleft.x, y: bounds.topleft.y},
-    this.bounds.width &#x3D; bounds.width;
-    this.bounds.height &#x3D; bounds.height;
-    this.interlacement &#x3D; utilInstance.resolvePointToAbsoluteNdx(bounds.topleft, this.scale);
-  }
-
-  setPosition(pos: Point){
-    this.bounds.topleft &#x3D;  {x: pos.x, y:pos.y};
-    this.interlacement &#x3D; utilInstance.resolvePointToAbsoluteNdx(pos, this.scale);
-  }
-
-
-
-  rescale(){
-
-    const zoom_factor &#x3D; this.scale / this.default_cell;
-    const container: HTMLElement &#x3D; document.getElementById(&#x27;scale-&#x27;+this.id);
-    if(container &#x3D;&#x3D;&#x3D; null) return;
-
-    container.style.transformOrigin &#x3D; &#x27;top left&#x27;;
-    container.style.transform &#x3D; &#x27;scale(&#x27; + zoom_factor + &#x27;)&#x27;;
-
-    this.bounds.topleft &#x3D; {
-      x: this.interlacement.j * this.scale,
-      y: this.interlacement.i * this.scale
-    };
-
-    this.bounds.height &#x3D; this.base_height * zoom_factor;
-
- 
-  
-
-
-  }
-
-  drawForPrint(canvas, cx, scale){
-    if(canvas &#x3D;&#x3D;&#x3D; undefined) return;
-
-    cx.fillStyle &#x3D; &quot;#ffffff&quot;;
-    cx.fillRect(this.bounds.topleft.x, this.bounds.topleft.y, this.bounds.width, this.bounds.height); 
-
-    cx.fillStyle &#x3D; &quot;#666666&quot;;
-    cx.font &#x3D; this.scale*2+&quot;px Verdana&quot;;
-
-    let datastring: string &#x3D; this.name+&quot; // &quot;;
-
-    this.op.params.forEach((p, ndx) &#x3D;&gt; {
-      datastring &#x3D; datastring + p.name +&quot;: &quot;+ this.op_inputs[ndx].value + &quot;, &quot;;
-    });
-
-    cx.fillText(datastring,this.bounds.topleft.x + 5, this.bounds.topleft.y+25 );
-
-
-  }
-
-   /**
-   * updates this components position based on the child component&#x27;s position
-   * */
-    updatePositionFromChild(child: SubdraftComponent){
-
-
-       const container &#x3D; &lt;HTMLElement&gt; document.getElementById(&quot;scale-&quot;+this.id);
-       this.setPosition({x: child.bounds.topleft.x, y: child.bounds.topleft.y - (container.offsetHeight * this.scale/this.default_cell) });
-  
-    }
-
-  /**
-   * set&#x27;s the width to at least 200, but w if its large
-   */
-  setWidth(w:number){
-    this.bounds.width &#x3D; (w &gt; 200) ? w : 200;
-  }
-
-  // addOutput(dm: DraftMap){
-  //   this.outputs.push(dm);
-  // }
-
-  disableDrag(){
-    this.disable_drag &#x3D; true;
-  }
-
-  enableDrag(){
-    this.disable_drag &#x3D; false;
-  }
-
-  drop(){
-    console.log(&quot;dropped&quot;);
-  }
-
-  maxInputs():number{
-    return this.op.max_inputs;
-  }
-
-  inputSelected(input_id: number){
-    this.disableDrag();
-    this.onInputAdded.emit({id: this.id, ndx: input_id});
-  }
-
-
-  removeConnectionTo(sd_id: number, ndx: number){
-    this.onConnectionRemoved.emit({from: sd_id, to: this.id});
-  }
-
-  openHelpDialog() {
-    const dialogRef &#x3D; this.dialog.open(OpHelpModal, {
-      data: {
-        name: this.op.name,
-        op: this.op
-      }
+    this.auth.login().then(logged_in &#x3D;&gt; {
+      this.dialogRef.close(&#x27;Log In Via Google Success!&#x27;);
+    }, not_logged_in &#x3D;&gt; {
+      console.log(Error)
     });
 
   }
 
-  onCheckboxParamChange(id: number, value: number){
-    const opnode: OpNode &#x3D; &lt;OpNode&gt; this.tree.getNode(this.id);
-    opnode.params[id] &#x3D; (value) ? 1 : 0;
-    this.op_inputs[id].setValue(value);
-    this.onOperationParamChange.emit({id: this.id});
+  openEmailLogin(){
+    this.router.navigateByUrl(&#x27;/email-login&#x27;);
   }
 
-  onParamChange(id: number, value: number){
-
-    //if(this.op_inputs[id].hasError(&#x27;pattern&#x27;) || this.op_inputs[id].hasError(&#x27;required&#x27;)) return;
-
-    const opnode: OpNode &#x3D; &lt;OpNode&gt; this.tree.getNode(this.id);
-    opnode.params[id] &#x3D; value;
-    this.op_inputs[id].setValue(value);
-    
-    if(this.is_dynamic_op){
-      value &#x3D; value+1;
-      //check to see if we should add or remove draft inputs
-      if(id &#x3D;&#x3D;&#x3D; (&lt;DynamicOperation&gt;this.op).dynamic_param_id){
-        const type &#x3D; (&lt;DynamicOperation&gt;this.op).dynamic_param_type;
-        switch(type){
-
-          case &#x27;number&#x27;:
-          case &#x27;system&#x27;:
-            if(value &gt; this.inlets.length){
-              for(let i &#x3D; this.inlets.length; i &lt; value; i++){
-
-                if(type &#x3D;&#x3D;&#x3D; &#x27;number&#x27;){
-                  this.inlets.push(new FormControl(i));
-                  opnode.inlets.push(i);
-                }else{
-                  this.inlets.push(new FormControl(this.systems.weft_systems[i-1].name))
-                  this.systems.weft_systems[i-1].in_use &#x3D; true;
-                  opnode.inlets.push(i-1);
-                } 
-              }
-
-            }else if(value &lt; this.inlets.length){
-              this.inlets.splice(value, this.inlets.length - value);
-              opnode.inlets.splice(value,  opnode.inlets.length - value);
-            }
-          break;
-
-            
-
-        }
-      }
-    }
-    
-    
-    this.onOperationParamChange.emit({id: this.id});
-   
+  createNewEmailUser(){
+    this.router.navigateByUrl(&#x27;/signup&#x27;);
   }
 
-  //returned from a file upload event
-  /**
-   * get the data type and process it here
-   * @param obj 
-   */
-  handleFile(id: number, obj: any){
-
-    const image_div &#x3D;  document.getElementById(&#x27;param-image-&#x27;+this.id);
-    image_div.style.display &#x3D; &#x27;none&#x27;;
-
-
-    obj &#x3D; obj.data;
-
-
-    switch(obj.type){
-      case &#x27;image&#x27;:
-
-        if(this.operations.isDynamic(this.name) &amp;&amp; (&lt;DynamicOperation&gt; this.op).dynamic_param_type !&#x3D;&#x3D; &#x27;color&#x27;) return;
-
-        if(obj.warning !&#x3D;&#x3D; &#x27;&#x27;){
-          image_div.style.display &#x3D; &#x27;flex&#x27;;
-          this.filewarning &#x3D; obj.warning;
-        }else{
-
-   
-
-
-          const opnode &#x3D; this.tree.getOpNode(this.id);
-          this.op_inputs[id].setValue(obj.id);
-          opnode.params[id] &#x3D; obj.id;
-
-
-
-
-          obj.colors.forEach(hex &#x3D;&gt; {
-
-            //add any new colors
-            const ndx &#x3D; this.inlets.findIndex(el &#x3D;&gt; el.value &#x3D;&#x3D;&#x3D; hex);
-            if(ndx &#x3D;&#x3D;&#x3D; -1){
-              this.inlets.push(new FormControl(hex));
-              opnode.inlets.push(hex);
-            }
-          });
-
-          const remove &#x3D; [];
-          //now remove any inlets that no longer have values
-          opnode.inlets.forEach((inlet, ndx) &#x3D;&gt; {
-            if(inlet &#x3D;&#x3D;&#x3D; 0) return;
-            const found &#x3D; obj.colors.find(el &#x3D;&gt; el &#x3D;&#x3D;&#x3D; inlet);
-            if(found &#x3D;&#x3D;&#x3D; undefined){
-              remove.push(ndx);
-            }
-          })
-          remove.forEach(removeid &#x3D;&gt; {
-            opnode.inlets.splice(removeid, 1);
-            this.inlets.splice(removeid, 1);
-          });
-
-
-          //now update the default parameters to the original size 
-          this.op_inputs[1].setValue(obj.data.width/10);
-          this.op_inputs[2].setValue(obj.data.height/10);
-          opnode.params[1] &#x3D; obj.data.width/10;
-          opnode.params[2] &#x3D; obj.data.height/10;
-
-          this.drawImagePreview();
-
-
-        }
-        break;
-    }
-  }
-
-  /**
-   * 
-   * @param id 
-   * @param value 
-   */
-  onInletChange(id: number, value: any){
-    const opnode: OpNode &#x3D; &lt;OpNode&gt; this.tree.getNode(this.id);
-    this.inlets[id].setValue(value);
-
-    
-    if(this.is_dynamic_op){
-      const type &#x3D; (&lt;DynamicOperation&gt; this.op).dynamic_param_type;
-      switch(type){
-        case &#x27;system&#x27;:
-          opnode.inlets[id] &#x3D; this.systems.weft_systems.findIndex(el &#x3D;&gt; el.name &#x3D;&#x3D;&#x3D; value);
-          break;
-
-        default:
-          opnode.inlets[id] &#x3D; value;
-        break;
-      }
-
-    }else{
-      opnode.inlets[id] &#x3D; value;
-    }
   
-    this.inlets[id].setValue(value);
-
-    
-    this.onOperationParamChange.emit({id: this.id});
-   
-  }
-
-  delete(){
-    this.deleteOp.emit({id: this.id});
-  }
-
-  duplicate(){
-    this.duplicateOp.emit({id: this.id});
-  }
-
-
-
-  dragStart($event: any) {
-   
-  }
-
-  dragMove($event: any) {
-       //position of pointer of the page
-       const pointer:Point &#x3D; $event.pointerPosition;
-       const relative:Point &#x3D; utilInstance.getAdjustedPointerPosition(pointer, this.viewport.getBounds());
-       const adj:Point &#x3D; utilInstance.snapToGrid(relative, this.scale);
-       this.bounds.topleft &#x3D; adj;  
-       this.interlacement &#x3D; utilInstance.resolvePointToAbsoluteNdx(adj, this.scale);
-       this.onOperationMove.emit({id: this.id, point: adj});
-
-  }
-
-
-  dragEnd($event: any) {
-   
-  }
- 
 
 }
 </code></pre>

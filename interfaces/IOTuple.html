@@ -118,6 +118,9 @@
                                     <a href="../components/InitModal.html" >InitModal</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../components/InletComponent.html" >InletComponent</a>
+                                </li>
+                                <li class="link">
                                     <a href="../components/LoginComponent.html" >LoginComponent</a>
                                 </li>
                                 <li class="link">
@@ -152,6 +155,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/PatternModal.html" >PatternModal</a>
@@ -237,9 +243,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/Loom.html" >Loom</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
@@ -342,6 +345,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/VaeService.html" >VaeService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/VersionService.html" >VersionService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -449,9 +455,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/OperationParams.html" >OperationParams</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/Point.html" >Point</a>
@@ -623,6 +626,9 @@
                                            <a href="../components/InitModal.html" >InitModal</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../components/InletComponent.html" >InletComponent</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../components/LoginComponent.html" >LoginComponent</a>
                                        </li>
                                        <li class="link">
@@ -657,6 +663,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/PatternModal.html" >PatternModal</a>
@@ -742,9 +751,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/Loom.html" >Loom</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
@@ -847,6 +853,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/VaeService.html" >VaeService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/VersionService.html" >VersionService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -954,9 +963,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/OperationParams.html" >OperationParams</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/Point.html" >Point</a>
@@ -1125,7 +1131,7 @@
     </div>
     <div class="tab-pane fade tab-source-code" id="source">
         <pre><code class="hljs javascript">import { Injectable, ViewRef } from &#x27;@angular/core&#x27;;
-import { cloneDeep, map, toNumber } from &#x27;lodash&#x27;;
+import { cloneDeep, flip, map, toNumber } from &#x27;lodash&#x27;;
 import { Cell } from &#x27;../../core/model/cell&#x27;;
 import { Draft } from &#x27;../../core/model/draft&#x27;;
 import { Loom } from &#x27;../../core/model/loom&#x27;;
@@ -1134,18 +1140,16 @@ import { GloballoomService } from &#x27;../../core/provider/globalloom.service&#
 import { ConnectionComponent } from &#x27;../palette/connection/connection.component&#x27;;
 import { OperationComponent } from &#x27;../palette/operation/operation.component&#x27;;
 import { SubdraftComponent } from &#x27;../palette/subdraft/subdraft.component&#x27;;
-import { OperationService, OpInput, DynamicOperation } from &#x27;./operation.service&#x27;;
+import { OperationService, OpInput, DynamicOperation, Operation, StringParam } from &#x27;./operation.service&#x27;;
 import utilInstance from &#x27;../../core/model/util&#x27;;
 import { UploadService } from &#x27;../../core/uploads/upload.service&#x27;;
+import { element } from &#x27;protractor&#x27;;
+import { SystemsService } from &#x27;../../core/provider/systems.service&#x27;;
 
 
 /**
  * this class registers the relationships between subdrafts, operations, and connections
  */
-
-
-
-
 
 /**
  * this stores a reference to a component on the palette with its id and some
@@ -1222,7 +1226,8 @@ export class TreeService {
   constructor(
     private globalloom: GloballoomService,
     private ops: OperationService,
-    private upSvc: UploadService) { 
+    private upSvc: UploadService,
+    private systemsservice: SystemsService) { 
   }
 
 
@@ -1235,6 +1240,31 @@ export class TreeService {
 
 
   }
+
+    /**
+     * go through the list of nodes being loaded and replace any with names that have been outdated.  
+     * **/
+    
+    async replaceOutdatedOps(nodes: Array&lt;any&gt;) : Promise&lt;Array&lt;any&gt;&gt;{
+
+      console.log(&quot;nodes&quot;, nodes);
+      const correctedNodes &#x3D; nodes.map(node &#x3D;&gt; {
+        if(this.ops.getOp(node.name) &#x3D;&#x3D;&#x3D; null){
+          const op &#x3D;  this.ops.getOpByOldName(node.name);
+          console.log(&quot;got &quot;, node.name, &#x27; from &#x27;, op);
+          node.name &#x3D; op.name
+          node.inlets &#x3D; op.inlets;
+        }
+        return node;
+      });
+
+      
+
+      console.log(&quot;nodes&quot;, nodes, correctedNodes);
+      return Promise.resolve(correctedNodes);
+    }
+
+
 
   /** scan through nodes and return all that our valid */
   async validateNodes() : Promise&lt;boolean&gt;{
@@ -1264,15 +1294,92 @@ export class TreeService {
 
 
   setOpParams(id: number, params: Array&lt;any&gt;, inlets: Array&lt;any&gt;){
-    this.getOpNode(id).params &#x3D; params;
-    this.getOpNode(id).inlets &#x3D; inlets;
+    this.getOpNode(id).params &#x3D; params.slice();
+    this.getOpNode(id).inlets &#x3D; inlets.slice();
+  }
+
+  /**
+   * this is called when a dynamic operation&#x27;s parameter updates and therefore, must change inlet values
+   * @param node_id an object containing the id of hte parameter that has changed
+   * @param param_id the id of the parameter that changed
+   * @param value the value at that parameter
+   * @returns a list of inlet values to add.
+   */
+   onDynanmicOperationParamChange(name: string, inlets: Array&lt;any&gt;, param_id: number, param_val: any) : Array&lt;any&gt;{
+
+
+    const op &#x3D; this.ops.getOp(name);
+
+      let param_type &#x3D; op.params[param_id].type;
+
+      //check to see if we should add or remove draft inputs
+      if(param_id &#x3D;&#x3D;&#x3D; (&lt;DynamicOperation&gt;op).dynamic_param_id){
+        const type &#x3D; (&lt;DynamicOperation&gt;op).dynamic_param_type;
+
+        let static_inputs &#x3D; op.inlets.filter(el &#x3D;&gt; el.type &#x3D;&#x3D;&#x3D; &#x27;static&#x27;);
+        let num_dynamic_inlets &#x3D; inlets.length - static_inputs.length;
+
+        switch(type){
+
+          case &#x27;notation&#x27;:
+
+
+            const matches &#x3D; utilInstance.parseRegex(param_val, (&lt;StringParam&gt;op.params[0]).regex);
+            inlets &#x3D; inlets.slice(0,static_inputs.length);
+            matches.forEach(el &#x3D;&gt; {
+              inlets.push(el);
+            })
+
+          break;
+
+
+          
+          case &#x27;number&#x27;:
+
+          if(param_type &#x3D;&#x3D;&#x3D; &#x27;number&#x27;){
+            if(param_val &gt; num_dynamic_inlets){
+              for(let i &#x3D; num_dynamic_inlets; i &lt; param_val; i++){
+                  inlets.push(i+1);
+              }
+            }else if(param_val &lt; num_dynamic_inlets){
+              const delete_num &#x3D; num_dynamic_inlets - param_val;
+              inlets &#x3D; inlets.slice(0, -delete_num);
+            }
+          }else if(param_type &#x3D;&#x3D; &#x27;string&#x27;){
+            const all_inputs &#x3D; param_val.split(&#x27; &#x27;);
+            const unique_values &#x3D; utilInstance.filterToUniqueValues(all_inputs);
+            inlets &#x3D; inlets.slice(0,static_inputs.length);
+            unique_values.forEach(el &#x3D;&gt; {
+              inlets.push(el);
+            })
+          }
+
+          break;
+          case &#x27;system&#x27;:
+             static_inputs &#x3D; op.inlets.filter(el &#x3D;&gt; el.type &#x3D;&#x3D;&#x3D; &#x27;static&#x27;);
+             num_dynamic_inlets &#x3D; inlets.length - static_inputs.length;
+
+            if(param_val &gt; num_dynamic_inlets){
+              for(let i &#x3D; num_dynamic_inlets; i &lt; param_val; i++){
+                  this.systemsservice.weft_systems[i].in_use &#x3D; true;
+                  inlets.push(i);  
+              }
+            }else if(param_val &lt; num_dynamic_inlets){
+              inlets &#x3D; inlets.slice(0, param_val+static_inputs);
+            }
+          break;
+
+            
+
+        }
+      }
+    return inlets;
   }
 
 
 
-
   /**
-   * loads data into an operation node from a file load or undo/redo event
+   * loads data into an operation node from a file load, or when an operation is first instantiated,  or undo/redo event
    * @param entry the upload entry associated with this node or null if there was no upload associated
    * @param name the name of the operation
    * @param params the parameters to input
@@ -1283,7 +1390,7 @@ export class TreeService {
     
 
     const nodes &#x3D; this.nodes.filter(el &#x3D;&gt; el.id &#x3D;&#x3D;&#x3D; entry.cur_id);
-    const op &#x3D; this.ops.getOp(name);
+    let op &#x3D; this.ops.getOp(name);
 
     if(nodes.length !&#x3D;&#x3D; 1){
       return Promise.reject(&quot;found 0 or more than 1 nodes at id &quot;+entry.cur_id);
@@ -1291,30 +1398,22 @@ export class TreeService {
 
     const node &#x3D; nodes[0];
 
-    if(this.ops.getOp(name) &#x3D;&#x3D;&#x3D; undefined){
-      return Promise.reject(&quot;no op of name:&quot;+name+&quot; exists&quot;);
-    } 
+    if(op &#x3D;&#x3D;&#x3D; undefined || op &#x3D;&#x3D;&#x3D; null){
+       return Promise.reject(&quot;no op of name:&quot;+name+&quot; exists&quot;);
 
-    if(inlets &#x3D;&#x3D;&#x3D; undefined){
-      if(this.ops.isDynamic(name)){
-        const dynamic_param_id &#x3D; (&lt;DynamicOperation&gt; op).dynamic_param_id;
-        const default_value &#x3D; (&lt;DynamicOperation&gt; op).params[dynamic_param_id].value;
-        for(let i &#x3D; 0; i &lt; default_value; i++){
-          inlets.push(i);
-        }
-      }else{
-        inlets &#x3D; [0];
-      }
-    }else{
-      inlets &#x3D; inlets;
-    }    
+    }  
+
 
 
     if(params &#x3D;&#x3D;&#x3D; undefined){
       params &#x3D; [];
     }
 
-    const param_types &#x3D; this.ops.getOp(name).params.map(el &#x3D;&gt; el.type);
+    if(params &#x3D;&#x3D;&#x3D; undefined){
+      inlets &#x3D; [];
+    }
+
+    const param_types &#x3D; op.params.map(el &#x3D;&gt; el.type);
 
 
       const formatted_params &#x3D; param_types.map((type, ndx) &#x3D;&gt; {
@@ -1338,13 +1437,25 @@ export class TreeService {
         if(ndx &lt; params.length) return formatted_params[ndx];
         else return p;
       });
-  
+
+      const default_inlet_values &#x3D; this.ops.getOp(name).inlets.map(el &#x3D;&gt; el.value);
+
+      if(inlets &#x3D;&#x3D;&#x3D; undefined || inlets.length &#x3D;&#x3D; 0){
+        inlets &#x3D; default_inlet_values.slice();
+        if(this.ops.isDynamic(name)){
+          const op &#x3D; &lt;DynamicOperation&gt; this.ops.getOp(name);
+          let dynamic_inlets &#x3D; this.onDynanmicOperationParamChange(name, inlets, op.dynamic_param_id, op.params[op.dynamic_param_id].value);
+          inlets &#x3D; dynamic_inlets.slice();
+        }
+      }
+
+       inlets &#x3D; inlets.map(el &#x3D;&gt; (el &#x3D;&#x3D;&#x3D; null) ? 0 : el); 
+
   
       node.dirty &#x3D; false;
       (&lt;OpNode&gt; node).name &#x3D; name;
       (&lt;OpNode&gt; node).params &#x3D; params_out.slice();
-      (&lt;OpNode&gt; node).inlets &#x3D; inlets;
-  
+      (&lt;OpNode&gt; node).inlets &#x3D; inlets.slice();
   
      return Promise.resolve({on:&lt;OpNode&gt; nodes[0], entry});
   
@@ -1571,19 +1682,20 @@ export class TreeService {
   sweepInlets(id: number) : Promise&lt;Array&lt;ViewRef&gt;&gt;{
 
      const opnode: OpNode &#x3D; this.getOpNode(id);
+     const op: Operation &#x3D; this.ops.getOp(opnode.name);
      const inputs_to_op:Array&lt;IOTuple&gt; &#x3D; this.getInputsWithNdx(id);
 
-   //filter out inputs that are matched to an index highter than what we offer
-    const missing_inlets: Array&lt;TreeNode&gt; &#x3D; inputs_to_op
-      .filter((el) &#x3D;&gt; el.ndx &gt; opnode.inlets.length)
-      .map(el &#x3D;&gt; el.tn);
+    const num_constant_inlets &#x3D; op.inlets.length;
 
+    //filter out inputs that are matched to an index highter than what we offer
+    const missing_inlets: Array&lt;IOTuple&gt; &#x3D; inputs_to_op
+      .filter((el) &#x3D;&gt; el.ndx &gt;&#x3D; opnode.inlets.length)
 
-    const viewRefs &#x3D; missing_inlets.map(el &#x3D;&gt; el.node.ref);
+    const viewRefs &#x3D; missing_inlets.map(el &#x3D;&gt; el.tn.node.ref);
 
     
     missing_inlets.forEach(el &#x3D;&gt; {
-        this.removeConnectionNode(el.inputs[0].tn.node.id, el.outputs[0].tn.node.id);
+        this.removeConnectionNode(el.tn.inputs[0].tn.node.id, el.tn.outputs[0].tn.node.id, el.ndx);
     });
 
     return Promise.resolve(viewRefs);
@@ -1702,6 +1814,8 @@ export class TreeService {
         params: [],
         name: &#x27;&#x27;
       }
+
+
       break;
       default: 
        node &#x3D; {
@@ -1825,8 +1939,9 @@ export class TreeService {
   /**
    * called on an operation to check if it can accept connections from a given subdraft
    * @param id - the id of the operation in question
+   * @param inlet - the inlet id we are looking at
    */
-  canAcceptConnections(id: number) : boolean {
+  canAcceptConnections(id: number, inlet: number) : boolean {
 
     if(this.open_connection &#x3D;&#x3D;&#x3D; -1) {
     console.error(&quot;no open connection&quot;);
@@ -1839,14 +1954,15 @@ export class TreeService {
       return false; //can&#x27;t be an input to your parent
     } 
 
-    const is_already_connected &#x3D; this.getInputs(id).length &gt; 0 &amp;&amp; this.getInputs(id).find(el &#x3D;&gt; el &#x3D;&#x3D;&#x3D; this.open_connection) !&#x3D;&#x3D; undefined;
+    const is_already_connected &#x3D; this.getInputsAtNdx(id, inlet).length &gt; 0 &amp;&amp; this.getInputs(id).find(el &#x3D;&gt; el &#x3D;&#x3D;&#x3D; this.open_connection) !&#x3D;&#x3D; undefined;
     if(is_already_connected){
      // console.error(&quot;already connected, draft&#x3D;&quot;, this.open_connection, &quot; opid&#x3D;&quot;, id);
       return false; //these two things are already directly connected
     } 
 
+    
 
-    const has_room &#x3D; (this.getInputs(id).length &lt; (&lt;OperationComponent&gt; this.getComponent(id)).op.max_inputs);
+    const has_room &#x3D; (this.getInputs(id).length &lt; (&lt;OperationComponent&gt; this.getComponent(id)).op.inlets[inlet].num_drafts || (&lt;OperationComponent&gt; this.getComponent(id)).op.inlets[inlet].num_drafts &#x3D;&#x3D; -1);
     if(!has_room) return false;
 
     if(parent_op &#x3D;&#x3D;&#x3D; -1 &amp;&amp; has_room) return true; //if you don&#x27;t have a parent and there is room, go for it
@@ -2132,11 +2248,11 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
  * @param id - the connection to remove
  * @returns a list of all nodes removed as a result of this action
  */
- removeConnectionNode(from:number, to:number) : Array&lt;Node&gt;{
+ removeConnectionNode(from:number, to:number, inletid: number) : Array&lt;Node&gt;{
 
 
-  const cxn_id:number &#x3D; this.getConnection(from, to);
-
+  const cxn_id:number &#x3D; this.getConnectionAtInlet(from, to, inletid);
+  console.log(&quot;got connection &quot;, cxn_id);
 
   const deleted:Array&lt;Node&gt; &#x3D; []; 
   if(cxn_id &#x3D;&#x3D;&#x3D; undefined) return;
@@ -2197,7 +2313,6 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
     const ready: Array&lt;OpNode&gt; &#x3D; dependency_nodes.filter((el, ndx) &#x3D;&gt; {
       const depends_on: Array&lt;number&gt; &#x3D; this.getUpstreamOperations(el.id);
       const needs &#x3D; depends_on.map(id &#x3D;&gt; this.getNode(id).dirty);
-
       const find_true &#x3D; needs.findIndex(el &#x3D;&gt; el &#x3D;&#x3D;&#x3D; true);
       if(find_true &#x3D;&#x3D;&#x3D; -1) return el;
     });
@@ -2205,51 +2320,6 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
     return ready;
   }
 
-
-//  /**
-//    * given the results of an operation, updates any associated drafts, creating or adding null drafts to no longer needed drafts
-//    * since this function cannot delete nodes, it makes nodes that no longer need to exist as null for later collection
-//    * @param res the list of results from perform op
-//    * @returns a list of the draft nodes touched. 
-//    */
-//   async updateDraftsFromResults(parent: number, res: Array&lt;Draft&gt;) : Promise&lt;Array&lt;number&gt;&gt;{
-
-//     const out &#x3D; this.getNonCxnOutputs(parent);
-//     const touched: Array&lt;number&gt; &#x3D; [];
-
-//     console.log(&quot;updating drafts from results&quot;, res, out);
-
-//     if(out.length &#x3D;&#x3D;&#x3D; res.length){
-//       console.log(&quot;set draft&quot;);
-//       out.forEach((output, ndx) &#x3D;&gt; {
-//         this.setDraft(output, res[ndx],null);
-//         touched.push(output);
-//       });
-//     }else if(out.length &gt; res.length){
-//       console.log(&quot;remove draft&quot;);
-
-//       for(let i &#x3D; res.length; i &lt; out.length; i++){
-//         const dn &#x3D; &lt;DraftNode&gt; this.getNode(out[i]);
-//         dn.draft &#x3D; new Draft({wefts:0, warps:0});
-//         dn.loom &#x3D; new Loom(dn.draft, this.globalloom.min_frames, this.globalloom.min_treadles);
-//         dn.dirty &#x3D; true;
-//         touched.push(out[i]);
-//       }
-//     }else{
-//       console.log(&quot;create draft&quot;);
-
-//       for(let i &#x3D; out.length; i &lt; res.length; i++){
-//         const id &#x3D; this.createNode(&#x27;draft&#x27;, null, null);
-//         const cxn &#x3D; this.createNode(&#x27;cxn&#x27;, null, null);
-//         this.loadDraftData({prev_id: -1, cur_id: id}, res[i], null); //add loom as null for now as it assumes that downstream drafts do not have custom loom settings (e.g. they can be generated from drawdown)
-//         this.addConnection(parent, 0, id, 0, cxn);
-//         touched.push(id);
-//       }
-//     }
-
-//     return touched;
-
-//   }
 
 /**
    * given the results of an operation, updates any associated drafts, creating or adding null drafts to no longer needed drafts
@@ -2261,6 +2331,8 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
 
   const out &#x3D; this.getNonCxnOutputs(parent);
   const touched: Array&lt;number&gt; &#x3D; [];
+
+
 
   //console.log(&quot;updating drafts, there are currently: &quot;, out.length, &quot;existing ouputs and &quot;, res.length, &quot;new outputs&quot;);
 
@@ -2312,6 +2384,8 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
  */
   async performTopLevelOps(): Promise&lt;any&gt; {
 
+
+
     //mark all ops as dirty to start
     this.nodes.forEach(el &#x3D;&gt; {
       if(el.type &#x3D;&#x3D;&#x3D; &quot;op&quot;) el.dirty &#x3D; true;
@@ -2322,6 +2396,7 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
       .filter(el &#x3D;&gt; el.type &#x3D;&#x3D;&#x3D; &#x27;op&#x27;)
       .filter(el &#x3D;&gt; this.getUpstreamOperations(el.id).length &#x3D;&#x3D;&#x3D; 0)
       .map(el &#x3D;&gt; el.id);
+
 
     return this.performGenerationOps(top_level_nodes);
 
@@ -2335,8 +2410,14 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
    */
   performGenerationOps(op_node_list: Array&lt;number&gt;) : Promise&lt;any&gt; {
 
-    const op_fn_list &#x3D; op_node_list.map(el &#x3D;&gt; this.performOp(el));
+
+    const needs_computing &#x3D; op_node_list.filter(el &#x3D;&gt; this.getOpNode(el).dirty);
+
+    if(needs_computing.length &#x3D;&#x3D; 0) return Promise.resolve([]);
+
+    const op_fn_list &#x3D; needs_computing.map(el &#x3D;&gt; this.performOp(el));
    
+    
     return Promise.all(op_fn_list).then( out &#x3D;&gt; {
       const flat:Array&lt;number&gt; &#x3D; out.reduce((acc, el, ndx)&#x3D;&gt;{
         return acc.concat(el);
@@ -2345,8 +2426,7 @@ removeOperationNode(id:number) : Array&lt;Node&gt;{
       return this.getNodesWithDependenciesSatisfied();
 
     }).then(needs_performing &#x3D;&gt; {
-     
-      const fns &#x3D; needs_performing.map(el &#x3D;&gt; el.id);
+      const fns &#x3D; needs_performing.filter(el &#x3D;&gt; el.dirty).map(el &#x3D;&gt; el.id);
       if(needs_performing.length &#x3D;&#x3D;&#x3D; 0) return [];
       return  this.performGenerationOps(fns);    
     });
@@ -2378,6 +2458,17 @@ flipDraft(draft: Draft) : Promise&lt;Draft&gt;{
 }
 
 
+isValidIOTuple(io: IOTuple) : boolean {
+  if(io &#x3D;&#x3D;&#x3D; null || io &#x3D;&#x3D;&#x3D; undefined) return false;
+  const draft_tn &#x3D; io.tn.inputs[0].tn;
+  const cxn_tn &#x3D; io.tn;
+  const type &#x3D; draft_tn.node.type;  
+  const draft: Draft &#x3D; (&lt;DraftNode&gt;draft_tn.node).draft;
+  if(draft &#x3D;&#x3D;&#x3D; null || draft &#x3D;&#x3D;&#x3D; undefined) return false;
+  if(draft.wefts &#x3D;&#x3D; 0 || draft.warps &#x3D;&#x3D; 0) return false;
+  return true;
+}
+
 
 
 /**
@@ -2396,34 +2487,40 @@ flipDraft(draft: Draft) : Promise&lt;Draft&gt;{
 
   let inputs: Array&lt;OpInput&gt; &#x3D; [];
 
-  if(this.ops.isDynamic(opnode.name)){
+  //if(this.ops.isDynamic(opnode.name)){
     
     //first push the parent params
 
-    inputs.push({op_name: op.name, drafts: [], inlet: 0, params: opnode.params});
+    inputs.push({op_name: op.name, drafts: [], inlet: -1, params: opnode.params});
 
-      const flip_fns &#x3D; [];
-      const draft_id_to_ndx &#x3D; [];
-      all_inputs.filter(el &#x3D;&gt; el !&#x3D;&#x3D; undefined &amp;&amp; el !&#x3D;&#x3D; null).forEach((el) &#x3D;&gt; {
-        const draft_tn &#x3D; el.tn.inputs[0].tn;
-        const cxn_tn &#x3D; el.tn;
-        const type &#x3D; draft_tn.node.type;
-        if(type &#x3D;&#x3D;&#x3D; &#x27;draft&#x27;){
-          draft_id_to_ndx.push({ndx: el.ndx, draft_id: draft_tn.node.id})
-          flip_fns.push(this.flipDraft((&lt;DraftNode&gt;draft_tn.node).draft));
-        }
-      });
+    const flip_fns &#x3D; [];
+    const draft_id_to_ndx &#x3D; [];
+    all_inputs.filter(el &#x3D;&gt; this.isValidIOTuple(el))
+    .forEach((el) &#x3D;&gt; {
+      
+      const draft_tn &#x3D; el.tn.inputs[0].tn;
+      const cxn_tn &#x3D; el.tn;
+      const type &#x3D; draft_tn.node.type;
+      if(type &#x3D;&#x3D;&#x3D; &#x27;draft&#x27;){
+        draft_id_to_ndx.push({ndx: el.ndx, draft_id: draft_tn.node.id, cxn: cxn_tn.node.id})
+        flip_fns.push(this.flipDraft((&lt;DraftNode&gt;draft_tn.node).draft));
+      }
+    });
 
 
    
     return Promise.all(flip_fns)
     .then(flipped_drafts &#x3D;&gt; {
-      const paraminputs &#x3D; flipped_drafts.map(el &#x3D;&gt;  {
-        const node &#x3D; draft_id_to_ndx.find(input &#x3D;&gt; input.draft_id &#x3D;&#x3D;&#x3D; el.id);
-        return {op_name:&#x27;child&#x27;, drafts: [el], inlet: node.ndx ,params: [opnode.inlets[node.ndx]]}
-      })
+       
+      const paraminputs &#x3D; draft_id_to_ndx.map(el &#x3D;&gt; {
+          const draft &#x3D; flipped_drafts.find(draft &#x3D;&gt; draft.id &#x3D;&#x3D;&#x3D; el.draft_id);
+          if(draft &#x3D;&#x3D;&#x3D; undefined) return undefined;
+          else return {op_name:&#x27;child&#x27;, drafts: [draft], inlet: el.ndx, params: [opnode.inlets[el.ndx]]}
+        })
+      
+      const cleaned_inputs &#x3D; paraminputs.filter(el &#x3D;&gt; el !&#x3D; undefined);
 
-      inputs &#x3D; inputs.concat(paraminputs);
+      inputs &#x3D; inputs.concat(cleaned_inputs);
       return op.perform(inputs);
 
     })
@@ -2436,26 +2533,26 @@ flipDraft(draft: Draft) : Promise&lt;Draft&gt;{
       });
           
 
-    }else{
-      const drafts_coming_in: Array&lt;any&gt; &#x3D;  drafts_in
-      .map(input &#x3D;&gt; (&lt;DraftNode&gt; this.getNode(input)))
-      .filter(el &#x3D;&gt; el !&#x3D;&#x3D; null &amp;&amp; el !&#x3D;&#x3D; undefined)
-      .map(input_node &#x3D;&gt; input_node.draft)
-      .filter(el &#x3D;&gt; el !&#x3D;&#x3D; null &amp;&amp; el !&#x3D;&#x3D; undefined)
-      .map(el &#x3D;&gt; this.flipDraft(el));
+    // }else{
+    //   const drafts_coming_in: Array&lt;any&gt; &#x3D;  drafts_in
+    //   .map(input &#x3D;&gt; (&lt;DraftNode&gt; this.getNode(input)))
+    //   .filter(el &#x3D;&gt; el !&#x3D;&#x3D; null &amp;&amp; el !&#x3D;&#x3D; undefined)
+    //   .map(input_node &#x3D;&gt; input_node.draft)
+    //   .filter(el &#x3D;&gt; el !&#x3D;&#x3D; null &amp;&amp; el !&#x3D;&#x3D; undefined)
+    //   .map(el &#x3D;&gt; this.flipDraft(el));
 
-      return Promise.all(drafts_coming_in).then(drafts &#x3D;&gt;{
-          inputs.push({op_name: &#x27;&#x27;, drafts: drafts, inlet: 0, params: opnode.params});
-          return op.perform(inputs)
-          .then(res &#x3D;&gt; {
-            return Promise.all(res.map(el &#x3D;&gt; this.flipDraft(el)))
-          }).then(flipped &#x3D;&gt; {
-            opnode.dirty &#x3D; false;
-            return this.updateDraftsFromResults(id, flipped)
-          })
+    //   return Promise.all(drafts_coming_in).then(drafts &#x3D;&gt;{
+    //       inputs.push({op_name: &#x27;&#x27;, drafts: drafts, inlet: 0, params: opnode.params});
+    //       return op.perform(inputs)
+    //       .then(res &#x3D;&gt; {
+    //         return Promise.all(res.map(el &#x3D;&gt; this.flipDraft(el)))
+    //       }).then(flipped &#x3D;&gt; {
+    //         opnode.dirty &#x3D; false;
+    //         return this.updateDraftsFromResults(id, flipped)
+    //       })
             
-        });
-    }
+    //     });
+    // }
 
   
 
@@ -2638,11 +2735,36 @@ flipDraft(draft: Draft) : Promise&lt;Draft&gt;{
 
   }
 
+   /**
+   * given a from, to, and inlet index, return the connection id 
+   * @param from
+   * @returns the node id of the connection, or -1 if that connection is not found
+   */
+  getConnectionAtInlet(from: number, to:number, ndx: number) : number{
+    let found &#x3D; -1;
+
+    const inputs:Array&lt;IOTuple&gt; &#x3D; this.getInputsWithNdx(to);
+    const connection: Array&lt;IOTuple&gt; &#x3D; inputs.filter(el &#x3D;&gt; el.ndx &#x3D;&#x3D; ndx);
+    if(connection &#x3D;&#x3D;&#x3D; undefined) return -1;
+
+    if(connection.length &#x3D;&#x3D; 1) return connection[0].tn.node.id;
+    else{
+      connection.forEach(connectionAtInlet &#x3D;&gt; {
+        const non_cnx_inputs &#x3D; this.getInputs(connectionAtInlet.tn.node.id);
+        console.log(connectionAtInlet, from,non_cnx_inputs);
+        const match_from &#x3D; non_cnx_inputs.find(el &#x3D;&gt; el &#x3D;&#x3D;&#x3D; from);
+        if(match_from !&#x3D;&#x3D; undefined) found &#x3D;  connectionAtInlet.tn.node.id;
+      });
+    }
+
+    return found;
+   
+   }
+
   /**
    * given two nodes, returns the id of the connection node connecting them
    * @param a one node
    * @param b the otehr node node
-   * @param ndx the param to which this attaches on the input side.
    * @returns the node id of the connection, or -1 if that connection is not found
    */
   getConnection(a: number, b:number) : number{
@@ -2793,6 +2915,12 @@ flipDraft(draft: Draft) : Promise&lt;Draft&gt;{
     const tn &#x3D; this.getTreeNode(node_id);
     if(tn &#x3D;&#x3D;&#x3D; undefined) return [];
     return tn.inputs;
+  }
+
+  getInputsAtNdx(node_id: number, inlet_ndx: number):Array&lt;IOTuple&gt;{
+    const tn &#x3D; this.getTreeNode(node_id);
+    if(tn &#x3D;&#x3D;&#x3D; undefined) return [];
+    return tn.inputs.filter(el &#x3D;&gt; el.ndx &#x3D;&#x3D; inlet_ndx);
   }
 
   getConnectionInput(node_id: number):number{

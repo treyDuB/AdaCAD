@@ -118,6 +118,9 @@
                                     <a href="../components/InitModal.html" >InitModal</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../components/InletComponent.html" >InletComponent</a>
+                                </li>
+                                <li class="link">
                                     <a href="../components/LoginComponent.html" >LoginComponent</a>
                                 </li>
                                 <li class="link">
@@ -152,6 +155,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/PatternModal.html" >PatternModal</a>
@@ -237,9 +243,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/Loom.html" >Loom</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
@@ -342,6 +345,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/VaeService.html" >VaeService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/VersionService.html" >VersionService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -449,9 +455,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/OperationParams.html" >OperationParams</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/Point.html" >Point</a>
@@ -623,6 +626,9 @@
                                            <a href="../components/InitModal.html" >InitModal</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../components/InletComponent.html" >InletComponent</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../components/LoginComponent.html" >LoginComponent</a>
                                        </li>
                                        <li class="link">
@@ -657,6 +663,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/PatternModal.html" >PatternModal</a>
@@ -742,9 +751,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/Loom.html" >Loom</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
@@ -847,6 +853,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/VaeService.html" >VaeService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/VersionService.html" >VersionService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -954,9 +963,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/OperationParams.html" >OperationParams</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/Point.html" >Point</a>
@@ -1067,7 +1073,7 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <code>constructor(tree: <a href="../injectables/TreeService.html" >TreeService</a>, ns: <a href="../injectables/NotesService.html" >NotesService</a>, ps: <a href="../injectables/PatternService.html" >PatternService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, ss: <a href="../injectables/SystemsService.html" >SystemsService</a>)</code>
+                                    <code>constructor(tree: <a href="../injectables/TreeService.html" >TreeService</a>, ns: <a href="../injectables/NotesService.html" >NotesService</a>, ps: <a href="../injectables/PatternService.html" >PatternService</a>, ms: <a href="../injectables/MaterialsService.html" >MaterialsService</a>, ss: <a href="../injectables/SystemsService.html" >SystemsService</a>, vs: <a href="../injectables/VersionService.html" >VersionService</a>)</code>
                                 </td>
                             </tr>
             
@@ -1168,6 +1174,8 @@ import { SystemsService } from &#x27;./systems.service&#x27;;
 import { Note, NotesService } from &#x27;./notes.service&#x27;;
 import { PatternService } from &#x27;./pattern.service&#x27;;
 import { System } from &#x27;../model/system&#x27;;
+import { version } from &#x27;process&#x27;;
+import { VersionService } from &#x27;./version.service&#x27;;
 
 
  export interface NodeComponentProxy{
@@ -1200,6 +1208,7 @@ import { System } from &#x27;../model/system&#x27;;
 
 
  export interface SaveObj{
+  version: string,
   type: string,
   nodes: Array&lt;NodeComponentProxy&gt;,
   tree: Array&lt;TreeNodeProxy&gt;,
@@ -1213,6 +1222,7 @@ import { System } from &#x27;../model/system&#x27;;
  }
 
 export interface FileObj{
+ version: string,
  filename: string,
  nodes: Array&lt;NodeComponentProxy&gt;,
  treenodes: Array&lt;TreeNodeProxy&gt;,
@@ -1272,7 +1282,8 @@ export class FileService {
     private ns: NotesService,
     private ps: PatternService,
     private ms: MaterialsService,
-    private ss: SystemsService) { 
+    private ss: SystemsService,
+    private vs: VersionService) { 
   
   this.status &#x3D; [
     {id: 0, message: &#x27;success&#x27;, success: true},
@@ -1386,6 +1397,7 @@ export class FileService {
 
 
       const envt: FileObj &#x3D; {
+        version: data.version,
         filename: filename,
         drafts: drafts,
         looms: (looms &#x3D;&#x3D;&#x3D; undefined) ? [] : looms,
@@ -1473,6 +1485,7 @@ export class FileService {
 
     
     const f: FileObj &#x3D; {
+      version: &#x27;na&#x27;,
       filename: filename,
       drafts: drafts,
       looms: looms,
@@ -1491,7 +1504,6 @@ export class FileService {
      * @returns 
      */
     jpg: async (filename: string, data: any) : Promise&lt;LoadResponse&gt; &#x3D;&gt; {
-      console.log(&quot;processing JPG data&quot;)
       this.clearAll();
 
       let drafts: Array&lt;Draft&gt; &#x3D; [];
@@ -1575,6 +1587,7 @@ export class FileService {
 
       const f: FileObj &#x3D; {
         filename: filename,
+        version: &#x27;na&#x27;,
         drafts: drafts,
         looms: looms,
         nodes: [], 
@@ -1625,6 +1638,7 @@ export class FileService {
     
       const f: FileObj &#x3D; {
         filename: filename,
+        version: &#x27;na&#x27;,
         drafts: drafts,
         looms: looms,
         nodes: [proxies.node], 
@@ -1652,7 +1666,6 @@ export class FileService {
       const draft: Draft &#x3D; new Draft({warps: warps, wefts: wefts});
       drafts.push(draft);
 
-      console.log(&quot;form data&quot;, f.value)
 
       var frame_num &#x3D; (f.value.frame_num &#x3D;&#x3D;&#x3D; undefined) ? 8 : f.value.frame_num;
       var treadle_num &#x3D; (f.value.treadle_num &#x3D;&#x3D;&#x3D; undefined) ? 10 : f.value.treadle_num;
@@ -1680,6 +1693,7 @@ export class FileService {
     
       const envt: FileObj &#x3D; {
         filename: &quot;adacad mixer&quot;,
+        version: &#x27;na&#x27;,
         drafts: drafts,
         looms: looms,
         nodes: [proxies.node], 
@@ -1706,6 +1720,7 @@ export class FileService {
            
       const out: SaveObj &#x3D; {
         type: type,
+        version: this.vs.currentVersion(),
         drafts: drafts,
         looms: looms,
         patterns: this.ps.exportPatternsForSaving(),
@@ -1719,7 +1734,6 @@ export class FileService {
 
       //update this to return the object and see how it writes
       var theJSON &#x3D; JSON.stringify(out);
-      console.log(&quot;out&quot;, out);
       return Promise.resolve({json: theJSON, file: out});
 
 

@@ -118,6 +118,9 @@
                                     <a href="../components/InitModal.html" >InitModal</a>
                                 </li>
                                 <li class="link">
+                                    <a href="../components/InletComponent.html" >InletComponent</a>
+                                </li>
+                                <li class="link">
                                     <a href="../components/LoginComponent.html" >LoginComponent</a>
                                 </li>
                                 <li class="link">
@@ -152,6 +155,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/PatternModal.html" >PatternModal</a>
@@ -237,9 +243,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../classes/Loom.html" >Loom</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
                                 </li>
                                 <li class="link">
                                     <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
@@ -342,6 +345,9 @@
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/VaeService.html" >VaeService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="../injectables/VersionService.html" >VersionService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -449,9 +455,6 @@
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/OperationParams.html" >OperationParams</a>
                                 </li>
                                 <li class="link">
                                     <a href="../interfaces/Point.html" >Point</a>
@@ -623,6 +626,9 @@
                                            <a href="../components/InitModal.html" >InitModal</a>
                                        </li>
                                        <li class="link">
+                                           <a href="../components/InletComponent.html" >InletComponent</a>
+                                       </li>
+                                       <li class="link">
                                            <a href="../components/LoginComponent.html" >LoginComponent</a>
                                        </li>
                                        <li class="link">
@@ -657,6 +663,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../components/PaletteComponent.html" >PaletteComponent</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../components/ParameterComponent.html" >ParameterComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/PatternModal.html" >PatternModal</a>
@@ -742,9 +751,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/Loom.html" >Loom</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
                                        </li>
                                        <li class="link">
                                            <a href="../classes/MyErrorStateMatcher.html" >MyErrorStateMatcher</a>
@@ -847,6 +853,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/VaeService.html" >VaeService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/VersionService.html" >VersionService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/ViewportService.html" >ViewportService</a>
@@ -954,9 +963,6 @@
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/OperationClassification.html" >OperationClassification</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/OperationParams.html" >OperationParams</a>
                                        </li>
                                        <li class="link">
                                            <a href="../interfaces/Point.html" >Point</a>
@@ -1208,10 +1214,29 @@
             
                             <tr>
                                 <td class="col-md-4">
+                                        <div class="io-description"><p>gets the note associated with a given id. </p>
+            </div>
+                                        <div class="io-description">
+                                                <b>Parameters :</b>
+                                                <ul class="jsdoc-params">
+                                                        <li>
+                                                            <div>
+                                                                <b>id</b>
+                                                            </div>
+                                                            <div>
+                                                                
+                                                            </div>
+                                                        </li>
+                                                </ul>
+                                        </div>
                                         <div class="io-description">
                                             <b>Returns: </b>    <code>Note</code>
             
                                         </div>
+                                            <div class="io-description">
+                                                <p>the note object or undefined if not found</p>
+            
+                                            </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -1323,8 +1348,13 @@ export class NotesService {
     this.notes &#x3D; ns;
   }
 
+  /**
+   * gets the note associated with a given id. 
+   * @param id 
+   * @returns the note object or undefined if not found
+   */
   get(id: number) : Note {
-    return this.notes[id];
+    return this.notes.find(el &#x3D;&gt; el.id &#x3D;&#x3D; id);
   }
 
   delete(id: number){

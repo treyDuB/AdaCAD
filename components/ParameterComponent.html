@@ -157,7 +157,7 @@
                                     <a href="../components/PaletteComponent.html" >PaletteComponent</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/ParameterComponent.html" >ParameterComponent</a>
+                                    <a href="../components/ParameterComponent.html"  class="active" >ParameterComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/PatternModal.html" >PatternModal</a>
@@ -329,7 +329,7 @@
                                     <a href="../injectables/PatternService.html" >PatternService</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../injectables/PatternfinderService.html"  class="active" >PatternfinderService</a>
+                                    <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                 </li>
                                 <li class="link">
                                     <a href="../injectables/StateService.html" >StateService</a>
@@ -665,7 +665,7 @@
                                            <a href="../components/PaletteComponent.html" >PaletteComponent</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/ParameterComponent.html" >ParameterComponent</a>
+                                           <a href="../components/ParameterComponent.html"  class="active" >ParameterComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/PatternModal.html" >PatternModal</a>
@@ -837,7 +837,7 @@
                                            <a href="../injectables/PatternService.html" >PatternService</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../injectables/PatternfinderService.html"  class="active" >PatternfinderService</a>
+                                           <a href="../injectables/PatternfinderService.html" >PatternfinderService</a>
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/StateService.html" >StateService</a>
@@ -1030,666 +1030,511 @@
                    
                    </nav>
                </div>
-               <div class="content injectable">
+               <div class="content component">
                    <div class="content-data">
 
 
-
-
 <ol class="breadcrumb">
-  <li>Injectables</li>
-  <li>PatternfinderService</li>
+  <li>Components</li>
+  <li>ParameterComponent</li>
 </ol>
 
-<ul class="nav nav-tabs" role="tablist">
-    <li class="active">
-        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-    </li>
-    <li>
-        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-    </li>
-</ul>
 
-<div class="tab-content">
-    <div class="tab-pane fade active in" id="infos">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/app/core/provider/patternfinder.service.ts</code>
-        </p>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+        </li>
+        <li>
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade active in" id="infos"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/mixer/palette/operation/parameter/parameter.component.ts</code>
+</p>
 
 
-            <section>
-                <h3 id="constructor">Constructor</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <code>constructor()</code>
-                                </td>
-                            </tr>
-            
-                        </tbody>
-                    </table>
-            </section>
 
-            <section>
-                <h3 id="methods">Methods</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> getThreadingFromArr</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>getThreadingFromArr(arr: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> getTreadlingFromArr</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>getTreadlingFromArr(arr: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findBasePatternString</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findBasePatternString(subsection: string)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findBasePatternArray</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findBasePatternArray(pattern: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> toString</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>toString(pattern: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> toArray</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>toArray(pattern: string)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> countOccurances</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>countOccurances(arr: any, item: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findPatterns</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findPatterns(sequence: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Private</span> findDraftPatterns</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play lock">
-                                            <span class="fa fa-lock"></span>
-                                        </span>
-                                    <code>findDraftPatterns(treadlingPatterns: any, treadling: any, threadingPatterns: any, threading: any, draft: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                            <tr>
-                                <td class="col-md-4">
-                                    <b><span class="modifier">Public</span> computePatterns</b>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <span class="modifier-icon method fa fa-play circle">
-                                            <span class="fa fa-circle"></span>
-                                        </span>
-                                    <code>computePatterns(threading: any, treadling: any, draft: any)</code>
-                                </td>
-                            </tr>
-            
-                            <tr>
-                                <td class="col-md-4">
-                                        <div class="io-description">
-                                            <b>Returns: </b>    <code>void</code>
-            
-                                        </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </section>
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover">
+        <tbody>
 
-    </div>
-    <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
 
-@Injectable({
-  providedIn: &#x27;root&#x27;
-})
-export class PatternfinderService {
 
-  constructor() { }
 
-  public getThreadingFromArr(arr) {
-    var marked_strings: number[][] &#x3D; [];
-    var marked_strings_frame_tracker: number[] &#x3D; [];
-    var threading: number[][] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; arr.length; i++) {
-        threading.push([]);
-        for (var j &#x3D; 0; j &lt; arr[i].length; j++) {
-            threading[i].push(0);
-        }
-    }
-    var frame_count: number &#x3D; 0;
 
-    for (var c &#x3D; 0; c &lt; arr.length; c++) {
-        if (!marked_strings.includes(arr[c])) {
-            marked_strings.push(arr[c]);
-            marked_strings_frame_tracker.push(frame_count);
-            threading[frame_count][c] &#x3D; 1;
-            frame_count +&#x3D; 1;
-        } else {
-            for (var s &#x3D; 0; s &lt; marked_strings.length; s++) {
-                if (marked_strings[s] &#x3D;&#x3D; arr[c]) {
-                    threading[marked_strings_frame_tracker[s]][c] &#x3D; 1;
-                }
-            }
-        }
-    }
 
-    var max_idx &#x3D; 0;
-    for (var i &#x3D; threading.length-1; i &gt;&#x3D; 0; i--) {
-        if (threading[i].find(elmt &#x3D;&gt; elmt &#x3D;&#x3D; 1)) {
-            for (var j &#x3D; 0; j &lt; threading[i].length; j++) {
-                if (threading[i][j] &#x3D;&#x3D; 0) {
-                    var allZero: boolean &#x3D; true;
-                    for (var k &#x3D; j+1; k &lt; threading[i].length; k++) {
-                        if (threading[i][k] &#x3D;&#x3D; 1) {
-                            allZero &#x3D; false;
-                        }
-                    }
-                    if (allZero &amp;&amp; max_idx &lt; j) {
-                        max_idx &#x3D; j;
-                    }
-                }
-            }
-        } else {
-            threading.splice(i, 1);
-        }
-    }
 
-    for (var i &#x3D; 0; i &lt; threading.length; i++) {
-        threading[i].splice(max_idx+1, threading[i].length-max_idx+1);
-    }
-    var toRetThreading: number[] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; threading.length; i++) {
-        for (var j &#x3D; 0; j &lt; threading[i].length; j++) {
-            if (threading[i][j] &#x3D;&#x3D; 1) {
-                toRetThreading.push(j);
-                break;
-            }
-        }
-    }
-    return toRetThreading;
-}
 
-public getTreadlingFromArr(arr) {
-    var marked_strings: number[][] &#x3D; [];
-    var marked_strings_col_tracker: number[] &#x3D; [];
-    var treadling: number[][] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; arr.length; i++) {
-        treadling.push([]);
-        for (var j &#x3D; 0; j &lt; arr[i].length; j++) {
-            treadling[i].push(0);
-        }
-    }
-    var treadle_count: number &#x3D; 0;
 
-    for (var r &#x3D; 0; r &lt; arr.length; r++) {
-        if (!marked_strings.includes(arr[r])) {
-            marked_strings.push(arr[r]);
-            marked_strings_col_tracker.push(treadle_count);
-            treadling[r][treadle_count] &#x3D; 1;
-            treadle_count +&#x3D; 1;
-        } else {
-            for (var s &#x3D; 0; s &lt; marked_strings.length; s++) {
-                if (marked_strings[s] &#x3D;&#x3D; arr[r]) {
-                    treadling[r][marked_strings_col_tracker[s]] &#x3D; 1;
-                }
-            }
-        }
-    }
 
-    var max_idx &#x3D; 0;
-    for (var i &#x3D; treadling.length-1; i &gt;&#x3D; 0; i--) {
-        if (treadling[i].find(elmt &#x3D;&gt; elmt &#x3D;&#x3D; 1)) {
-            for (var j &#x3D; 0; j &lt; treadling[i].length; j++) {
-                if (treadling[i][j] &#x3D;&#x3D; 0) {
-                    var allZero: boolean &#x3D; true;
-                    for (var k &#x3D; j+1; k &lt; treadling[i].length; k++) {
-                        if (treadling[i][k] &#x3D;&#x3D; 1) {
-                            allZero &#x3D; false;
-                        }
-                    }
-                    if (allZero &amp;&amp; max_idx &lt; j) {
-                        max_idx &#x3D; j;
-                    }
-                }
-            }
-        } else {
-            treadling.splice(i, 1);
-        }
-    }
 
-    for (var i &#x3D; 0; i &lt; treadling.length; i++) {
-        treadling[i].splice(max_idx+1, treadling[i].length-max_idx+1);
-    }
-    var toRetTreadling: number[] &#x3D; [];
-    for (var i &#x3D; 0; i &lt; treadling.length; i++) {
-        for (var j &#x3D; 0; j &lt; treadling[i].length; j++) {
-            if (treadling[i][j] &#x3D;&#x3D; 1) {
-                toRetTreadling.push(j);
-                break;
-            }
-        }
-    }
-    return toRetTreadling;
-}
 
-private findBasePatternString(subsection: string) {
-    var str: string &#x3D; &quot;&quot;;
-    var pattern: any &#x3D; [];
-    for (var i &#x3D; 0; i &lt; subsection.length; i++) {
-        let currentChar &#x3D; subsection[i]
-        if (currentChar &#x3D;&#x3D; &quot;,&quot;) {
-            pattern.push(parseInt(str));
-            str &#x3D; &quot;&quot;;
-        } else {
-            str +&#x3D; currentChar;
-        }
-    }
-    return this.findBasePatternArray(pattern)
-}
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-parameter</code></td>
+            </tr>
 
-private findBasePatternArray(pattern: any) {
-    for (var i &#x3D; 2; i &lt; pattern.length; i++) {
-        if (pattern.length % i &#x3D;&#x3D; 0) {
-            var match &#x3D; true;
-            for (var j &#x3D; 1; j &lt; i; j++) {
-                if (pattern.slice(0, pattern.length/i) !&#x3D; pattern.slice((pattern.length/i)*j,(pattern.length/i)*(j+1))) {
-                    match &#x3D; false;
-                }
-                if (match) {
-                    return this.findBasePatternArray(pattern.slice(0, pattern.length/i));
-                }
-            }
-        }
-    }
-    return pattern;
-}
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>parameter.component.scss</code></td>
+            </tr>
 
-private toString(pattern: any) {
-    var strPattern: string &#x3D; &quot;&quot;;
-    for (var i &#x3D; 0; i &lt; pattern.length; i++) {
-        var num: number &#x3D; pattern[i];
-        strPattern +&#x3D; num.toString();
-        strPattern +&#x3D; &quot;,&quot;;
-    }
-    return strPattern.slice(0, -1);
-}
 
-private toArray(pattern: string) {
-    var arrayPattern: any &#x3D; [];
-    var temp: string &#x3D; &quot;&quot;;
-    for (var i &#x3D; 0; i &lt; pattern.length; i++) {
-        var currentChar &#x3D; pattern[i];
-        if (currentChar !&#x3D; &quot;,&quot;) {
-            temp +&#x3D; currentChar;
-            if (i &#x3D;&#x3D; pattern.length - 1) {
-                arrayPattern.push(parseInt(temp));
-            }
-        } else if (currentChar &#x3D;&#x3D; &quot;,&quot;) {
-            arrayPattern.push(parseInt(temp));
-            temp &#x3D; &quot;&quot;;
-        } 
-    }
-    return arrayPattern;
-}
 
-private countOccurances(arr, item) {
-    var count &#x3D; 0;
-    for (var i in arr) {
-        if (i &#x3D;&#x3D; item) {
-            count +&#x3D; 1;
-        }
-    }
-    return count;
-}
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>parameter.component.html</code></td>
+            </tr>
 
-private findPatterns(sequence) {
-    for (var i &#x3D; 0; i &lt; sequence.length; i++) {
-        if (sequence[i] &#x3D;&#x3D; -1) {
-            var allEmpty &#x3D; true;
-            for (var j &#x3D; i+1; j &lt; sequence.length; j++) {
-                if (sequence[j] !&#x3D; -1) {
-                    allEmpty &#x3D; false;
-                }
-            }
-            if (allEmpty) {
-                break;
-            }
-        }
-    }
-    if (allEmpty) {
-        sequence.splice(i, sequence.length - i);
-    }
-    var singles &#x3D; {};
 
-    for (var i &#x3D; 0; i &lt; sequence.length; i++) {
-        var count &#x3D; 0;
-        sequence.forEach(element &#x3D;&gt; {
-            if (element &#x3D;&#x3D; sequence[i]) {
-                count +&#x3D; 1;
-            }
-        });
-        singles[sequence[i]] &#x3D; count;
-    }
-    for (var key in singles) {
-        if (singles[key] &#x3D;&#x3D; 1) {
-            delete singles[key];
-        }
-    }
-    if (Object.keys(singles).length &#x3D;&#x3D; 0) {
-        return sequence;
-    }
+        </tbody>
+    </table>
+</section>
+
+    <section>
+        <h3 id="inputs">Inputs</h3>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>opid</code>
+                        </td>
+                        <td class="col-md-10">
+                              <p>
+                                <em>Type:</em>    <code>number</code>
+
+                              </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>param</code>
+                        </td>
+                        <td class="col-md-10">
+                              <p>
+                                <em>Type:</em>    <code>NumParam | StringParam | SelectParam | BoolParam | FileParam</code>
+
+                              </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>paramid</code>
+                        </td>
+                        <td class="col-md-10">
+                              <p>
+                                <em>Type:</em>    <code>number</code>
+
+                              </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
+
+    <section>
+        <h3 id="outputs">Outputs</h3>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>onFileUpload</code>
+                        </td>
+                        <td class="col-md-10">
+                            <em><code>$event</code> type:</em>    <code><a href="https://angular.io/docs/ts/latest/api/core/index/EventEmitter-class.html" target="_blank" >EventEmitter</a></code>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            <code>onOperationParamChange</code>
+                        </td>
+                        <td class="col-md-10">
+                            <em><code>$event</code> type:</em>    <code><a href="https://angular.io/docs/ts/latest/api/core/index/EventEmitter-class.html" target="_blank" >EventEmitter</a></code>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
+
+    <section>
+        <h3 id="constructor">Constructor</h3>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>constructor(tree: <a href="../injectables/TreeService.html" >TreeService</a>)</code>
+                        </td>
+                    </tr>
     
-    for (var size &#x3D; 1; size &lt; sequence.length; size++) {
-        for (var i &#x3D; 0; i &lt; sequence.length-1-size; size++) {
-            let key &#x3D; sequence.slice(i, i+size);
-            var repeat &#x3D; true;
-            for (var j &#x3D; i+size; j &lt; sequence.length-1-size; j+&#x3D; size) {
-                if (JSON.stringify(sequence.slice(j, j+size))!&#x3D; JSON.stringify(key)) {
-                    repeat &#x3D; false;
-                }
-            }
-            if (repeat) {
-                return key;
-            }
-        }
-    }
-    return sequence;
+                </tbody>
+            </table>
+    </section>
+
+    <section>
+        <h3 id="methods">Methods</h3>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> onParamChange</b>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+    <code>onParamChange(value: number)</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>changes the view and updates the tree with the new value</p>
+    </div>
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <ul class="jsdoc-params">
+                                                <li>
+                                                    <div>
+                                                        <b>value</b>
+                                                    </div>
+                                                    <div>
+                                                        
+                                                    </div>
+                                                </li>
+                                        </ul>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>void</code>
+    
+                                </div>
+                                    <div class="io-description">
+                                        
+                                    </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> handleFile</b>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+    <code>handleFile(obj: any)</code>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description">
+                                    <b>Returns: </b>    <code>void</code>
+    
+                                </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
+
+    <section>
+        <h3 id="inputs">Properties</h3>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> boolparam</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>boolparam:     <code>BoolParam</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> fc</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>fc:     <code><a href="https://angular.io/docs/ts/latest/api/forms/index/FormControl-class.html" target="_blank" >FormControl</a></code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> fileparam</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>fileparam:     <code>FileParam</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> name</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>name:     <code>any</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> numparam</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>numparam:     <code>NumParam</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> opnode</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>opnode:     <code>OpNode</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> selectparam</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>selectparam:     <code>SelectParam</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> stringparam</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>stringparam:     <code>StringParam</code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <b> tree</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <code>tree:     <code><a href="../injectables/TreeService.html" target="_self" >TreeService</a></code>
+    </bcode>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </section>
+</div>
+        <div class="tab-pane fade tab-source-code" id="source">
+            <pre><code class="hljs javascript">import { Component, EventEmitter, Input, OnInit, Output } from &#x27;@angular/core&#x27;;
+import { AbstractControl, FormControl, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn, Validators } from &#x27;@angular/forms&#x27;;
+import { OpNode, TreeService } from &#x27;../../../provider/tree.service&#x27;;
+import { BoolParam, FileParam, NumParam, OperationParam, SelectParam, StringParam } from &#x27;../../../provider/operation.service&#x27;;
+
+
+export function regexValidator(nameRe: RegExp): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+    const globalRegex &#x3D; new RegExp(nameRe, &#x27;g&#x27;);
+    const valid &#x3D;  globalRegex.test(control.value);
+    return !valid ? {forbiddenInput: {value: control.value}} : null;
+  };
 }
 
-private findDraftPatterns(treadlingPatterns, treadling, threadingPatterns, threading, draft) {
-    var treadlingString: string &#x3D; this.toString(treadling);
-    var threadingString: string &#x3D; this.toString(threading);
 
 
-    var treadlingRanges &#x3D; [];
-    var threadingRanges &#x3D; [];
+@Component({
+  selector: &#x27;app-parameter&#x27;,
+  templateUrl: &#x27;./parameter.component.html&#x27;,
+  styleUrls: [&#x27;./parameter.component.scss&#x27;]
+})
+export class ParameterComponent implements OnInit {
+  
+  fc: FormControl;
+  opnode: OpNode;
+  name: any;
+
+  @Input() param:  NumParam | StringParam | SelectParam | BoolParam | FileParam;
+  @Input() opid:  number;
+  @Input() paramid:  number;
+  @Output() onOperationParamChange &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onFileUpload &#x3D; new EventEmitter &lt;any&gt;(); 
+
+  //you need these to access values unique to each type.
+  numparam: NumParam;
+  boolparam: BoolParam;
+  stringparam: StringParam;
+  selectparam: SelectParam;
+  fileparam: FileParam;
 
 
-    let idxTreadling &#x3D; treadlingString.indexOf(treadlingPatterns);
-    var length &#x3D; -1;
-
-    for (var j &#x3D; 0; j &lt; treadlingString.length; j++) {
-        if (j &#x3D;&#x3D; idxTreadling) {
-            length +&#x3D; 1;
-            break;
-        }
-        if (treadlingString[j] &#x3D;&#x3D; &quot;,&quot;) {
-            length +&#x3D; 1;
-        }
-    }
-    treadlingRanges.push([length, treadlingPatterns.length]);
-
-    let idxThreading &#x3D; threadingString.indexOf(threadingPatterns);
-    var length &#x3D; -1;
-
-    for (var j &#x3D; 0; j &lt; threadingString.length; j++) {
-        if (j &#x3D;&#x3D; idxThreading) {
-            length +&#x3D; 1;
-            break;
-        }
-        if (threadingString[j] &#x3D;&#x3D; &quot;,&quot;) {
-            length +&#x3D; 1;
-        }
-    }
-    threadingRanges.push([length, threadingPatterns.length]);
-
-    var draftPatterns &#x3D; [];
-    for (var i &#x3D; 0; i &lt; treadlingRanges.length; i++) {
-        for (var j &#x3D; 0; j &lt; threadingRanges.length; j++) {
-            var pattern &#x3D; [];
-            var counter &#x3D; -1;
-            for (var idxWeft &#x3D; treadlingRanges[i][0]; idxWeft &lt; treadlingRanges[i][1]; idxWeft +&#x3D; 1) {
-                counter +&#x3D; 1;
-                pattern.push([]);
-                for (var idxWarp &#x3D; threadingRanges[j][0]; idxWarp &lt; threadingRanges[j][1]; idxWarp +&#x3D; 1) {
-                    pattern[counter].push(draft[idxWeft][idxWarp]);
-                }
-            }
-            draftPatterns.push(pattern);
-        }
-    }
-    var transformedDraftPatterns &#x3D; [];
-
-    for (var i &#x3D; 0; i &lt; draftPatterns.length; i++) {
-        transformedDraftPatterns.push([]);
-        for (var j &#x3D; 0; j &lt; draftPatterns[i].length; j++) {                
-            transformedDraftPatterns[i].push([]);
-            for(var k &#x3D; 0; k &lt; draftPatterns[i][j].length; k++) {
-                if (draftPatterns[i][j][k] &#x3D;&#x3D; 1 || draftPatterns[i][j][k].is_up) {
-                    transformedDraftPatterns[i][j].push(1);
-                } else {
-                    transformedDraftPatterns[i][j].push(0);
-                }
-            }
-        }
-    }
-    return transformedDraftPatterns[0];
-}
-
-  public computePatterns(threading, treadling, draft) {
-
-      let threadingPatterns &#x3D; this.findPatterns(threading);
-      let treadlingPatterns &#x3D; this.findPatterns(treadling);
-
-      return this.findDraftPatterns(treadlingPatterns, treadling, threadingPatterns, threading, draft);
+  constructor(public tree: TreeService) { 
   }
+
+  ngOnInit(): void {
+
+    this.opnode &#x3D; this.tree.getOpNode(this.opid);
+
+     //initalize the form controls for the parameters: 
+
+      switch(this.param.type){
+        case &#x27;number&#x27;:
+          this.numparam &#x3D; &lt;NumParam&gt; this.param;
+          this.fc &#x3D; new FormControl(this.param.value);
+          break;
+
+        case &#x27;boolean&#x27;:
+          this.boolparam &#x3D; &lt;BoolParam&gt; this.param;
+          this.fc &#x3D; new FormControl(this.param.value);
+          break;
+
+        case &#x27;select&#x27;:
+          
+          this.selectparam &#x3D; &lt;SelectParam&gt; this.param;
+          this.fc &#x3D; new FormControl(this.param.value);
+          break;
+
+        case &#x27;file&#x27;:
+          this.fileparam &#x3D; &lt;FileParam&gt; this.param;
+          this.fc &#x3D; new FormControl(this.param.value);
+          break;
+
+        case &#x27;string&#x27;:
+          this.stringparam &#x3D; &lt;StringParam&gt; this.param;
+          this.fc &#x3D; new FormControl(this.stringparam.value, [Validators.required, regexValidator((&lt;StringParam&gt;this.param).regex)]);
+          break;
+       
+      }
+  
+
+  }
+
+
+
+  /**
+   * changes the view and updates the tree with the new value
+   * @param value 
+   */
+  onParamChange(value: number){
+
+    const opnode: OpNode &#x3D; &lt;OpNode&gt; this.tree.getNode(this.opid);
+
+    switch(this.param.type){
+      case &#x27;number&#x27;: 
+        opnode.params[this.paramid] &#x3D; value;
+        this.fc.setValue(value);
+        this.onOperationParamChange.emit({id: this.paramid, value: value});
+        break;
+
+      case &#x27;boolean&#x27;:
+        opnode.params[this.paramid] &#x3D; (value) ? 1 : 0;
+        this.fc.setValue(value);
+        this.onOperationParamChange.emit({id: this.paramid, value: value});
+        break;
+
+      case &#x27;string&#x27;:
+        opnode.params[this.paramid] &#x3D; value;
+        this.fc.setValue(value);
+        if(!this.fc.hasError(&#x27;forbiddenInput&#x27;))this.onOperationParamChange.emit({id: this.paramid, value: value});
+        break;
+
+      case &#x27;select&#x27;:
+        opnode.params[this.paramid] &#x3D; value;
+        this.fc.setValue(value);
+        this.onOperationParamChange.emit({id: this.paramid, value: value});
+        break;
+    }
+
+   
+  }
+
+  handleFile(obj: any){
+    this.fc.setValue(obj.data.name);
+    this.opnode.params[this.paramid] &#x3D; obj.id;
+    this.onFileUpload.emit({id: obj.id, data: obj.data});
+  }
+
+
 }
 </code></pre>
+        </div>
     </div>
-</div>
+
+
+
 
 
 
