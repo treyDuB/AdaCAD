@@ -12,7 +12,7 @@
 
   },
   {
-    "name": "Balanced 4-End Twill",
+    "name": "Balanced Twill",
     "id": 1,
     "favorite": false,
     "height": 4,
@@ -25,29 +25,27 @@
                ]
   },
   {
-    "name": "Weft-Faced 4-End Twill",
+    "name": "Weft-Faced Twill",
     "id": 2,
     "favorite": false,
-    "height": 4,
-    "width": 4,
+    "height": 3,
+    "width": 3,
     "pattern": [
-                [false, false, false, true],
-                [false, false, true, false],
-                [false, true, false, false],
-                [true, false, false, false]
+                [false, false, true],
+                [false, true, false],
+                [true, false, false]
                ]
   },
   {
-    "name": "Warp-Faced 4-End Twill",
+    "name": "Warp-Faced Twill",
     "id": 3,
     "favorite": false,
-    "height": 4,
+    "height": 3,
     "width": 3,
     "pattern": [
-                [true, true, true, false],
-                [true, true, false, true],
-                [true, false, true, true],
-                [false, true, true, true]
+                [true, true, false],
+                [true, false, true],
+                [false, true, true]
                ]
   },
   {
@@ -64,33 +62,23 @@
                ]
   },
   {
-    "name": "Basketweave",
+    "name": "Heddles Down",
     "id": 5,
-    "favorite": false,
-    "height": 4,
-    "width": 4,
+    "favorite": true,
+    "height": 1,
+    "width": 1,
     "pattern": [
-                [true, true, false, false],
-                [true, true, false, false],
-                [false, false, true, true],
-                [false, false, true, true]
+                [false]
                ]
   },
   {
-    "name": "Weft-Faced 8-End Satin",
+    "name": "Heddles Up",
     "id": 6,
     "favorite": true,
-    "height": 8,
-    "width": 8,
+    "height": 1,
+    "width": 1,
     "pattern": [
-                [true, false, false, false, false, false, false, false],
-                [false, false, false, true, false, false, false, false],
-                [false, false, false, false, false, false, true, false],
-                [false, true, false, false, false, false, false, false],
-                [false, false, false, false, true, false, false, false],
-                [false, false, false, false, false, false, false, true],
-                [false, false, true, false, false, false, false, false],
-                [false, false, false, false, false, true, false, false]
+                [true]
                ]
   }
 ]

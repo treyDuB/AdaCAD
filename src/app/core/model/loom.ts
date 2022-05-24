@@ -1,76 +1,209 @@
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { Cell } from './cell';
+import { Interlacement, InterlacementVal, LoomCoords, LoomUpdate } from './datatypes';
+import { Draft } from './draft';
 import utilInstance from './util';
-
 /**
- * Definition of threading class.
- * @class
- */
-const countOccurrences = (blah, val) => blah.reduce((a, v) => (v === val ? a + 1 : a), 0);
-
- 
+ * The Loom class stores the threading, tieup, and treadling informatino for a given draft.
+ * @param draft_id an id of the draft for which this loom is currently corresponding
+ * @param type 'frame' or 'jacquard'
+ * @param epi  a number describing the density of the weave 
+ * @param units a string fom the density units type that describes if it should be read in epi or ends per 10 cm
+ * @param the width of the fabric given the epi and number of warps
+ * @param threading array the same size as warps that has the id for the frame it is associated with or -1. 
+ * @param min_frames the available number of frames on the loom (as defined by user)
+ * @param num_frames the total number of frames required for the given drawdown
+ * @param frame_mapping used to describe the ordering of frames in the view 
+ * @param treadling array the same size as wefts that has the id for the frame it is associated with or -1. 
+ * @param min_treadles the available number of treadles on the loom (as defined by user)
+ * @param num_treadles the total number of treadles required for the given drawdown
+ * @param tieup a 2D array of boooleans size frames x treadles that represents the tieup
+ */ 
 export class Loom{
-    type: string;
-    epi: number;
-    units: string;
+
+    draft_id = -1;
+    type: string = 'jacquard';
+    epi: number = 10;
+    units: string = 'in';
     width: number;
 
 
-    //1-d array the same size as warps that has the id for the frame it is associated with or -1. 
-    threading: Array<number>; 
-    min_frames: number; 
-    num_frames: number; //the number frames in use
-    frame_mapping: Array<number>;
+    threading: Array<number> = []; 
+    min_frames: number = 8; 
+    num_frames: number = 8; //the number frames in use
+    frame_mapping: Array<number> = [];
     
-    //1-d array the same size as wefts that has the id for the frame it is associated with or -1. 
-    treadling: Array<number>;
-    min_treadles: number;
-    num_treadles: number;
+    treadling: Array<number> = [];
+    min_treadles: number = 10;
+    num_treadles: number = 10;
 
     // 2-d arraw of size frames x treadles
-    tieup: Array<Array<boolean>>; 
+    tieup: Array<Array<boolean>> = []; 
+
+    
+    constructor(d: Draft, type: string, frames: number, treadles: number) {
+      this.draft_id = d.id;
+      this.width = d.warps / this.epi; 
+      this.type = type;
+      this.min_treadles = treadles;
+      this.min_frames =frames;
+      this.num_treadles = treadles;
+      this.num_frames =frames;
+      
+      this.resetThreading(d.warps, this.type);
+      this.resetTreadling(d.wefts, this.type);
+        
+      this.resetTieup(this.num_frames, this.num_treadles, this.type);
+      this.resetFrameMapping(this.min_frames, this.type);
+      this.recomputeWidth();
+    }
+    
+    /**
+     * this links a draft to the loom after it has been loaded or initialized. 
+     * @param d the draft to link
+     * @returns whether it was of the correct size and thus able to attach
+     */
+    overloadDraft(d: Draft) : boolean {
+      if(d.warps !== this.threading.length) return false;
+      if(d.wefts !== this.treadling.length) return false;
+
+      this.draft_id = d.id;
+      return true;
+
+    }
+
+    overloadEpi(epi:number){
+      this.epi = epi;
+      this.recomputeWidth();
+    }
+
+    overloadUnits(units:'in' | 'cm'){
+      this.units = units;
+      this.recomputeWidth();
+    }
 
 
-    constructor(type: string, wefts: number, warps: number, frames: number, treadles:number) {
+    overloadType(type:string){
+      this.type = type;
+    }
+
+    changeType(type:string){
+      this.type = type;
+      //Write some code here to compute changes
+    }
+
+
+    overloadThreading(threading: Array<number>){
+      this.threading = threading; 
+      this.updateNumFramesFromThreading();
+      this.updateTieupSize();
+      this.recomputeWidth();
+    }
+
+    overloadTreadling(treadling: Array<number>){
+      this.treadling = treadling; 
+      this.updateNumTreadlesFromTreadling();
+      this.updateTieupSize();
+    }
+
+    overloadTieup(tieup: Array<Array<boolean>>){
+      this.tieup = tieup;
+    }
+
+    /**
+     * loads a new set of data into this existing loom object
+     * @param type 
+     * @param wefts 
+     * @param warps 
+     * @param frames 
+     * @param treadles 
+     */
+     load(type: string, wefts: number, warps: number, frames: number, treadles:number) {
 
 
 
         this.type = type;
         
-
         this.min_frames = frames;
         this.min_treadles = treadles;
         this.num_frames = frames;
         this.num_treadles = treadles;
 
 
-        this.resetFrameMapping(frames);
-        this.resetThreading(warps);
-        this.resetTreadling(wefts);
-        this.resetTieup(frames, treadles);
+        this.resetFrameMapping(frames, type);
+        this.resetThreading(warps, type);
+        this.resetTreadling(wefts, type);
+        this.resetTieup(frames, treadles, type);
       
     }
 
-     loadNew(type: string, wefts: number, warps: number, frames: number, treadles:number) {
-
-
-
-        this.type = type;
-        
-        this.min_frames = frames;
-        this.min_treadles = treadles;
-        this.num_frames = frames;
-        this.num_treadles = treadles;
-
-
-        this.resetFrameMapping(frames);
-        this.resetThreading(warps);
-        this.resetTreadling(wefts);
-        this.resetTieup(frames, treadles);
+    copy(l: Loom){
+      this.draft_id=  l.draft_id;
+      this.type = l.type;
+      this.epi = l.epi;
+      this.units = l.units,
+      this.width = l.width,
       
+      this.threading = [];
+      this.threading = l.threading.map(el => el);
+
+      this.min_frames = l.min_frames;
+      this.num_frames = l.num_frames;
+      this.min_treadles = l.min_treadles;
+      this.num_treadles = l.num_treadles;
+  
+      this.treadling = [];
+      this.treadling = l.treadling.map(el => el);
+      
+      this.tieup = [];
+      l.tieup.forEach((row, i) => {
+        this.tieup.push([]);
+        row.forEach((cell, ndx) => {
+          this.tieup[i][ndx] = cell;
+        });
+      });
+
+      this.frame_mapping = [];
+      this.frame_mapping = l.frame_mapping.map(el => el);
+    }
+
+   
+
+    insertCol(i: number){
+      this.threading.splice(i, 0, -1);
+      this.recomputeWidth();
+    }
+
+    cloneCol(i: number){
+      this.threading.splice(i, 0, this.threading[i]);
+      this.recomputeWidth();
+    }
+
+    deleteCol(i:number){
+      this.threading.splice(i,1);
+      this.recomputeWidth();
+    }
+
+    insertRow(i: number){
+      this.treadling.splice(i, 0, -1);
+    }
+
+    cloneRow(i:number){
+      this.treadling.splice(i, 0, this.treadling[i-1]);
+    }
+
+    deleteRow(i: number){
+      this.treadling.splice(i,1);
+    }
+
+    isFrame():boolean{
+      return (this.type === "frame");
     }
 
 
-
+    /**
+     * updates the size of min frames from load or UI
+     * @param frames 
+     */
     setMinFrames(frames:number){
 
       //get the max frame being used
@@ -79,7 +212,7 @@ export class Loom{
       if(frames >= this.num_frames){
         this.min_frames = frames;
         this.num_frames = frames;
-        this.resetFrameMapping(frames);
+        this.resetFrameMapping(frames, this.type);
       }else{
         this.min_frames = frames;
       }
@@ -90,6 +223,7 @@ export class Loom{
 
     setMinTreadles(treadles:number){
 
+      console.log("setting min treadles", treadles);
       this.updateNumTreadlesFromTreadling();
 
       if(treadles >= this.num_treadles){
@@ -103,6 +237,9 @@ export class Loom{
 
     }
 
+    /**
+     * scans the current frames and treadles for unused and updates the size accordingly
+     */
     updateTieupSize(){
 
       //if the tieup is larger than the num frames or treadles, trim it
@@ -137,7 +274,7 @@ export class Loom{
     }
 
     //always sets in reverse order (for now)
-    resetFrameMapping(frames: number){
+    resetFrameMapping(frames: number, type: string){
        this.frame_mapping = [];
         for(var i = 0; i < frames; i++){
           this.frame_mapping.push((frames-1)-i);
@@ -145,24 +282,43 @@ export class Loom{
 
     }
 
-    clearAllData(warps, wefts){
+    /**
+     * clears all the data in this object, resets to sizes described by warps and wefts
+     * @param warps 
+     * @param wefts 
+     */
+    clearAllData(warps:number, wefts:number){
       this.num_frames = this.min_frames;
       this.num_treadles = this.min_treadles;
-      this.resetFrameMapping(this.min_frames);
-      this.resetThreading(warps);
-      this.resetTreadling(wefts);
-      this.resetTieup(this.min_frames, this.min_treadles);
+      this.resetFrameMapping(this.min_frames, this.type);
+      this.resetThreading(warps, this.type);
+      this.resetTreadling(wefts, this.type);
+      this.resetTieup(this.min_frames, this.min_treadles, this.type);
+    }
+
+    recomputeWidth(){
+      this.width = (this.units === 'in') ? this.threading.length/this.epi : 10 * this.threading.length/this.epi;
     }
 
 
-    resetThreading(warps){
+
+    resetThreading(warps:number, type: string){
       this.threading = [];
-        for (var i = 0; i < warps; i++) {
+      
+
+        if(type=='rigid'){
+          for (var i = 0; i < warps; i++) {
+            if(i%0 == 0) this.threading.push(0);
+            else this.threading.push(1);
+          }
+        }else{
+          for (var i = 0; i < warps; i++) {
             this.threading.push(-1);
+          }
         }
     }
 
-    resetTieup(frames, treadles){
+    resetTieup(frames:number, treadles:number, type:string){
 
       this.tieup = [];
         for (var i = 0; i < frames; i++) {
@@ -173,7 +329,7 @@ export class Loom{
         }
     }
 
-    resetTreadling(wefts){
+    resetTreadling(wefts:number, type: string){
 
         this.treadling = [];
         for (var i = 0; i < wefts; i++) {
@@ -186,8 +342,15 @@ export class Loom{
    * @param {i,j} the Row, Column of the changed pixel.
    * @returns {a list of updates made}
    */
-    updateFromDrawdown(i, j, drawdown){
-      return this.updateConfig(this.getConfig({i: i, j:j, drawdown: drawdown}));
+
+    /**
+     * updates the threading, tieup, and treadling in response to an update upon the drawdown
+     * @param ndx the updated location 
+     * @param drawdown an Array of Cells representing the drawdown
+     * @returns a list of all the treadling, threading, and tieups that need to be updated
+     */
+    updateFromDrawdown(ndx: Interlacement, drawdown: Array<Array<Cell>>): LoomUpdate{
+      return this.updateConfig(this.getConfig(ndx, drawdown));
     }
 
 
@@ -212,39 +375,35 @@ export class Loom{
       return this.num_frames;
     }
 
+/**
+ * describes the required frame andd treadle assignment for a given interlacement within the drawdown
+ * @param ndx 
+ * @param drawdown 
+ * @returns a description of the assigned frames and treadles
+ */
+getConfig(ndx:Interlacement, drawdown: Array<Array<Cell>>):LoomCoords{
 
 
-
-   /* This function takes a point from the draw down [i,j] in the current view representing rows and columns 
-and returns an associated value for threading frames and treadles
-   * @param obj{i: i,j: j} the Row, Column of the changed pixel.
-   * @returns {obj{i: i, j: j, frame: number, treadle: number}}
-   */
-
-    getConfig(obj){
-
-
-      var config = {
-        i: obj.i, 
-        j: obj.j,
+      var config: LoomCoords = {
+        ndx: ndx,
         frame: -1,
         treadle:-1,
-        drawdown: obj.drawdown
+        drawdown: drawdown
       }
 
 
-      var j_pattern = obj.drawdown.map(element => element[obj.j]);
-      var i_pattern = obj.drawdown[obj.i];
+      var j_pattern = drawdown.map(element => element[ndx.j]);
+      var i_pattern = drawdown[ndx.i];
       
 
       //(1) check if the row is unique
       var found = false;
-      for(var i = 0; i < obj.drawdown.length && !found; i++){
+      for(var i = 0; i < drawdown.length && !found; i++){
         
         //don't check the row we are currently in
-        if(i != obj.i){
+        if(i != ndx.i){
 
-          const idx = obj.drawdown[i].find((element, ndx) => element.isUp() !== i_pattern[ndx].isUp());
+          const idx = drawdown[i].find((element, ndx) => element.isUp() !== i_pattern[ndx].isUp());
           if(idx === undefined){
               found = true;
               config.treadle = this.treadling[i];
@@ -253,9 +412,9 @@ and returns an associated value for threading frames and treadles
       }
 
       if(!found){
-        var count = countOccurrences(this.treadling, this.treadling[obj.i]);
-        if(this.treadling[obj.i] != -1 && count == 1){
-          config.treadle = this.treadling[obj.i];
+        var count = utilInstance.countOccurrences(this.treadling, this.treadling[ndx.i]);
+        if(this.treadling[ndx.i] != -1 && count == 1){
+          config.treadle = this.treadling[ndx.i];
         }else{
           config.treadle = this.getEmptyTreadle();
         }
@@ -263,9 +422,9 @@ and returns an associated value for threading frames and treadles
 
      //(1) check if the column is unique
       found = false;
-      for(var j = 0; j < obj.drawdown[0].length && !found; j++){
-        if(j != obj.j){
-          const col = obj.drawdown.map(element => element[j]);
+      for(var j = 0; j < drawdown[0].length && !found; j++){
+        if(j != ndx.j){
+          const col = drawdown.map(element => element[j]);
           const idx = col.find((element, ndx) => element.isUp() !== j_pattern[ndx].isUp());
 
           if(idx === undefined){
@@ -277,9 +436,9 @@ and returns an associated value for threading frames and treadles
 
 
       if(!found ){
-        var count = countOccurrences(this.threading, this.threading[obj.j]);
-        if(this.threading[obj.j] != -1 && count == 1){
-          config.frame = this.threading[obj.j];
+        var count = utilInstance.countOccurrences(this.threading, this.threading[ndx.j]);
+        if(this.threading[ndx.j] != -1 && count == 1){
+          config.frame = this.threading[ndx.j];
         }else{
           config.frame = this.getEmptyFrame();
         }
@@ -292,67 +451,55 @@ and returns an associated value for threading frames and treadles
 
 
 
-/***
-   /* This function updates the values of the treadles, 
-   threading and tie up based on a returned value 
-   from getConfig
-   * @param obj{i: i,j: j} the Row, Column of the changed pixel.
-   * @returns a list of the updated points {obj{threading: array<{i,j}>, treadling: array<{i,j}>, tieup  array<{i,j}}}
-   */   
-      
-    updateConfig(config){
-      
-      var updates = {
+
+    updateConfig(config:LoomCoords):LoomUpdate{
+
+      var updates:LoomUpdate = {
         threading: [],
         treadling: [],
         tieup: []
       }
 
 
-
-
-
       //if this is within the existing frames
       if(config.frame < this.num_frames){
         
-        if(this.threading[config.j] != -1){
-          updates.threading.push({i: this.threading[config.j], j: config.j, val: false});
+        if(this.threading[config.ndx.j] != -1){
+          updates.threading.push({i: this.threading[config.ndx.j], j: config.ndx.j, val: false});
         }
 
-        this.threading[config.j] = config.frame;
-        updates.threading.push({i: config.frame, j: config.j, val: true});
+        this.threading[config.ndx.j] = config.frame;
+        updates.threading.push({i: config.frame, j: config.ndx.j, val: true});
 
 
 
       }else{
         
         //add a frame and then assign this to it
-        this.threading[config.j] = config.frame;
-        updates.threading.push({i: config.frame, j: config.j, val: true})
+        this.threading[config.ndx.j] = config.frame;
+        updates.threading.push({i: config.frame, j: config.ndx.j, val: true})
         this.updateNumFramesFromThreading();
-        this.resetFrameMapping(this.num_frames);
-
-
+        this.resetFrameMapping(this.num_frames, this.type);
       }
 
 
 
 
       if(config.treadle < this.num_treadles){
-        if(this.treadling[config.i] != -1){
-          updates.treadling.push({i: config.i, j: this.treadling[config.i], val: false});
-          this.treadling[config.i] = -1;
+        if(this.treadling[config.ndx.i] != -1){
+          updates.treadling.push({i: config.ndx.i, j: this.treadling[config.ndx.i], val: false});
+          this.treadling[config.ndx.i] = -1;
 
         }
 
-        this.treadling[config.i] = config.treadle;
-        updates.treadling.push({i: config.i, j:  config.treadle, val: true});
+        this.treadling[config.ndx.i] = config.treadle;
+        updates.treadling.push({i: config.ndx.i, j:  config.treadle, val: true});
 
       }else{
 
 
-        this.treadling[config.i] = config.treadle;
-        updates.treadling.push({i: config.i, j:  config.treadle, val: true});
+        this.treadling[config.ndx.i] = config.treadle;
+        updates.treadling.push({i: config.ndx.i, j:  config.treadle, val: true});
 
         //this.num_treadles = (config.treadle+1);
         this.updateNumTreadlesFromTreadling();
@@ -379,8 +526,6 @@ and returns an associated value for threading frames and treadles
           }
         }
       }
-
-
 
       
       //look through each treadle, and see if the tie up needs to be updated
@@ -485,75 +630,93 @@ and returns an associated value for threading frames and treadles
        return {wefts:[], warps:[]};
     }
 
-    inTieupRange(i, j){
-      if(i >= 0 && i < this.tieup.length) return true;
-      if(j >= 0 && j < this.tieup[0].length) return true;
+
+    
+    inTieupRange(ndx: Interlacement):boolean{
+      if(ndx.i >= 0 && ndx.i < this.tieup.length) return true;
+      if(ndx.j >= 0 && ndx.j < this.tieup[0].length) return true;
       return false;
     }
 
-    hasTieup(i, j):boolean{
-      if(!this.inTieupRange(i, j)) return null;
-      else return (this.tieup[i][j]); 
+    hasTieup(ndx: Interlacement):boolean{
+      if(!this.inTieupRange(ndx)) return null;
+      else return (this.tieup[ndx.i][ndx.j]); 
 
     }
 
-    inThreadingRange(i, j){
-      if(j >= 0 && j < this.threading.length) return true;
-      if(i >= 0 && i < this.num_frames) return true;
+
+    inThreadingRange(ndx: Interlacement):boolean{
+      if(ndx.j >= 0 && ndx.j < this.threading.length) return true;
+      if(ndx.i >= 0 && ndx.i < this.num_frames) return true;
       return false;
     }
 
-    isInFrame(warp, frame){
-      if(!this.inThreadingRange(frame, warp)){
+
+    /**
+     * checks if the given warp is assigned to the given frame
+     * @param warp the warm in the draft
+     * @param frame the frame in question
+     * @returns null if out of range or true/false if it is in this warp
+     */
+    isInFrame(warp:number, frame:number):boolean{
+      if(!this.inThreadingRange({i:frame, j:warp, si: -1})){
         return null;
       } 
       else return (this.threading[warp] === frame); 
 
     }
 
-    inTreadlingRange(i, j){
-      if(j >= 0 && j < this.treadling.length) return true;
-      if(i >= 0 && i < this.num_treadles) return true;
+    inTreadlingRange(ndx: Interlacement):boolean{
+      if(ndx.j >= 0 && ndx.j < this.treadling.length) return true;
+      if(ndx.i >= 0 && ndx.i < this.num_treadles) return true;
       return false;
     }
 
-    isInTreadle(weft, treadle){
-      if(!this.inTreadlingRange(weft, treadle)) return null;
+    /**
+     * checks if the given weft is assigned to the given treadle
+     * @param weft the weft in the draft
+     * @param treadle the treadle in question
+     * @returns null if out of range or true/false if it is in this weft
+     */
+    isInTreadle(weft:number, treadle:number):boolean{
+      if(!this.inTreadlingRange({i: weft, j:treadle, si: -1})) return null;
       else return (this.treadling[weft] === treadle); 
-
     }
 
 
-    updateTieup(i, j, val){
-       var updates = [];
-        this.tieup[i][j] = val;
-        updates.push({i:i, j:j, val:val});
+
+    updateTieup(ndx: InterlacementVal): Array<InterlacementVal>{
+       var updates:Array<InterlacementVal> = [];
+        this.tieup[ndx.i][ndx.j] = ndx.val;
+        updates.push({i:ndx.i, j:ndx.j, val:ndx.val});
         return updates;
     }
 
 
 
-
-    updateThreading(i, j, val){
+    /**
+     * updates the therading given this interlacement val
+     * @param ndx 
+     * @returns a list of the updates made
+     */
+    updateThreading(ndx: InterlacementVal):Array<InterlacementVal>{
       var updates = [];
-      var frame = this.threading[j];
-
-      if(!this.inThreadingRange(i, j)) return updates;
+      var frame = this.threading[ndx.j];
+      if(!this.inThreadingRange({i:ndx.i, j:ndx.j, si: -1})) return updates;
 
       //a new value is coming in
-      if(val){
+      if(ndx.val){
 
         //nothing is assigned to this frame, send an update to unset the pixel
-        if(frame !== -1) updates.push({i:frame, j: j, val:false});
-
-        updates.push({i:i, j: j, val:val});
-        this.threading[j] = i;
+        if(frame !== -1) updates.push({i:frame, j: ndx.j, val:false});
+        this.threading[ndx.j] = ndx.i;
+        updates.push({i:ndx.i, j: ndx.j, val:ndx.val});
 
       }else{
 
-        if(frame === i){
-          updates.push({i:i, j: j, val:val});
-          this.threading[j] = -1;
+        if(frame === ndx.i){
+          updates.push({i:ndx.i, j: ndx.j, val:ndx.val});
+          this.threading[ndx.j] = -1;
         }
 
       }
@@ -561,33 +724,36 @@ and returns an associated value for threading frames and treadles
       return updates;
     }
 
-    updateTreadling(i, j, val){
+
+    updateTreadling(ndx: InterlacementVal):Array<InterlacementVal>{
       var updates = [];
-      var treadle = this.treadling[i];
+      var treadle = this.treadling[ndx.i];
 
 
-      if(!this.inTreadlingRange(i, j)) return updates;
+      if(!this.inTreadlingRange({i:ndx.i, j:ndx.j, si: -1})) return updates;
 
-      if(val){
+      if(ndx.val){
 
-        if(treadle !== -1) updates.push({i:i, j: treadle, val:false});
-        updates.push({i:i, j: j, val:true});
-        this.treadling[i] = j;
+        if(treadle !== -1) updates.push({i:ndx.i, j: treadle, val:false});
+        updates.push({i:ndx.i, j: ndx.j, val:true});
+        this.treadling[ndx.i] = ndx.j;
 
       }else{
 
-        if(treadle === j){
-          updates.push({i:i, j: j, val:false});
-          this.treadling[i] = -1;
+        if(treadle === ndx.j){
+          updates.push({i:ndx.i, j: ndx.j, val:false});
+          this.treadling[ndx.i] = -1;
         }
 
       }
-
 
       return updates;
 
     }
 
+    /**
+     * dynamically updates the num of frames based on what has been assigned in the threading
+     */
     updateNumFramesFromThreading(){
       //sets num_frames from values in the threading draft
       var max = -1;
@@ -600,6 +766,9 @@ and returns an associated value for threading frames and treadles
       if(this.num_frames < this.min_frames) this.num_frames = this.min_frames;
     }
 
+    /**
+     * dynamically updates the num of treadles based on what has been assigned in the treadling
+     */
     updateNumTreadlesFromTreadling(){
       //sets num_frames from values in the threading draft
       var max = -1;
@@ -609,17 +778,32 @@ and returns an associated value for threading frames and treadles
 
       this.num_treadles = max + 1;
       if(this.num_treadles < this.min_treadles) this.num_treadles = this.min_treadles;
-          }
+    }
+
+      /***
+       This function takes a point added to the draft and updates and redraws the loom states
+      It takes current position of a point on the currently visible draft
+      ***/
+     updateLoomFromDraft(currentPos:Interlacement, draft: Draft):boolean{
+
+
+        var updates = this.updateFromDrawdown({i:currentPos.i,j:currentPos.j,si:currentPos.si}, draft.pattern);
+        var u_threading = this.updateUnused(this.threading, this.min_frames, this.num_frames, "threading");
+        var u_treadling = this.updateUnused(this.treadling, this.min_treadles, this.num_treadles, "treadling");
+
+        return true;
+          
+      }
 
 
 
-    clearTieupCol(i){
+    clearTieupCol(i:number){
        for(var j = 0; j < this.tieup.length; j++){
             this.tieup[j][i] = false;
         }
     }
 
-    clearTieupRow(i){
+    clearTieupRow(i:number){
        for(var j = 0; j < this.tieup[0].length; j++){
             this.tieup[i][j] = false;
        }
@@ -627,18 +811,24 @@ and returns an associated value for threading frames and treadles
   
 
 
-
-    updateUnused(struct:Array<number>, min:number, num:number, type:string){
+    /**
+     * scans through the loom and reorients the assignments to condense into the minimum number of frames and columns
+     * @param struct the array of threading/treadling to check
+     * @param min the min number of this struct
+     * @param num the current number used in this struct
+     * @param type describes if it is threadling or threading
+     * @returns boolean indicating whether or not condensing took place
+     */
+    updateUnused(struct:Array<number>, min:number, num:number, type:string):boolean{
 
         var status = [];
         var zeros = []; 
-        var condensed = false;
         var map = [];        //map [new-index] = old-index
 
         //first check if the frames/treadles are being used or not
         //push unusued frames to zero:
         for(var i = 0; i < num; i++){
-          var occurances = countOccurrences(struct, i);
+          var occurances = utilInstance.countOccurrences(struct, i);
           status[i] = occurances;
           if(occurances === 0) zeros.push(i);
         }
@@ -649,7 +839,7 @@ and returns an associated value for threading frames and treadles
         
         //push non-zero rows in order to map first
         for(var i = 0; i < num; i++){
-          if(countOccurrences(zeros, i) == 0){
+          if(utilInstance.countOccurrences(zeros, i) == 0){
             map.push(i);
           }
         }
@@ -710,7 +900,7 @@ and returns an associated value for threading frames and treadles
                   //delete a frame
                   //this.num_frames--;
                   this.updateNumFramesFromThreading();
-                  this.resetFrameMapping(this.num_frames);
+                  this.resetFrameMapping(this.num_frames, this.type);
                   this.tieup.splice(i, 1);
                 }else{
                   this.clearTieupRow(i);
@@ -741,7 +931,7 @@ and returns an associated value for threading frames and treadles
               if(type === "threading"){
                 //this.num_frames--;
                 this.updateNumFramesFromThreading();
-                this.resetFrameMapping(this.num_frames);
+                this.resetFrameMapping(this.num_frames, this.type);
                 this.tieup.splice(i, 1);
 
               } else{
@@ -756,5 +946,35 @@ and returns an associated value for threading frames and treadles
 
         return (swap_happened || this.num_frames < num);
   }
+
+   //this recomputes the state of the frames, treadles and threading from the draft
+   recomputeLoom(draft:Draft){
+
+    let mock = [];
+
+    this.clearAllData(draft.warps, draft.wefts);
+
+    //pretendd that we are computing the values as though they were added one by one
+    for (var i = 0; i < draft.pattern.length; i++) {
+        mock.push([]);
+      for(var j = 0; j < draft.pattern[0].length; j++){
+        mock[i].push(new Cell(null));
+      }
+    }
+
+    //compute full rows and for speed
+    for (var i = 0; i < draft.pattern.length; i++) {
+      for(var j = 0; j < draft.pattern[0].length; j++){
+            
+          if(draft.pattern[i][j].isUp()){
+              mock[i][j].setHeddle(draft.pattern[i][j].isUp());
+              this.updateFromDrawdown({i:i,j:j, si:-1}, mock);
+              var u_threading = this.updateUnused(this.threading, this.min_frames, this.num_frames, "threading");
+              var u_treadling = this.updateUnused(this.treadling, this.min_treadles, this.num_treadles, "treadling");
+          }
+      }
+    }
+  }
+
 
 }//end class

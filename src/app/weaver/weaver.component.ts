@@ -1,59 +1,25 @@
-import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, ChangeDetectionStrategy, Input } from '@angular/core';
 import {enableProdMode} from '@angular/core';
 
 import { PatternService } from '../core/provider/pattern.service';
-import { WeaveDirective } from '../core/directives/weave.directive';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
 import { Draft } from '../core/model/draft';
 import { Render } from '../core/model/render';
 import { Pattern } from '../core/model/pattern';
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { ConnectionModal } from './modal/connection/connection.modal';
-import { InitModal } from './modal/init/init.modal';
-import { LabelModal } from './modal/label/label.modal';
-//import {RedoAction, UndoAction} from '../history/actions';
+import { MatDialog } from "@angular/material/dialog";
 import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-//import {getRedoAction, getUndoAction} from '../history/selectors';
-import {AppState} from '../ngrx/app.state';
-import {select, Store} from '@ngrx/store';
-import {cloneDeep, now} from 'lodash';
-
+import { FileService, LoadResponse } from '../core/provider/file.service';
+import { Loom } from '../core/model/loom';
+import * as _ from 'lodash';
+import { DraftviewerComponent } from '../core/draftviewer/draftviewer.component';
+import {DesignmodesService} from '../core/provider/designmodes.service'
+import { SidebarComponent } from '../core/sidebar/sidebar.component';
+import { MaterialsService } from '../core/provider/materials.service';
+import { SystemsService } from '../core/provider/systems.service';
+import { Cell } from '../core/model/cell';
 
 //disables some angular checking mechanisms
-//enableProdMode();
-
-
-/**
- * Controller of the Weaver component.
- * @class
- */
-
-interface LoomTypes {
-  value: string;
-  viewValue: string;
-}
-
-interface MaterialTypes {
-  value: number;
-  viewValue: string;
-}
-
-interface DensityUnits {
-  value: string;
-  viewValue: string;
-}
-
-interface HistoryState {
-  draft: Draft;
-  is_active: boolean;
-}
-
-
-interface ViewModes {
-  value: string;
-  viewValue: string;
-}
-
+// enableProdMode();
 
 
 
@@ -63,83 +29,82 @@ interface ViewModes {
   styleUrls: ['./weaver.component.scss']
 })
 export class WeaverComponent implements OnInit {
+ 
   /**
    * The reference to the weave directive.
    * @property {WeaveDirective}
    */
-  @ViewChild(WeaveDirective, {static: false}) weaveRef;
-  @ViewChild('bitmapImage', {static: false}) bitmap;
+  @ViewChild(DraftviewerComponent, {static: true}) weaveRef;
+  @ViewChild(SidebarComponent, {static: true}) sidebar;
+  
+  @Input()  draft: Draft; 
+  @Input()  viewonly: boolean; 
+  @Input() loom: Loom;
 
-  /**
-   * The name of the current selected brush.
-   * @property {string}
-   */
-  brush = 'invert';
-
-  /**
-   * The weave Draft object.
-   * @property {Draft}
-   */
-  draft: Draft;
-
-
-  timeline: HistoryState[] = [];
 
  /**
    * The weave Render object.
    * @property {Render}
    */
-  render: Render = new Render(false);
+  render: Render;
 
  /**
-   * The types of looms this version will support.
-   * @property {LoomType}
+  //  * The weave Timeline object.
+  //  * @property {Timeline}
+  //  */
+  // timeline: Timeline = new Timeline();
+
+ /**
+   * A collection of patterns to use in this space
+   * @property {Pattern}
    */
-  loomtypes: LoomTypes[] = [
-    {value: 'frame', viewValue: 'Shaft'},
-    {value: 'jacquard', viewValue: 'Jacquard'}
-  ];
-
-
-  material_types: MaterialTypes[] = [
-    {value: 0, viewValue: 'Non-Conductive'},
-    {value: 1, viewValue: 'Conductive'},
-    {value: 2, viewValue: 'Resistive'}
-  ];
-
-  density_units: DensityUnits[] = [
-    {value: 'in', viewValue: 'Ends per Inch'},
-    {value: 'cm', viewValue: 'Ends per 10cm '}
-  ];
-
-  view_modes: ViewModes[] = [
-      {value: 'visual', viewValue: 'Visual'},
-      {value: 'pattern', viewValue: 'Draft'},
-      {value: 'yarn', viewValue: 'Circuit'},
-      {value: 'mask', viewValue: 'Masks'}
-
-    ];
-
+  patterns: Array<Pattern>;
 
 
   /**
-   * The list of all patterns saved. Provided by pattern service.
-   * @property {Array<Pattern>}
-   */
-  //patterns;
+  The current selection, as a Pattern 
+  **/
+  copy: Pattern;
 
+  /**
+   * a place to store the drafts returned from emma's ml code
+   */
+  generated_drafts: Array<Draft> = [];
+
+
+  /**
+  * Boolean reepresenting if generative ML mode is on or off
+  * @property {boolean}
+  * */
+  generativeMode = false;
+   
+  /**
+  * String holding collection name for generative ML
+  */
+  collection: string = "";
+
+
+  /**
+  * Number of warps for drafts of collection selected 
+  */
+  warpSize: number;
+
+  /**
+  * Number of wefts for drafts of collection selected 
+  */
+  weftSize: number;
 
   selected;
 
-  private unsubscribe$ = new Subject();
-  private undoItem;
-  private redoItem;
+  collapsed: boolean = false;
 
-  default_patterns:any;
-  collapsed:boolean = false;
+  private unsubscribe$ = new Subject();
+
   dims:any;
 
   draftelement:any;
+
+  scrollingSubscription: any;
 
   /// ANGULAR FUNCTIONS
   /**
@@ -148,35 +113,64 @@ export class WeaverComponent implements OnInit {
    * to get and update stitches.
    * dialog - Anglar Material dialog module. Used to control the popup modals.
    */
-  constructor(private ps: PatternService, private dialog: MatDialog, 
-              private store: Store<AppState>) {
+  constructor(
+    private ps: PatternService, 
+    private dialog: MatDialog, 
+    private fs: FileService,
+    private dm: DesignmodesService,
+    public scroll: ScrollDispatcher,
+    private ms: MaterialsService,
+    private ss: SystemsService) {
 
-    //initialize with a draft so that we can load some things faster. 
-    this.draft = new Draft({});
-    this.default_patterns = [];
+    this.scrollingSubscription = this.scroll
+          .scrolled()
+          .subscribe((data: any) => {
+            this.onWindowScroll(data);
+    });
 
 
-    this.ps.getPatterns().subscribe((res) => {
-       for(var i in res.body){
-          this.default_patterns.push(res.body[i]);
-       }
-    }); 
+    this.copy = new Pattern({pattern: [[false,true],[false,true]]});
+    this.dm.selectDesignMode('draw', 'design_modes');
+    this.dm.selectDesignMode('toggle', 'draw_modes');
 
-    this.render.view_frames = (this.draft.loom.type === 'frame') ? true : false;     
-    if (this.draft.patterns === undefined) this.draft.patterns = this.default_patterns;
-    
+  }
 
+  private onWindowScroll(data: CdkScrollable) {
+    const scrollTop:number = data.measureScrollOffset("top");
+    const scrollLeft:number = data.measureScrollOffset("left");
+    this.weaveRef.reposition(scrollTop, scrollLeft);
   }
 
 
 
-  reInit(result){
+  loadNewFile(result: LoadResponse){
 
-    this.draft.reload(result);
+    console.log("loading new file", result);
+    const data = result.data;
+    if(data.drafts.length > 0){
+      this.draft.reload(data.drafts[0]);
+    }else{
+      console.log("ERROR, there were not drafts associated with this file");
+    }
 
-    this.render.view_frames = (this.draft.loom.type === 'frame') ? true : false;     
+    if(data.looms.length > 0){
+      this.loom.copy(data.looms[0]);
+      const success: boolean = this.loom.overloadDraft(this.draft);
+      if(!success) console.log("ERROR, could not attach loom to draft of different size");
+    }else{
+      console.log("WARNING, there were no looms associated with this file");
+      this.loom.clearAllData(this.draft.warps, this.draft.wefts);
+      this.loom.recomputeLoom(this.draft);
 
-    if (this.draft.patterns === undefined) this.draft.patterns = this.default_patterns;
+      const success: boolean = this.loom.overloadDraft(this.draft);
+      if(!success) console.log("ERROR, could not attach loom to draft of different size");
+    }
+
+
+    this.draft.computeYarnPaths(this.ms.getShuttles());
+    //this.ss.addHistoryState(this.draft);
+    
+    this.render.updateVisible(this.draft);
     
 
     this.weaveRef.onNewDraftLoaded();
@@ -191,31 +185,23 @@ export class WeaverComponent implements OnInit {
       weft_materials:true
     });
 
-    this.weaveRef.rescale();
-  
+    this.weaveRef.rescale(this.render.getZoom());
+
   }
   
   ngOnInit(){
 
+    //if(d !== undefined) this.draft = new Draft(JSON.parse(d));
+    this.render = new Render(true, this.draft, this.ss);
+    this.draft.computeYarnPaths(this.ms.getShuttles());
+    //this.timeline.addHistoryState(this.draft);  
+    
   }
 
   ngAfterViewInit() {
 
-  
-    const dialogRef = this.dialog.open(InitModal, {
-      data: {loomtypes: this.loomtypes, density_units: this.density_units}
-    });
-
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result !== undefined) this.reInit(result);
-   });
-
-
-   
 
     this.weaveRef.onNewDraftLoaded();
-
 
     this.weaveRef.redraw({
       drawdown: true, 
@@ -226,21 +212,7 @@ export class WeaverComponent implements OnInit {
       weft_materials:true
     });
 
-    this.weaveRef.rescale();
   
-    console.log("rendered ", this.draft);
-
-
-
-
-    // this.store.pipe(select(getUndoAction), takeUntil(this.unsubscribe$)).subscribe(undoItem => {
-    //   this.undoItem = undoItem;
-    // });
-    // this.store.pipe(select(getRedoAction), takeUntil(this.unsubscribe$)).subscribe(redoItem => {
-    //   this.redoItem = redoItem;
-    // });
-
-
     
   }
 
@@ -251,14 +223,45 @@ export class WeaverComponent implements OnInit {
   }
 
   undo() {
-    this.weaveRef.restorePreviousHistoryState();
+    // let d: Draft = this.timeline.restorePreviousHistoryState();
+    // if(d === undefined || d === null) return;
+
+    // this.draft.reload(d);    
+    // this.weaveRef.onNewDraftLoaded();
+    // this.weaveRef.redraw({
+    //   drawdown: true, 
+    //   loom:true, 
+    //   warp_systems: true, 
+    //   weft_systems: true, 
+    //   warp_materials: true,
+    //   weft_materials:true
+    // });
+
   }
 
   redo() {
-    this.weaveRef.restoreNextHistoryState();
+    // let d: Draft = this.timeline.restoreNextHistoryState();
+
+    // if(d === undefined || d === null) return;
+
+
+    // this.draft.reload(d);    
+    // this.weaveRef.onNewDraftLoaded();
+    // this.weaveRef.redraw({
+    //   drawdown: true, 
+    //   loom:true, 
+    //   warp_systems: true, 
+    //   weft_systems: true, 
+    //   warp_materials: true,
+    //   weft_materials:true
+    // });
+
   }
 
   /// EVENTS
+
+
+
 
 /**
    * Call zoom in on Shift+p.
@@ -270,7 +273,6 @@ export class WeaverComponent implements OnInit {
   private keyEventZoomIn(e) {
     console.log("zoom in");
     this.render.zoomIn();
-    this.weaveRef.rescale();
 
 
   }
@@ -284,7 +286,6 @@ export class WeaverComponent implements OnInit {
   private keyEventZoomOut(e) {
     console.log("zoom out");
     this.render.zoomOut();
-    this.weaveRef.rescale();
   }
 
 
@@ -297,9 +298,9 @@ export class WeaverComponent implements OnInit {
 
   @HostListener('window:keydown.e', ['$event'])
   private keyEventErase(e) {
-    this.brush = 'erase';
-    this.weaveRef.unsetSelection();
 
+    this.dm.selectDesignMode('down','draw_modes');
+    this.weaveRef.unsetSelection();
   }
 
   /**
@@ -310,7 +311,7 @@ export class WeaverComponent implements OnInit {
    */
   @HostListener('window:keydown.d', ['$event'])
   private keyEventPoint(e) {
-    this.brush = 'point';
+    this.dm.selectDesignMode('up','draw_modes');
     this.weaveRef.unsetSelection();
 
   }
@@ -323,7 +324,7 @@ export class WeaverComponent implements OnInit {
    */
   @HostListener('window:keydown.s', ['$event'])
   private keyEventSelect(e) {
-    this.brush = 'select';
+    this.dm.selectDesignMode('select','design_modes');
     this.weaveRef.unsetSelection();
 
   }
@@ -336,7 +337,8 @@ export class WeaverComponent implements OnInit {
    */
   @HostListener('window:keydown.x', ['$event'])
   private keyEventInvert(e) {
-    this.brush = 'invert';
+
+    this.dm.selectDesignMode('toggle','draw_modes');
     this.weaveRef.unsetSelection();
 
   }
@@ -347,10 +349,10 @@ export class WeaverComponent implements OnInit {
    * @param {Event} e - Press Control + x
    * @returns {void}
    */
-  @HostListener('window:keydown.c', ['$event'])
-  private keyEventCopy(e) {
-    this.onCopy();  
-  }
+  // @HostListener('window:keydown.c', ['$event'])
+  // private keyEventCopy(e) {
+  //   this.onCopy();  
+  // }
 
     /**
    * Sets key to copy 
@@ -360,7 +362,12 @@ export class WeaverComponent implements OnInit {
    */
   @HostListener('window:keydown.p', ['$event'])
   private keyEventPaste(e) {
-    this.onPaste({});
+    this.weaveRef.onPaste({});
+  }
+
+
+  public closeAllModals(){
+    this.sidebar.closeWeaverModals();
   }
 
   /**
@@ -371,9 +378,10 @@ export class WeaverComponent implements OnInit {
    */
   public viewChange(value: any) {
     
+    this.dm.selectDesignMode(value, 'view_modes');
     this.render.setCurrentView(value);
 
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
+    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths(this.ms.getShuttles());
 
     this.weaveRef.redraw({
       drawdown: true
@@ -386,12 +394,68 @@ export class WeaverComponent implements OnInit {
    * @param {Event} e - brush change event from design component.
    * @returns {void}
    */
-  public onBrushChange(e:any) {
-    this.brush = e.name;
+  public designModeChange(e:any) {
+
+
     this.weaveRef.unsetSelection();
 
   }
 
+  
+//   /**
+//    * Flips the current booleean value of generativeMode.
+//   * @extends WeeaveComponent
+//   * @param {Event} e
+//   * @returns {void}
+//   */
+//  public onGenerativeModeChange(e: any) {
+//    console.log('e:', e);
+//    this.generativeMode = !this.generativeMode;
+//    this.collection = e.collection.toLowerCase().split(' ').join('_');
+//    this.warpSize = e.warpSize;
+//    this.weftSize = e.weftSize;
+//    this.vae.loadModels(this.collection).then(() => {
+//     if (this.generativeMode) {
+//       this.vae.loadModels(this.collection);
+//       let pattern = this.patternFinder.computePatterns(this.loom.threading, this.loom.treadling, this.draft.pattern);
+//       var suggestions = [];
+//       let draftSeed = this.patternToSize(pattern, this.warpSize, this.weftSize);
+//       this.vae.generateFromSeed(draftSeed).then(suggestionsRet => {
+//         suggestions = suggestionsRet;
+//         console.log('suggestions:', suggestions);
+//         for (var i = 0; i < suggestions.length; i++) {
+//           let treadlingSuggest = this.patternFinder.getTreadlingFromArr(suggestions[i]);
+//           let threadingSuggest = this.patternFinder.getThreadingFromArr(suggestions[i]);
+//           let pattern = this.patternFinder.computePatterns(threadingSuggest, treadlingSuggest, suggestions[i])
+//           let draft = new Draft({});
+//           for (var i = 0; i < pattern.length; i++) {
+//             var first = false;
+//             if (i != 0) {
+//               draft.pattern.push([]);
+//             } else {
+//               first = true;
+//             }
+//             for (var j = 0; j < pattern[i].length; j++) {
+//               if (first && j == 0) {
+//                 draft.pattern[i][j] = new Cell(pattern[i][j] == 1 ? true : false);
+//               } else {
+//                 draft.pattern[i].push(new Cell(pattern[i][j] == 1 ? true : false));
+//               }
+//             }
+//           }
+//           this.generated_drafts.push(draft);    
+//         }
+//       });
+//     }
+//    });
+//  }
+
+//  public loadGeneratedDraft(e: any){
+//   console.log("running load generated draft!");
+  
+//   //tell the draft viewer to load this business!
+// }
+  
   /**
    * Tell the weave directive to fill selection with pattern.
    * @extends WeaveComponent
@@ -399,29 +463,48 @@ export class WeaverComponent implements OnInit {
    * @returns {void}
    */
   public onFill(e) {
-    var p = this.draft.patterns[e.id];
     
-    this.weaveRef.fillArea(this.weaveRef.selection, p, 'original');
+    let p:Pattern = this.patterns[e.id];
+    
+    this.draft.fillArea(this.weaveRef.selection, p, 'original', this.render.visibleRows, this.loom);
 
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
+    if(this.loom.isFrame()) this.loom.recomputeLoom(this.draft);
+
+    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths(this.ms.getShuttles());
     
-    this.weaveRef.redraw({drawdown:true, loom:true})
+    this.weaveRef.copyArea();
+
+    this.weaveRef.redraw({drawdown:true, loom:true});
+
+    //this.timeline.addHistoryState(this.draft);
+    
   }
 
   /**
    * Tell weave reference to clear selection.
    * @extends WeaveComponent
-   * @param {Event} Delte - clear event from design component.
+   * @param {Event} Delete - clear event from design component.
    * @returns {void}
    */
   public onClear(b:boolean) {
-    var p = new Pattern([[b]]);
+    
+    const p: Pattern = new Pattern({width: 1, height: 1, pattern: [[b]]});
 
-    this.weaveRef.fillArea(this.weaveRef.selection, p, 'original')
+    this.draft.fillArea(this.weaveRef.selection, p, 'original', this.render.visibleRows, this.loom)
 
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
+    if(this.loom.isFrame()) this.loom.recomputeLoom(this.draft);
+
+    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths(this.ms.getShuttles());
+
+    this.weaveRef.copyArea();
 
     this.weaveRef.redraw({drawdown:true, loom:true});
+
+   // this.timeline.addHistoryState(this.draft);
+
+  }
+
+  public onScroll(){
   }
 
   /**
@@ -431,93 +514,15 @@ export class WeaverComponent implements OnInit {
    * @returns {void}
    */
   public onMask(e) {
-    console.log(e);
-    var p = this.draft.patterns[e.id];
-    this.weaveRef.maskArea(p);
-    this.weaveRef.redraw({drawdown:true, loom:true});
+    // console.log(e);
+    // var p = this.draft.patterns[e.id].pattern;
+    // this.weaveRef.maskArea(p);
+    // this.redraw();
   }
 
-  /**
-   * Tells weave reference to paste copied pattern.
-   * @extends WeaveComponent
-   * @param {Event} e - paste event from design component.
-   * @returns {void}
-   */
-  public onPaste(e) {
-
-    var p = new Pattern(this.weaveRef.copy);
+  
 
 
-    var type;
-
-    if(e.type === undefined) type = "original";
-    else type =  e.type;
-
-    this.weaveRef.fillArea(this.weaveRef.selection, p, type);
-    
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
-
-    this.weaveRef.redraw({drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
-  }
-
-  /**
-   * Creates the copied pattern within the weave reference
-   * @extends WeaveComponent
-   * @param {Event} e - copy event from design component.
-   * @returns {void}
-   */
-  public onCopy() {
-
-    this.weaveRef.copyArea();
-  }
-
-  /**
-   *
-   *
-   */
-  public onSave(e: any) {
-
-    e.bitmap = this.bitmap;
-
-    if (e.type === "bmp") this.weaveRef.saveBMP("weave_draft", e);
-    else if (e.type === "ada") this.weaveRef.saveADA("weave_draft", e);
-    else if (e.type === "wif") this.weaveRef.saveWIF("weave_draft", e);
-    else if (e.type === "jpg") this.weaveRef.savePrintableDraft("weave_draft", e);
-    
-  }
-
-  /**
-   * Open the connection modal.
-   * @extends WeaveComponent
-   * @returns {void}
-   */
-  public openConnectionDialog() {
-
-    const dialogRef = this.dialog.open(ConnectionModal, {data: {shuttles: this.draft.shuttles}});
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.draft.connections.push(result);
-      }
-    });
-  }
-
-
-  /**
-   * Open the label modal.
-   * @extends WeaveComponent
-   * @returns {void}
-   */
-  public openLabelDialog() {
-
-    const dialogRef = this.dialog.open(LabelModal);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log(result);
-      }
-    });
-  }
 
 
 
@@ -531,71 +536,62 @@ export class WeaverComponent implements OnInit {
     console.log(e);
   }
 
+
+  /**
+   */
+   public materialChange() {
+    this.weaveRef.redraw({drawdown: true, warp_materials:true,  weft_materials:true});
+    //this.timeline.addHistoryState(this.draft);
+  }
+
+
+
+
+
   /**
    * Inserts an empty row on system, system
    */
   public shuttleColorChange() {
     this.weaveRef.redraw({drawdown: true, warp_materials:true,  weft_materials:true});
+   // this.timeline.addHistoryState(this.draft);
   }
 
-  /**
-   * Inserts an empty row on system, system
-   */
-  public insertRow(i, shuttle, system) {
-
-    this.draft.insertRow(i, shuttle, system);
-    //this.draft.updateConnections(i, 1);
-    
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-  }
-
-  public cloneRow(i, c, shuttle, system) {
-    this.draft.cloneRow(i, c, shuttle, system);
-   // this.draft.updateConnections(i, 1);
-
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-
-  }
-
-  public deleteRow(i) {
-    this.draft.deleteRow(i);
-   // this.draft.updateConnections(i, -1);
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-
-    //this.onAddRow.emit();
-  }
-
-    /**
-   * In
-   * @extends WeaveComponent
-   * @returns {void}
-   */
-  public insertCol(i, shuttle,system) {
-    this.draft.insertCol(i, shuttle,system);
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-
-  }
-
-  public cloneCol(i, shuttle,system) {
-    console.log(i, shuttle);
-    this.draft.cloneCol(i, shuttle,system);
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-
-  }
-
-
-  public deleteCol(i) {
-    this.draft.deleteCol(i);
-    //this.draft.updateConnections(i, -1);
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-
-
-  }
+  
 
   public updatePatterns(e: any) {
-    // this.patterns = e.patterns;
-    // this.draft.patterns = this.patterns;
-    this.draft.patterns = e.patterns;
+    this.patterns = e.patterns;
+
+  }
+
+  public updateWarpSystems(pattern: Array<number>) {
+    console.log("update warp sys", pattern);
+    this.draft.updateWarpSystemsFromPattern(pattern);
+    this.weaveRef.redraw({drawdown: true, warp_systems: true});
+
+  }
+
+  public updateWeftSystems(pattern: Array<number>) {
+    console.log("update weft sys", pattern);
+
+    this.draft.updateWeftSystemsFromPattern(pattern);
+    this.weaveRef.redraw({drawdown: true, weft_systems: true});
+
+  }
+
+  public updateWarpShuttles(pattern: Array<number>) {
+    console.log("update warp shut", pattern);
+
+    this.draft.updateWarpShuttlesFromPattern(pattern);
+    this.weaveRef.redraw({drawdown: true, warp_materials: true});
+
+  }
+
+  public updateWeftShuttles(pattern: Array<number>) {
+    console.log("update weft shutf", pattern);
+
+    this.draft.updateWeftShuttlesFromPattern(pattern);
+    this.draft.computeYarnPaths(this.ms.getShuttles());
+    this.weaveRef.redraw({drawdown: true, weft_materials: true});
 
   }
 
@@ -605,16 +601,16 @@ export class WeaverComponent implements OnInit {
   // }
 
   public createShuttle(e: any) {
-    this.draft.addShuttle(e.shuttle); 
+    this.ms.addShuttle(e.shuttle); 
   }
 
-  public createWarpSystem(e: any) {
-    this.draft.addWarpSystem(e.system);
-  }
+  // public createWarpSystem(e: any) {
+  //   this.draft.addWarpSystem(e.system);
+  // }
 
-  public createWeftSystem(e: any) {
-    this.draft.addWarpSystem(e.system);
-  }
+  // public createWeftSystem(e: any) {
+  //   this.draft.addWarpSystem(e.system);
+  // }
 
   public hideWarpSystem(e:any) {
     
@@ -628,16 +624,23 @@ export class WeaverComponent implements OnInit {
 
   public hideWeftSystem(e:any) {
    
-    this.draft.updateVisible();
+    this.render.updateVisible(this.draft);
     
     this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
   }
 
   public showWeftSystem(e:any) {
 
-    this.draft.updateVisible();
+    this.render.updateVisible(this.draft);
 
     this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+  }
+
+
+  public notesChanged(e:any) {
+
+  //   console.log(e);
+  //  this.draft.notes = e;
   }
 
   // public hideShuttle(e:any) {
@@ -653,30 +656,19 @@ export class WeaverComponent implements OnInit {
   // }
 
   public epiChange(e:any){
-    this.draft.epi = e.epi;
-    this.draft.recomputeWidth();
+    this.loom.overloadEpi(e.epi);
   }
 
   public unitChange(e:any){
-    this.draft.units = e.units;
-    this.draft.recomputeWidth();    
-
-  }
-
-  public thicknessChange(e:any){
-
-    if(this.render.isYarnBasedView()) this.weaveRef.redraw({drawdown: true});
+    this.loom.overloadUnits(e.units);
   }
 
 
   public loomChange(e:any){
     
-    this.draft.loom.type = e.loomtype;
+    this.loom.overloadType(e.loomtype);
 
-    if(this.draft.loom.type == 'jacquard'){
-      this.render.view_frames = false;
-    }else{
-      this.render.view_frames = true;
+    if(this.loom.type === 'frame'){
       this.weaveRef.recomputeLoom();
     }
     
@@ -685,12 +677,12 @@ export class WeaverComponent implements OnInit {
   }
 
   public frameChange(e:any){
-    this.draft.loom.setMinFrames(e.value);
+    this.loom.setMinFrames(e.value);
     this.weaveRef.redraw({loom: true});
   }
 
   public treadleChange(e:any){
-    this.draft.loom.setMinTreadles(e.value);
+    this.loom.setMinTreadles(e.value);
     this.weaveRef.redraw({loom: true});
   }
 
@@ -702,19 +694,22 @@ export class WeaverComponent implements OnInit {
       var diff = e.warps - this.draft.warps;
       
       for(var i = 0; i < diff; i++){  
-        this.insertCol(this.draft.warps, 0, 0);
+         this.draft.insertCol(i, 0,0);
+         this.loom.insertCol(i);
       }
     }else{
       var diff = this.draft.warps - e.warps;
       for(var i = 0; i < diff; i++){  
-        this.deleteCol(this.draft.warps-1);
+        this.draft.deleteCol(this.draft.warps-1);
+        this.loom.deleteCol(this.draft.warps-1);
+
       }
 
     }
 
-    this.draft.recomputeWidth();
+   // this.timeline.addHistoryState(this.draft);
 
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
+    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths(this.ms.getShuttles());
 
     this.weaveRef.redraw({drawdown: true, loom: true, warp_systems: true, warp_materials:true});
 
@@ -728,72 +723,87 @@ export class WeaverComponent implements OnInit {
       var diff = e.wefts - this.draft.wefts;
       
       for(var i = 0; i < diff; i++){  
-        this.insertRow(e.wefts+i, 0, 0);
+        this.draft.insertRow(e.wefts+i, 0, 0);
+        this.loom.insertRow(e.wefts+i);
+        console.log("inserting row");
       }
     }else{
       var diff = this.draft.wefts - e.wefts;
       for(var i = 0; i < diff; i++){  
-        this.deleteRow(this.draft.wefts-1);
+        this.draft.deleteRow(this.draft.wefts-1);
+        this.loom.deleteRow(this.draft.wefts-1);
       }
 
     }
 
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
+    this.render.updateVisible(this.draft);
 
-    this.weaveRef.redraw({drawdown: true, loom: true, warp_systems: true, warp_materials:true});
+    //this.timeline.addHistoryState(this.draft);
+
+    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths(this.ms.getShuttles());
+
+    this.weaveRef.redraw({drawdown: true, loom: true, weft_systems: true, weft_materials:true});
 
 
   }
 
   public createPattern(e: any) {
-    // e.pattern.id = this.patterns.length;
-    // this.patterns.push(e.pattern);
-    // this.draft.patterns = this.patterns;
-    e.pattern.id = this.draft.patterns.length;
-    this.draft.patterns.push(e.pattern);
+    e.pattern.id = this.patterns.length;
+    this.patterns.push(e.pattern);
   }
 
 
 //should this just hide the pattern or fully remove it, could create problems with undo/redo
    public removePattern(e: any) {
-    this.draft.patterns = this.draft.patterns.filter(pattern => pattern !== e.pattern);
+    this.patterns = this.patterns.filter(pattern => pattern !== e.pattern);
   }
 
 
-
-  public toggleViewFrames(){
-
-    this.render.toggleViewFrames();
-
-    if(this.render.view_frames && this.draft.loom.type == "frame"){
-      this.weaveRef.recomputeLoom();
-    }
-
-    this.weaveRef.redraw({loom:true});
-   
+  public updateSelection(e:any){
+    this.copy = e;
   }
+
+
+  /**
+   * called when a change that affects the view has taken place in the loom modal
+   */
+  onLoomChange(){
+
+      this.render.updateVisible(this.draft);
+
+    //  this.timeline.addHistoryState(this.draft);
+
+     if(this.render.isYarnBasedView()) this.draft.computeYarnPaths(this.ms.getShuttles());
+
+      if(this.loom.type === 'frame'){
+        this.loom.recomputeLoom(this.draft);
+      }
+
+     this.weaveRef.redraw({drawdown: true, loom: true, weft_systems: true, weft_materials:true,warp_systems: true, warp_materials:true});
+
+  }
+
 
   public renderChange(e: any){
      
      if(e.source === "slider"){
         this.render.setZoom(e.value);
-        this.weaveRef.rescale();
+        this.weaveRef.rescale(this.render.getZoom());
 
      } 
 
      if(e.source === "in"){
         this.render.zoomIn();
-        this.weaveRef.rescale();
 
      } 
 
      if(e.source === "out"){
         this.render.zoomOut();
-        this.weaveRef.rescale();
 
      } 
      if(e.source === "front"){
-        this.render.setFront(e.checked);
+        this.render.setFront(!e.checked);
+        this.weaveRef.flip();
         this.weaveRef.redraw({drawdown:true});
      }      
   }
@@ -802,153 +812,91 @@ export class WeaverComponent implements OnInit {
     this.collapsed = !this.collapsed;
   }
 
-  public styleViewFrames(ctx){
-    var dims = this.render.getInterpolationDims("base");
-    if(this.render.view_frames) return {'top.px': ctx.offsetTop  - 2*(dims.h), 'left.px': ctx.offsetLeft +  (this.draft.warps + this.draft.loom.num_treadles+3) * dims.w};
-    return {'top.px': ctx.offsetTop  - 2*(dims.h), 'left.px': ctx.offsetLeft +  (this.draft.warps + 2) *dims.w};
+
+
+
+
+
+//careful! calling this from console will clear all data in local storage
+public clearLocalStorage(){
+
+  var total = 0;
+  for(var x in localStorage) {
+    localStorage.removeItem(x);
   }
-
-  public styleThreading(){
-    return  {'top.px': 120, 'left.px':50};
-  }
-
-  public styleSelection(ctx){
-    return  {'top.px':ctx.offsetTop, 'left.px': ctx.offsetLeft};
-  }
+  console.log( "LOCAL STORAGE CLEARED");
+  console.log("local storage size now "+localStorage.length);
+}
 
 
-  public styleTieUps(ctx){
-    var dims = this.render.getInterpolationDims("base");
-    return  {'top.px':ctx.offsetTop, 'left.px': ctx.offsetLeft+this.draft.warps*dims.w};
-  }
+//call this from console when you want to write a file of the data
+public downloadLocalStorage(){
+  // let d_log = loadRawLog();
 
-  public styleDrawdown(ctx){
-    var dims = this.render.getInterpolationDims("base");
-    if(this.render.view_frames) return  {'top.px': ctx.offsetTop + (this.draft.loom.num_frames+1)*dims.h, 'left.px': ctx.offsetLeft - dims.w, 'width': (this.draft.warps+2) * dims.w, 'height':(this.draft.wefts+2) * dims.h};
-    else return  {'top.px': ctx.offsetTop, 'left.px': ctx.offsetLeft - dims.w, 'width': (this.draft.warps+2) * dims.w, 'height':(this.draft.wefts+2) * dims.h}
-  }
+  // let oldest_stamp = d_log[0].timestamp;
+  //   let newest_stamp =   d_log[0].timestamp
 
 
-  public styleTreadling(ctx){
-    var dims = this.render.getCellDims("base");
-    return {'top.px': ctx.offsetTop + (this.draft.loom.num_frames+2)*dims.h, 'left.px': ctx.offsetLeft + (this.draft.warps+2)*dims.w}
-  }
+  // for(var d in d_log){
+  //   if(d_log[d].timestamp > newest_stamp) newest_stamp = d_log[d].timestamp;
+  //   if(d_log[d].timestamp < oldest_stamp) oldest_stamp = d_log[d].timestamp;
+  // }
+
+  //   console.log(oldest_stamp, newest_stamp);
+  // let writer = createWriter(oldest_stamp+"_"+newest_stamp+".csv");
+  // writer.write(["timestamp", "region", "value"]);
+  // writer.write('\n');
+
+  // for(var d in d_log){
+  //   writer.write([d_log[d].timestamp, d_log[d].region, d_log[d].value]);
+  //   writer.write('\n');
+  // }
+  // writer.close();
 
 
-  public styleWeftMaterials(ctx){
-    var dims = this.render.getCellDims("base");
-     if(this.render.view_frames) return {'top.px': ctx.offsetTop + (this.draft.loom.num_frames+2)*dims.h, 'left.px': ctx.offsetLeft +  (this.draft.warps + this.draft.loom.num_treadles+4) * dims.w};
-     else  return {'top.px': ctx.offsetTop + dims.h, 'left.px': ctx.offsetLeft +  (this.draft.warps+3)* dims.w};
-  }
+}
 
 
-  public styleWeftSystems(ctx){
-    var dims = this.render.getCellDims("base");
-     if(this.render.view_frames) return {'top.px': ctx.offsetTop + (this.draft.loom.num_frames+2)*dims.h, 'left.px': ctx.offsetLeft +  (this.draft.warps + this.draft.loom.num_treadles+3) * dims.w};
-     else  return {'top.px': ctx.offsetTop+dims.h, 'left.px': ctx.offsetLeft +  (this.draft.warps+2)* dims.w};
-  }
+public getDraftFromLocalStore() : string{
+  var aValue = localStorage.getItem("draft");
+  return aValue;
+}
 
-  public styleWeftSystemsText(ctx){
-    var dims = this.render.getInterpolationDims("base");
-     if(this.render.view_frames) return {'top.px': ctx.offsetTop + (this.draft.loom.num_frames+2)*dims.h, 'left.px': ctx.offsetLeft +  (this.draft.warps + this.draft.loom.num_treadles+7) * dims.w};
-     else  return {'top.px': ctx.offsetTop+dims.h*2, 'left.px': ctx.offsetLeft +  (this.draft.warps+7)* dims.w};  
-  }
+//load raw log into memory so we can process it for the visualization
+//this will be called once everytime we switch into vis mode, though log entries may be
+//accumulated in the backgroudn that won't affect this
+public loadRawLog(){
+  //clear the log so we can load it fresh
+  // console.log(Date.now());
 
-  public styleColButtons(ctx){
-     var dims = this.render.getInterpolationDims("base");
-    if(this.render.view_frames)    return {'top.px': ctx.offsetTop - 7*dims.h, 'left.px': ctx.offsetLeft};
-    else  return {'top.px': ctx.offsetTop - 7*dims.h, 'left.px': ctx.offsetLeft};
-   
-  }
+   var d_log = [];
+  // //console.log(localStorage.length);
 
+  // for(var x in localStorage) {
+  //   if(typeof(localStorage[x]) == "string"){
+  //     time_region = split(x, ":")
+  //     value = localStorage[x];
 
-  public styleSingleColButton(i){
-    var dims = this.render.getInterpolationDims("base");
-    var zoom = this.render.getZoom();
-    return {'left.px':i*dims.w, 'width.px':dims.w, 'font-size.em':zoom/100}
+  //     d_log.push({
+  //     timestamp: time_region[0],
+  //     region: time_region[1],
+  //     value: value}
+  //   );
+  //   }
+  // }
 
-  }
+  return d_log;
 
+}
 
-  //this styles the container that contains all the row buttons
-  public styleRowButtons(ctx){
+ /**
+   *
+   * tranfers on save from header to draft viewer
+   */
+  public onSave(e: any) {
 
+    this.weaveRef.onSave(e);
 
-    var dims = this.render.getInterpolationDims("base");
-    if(this.render.view_frames) return {'top.px': ctx.offsetTop + (this.draft.loom.num_frames+2)*dims.h, 'left.px': ctx.offsetLeft +  (this.draft.warps + this.draft.loom.num_treadles+7) * dims.w};
-     else  return {'top.px': ctx.offsetTop + dims.h, 'left.px': ctx.offsetLeft +  (this.draft.warps+6)* dims.w};
-  }
-
-  public styleSingleRowButton(i){
-    var zoom = this.render.getZoom();
-    var dims = this.render.getInterpolationDims("base");
-    return {'top.px':(i*dims.h), 'font-size.em':zoom/100};
-
-    // var dims = this.render.getInterpolationDims("base");
-    // var zoom = this.render.getZoom();
-    // return {'top.px':i*dims.h, 'height.px':dims.h, 'font-size.em':zoom/100}
-
-  }
-
-
-// public getButtonRowHeight(ctx){
-//      var dims = this.render.getCellDims("base");
-//      return dims.h;
-//   }
-
-  public getTransform(j){
-      var dims = this.render.getInterpolationDims("base");
-      return "translate("+(this.draft.warps-j)*dims.w+", 0) rotate(-45)"
-  }
-
-  public getWarpSystemTransform(j){
-      var dims = this.render.getInterpolationDims("base");
-      let top = dims.h*2 + dims.h/4;
-      let left = j*dims.w + dims.w/4;
-      return "translate("+left+", "+top+")";
-  }
-
-  public getSelectorFontSize(j){
-      var zoom = this.render.getZoom()/50;
-      return zoom+"em";
-  }
-
-  public styleWarpSystems(ctx){
-    var dims = this.render.getCellDims("base");
-    if(this.render.view_frames)    return {'top.px': ctx.offsetTop - 2*dims.h, 'left.px': ctx.offsetLeft};
-    else  return {'top.px': ctx.offsetTop - 2*dims.h, 'left.px': ctx.offsetLeft};
-  }  
-
-  public styleWarpMaterials(ctx){
-    var dims = this.render.getCellDims("base");
-    if(this.render.view_frames)    return {'top.px': ctx.offsetTop - 3*dims.h, 'left.px': ctx.offsetLeft};
-    else  return {'top.px': ctx.offsetTop - 3*dims.h, 'left.px': ctx.offsetLeft};
-  }  
- 
-
-  public styleWarpSystemsText(ctx){
-    var dims = this.render.getInterpolationDims("base");
-    if(this.render.view_frames)    return {'top.px': ctx.offsetTop - 3.5*dims.h, 'left.px': ctx.offsetLeft};
-    else  return {'top.px': ctx.offsetTop - 3.5*dims.h, 'left.px': ctx.offsetLeft};
-  }
- 
-  public styleWeftSystemsRow(j){
-        var dims = this.render.getInterpolationDims("base");
-        return (j*dims.h + dims.h/4) ;
-
-  }
-
-  public getWeftSystemTransform(j){
-      var dims = this.render.getInterpolationDims("base");
-      let left = -(dims.w*3 - dims.w/4);
-      let top = j*dims.h + 3*dims.h/4;
-      return "translate("+left+", "+top+")";
-  }
-
-
-  public styleWarpRow(j){
-        var dims = this.render.getInterpolationDims("base");
-        return (j*dims.w);
   }
 
 

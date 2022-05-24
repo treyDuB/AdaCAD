@@ -34,6 +34,7 @@ export class Shuttle {
   }
 
   updateVariables({id, name, insert, visible, color, thickness, type, notes}) {
+    
     this.id = id;
     this.name = name;
     this.insert = insert;
@@ -53,6 +54,10 @@ export class Shuttle {
     if (!this.name) {
       this.name = 'Shuttle ' + (id + 1);
     }
+  }
+
+  getId(){
+    return this.id;
   }
 
   setColor(color: string) {
@@ -82,6 +87,10 @@ export class Shuttle {
 
   getType() {
     return this.type;
+  }
+
+  getName(){
+    return this.name;
   }
 
 }

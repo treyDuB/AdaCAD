@@ -1,0 +1,97 @@
+<div class="operation-container"
+cdkDrag
+[style.z-index] = "zndx"
+[cdkDragDisabled] = "disable_drag"
+[cdkDragFreeDragPosition]="bounds.topleft"
+(cdkDragMoved)="dragMove($event)"
+(cdkDragEnded)="dragEnd($event)"
+(cdkDragStarted)="dragStart($event)"
+>
+
+<div id='scale-{{id}}' class="operation-container">
+
+    <div class="cxn-row">
+
+
+        <div  *ngFor="let input of opnode.inlets; let i = index" class="input-group" id = "inlet{{id}}-{{i}}">
+          
+          <app-inlet 
+          [opid]='id'
+          [inletid]='i'
+          [dynamic]='is_dynamic_op'
+          (onInputSelected)="inputSelected($event)"
+          (onConnectionRemoved)="removeConnectionTo($event)"
+          (onInletChange)="onInletChange($event)"
+          ></app-inlet>
+        </div>
+       
+    </div>
+
+
+    <div class="top-row" >
+
+
+
+    <div class="operation-details">
+        <!-- <div class="name">{{op.name}} // {{id}}</div> -->
+        <div class="name">{{op.displayname}}</div>
+        <button 
+        class="help"
+        (click)="openHelpDialog()">
+        <i class="fas fa-question"></i>
+    </button> 
+    </div>
+
+
+    <button 
+    matTooltip= "Duplilcate"
+    class="button is-small is-primary fa fa-clone"
+    (click)="duplicate()">
+    </button>
+    
+
+    <button 
+    class="button is-small is-primary"
+    (click)="delete()">
+    <i class="fas fa-times"></i>
+    </button>
+</div>
+
+
+
+
+
+         
+
+<div class="params">
+
+
+  <div class='param-image' id="param-image-{{id}}" >
+    <div class="image_preview" id="image_preview-{{id}}">
+      <canvas id="preview_canvas-{{id}}"></canvas>
+      <div id="param-image-dims-{{id}}"></div> 
+    </div>
+    <div class="error"><p>{{filewarning}}</p></div> 
+   </div>
+
+   <div class="param-list">
+   
+    <ng-container *ngFor="let param of op.params; let i = index">
+      
+      <app-parameter 
+      [param]='param' 
+      [opid]='id' 
+      [paramid]='i'
+      (onOperationParamChange) = onParamChange($event)
+      (onFileUpload) = handleFile($event)>
+     </app-parameter>
+
+
+
+    
+    </ng-container>
+
+  </div>
+    </div>
+</div>
+</div>

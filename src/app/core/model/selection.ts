@@ -1,17 +1,14 @@
-import { Point } from './point';
-import { Shape } from './shape';
+import { Interlacement } from '../../core/model/datatypes'
 
 /**
  * Definition of selection object.
  * @class
  */
 export class Selection {
-  start: Point;
-  end: Point;
+  start: Interlacement;
+  end: Interlacement;
   width: number;
   height: number;
-
-  shape: Shape; // for non-rectangular selections
   target: any;
 
 
@@ -55,4 +52,8 @@ export class Selection {
     if(this.target !== undefined) return this.target.id;
     return undefined;
   }
+
+
+
+
 }

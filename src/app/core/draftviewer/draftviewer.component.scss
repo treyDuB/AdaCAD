@@ -1,0 +1,287 @@
+
+canvas{
+  width: fit-content;
+  height: fit-content;
+}
+
+// #warp-systems,
+// #warp-materials{
+//   width: fit-content;
+// }
+
+#threading{
+  padding-right: 10px;
+  //width: fit-content;
+}
+
+#treadling{
+  margin-top: 10px;
+}
+
+#draft-container{
+  display: block;
+  max-height: 60vh;
+  overflow: scroll;
+}
+
+#draft-scale-container{
+  margin: auto;
+  border: #fff;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  height: fit-content;
+}
+
+.warp-systems-container{
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+.threading-tieup-container{
+  display: flex;
+  flex-direction: row; 
+  padding-left: 10px;
+}
+
+.drawdown-container{
+  display: flex;
+  flex-direction: row;
+}
+
+.weft-systems-container{
+  display: flex;
+  flex-direction: row;
+  padding-top: 10px;
+
+}
+
+
+.warp-systems-text {
+      cursor: pointer;
+      height: 60px;
+      font-size: 10px;
+      line-height: 10px;
+      z-index: 1;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+      width: fit-content;
+    
+    
+    }
+  
+    .warp-systems-text.weaver {
+      background: #3d3d3d;
+      opacity: .8;
+    }
+    
+    .warp-systems-text.mixer {
+      background: #fff;
+    }
+    
+    
+    
+    
+    .warp-system-col{
+        width: 10px;
+        justify-content: flex-end;
+        flex-grow: 1;
+        color: #fff;
+        z-index: 1;
+        opacity: 1;
+        display: flex;
+        flex-direction: column-reverse;
+        text-align: center;
+        vertical-align: top;
+        line-height: 8px;
+      
+      .warp_selectors{
+        display: block;
+        height: 90px;
+      }
+    
+      &:hover {
+        .warp_insert,
+        .warp_clone,
+        .warp_delete{
+            display: block;
+        }
+      }
+
+      // &:last-child{
+      //   border-left: thin solid pink;
+      // }
+
+      // &:first-child{
+      //   border-right:thin solid pink;
+      // }
+    }
+    
+    .warp_system_code{
+    /*  user-select: none;
+      pointer-events: none;*/
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-bottom: thin solid white;
+      border-left: thin solid white;
+    }
+    
+    .warp_number{
+      display: block;
+      position: relative;
+      left: 10px;
+      height: 15px;
+      padding-left: 2px;
+      border-left: thin solid white;
+    
+    }
+
+    .warp_number_last{
+      display: block;
+      /* position: relative; */
+      left: 10px;
+      height: 15px;
+      padding-left: 2px;
+      border-left: thin solid white;
+    
+    }
+
+    // .last-warp{
+    //   display: block;
+    //   position: relative;
+    //   left: 10px;
+    //   height: 15px;
+    //   padding-left: 2px;
+    //   border-right: thin solid white;
+      
+    
+    // }
+    
+    .warp_insert,
+    .warp_clone,
+    .warp_delete{
+      align-items: left;
+      justify-content: left;
+      cursor: pointer;
+      height: 14px;
+      padding-bottom: 5px;
+      z-index: 2;
+      display: none;
+    
+    
+    }
+    
+    
+    
+    
+    .fa-plus-circle {
+      color: hsl(141, 71%, 48%);
+    }
+    
+    .fa-clone {
+      color: hsl(204, 86%, 53%)
+    }
+    
+    .fa-trash {
+       color: hsl(348, 100%, 61%);
+    }
+    
+    
+  
+  .weft-systems-text {
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 10px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: fit-content;
+  }
+
+  .weft-systems-text.weaver {
+    background: #3d3d3d;
+    opacity: .8;
+  }
+  
+  .weft-systems-text.mixer {
+    background: #fff;
+  }
+  
+  
+
+
+  .weft-system-row{
+    height: 10px;
+    width: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-grow: 1;
+    color: #fff;
+    z-index: 1;
+    opacity: 1;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 8px;
+
+    .weft_indicies{
+      width: 30px;
+      display: block;
+    }
+  
+    &:hover {
+      .weft_insert,
+      .weft_clone,
+      .weft_delete{
+          display: block;
+      }
+    }
+  
+  }
+  
+  .weft_system_code{
+    display: block;
+    width: 10px;
+    height: 10px; 
+    border-left: thin solid white;
+    border-top: thin solid white;
+  }
+  
+  .weft_number{
+    display: block;
+    position: relative;
+    top: -9px;
+    border-bottom: thin solid white;
+    padding-top: -9px;
+    width: 20px;
+  
+  }
+
+  .weft_number_last{
+    display: block;
+    position: relative;
+    top: 0px;
+    border-bottom: thin solid white;
+    width: 20px;
+  
+  }
+  
+  .weft_insert,
+  .weft_clone,
+  .weft_delete{
+    align-items: right;
+    justify-content: right;
+    cursor: pointer;
+    width: 15px;
+    padding-right: 5px;
+    z-index: 2;
+    display: none;
+  
+  }
+  

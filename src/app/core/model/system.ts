@@ -1,6 +1,6 @@
 /**
  * Definition of System object.
-* a system describes a structural relationship between rows and wefts. Used in overshot, multi-pick structures, or adding conductive rows
+* a system describes a structural relationship between rows and wefts. Used in overshot, mutipic structures, or adding conductive rows
  * @class
  */
 export class System {
@@ -8,14 +8,16 @@ export class System {
   name: string;
   notes: string;
   visible: boolean;
+  in_use: boolean;
 
   constructor(systemDict = null) {
 
     //defaults
-    this.id = -1;
-    this.name = "System"
+    this.id = 0;
+    this.name = "weft system"
     this.notes = "";
     this.visible = true;
+    this.in_use = false;
 
     if (systemDict) this.updateVariables(systemDict);
   }
@@ -45,5 +47,6 @@ export class System {
   getChar(){
     return String.fromCharCode(97 + this.id)
   }
+
 
 }

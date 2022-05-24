@@ -1,0 +1,177 @@
+.operation-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: max-content;
+}
+
+.top-row{
+    background: #333333;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 30px;
+}
+
+
+
+.top-row .child{
+    background: #999999;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 30px;
+}
+
+
+
+
+
+button.is-primary{
+    background-color: #333333;
+    border-color: transparent;
+    color: #fff;
+}
+
+.cxn-row{
+    font-size: .8em;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    background-color: transparent;
+    overflow: visible;
+
+}
+
+.cxn-row input{
+    border: none;
+    background: #00d1b2;
+    color: white;
+}
+
+
+.input-color{
+    width: 30px;
+    height: 30px;
+    border: thin solid white;
+}
+
+button.input{
+    position: relative;
+	background-color: #00d1b2;
+	color: white;
+	border: none;
+    width:30px;
+}
+
+button.cxn{
+    background-color: #00d1b2;
+    border: none;
+    border-left: thin solid white;
+    color: white;
+}
+
+.input-name{
+    margin-left: 8px;
+    line-height: 30px;
+}
+
+
+.inputs{
+    display: flex;
+    justify-content: flex-start;
+    text-align: center;
+}
+
+
+.mat-select{
+    width: 34px;
+    padding-left: 4px;
+    line-height: 30px;
+    background-color: #fff;
+}
+
+.mat-select-value{
+    color: #fff !important;
+}
+
+
+.inlet-label{
+    color: #fff;
+    line-height: 30px;
+    display: flex;
+    padding-right: 6px;
+}
+
+
+.param-image{
+    padding: 8px;
+    width: 116px;
+    display: none;
+    flex-direction: column;
+}
+
+.image_preview{
+    font-size: .5em;
+}
+
+.input-group{
+    display: flex;
+    flex-direction: row;
+    background-color: #00d1b2;
+    margin-right: 8px;
+}
+
+.input-group input{
+    width: 35px;
+}
+
+
+
+button.is-primary.is-active{
+    background-color: rgb(255, 64, 129);
+}
+
+.help{
+    background-color: #333333;
+    color: white;
+    height: 20px;
+    border:none;
+}
+
+.help:hover{
+    color: white;
+}
+
+.name{
+    margin: 0px 8px; 
+    color: white;
+    line-height: 30px;
+    min-width: 200px;
+}
+
+
+
+.params{
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    background: rgba(255,255,255,0.8);
+}
+
+.param-list{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+}
+
+.operation-details{
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
