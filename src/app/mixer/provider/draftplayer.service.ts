@@ -1,7 +1,7 @@
 import { Injectable} from '@angular/core';
 import { PedalsService, PedalStatus, Pedal } from '../../core/provider/pedals.service';
 import { Draft } from '../../core/model/draft';
-import { Operation, ServiceOp, OperationService } from '../provider/operation.service';
+import { TopologyOp, PipeOperation, SeedOperation, ServiceOp, OperationService } from '../provider/operation.service';
 import { EventEmitter } from 'events';
 
 interface PedalOp {
@@ -95,7 +95,7 @@ class PedalOpMapping {
   }
 
   opIsPaired(opName: string) {
-    let opPairs;
+    let opPairs = [];
     // console.log(this.pairs);
     if (this.numPairs > 0) {
       opPairs = Object.values(this.pairs).map((x: PlayerOp) => x.name);
@@ -138,26 +138,29 @@ const refresh: PlayerOp = {
 const reverse: PlayerOp = {
   name: 'reverse',
   perform: (init: PlayerState) => { 
-    let nextRow = (init.row-1) % init.draft.wefts;
+    let nextRow = (init.row+init.draft.wefts-1) % init.draft.wefts;
     return Promise.resolve({ draft: init.draft, row: nextRow, numPicks: init.numPicks+1});
   }
 }
 
 function playerOpFrom(op: ServiceOp) {
   // use "rotate" op as an example
-  let perform = function(init: PlayerState) {
-    let resultDraft: Draft;
-    let opInput = [{
-      params: [1],
-      drafts: [init.draft],
-      op_name: "",
-      inlet: null
-    }];
-    let result = Promise.resolve(op.perform(opInput));
-    return result.then((p) => { 
-      return { draft: p[0], row: init.row, numPicks: init.numPicks };
-    });
+  let dataOp: TopologyOp = op.topo_op;
+  let perform;
+  if (dataOp.classifier.type === 'pipe') {
+    const pipeOp = <PipeOperation> dataOp;
+    perform = function(init: PlayerState) {
+      let d: Draft = pipeOp.perform(init.draft, pipeOp.default_params);
+      return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });
+    }
+  } else if (dataOp.classifier.type === 'seed') {
+    const seedOp = <SeedOperation> dataOp;
+    perform = function(init: PlayerState) {
+      let d: Draft = seedOp.perform(seedOp.default_params);
+      return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });
+    }
   }
+  
   var p: PlayerOp = { 
     name: op.name,
     op: op,
@@ -209,16 +212,26 @@ export class DraftPlayerService {
     this.pedalOps.addOperation(refresh);
     this.pedalOps.addOperation(reverse);
 
-    let rotate = <ServiceOp> this.oss.getOp('rotate');
-    this.pedalOps.addOperation(playerOpFrom(rotate)); 
+    const tabby = <ServiceOp> this.oss.getOp('tabby');
+    const twill = <ServiceOp> this.oss.getOp('twill');
+    const random = <ServiceOp> this.oss.getOp('random');
+    const rotate = <ServiceOp> this.oss.getOp('rotate');
+    const invert = <ServiceOp> this.oss.getOp('invert');
+    const shiftx = <ServiceOp> this.oss.getOp('shift left');
+    // this.pedalOps.addOperation(playerOpFrom(rotate)); 
+    this.pedalOps.addOperation(playerOpFrom(tabby));
+    this.pedalOps.addOperation(playerOpFrom(twill));
+    this.pedalOps.addOperation(playerOpFrom(random));
+    this.pedalOps.addOperation(playerOpFrom(invert)); 
+    this.pedalOps.addOperation(playerOpFrom(shiftx)); 
 
-    this.pds.pedal_array.on('pedal-added', (num) => {
-      console.log("automatically pairing first pedal", num);
-      if (num == 1) {
-        console.log(this.pedalOps);
-        this.setPedalOp({value: 'forward'}, this.pedals[0]);
-      }
-    });
+    // this.pds.pedal_array.on('pedal-added', (num) => {
+    //   // console.log("automatically pairing first pedal", num);
+    //   if (num == 1) {
+    //     console.log(this.pedalOps);
+    //     this.setPedalOp({value: 'forward'}, this.pedals[0]);
+    //   }
+    // });
     this.pds.pedal_array.on('child-change', (e) => this.onPedal(e.id));
   }
 
@@ -259,25 +272,25 @@ export class DraftPlayerService {
   }
 
   onPedal(id: number) {
-    if (this.pedalOps[id]) {
-      this.pedalOps[id].perform(this.state)
+    if (this.pedalOps.pairs[id]) {
+      this.pedalOps.pairs[id].perform(this.state)
       .then((state: PlayerState) => {
         this.state = state;
+        console.log(this.state);
         this.redraw.emit('redraw');
         if (this.weaving) {
-          this.pds.loom_ready.once('change', (state) => {
-            if (state) {
+          // this.pds.loom_ready.once('change', (state) => {
+          //   if (state) {
               console.log("draft player: sending row");
               this.pds.sendDraftRow(this.currentRow());
-            }
-          })
+            // }
+          // })
         }
       });
     }
   }
 
   currentRow() {
-    console.log(this.state);
     let {draft, row} = this.state;
     let draftRow = draft.pattern[row % draft.wefts];
     let data = "";

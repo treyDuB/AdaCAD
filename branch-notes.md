@@ -4,6 +4,9 @@ Author(s): S
 
 Any directory paths assume that `/` is the root of the local AdaCAD repository.
 
+# 4/27/22
+Timing on pedal driver program: the upstream pedals are not being read in, seems to be one clock cycle off, comes in after the last clock cycle after the read period.
+
 # 4/17/22
 ## Architecture of Operations
 Mentally mapping, operations are actions (functions) that can take input drafts (0, 1, or N) and create output drafts (1 or N). The Operation class should really just be a wrapper for the perform() function.

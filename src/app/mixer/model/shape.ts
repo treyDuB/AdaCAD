@@ -101,9 +101,5 @@ export class Shape {
   getDraft():Array<Array<Cell>>{
     return this.draft;
   }
-
-
-
-
-
+  
 }

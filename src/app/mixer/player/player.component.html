@@ -48,44 +48,45 @@
       <div class="column">
         <!-- <p>Ready to weave? {{pls.pedals.readyToWeave}}</p> -->
         <div id="pedals-container" class="player-field">
-          <h2 class="pedals-field">Pedals: </h2>
+          <h2 class="player-field-header">Pedals </h2>
           <!-- <p>{{pls.pedals}}</p> -->
-          <ng-container class="pedal-array pedals-field" *ngFor="let p of pls.pedals">
-            <div class="pedal-box" id="pedal-{{p.id}}">
-              <div class="pedal-box-row">
-                <span class="pedal-field">{{p.id}}</span>
-                <span class="pedal-field">{{p.u_name}}</span>
-              </div>
-              <div class="pedal-box-row">
-                <span class="pedal-field-label">State: </span>
-                <span class="pedal-field">{{p.state}}</span>
-              </div>
-              <div class="pedal-box-row">
-                <mat-form-field>
-                  <mat-label>Operation</mat-label>
-                  <mat-select 
-                  [value]="pls.pedalOps.pairs[p.id].name"  
-                  (selectionChange)="pls.setPedalOp($event, p)">
-                    <ng-container *ngIf="pls.pedalOps.pairs[p.id]">
-                      <mat-option [value]="pls.pedalOps.pairs[p.id].name">
-                        {{pls.pedalOps.pairs[p.id].name}}
+          <div class="pedal-array pedals-field">
+            <ng-container *ngFor="let p of pls.pedals">
+              <div class="pedal-box" id="pedal-{{p.id}}">
+                <div class="pedal-box-row">
+                  <span class="pedal-field">{{p.id}}</span>
+                  <span class="pedal-field">{{p.u_name}}</span>
+                </div>
+                <div class="pedal-box-row pedal-state">
+                  <span class="pedal-field-label">State: </span>
+                  <span class="pedal-field">{{p.state}}</span>
+                </div>
+                <div class="pedal-box-row">
+                  <mat-form-field>
+                    <mat-label>Operation</mat-label>
+                    <mat-select 
+                    (selectionChange)="pls.setPedalOp($event, p)">
+                      <ng-container *ngIf="pls.pedalOps.pairs[p.id]">
+                        <mat-option [value]="pls.pedalOps.pairs[p.id].name">
+                          {{pls.pedalOps.pairs[p.id].name}}
+                        </mat-option>
+                      </ng-container>
+                      <mat-option *ngFor="let op of pls.pedalOps.unpairedOps" 
+                        [value]="op.name">
+                        {{op.name}}
                       </mat-option>
-                    </ng-container>
-                    <mat-option *ngFor="let op of pls.pedalOps.unpairedOps" 
-                      [value]="op.name">
-                      {{op.name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <!-- <span class="pedal-field-label">Operation: </span>
-                <span class="pedal-field">{{p.op}}</span> -->
+                    </mat-select>
+                  </mat-form-field>
+                  <!-- <span class="pedal-field-label">Operation: </span>
+                  <span class="pedal-field">{{p.op}}</span> -->
+                </div>
               </div>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
         
         <div id="draft-container" class="player-field">
-          <h2 class="draft-field">Draft: </h2>
+          <h2 class="player-field-header">Draft</h2>
           <canvas class="draft-field" id="active-draft-canvas"></canvas>
         </div>
       </div>

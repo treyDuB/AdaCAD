@@ -1,5 +1,21 @@
+.player-field {
+  border: #666 1px;
+  border-right-style: solid;
+}
+
+.player-field-header {
+  padding: 10px;
+  margin: unset;
+  background: #3f51b5;
+  color: #ffffff;
+}
+
+.player { height: inherit; }
+
 .column {
   float: left;
+  padding: unset;
+  height: inherit;
 }
 
 .loom-field, .pedals-field, .draft-field {
@@ -15,7 +31,6 @@
 
 .offline {
   background-color: rgb(150, 0, 0);
-  font-size: larger;
   color: #ffffff;
 }
 
@@ -24,11 +39,34 @@
   flex-direction: row;
 }
 
-.pedal-box {
-  background-color: #9eacff;
+.pedal-array {
+  margin: 10px;
 }
 
-.pedal-box, .player-field, .data-display {
+.pedal-box {
+  background-color: #bbc5ff;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.pedal-box, .data-display, #loom-container {
+  padding: 10px;
+}
+
+.pedal-state {
+  font-size: x-small;
+  color: #444444;
+}
+
+#loom-container {
+  padding-right: 20px;
+}
+
+#draft-container {
+  background-color: rgb(214, 214, 214);
+}
+
+#active-draft-canvas {
   padding: 10px;
 }
 
@@ -43,6 +81,7 @@
 .mat-button {
   background-color: #ff4081;
   color: white;
+  width: inherit;
   margin-left: 10px;
   margin-right: 10px;
 }
@@ -56,6 +95,10 @@
 .mat-expansion-panel-header, 
 .mat-expansion-panel-header.mat-expanded:focus {
   background: #121f6b;
+}
+
+.mat-expansion-panel-body {
+  padding: 0px;
 }
 
 .mat-expansion-panel, .mat-accordion, .mat-expansion-panel-header,
