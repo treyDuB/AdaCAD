@@ -352,6 +352,9 @@
                                 <li class="link">
                                     <a href="../injectables/ViewportService.html" >ViewportService</a>
                                 </li>
+                                <li class="link">
+                                    <a href="../injectables/WorkspaceService.html" >WorkspaceService</a>
+                                </li>
                         </ul>
                     </li>
             
@@ -859,6 +862,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../injectables/ViewportService.html" >ViewportService</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../injectables/WorkspaceService.html" >WorkspaceService</a>
                                        </li>
                                </ul>
                            </li>
@@ -1794,7 +1800,14 @@ export class OperationService {
         max: 100,
         value: 1,
         dx: &quot;the number of pics to keep between each splice row&quot;
-        }],
+        },
+        {name: &#x27;repeat&#x27;,
+        type: &#x27;boolean&#x27;,
+        falsestate: &#x27;do not repeat inputs to match size&#x27;,
+        truestate: &#x27;repeat inputs to match size&#x27;,
+        value: 1,
+        dx: &quot;controls if the inputs are repeated to make drafts of the same size or not&quot;
+      }],
         inlets: [{
           name: &#x27;receiving draft&#x27;, 
           type: &#x27;static&#x27;,
@@ -1816,6 +1829,8 @@ export class OperationService {
         const static_inlet &#x3D; op_inputs.find(el &#x3D;&gt; el.inlet &#x3D;&#x3D; 0);
         const splicing_inlet &#x3D; op_inputs.find(el &#x3D;&gt; el.inlet &#x3D;&#x3D; 1);
 
+
+        
         if(child_input &#x3D;&#x3D;&#x3D; undefined) return Promise.resolve([]);
         if(static_inlet &#x3D;&#x3D;&#x3D; undefined) return Promise.resolve([splicing_inlet.drafts[0]]);
         if(splicing_inlet &#x3D;&#x3D;&#x3D; undefined) return Promise.resolve([static_inlet.drafts[0]]);
@@ -1823,14 +1838,26 @@ export class OperationService {
 
         const static_input &#x3D; static_inlet.drafts[0];
         const splicing_input &#x3D; splicing_inlet.drafts[0];
+        const factor_in_repeats &#x3D; parent_input.params[1];
 
         const all_drafts &#x3D; [static_input, splicing_input];
 
-        const max_warps:number &#x3D; utilInstance.getMaxWarps(all_drafts);
-
-        let sum_rows &#x3D;all_drafts.reduce((acc, el) &#x3D;&gt; {
-          return acc + el.wefts;
-        }, 0);
+        let total_wefts: number &#x3D; 0;
+        const all_wefts &#x3D; all_drafts.map(el &#x3D;&gt; el.wefts).filter(el &#x3D;&gt; el &gt; 0);
+        if(factor_in_repeats &#x3D;&#x3D;&#x3D; 1)  total_wefts &#x3D; utilInstance.lcm(all_wefts);
+        else  {
+          total_wefts &#x3D;all_drafts.reduce((acc, el) &#x3D;&gt; {
+            return acc + el.wefts;
+          }, 0);
+  
+        }
+      
+        let total_warps: number &#x3D; 0;
+        const all_warps &#x3D; all_drafts.map(el &#x3D;&gt; el.warps).filter(el &#x3D;&gt; el &gt; 0);
+      
+        if(factor_in_repeats &#x3D;&#x3D;&#x3D; 1)  total_warps &#x3D; utilInstance.lcm(all_warps);
+        else  total_warps &#x3D; utilInstance.getMaxWarps(all_drafts);
+      
 
         const uniqueSystemRows &#x3D; this.ss.makeWeftSystemsUnique(all_drafts.map(el &#x3D;&gt; el.rowSystemMapping));
 
@@ -1840,21 +1867,23 @@ export class OperationService {
         let array_b_ndx &#x3D; 0;
       
         //create a draft to hold the merged values
-        const d:Draft &#x3D; new Draft({warps: max_warps, wefts:sum_rows, colShuttleMapping:static_input.colShuttleMapping, colSystemMapping:static_input.colSystemMapping});
+        const d:Draft &#x3D; new Draft({warps: total_warps, wefts:total_wefts, colShuttleMapping:static_input.colShuttleMapping, colSystemMapping:static_input.colSystemMapping});
 
         for(let i &#x3D; 0; i &lt; d.wefts; i++){
           let select_array: number &#x3D; (i % (parent_input.params[0]+1) &#x3D;&#x3D;&#x3D;parent_input.params[0]) ? 1 : 0; 
-          if(array_b_ndx &gt;&#x3D;splicing_input.wefts) select_array &#x3D; 0;
-          if(array_a_ndx &gt;&#x3D;static_input.wefts) select_array &#x3D; 1;
 
-          let ndx &#x3D; (select_array &#x3D;&#x3D;&#x3D; 0) ? array_a_ndx : array_b_ndx;
+          if(!factor_in_repeats){
+            if(array_b_ndx &gt;&#x3D;splicing_input.wefts) select_array &#x3D; 0;
+            if(array_a_ndx &gt;&#x3D;static_input.wefts) select_array &#x3D; 1;
+          }
+          
+          let cur_weft_num &#x3D; all_drafts[select_array].wefts
+          let ndx &#x3D; (select_array &#x3D;&#x3D;&#x3D; 0) ? array_a_ndx%cur_weft_num : array_b_ndx%cur_weft_num;
 
           d.pattern[i].forEach((cell, j) &#x3D;&gt; {
-            if(all_drafts[select_array].hasCell(ndx, j)){
-              cell.setHeddle(all_drafts[select_array].pattern[ndx][j].getHeddle());
-            }else{
-              cell.setHeddle(null);
-            }   
+            let cur_warp_num &#x3D; all_drafts[select_array].warps;
+            cell.setHeddle(all_drafts[select_array].pattern[ndx][j%cur_warp_num].getHeddle());
+            if(j &gt;&#x3D; cur_warp_num &amp;&amp; !factor_in_repeats) cell.setHeddle(null);
           });
 
           d.rowSystemMapping[i] &#x3D; uniqueSystemRows[select_array][ndx];
@@ -2235,14 +2264,14 @@ export class OperationService {
         min: 0,
         max: 10000,
         value: 0,
-        dx: &quot;the amount to offset the addedop_input.drafts from the left&quot;
+        dx: &quot;the amount to offset b from the left&quot;
         },
-        {name: &#x27;offset from bottom&#x27;,
+        {name: &#x27;bottom offset&#x27;,
         type: &#x27;number&#x27;,
         min: 0,
         max: 10000,
         value: 0,
-        dx: &quot;the amount to offset the overlayingop_input.drafts from the bottom&quot;
+        dx: &quot;the amount to offset b from the bottom&quot;
         }
       ],
       inlets: [{
@@ -2283,6 +2312,7 @@ export class OperationService {
         if(first.warps &gt; width) width &#x3D; first.warps;
         if(first.wefts &gt; height) height &#x3D; first.wefts;
 
+    
 
         //initialize the base container with the first draft at 0,0, unset for anythign wider
         const init_draft: Draft &#x3D; new Draft({
@@ -2333,7 +2363,7 @@ export class OperationService {
 
     const atop: Operation &#x3D; {
       name: &#x27;set atop, (a, b) &#x3D;&gt; a&#x27;,
-      displayname: &#x27;set atop, (a, b) &#x3D;&gt; a&#x27;, 
+      displayname: &#x27;set atop, (a, b) &#x3D;&gt; b&#x27;, 
       old_names:[&#x27;set atop&#x27;], 
       dx: &#x27;sets cells of a on top of b, no matter the value of b&#x27;,
       params: &lt;Array&lt;NumParam&gt;&gt;[
@@ -3247,10 +3277,10 @@ export class OperationService {
         value: 3,
         dx: &#x27;number of weft overs&#x27;
         },
-        &lt;BoolParam&gt; {name: &#x27;S/Z&#x27;,
+        &lt;BoolParam&gt; {name: &#x27;Z/S&#x27;,
         type: &#x27;boolean&#x27;,
-        falsestate: &#x27;Z twist&#x27;,
-        truestate: &#x27;S twist&#x27;,
+        falsestate: &#x27;Z&#x27;,
+        truestate: &#x27;S&#x27;,
         value: 0,
         dx: &#x27;toggle to switch the twist direction&#x27;
         }
@@ -3318,12 +3348,12 @@ export class OperationService {
         value: &#x27;2 2 3 3&#x27;,
         dx: &#x27;the under over pattern of this twill (e.g. 2 2 3 3)&#x27;
         },
-        &lt;BoolParam&gt;{name: &#x27;S/Z&#x27;,
+        &lt;BoolParam&gt;{name: &#x27;Z/S&#x27;,
         type: &#x27;boolean&#x27;,
-        truestate: &#x27;Z twist&#x27;,
-        falsestate: &#x27;S twist&#x27;,
+        falsestate: &#x27;Z&#x27;,
+        truestate: &#x27;S&#x27;,
         value: 0,
-        dx: &#x27;toggle to change twist direction&#x27;
+        dx: &#x27;toggle to change twill direction&#x27;
         }
       ],
       inlets: [{
@@ -3362,7 +3392,7 @@ export class OperationService {
 
 
         const pattern:Array&lt;Array&lt;Cell&gt;&gt; &#x3D; [];
-        let twist_val &#x3D; (twist &#x3D;&#x3D; 0) ? 1 : -1;
+        let twist_val &#x3D; (twist &#x3D;&#x3D; 0) ? -1 : 1;
         for(let i &#x3D; 0; i &lt; sum; i++){
           pattern.push([]);
           for(let j &#x3D; 0; j &lt; sum; j++){
@@ -3530,7 +3560,7 @@ export class OperationService {
 
     const warp_profile: DynamicOperation &#x3D; {
       name: &#x27;warp_profile&#x27;,
-      displayname: &#x27;profile draft (cloth width)&#x27;,
+      displayname: &#x27;pattern across width&#x27;,
       old_names:[],
       dynamic_param_id: 0,
       dynamic_param_type: &#x27;number&#x27;,
@@ -3891,6 +3921,13 @@ export class OperationService {
         max: 100,
         value: 2,
         dx: &#x27;the move number on each row&#x27;
+        },
+        &lt;BoolParam&gt;{name: &#x27;face&#x27;,
+        type: &#x27;boolean&#x27;,
+        falsestate: &quot;weft facing&quot;,
+        truestate: &quot;warp facing&quot;,
+        value: 0,
+        dx: &#x27;select to toggle warp and weft facing variations of this satin&#x27;
         }
       ],
       inlets: [{
@@ -3905,11 +3942,13 @@ export class OperationService {
         const parent_input &#x3D; op_inputs.find(el &#x3D;&gt; el.op_name &#x3D;&#x3D; &#x27;satin&#x27;);
         const child_input &#x3D; op_inputs.find(el &#x3D;&gt; el.op_name &#x3D;&#x3D; &#x27;child&#x27;);
        
+
         const pattern:Array&lt;Array&lt;Cell&gt;&gt; &#x3D; [];
         for(let i &#x3D; 0; i &lt;parent_input.params[0]; i++){
           pattern.push([]);
           for(let j &#x3D; 0; j &lt;parent_input.params[0]; j++){
-            pattern[i][j] &#x3D; (j&#x3D;&#x3D;&#x3D;(i*parent_input.params[1])%parent_input.params[0]) ? new Cell(true) : new Cell(false);
+            if(parent_input.params[2]&#x3D;&#x3D;&#x3D; 0) pattern[i][j] &#x3D; (j&#x3D;&#x3D;&#x3D;(i*parent_input.params[1])%parent_input.params[0]) ? new Cell(true) : new Cell(false);
+            else pattern[i][j] &#x3D; (j&#x3D;&#x3D;&#x3D;(i*parent_input.params[1])%parent_input.params[0]) ? new Cell(false) : new Cell(true);
           }
         }
 

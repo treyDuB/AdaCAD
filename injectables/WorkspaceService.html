@@ -118,7 +118,7 @@
                                     <a href="../components/InitModal.html" >InitModal</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../components/InletComponent.html"  class="active" >InletComponent</a>
+                                    <a href="../components/InletComponent.html" >InletComponent</a>
                                 </li>
                                 <li class="link">
                                     <a href="../components/LoginComponent.html" >LoginComponent</a>
@@ -353,7 +353,7 @@
                                     <a href="../injectables/ViewportService.html" >ViewportService</a>
                                 </li>
                                 <li class="link">
-                                    <a href="../injectables/WorkspaceService.html" >WorkspaceService</a>
+                                    <a href="../injectables/WorkspaceService.html"  class="active" >WorkspaceService</a>
                                 </li>
                         </ul>
                     </li>
@@ -629,7 +629,7 @@
                                            <a href="../components/InitModal.html" >InitModal</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../components/InletComponent.html"  class="active" >InletComponent</a>
+                                           <a href="../components/InletComponent.html" >InletComponent</a>
                                        </li>
                                        <li class="link">
                                            <a href="../components/LoginComponent.html" >LoginComponent</a>
@@ -864,7 +864,7 @@
                                            <a href="../injectables/ViewportService.html" >ViewportService</a>
                                        </li>
                                        <li class="link">
-                                           <a href="../injectables/WorkspaceService.html" >WorkspaceService</a>
+                                           <a href="../injectables/WorkspaceService.html"  class="active" >WorkspaceService</a>
                                        </li>
                                </ul>
                            </li>
@@ -1036,535 +1036,116 @@
                    
                    </nav>
                </div>
-               <div class="content component">
+               <div class="content injectable">
                    <div class="content-data">
 
 
+
+
 <ol class="breadcrumb">
-  <li>Components</li>
-  <li>InletComponent</li>
+  <li>Injectables</li>
+  <li>WorkspaceService</li>
 </ol>
 
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
+    </li>
+    <li>
+        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
+    </li>
+</ul>
 
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-            <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-        </li>
-        <li>
-            <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane fade active in" id="infos"><p class="comment">
-    <h3>File</h3>
-</p>
-<p class="comment">
-    <code>src/app/mixer/palette/operation/inlet/inlet.component.ts</code>
-</p>
-
-
-
-<section>
-    <h3>Metadata</h3>
-    <table class="table table-sm table-hover">
-        <tbody>
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="infos">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/provider/workspace.service.ts</code>
+        </p>
 
 
+            <section>
+                <h3 id="constructor">Constructor</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>constructor()</code>
+                                </td>
+                            </tr>
+            
+                        </tbody>
+                    </table>
+            </section>
 
 
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> origin_topright</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>origin_topright:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>true</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="col-md-4">
+                                    <b> use_colors_on_mixer</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <code>use_colors_on_mixer:     <code>boolean</code>
+            </bcode>
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <i>Default value: </i><code>true</code>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+    <div class="tab-pane fade tab-source-code" id="source">
+        <pre><code class="hljs javascript">import { Injectable } from &#x27;@angular/core&#x27;;
 
-
-
-
-
-
-
-
-            <tr>
-                <td class="col-md-3">selector</td>
-                <td class="col-md-9"><code>app-inlet</code></td>
-            </tr>
-
-            <tr>
-                <td class="col-md-3">styleUrls</td>
-                <td class="col-md-9"><code>inlet.component.scss</code></td>
-            </tr>
-
-
-
-            <tr>
-                <td class="col-md-3">templateUrl</td>
-                <td class="col-md-9"><code>inlet.component.html</code></td>
-            </tr>
-
-
-        </tbody>
-    </table>
-</section>
-
-    <section>
-        <h3 id="inputs">Inputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>dynamic</code>
-                        </td>
-                        <td class="col-md-10">
-                              <p>
-                                <em>Type:</em>    <code>boolean</code>
-
-                              </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>inletid</code>
-                        </td>
-                        <td class="col-md-10">
-                              <p>
-                                <em>Type:</em>    <code>number</code>
-
-                              </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>opid</code>
-                        </td>
-                        <td class="col-md-10">
-                              <p>
-                                <em>Type:</em>    <code>number</code>
-
-                              </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="outputs">Outputs</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onConnectionRemoved</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code><a href="https://angular.io/docs/ts/latest/api/core/index/EventEmitter-class.html" target="_blank" >EventEmitter</a></code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onInletChange</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code><a href="https://angular.io/docs/ts/latest/api/core/index/EventEmitter-class.html" target="_blank" >EventEmitter</a></code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-2">
-                            <code>onInputSelected</code>
-                        </td>
-                        <td class="col-md-10">
-                            <em><code>$event</code> type:</em>    <code><a href="https://angular.io/docs/ts/latest/api/core/index/EventEmitter-class.html" target="_blank" >EventEmitter</a></code>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="constructor">Constructor</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>constructor(tree: <a href="../injectables/TreeService.html" >TreeService</a>, systems: <a href="../injectables/SystemsService.html" >SystemsService</a>, ops: <a href="../injectables/OperationService.html" >OperationService</a>)</code>
-                        </td>
-                    </tr>
-    
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="methods">Methods</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> parseDefaultInletValue</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>parseDefaultInletValue(type: string, value: any)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>any</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> inputSelected</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>inputSelected()</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> removeConnectionTo</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>removeConnectionTo(sd_id: number)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> getInputName</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>getInputName(id: number)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>string</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> inletChange</b>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-    <code>inletChange(value: any)</code>
-                        </td>
-                    </tr>
-    
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-description">
-                                    <b>Returns: </b>    <code>void</code>
-    
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-
-    <section>
-        <h3 id="inputs">Properties</h3>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> all_system_codes</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>all_system_codes:     <code>any[]</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> fc</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>fc:     <code><a href="https://angular.io/docs/ts/latest/api/forms/index/FormControl-class.html" target="_blank" >FormControl</a></code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> inlet</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>inlet:     <code>OperationInlet</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> opnode</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>opnode:     <code>OpNode</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> selectedValue</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>selectedValue:     <code>number</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> textValidate</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>textValidate:     <code>any</code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <b> tree</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <code>tree:     <code><a href="../injectables/TreeService.html" target="_self" >TreeService</a></code>
-    </bcode>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
-</div>
-        <div class="tab-pane fade tab-source-code" id="source">
-            <pre><code class="hljs javascript">import { Component, Input, OnInit, Output, EventEmitter } from &#x27;@angular/core&#x27;;
-import { FormControl, FormGroupDirective, NgForm } from &#x27;@angular/forms&#x27;;
-import { OperationInlet, OperationService, DynamicOperation } from &#x27;../../../provider/operation.service&#x27;;
-import { SystemsService } from &#x27;../../../../core/provider/systems.service&#x27;;
-import { OpNode, TreeService } from &#x27;../../../provider/tree.service&#x27;;
-
-
-
-@Component({
-  selector: &#x27;app-inlet&#x27;,
-  templateUrl: &#x27;./inlet.component.html&#x27;,
-  styleUrls: [&#x27;./inlet.component.scss&#x27;]
+@Injectable({
+  providedIn: &#x27;root&#x27;
 })
-export class InletComponent implements OnInit {
 
-  @Input() opid:  number;
-  @Input() inletid:  number;
-  @Input() dynamic: boolean;
-  @Output() onInputSelected &#x3D; new EventEmitter &lt;any&gt;(); 
-  @Output() onConnectionRemoved &#x3D; new EventEmitter &lt;any&gt;(); 
-  @Output() onInletChange &#x3D; new EventEmitter &lt;any&gt;(); 
+/**
+ * store any global workspace settings here
+ */
+export class WorkspaceService {
 
-  fc: FormControl;
-  textValidate: any;
-  all_system_codes: Array&lt;any&gt;;
-  opnode: OpNode;
-  inlet: OperationInlet;
-  selectedValue: number; 
+  origin_topright: boolean &#x3D; true;
+  use_colors_on_mixer: boolean &#x3D; true;
+  
 
-  constructor(public tree: TreeService, private systems: SystemsService, private ops: OperationService) { 
-
-  }
-
-  ngOnInit(): void {    
-    this.opnode &#x3D; this.tree.getOpNode(this.opid);
-    this.all_system_codes &#x3D; this.systems.weft_systems.map(el &#x3D;&gt; el.name);
-    const op &#x3D; this.ops.getOp(this.opnode.name);  
-    
-    // initalize any dyanmic inlets
-    if(this.inletid &gt;&#x3D; op.inlets.length &amp;&amp; this.dynamic){
-      const type &#x3D; (&lt;DynamicOperation&gt; op).dynamic_param_type;
-      this.inlet &#x3D; &lt;OperationInlet&gt;{
-        type: type,
-        name: &#x27;&#x27;,
-        value: this.parseDefaultInletValue(type, this.opnode.inlets[this.inletid]),
-        num_drafts: 1,
-        dx: &#x27;&#x27;
-      }
-    }else{
-      this.inlet &#x3D; op.inlets[this.inletid];
-    }
-    
-
-
-    this.fc &#x3D; new FormControl(this.parseDefaultInletValue(this.inlet.type, this.opnode.inlets[this.inletid]));
-
-  }
-
-  parseDefaultInletValue(type: string, value: any) : any {
-    switch (type){
-      case &#x27;number&#x27;:
-      case &#x27;system&#x27;:
-        return parseInt(value);
-        break;
-      case &#x27;notation&#x27;:
-      case &#x27;string&#x27;:
-      case &#x27;color&#x27;:
-        return value.slice();
-      
-    }
-  }
-
-  inputSelected(){
-    this.onInputSelected.emit(this.inletid);
-  }
-
-  removeConnectionTo(sd_id: number){
-    this.onConnectionRemoved.emit({from: sd_id, to: this.opid, inletid: this.inletid});
-  }
-
-  getInputName(id: number) : string {
-    const sd &#x3D; this.tree.getDraft(id);
-    if(sd &#x3D;&#x3D;&#x3D; null || sd &#x3D;&#x3D;&#x3D; undefined) return &quot;null draft&quot;
-    return sd.getName();
-  }
-
-  inletChange(value: any){
-    const opnode: OpNode &#x3D; &lt;OpNode&gt; this.tree.getNode(this.opid);
-    this.fc.setValue(value);
-    
-    switch(this.inlet.type){
-      case &#x27;number&#x27;:
-        opnode.inlets[this.inletid] &#x3D; value;
-        break;
-      case &#x27;system&#x27;:
-        opnode.inlets[this.inletid] &#x3D; value;
-        break;
-      case &#x27;color&#x27;:
-        opnode.inlets[this.inletid] &#x3D; value;
-        break;
-      case &#x27;notation&#x27;:
-        opnode.inlets[this.inletid] &#x3D; value;
-        break;
-
-    }
-
-    this.onInletChange.emit({id: this.inletid});
-
-  }
-
-
-
-
-
-
+  constructor() { }
 }
 </code></pre>
-        </div>
     </div>
-
-
-
+</div>
 
 
 
