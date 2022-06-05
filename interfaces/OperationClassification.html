@@ -1810,9 +1810,13 @@ export class OperationService {
         const all_drafts &#x3D; [static_input, splicing_input];
 
         let total_wefts: number &#x3D; 0;
-        const all_wefts &#x3D; all_drafts.map(el &#x3D;&gt; el.wefts).filter(el &#x3D;&gt; el &gt; 0);
-        if(factor_in_repeats &#x3D;&#x3D;&#x3D; 1)  total_wefts &#x3D; utilInstance.lcm(all_wefts);
+        if(factor_in_repeats &#x3D;&#x3D;&#x3D; 1){
+
+          const factors &#x3D; [static_input.wefts, splicing_input.wefts*(parent_input.params[0]+1)];
+          total_wefts &#x3D; utilInstance.lcm(factors);
+        }  
         else  {
+          //sums the wefts from all the drafts
           total_wefts &#x3D;all_drafts.reduce((acc, el) &#x3D;&gt; {
             return acc + el.wefts;
           }, 0);
