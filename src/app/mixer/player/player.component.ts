@@ -111,8 +111,6 @@ export class PlayerComponent implements OnInit {
         }
       }
     }
-    // this.tree.setDraftClean(this.id);
-    // return "complete";
   }
 
   drawCell(cell_size: number, i: number, j: number, usecolor: boolean, flipY: boolean = true){
@@ -125,7 +123,7 @@ export class PlayerComponent implements OnInit {
       }else{
         if(is_up){
           color = usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : '#000000';
-        }else if (i == this.pls.state.row) {
+        }else if (i == this.pls.state.row) { // highlight current row in yellow
           color = usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : '#ffff00';
         } else {
           color = usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : '#ffffff';
@@ -134,8 +132,6 @@ export class PlayerComponent implements OnInit {
       }
     } else {
       this.cx.fillStyle =  '#0000000d';
-    // this.cx.fillStyle =  '#ff0000';
-
     }
     let y = flipY ? this.pls.draft.wefts-1 - i : i;
     this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
@@ -147,5 +143,4 @@ export class PlayerComponent implements OnInit {
     this.cx.fillRect(0, y*cell_size, cell_size, cell_size);
     this.cx.fillRect((width+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
-
 }

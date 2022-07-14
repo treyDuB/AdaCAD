@@ -1,14 +1,9 @@
 import { Injectable} from '@angular/core';
 import { PedalsService, PedalStatus, Pedal } from '../../core/provider/pedals.service';
 import { Draft } from '../../core/model/draft';
-import { TopologyOp, PipeOperation, SeedOperation, ServiceOp, OperationService } from '../provider/operation.service';
+import { TopologyOp, PipeOperation, SeedOperation } from '../model/operation';
+import { ServiceOp, OperationService } from '../provider/operation.service';
 import { EventEmitter } from 'events';
-
-interface PedalOp {
-  id: number,
-  name: string,
-  op?: PlayerOp
-}
 
 interface PedalsConfig {
   numPedals: number,
@@ -61,12 +56,6 @@ class PedalOpMapping {
     this.ops = []
     this.unpairedOps = [];
     this.pairs = {};
-
-    // if (loadConfig) {
-    //   for (var i of loadConfig.ops) {
-    //     this.pair(i, loadConfig.ops[i]);
-    //   }
-    // } 
   }
 
   get numPedals() {
@@ -120,7 +109,6 @@ class PedalOpMapping {
     this.unpairPedal(pid);
   }
 }
-
 
 const forward: PlayerOp = {
   name: 'forward',
@@ -218,7 +206,8 @@ export class DraftPlayerService {
     const rotate = <ServiceOp> this.oss.getOp('rotate');
     const invert = <ServiceOp> this.oss.getOp('invert');
     const shiftx = <ServiceOp> this.oss.getOp('shift left');
-    // this.pedalOps.addOperation(playerOpFrom(rotate)); 
+    
+    this.pedalOps.addOperation(playerOpFrom(rotate)); 
     this.pedalOps.addOperation(playerOpFrom(tabby));
     this.pedalOps.addOperation(playerOpFrom(twill));
     this.pedalOps.addOperation(playerOpFrom(random));
@@ -236,8 +225,10 @@ export class DraftPlayerService {
   }
 
   get pedals() { return this.pds.pedals; }
-  get readyToWeave() {
-    return (this.pds.readyToWeave && (this.pedalOps.opIsPaired('forward') > -1));
+  get readyToWeave() {  // need either one pedal forward or one pedal reverse, in order to progress through draft
+    return (this.pds.readyToWeave && 
+      ((this.pedalOps.opIsPaired('forward') > -1) || (this.pedalOps.opIsPaired('reverse') > -1))
+    );
   }
   get weaving() {
     return this.pds.active_draft.val;
@@ -245,13 +236,6 @@ export class DraftPlayerService {
   get draft() {
     return this.state.draft;
   }
-
-  // addPedalOption(op: PlayerOp) {
-  //   if (op.pedal < 0) {
-  //     this.options.push(op);
-  //     this.opsDict[op.name] = -1;
-  //   }
-  // }
 
   setDraft(d: Draft) {
     this.state.draft = d;
@@ -324,7 +308,7 @@ export class DraftPlayerService {
   toggleWeaving() {
     // don't let user start weaving until AT LEAST:
     // - 1 pedal connected AND
-    // - 1 pedal configured with operation "forward"
+    // - 1 pedal configured with operation "forward" or "reverse"
     this.pds.toggleWeaving();
     this.pds.vacuum_on.once('change', (state) => {
       if (state) {
