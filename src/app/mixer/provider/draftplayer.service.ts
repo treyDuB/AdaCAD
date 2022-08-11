@@ -1,7 +1,9 @@
 import { Injectable} from '@angular/core';
 import { PedalsService, PedalStatus, Pedal } from '../../core/provider/pedals.service';
 import { Draft } from '../../core/model/draft';
-import { TopologyOp, PipeOperation, SeedOperation } from '../model/operation';
+import { BaseOp as Op, TopologyOperation as TopoOp,
+  Pipe, Seed, NoDrafts, NoParams, DraftsOptional, ParamsOptional, AllRequired 
+} from '../model/operation';
 import { ServiceOp, OperationService } from '../provider/operation.service';
 import { EventEmitter } from 'events';
 
@@ -133,16 +135,16 @@ const reverse: PlayerOp = {
 
 function playerOpFrom(op: ServiceOp) {
   // use "rotate" op as an example
-  let dataOp: TopologyOp = op.topo_op;
+  let dataOp: TopoOp = op.topo_op;
   let perform;
   if (dataOp.classifier.type === 'pipe') {
-    const pipeOp = <PipeOperation> dataOp;
+    const pipeOp = dataOp as Op<Pipe, AllRequired>;
     perform = function(init: PlayerState) {
       let d: Draft = pipeOp.perform(init.draft, pipeOp.default_params);
       return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });
     }
   } else if (dataOp.classifier.type === 'seed') {
-    const seedOp = <SeedOperation> dataOp;
+    const seedOp = dataOp as Op<Seed, DraftsOptional>;
     perform = function(init: PlayerState) {
       let d: Draft = seedOp.perform(seedOp.default_params);
       return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });

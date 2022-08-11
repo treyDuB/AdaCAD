@@ -4,16 +4,17 @@
  * Types, classes, other infrastructural objects
  */
 
-import { toPlainObject } from 'lodash';
-import { string } from 'mathjs';
 import { Draft } from '../../core/model/draft';
 
+/**
+ * DEFINING TAXONOMY: OPERATION PARAMETERS
+ */
 export type ParamValue = number | boolean | string;
 
 export interface GenericParam<Type> {
   name: string,
   dx: string,
-  type: 'number' | 'boolean' | 'color' | 'file' | 'string', //number, boolean, color, file, string
+  type: 'number' | 'boolean' | 'color' | 'file' | 'string',
   value: Type,
   default?: Type,
   min?: number,
@@ -62,7 +63,7 @@ export function getParamValues(input: Array<OpParam>): Array<ParamValue> {
 }
 
 /**
-* Helper types to provide extra type-checking for Operation perform() functions
+* Types that an Operation's perform() function can handlle as input/output
 */
 
 /** @type Union of types that can serve as input to Operation perform() functions. */
@@ -71,46 +72,120 @@ export type PerformInput = Array<Draft> | Draft | null;
 /** @type Union of types that Operation perform() functions can output. */
 export type PerformOutput = Array<Draft> | Draft;
 
-type OpTopologyType = 'pipe' | 'seed' | 'merge' | 'branch' | 'bus';
-type OpConstraintType = 'no_drafts' | 'no_params' | 'drafts_opt' | 'params_opt' | 'all_req';
-type OpInputConstraint = 'req' | 'opt' | 'none';
+/**
+ * DEFINING TAXONOMY: OPERATION TOPOLOGY
+ */
+export const TopologyName = {
+  pipe: 'pipe', 
+  seed: 'seed', 
+  merge: 'merge', 
+  branch: 'branch', 
+  bus: 'bus'
+} as const;
+export type TopologyName = keyof typeof TopologyName;
 
-interface OpTopologyDef {name: OpTopologyType, input: PerformInput, output: PerformOutput};
-export interface Seed extends OpTopologyDef {name: 'seed', input: Draft | null, output: Draft};
-export interface Pipe extends OpTopologyDef {name: 'pipe', input: Draft, output: Draft};
-export interface Merge extends OpTopologyDef {name: 'merge', input: Array<Draft>, output: Draft};
-export interface Branch extends OpTopologyDef {name: 'branch', input: Draft, output: Array<Draft>};
-export interface Bus extends OpTopologyDef {name: 'bus', input: Array<Draft>, output: Array<Draft>};
+interface TopologyDef { type: TopologyName; input: PerformInput; output: PerformOutput; };
 
-type OpTopology = Seed | Pipe | Merge | Branch | Bus;
-type OpTopologyIndex = {
+/**
+* @class
+* Operation that uses parameters to generate a draft with no inputs, may take an optional input
+* @method perform OpPerform function: 
+* - INPUT: zero or one Draft
+* - OUTPUT: exactly one Draft
+*/
+export class Seed implements TopologyDef { type: 'seed'; input: Draft | null; output: Draft; };
+
+/**
+* @class
+* Operation that takes one input and generates one output draft. 
+* May or may not take parameters.
+* @method perform OpPerform function: 
+* - INPUT: exactly one Draft
+* - OUTPUT: exactly one Draft
+*/
+export class Pipe implements TopologyDef { type: 'pipe'; input: Draft; output: Draft; };
+
+/**
+* @class
+* Operation that takes many (N) inputs and generates one output draft.
+* @method perform OpPerform function: 
+* - INPUT: Array of Drafts
+* - OUTPUT: exactly one Draft
+*/
+export class Merge implements TopologyDef { type: 'merge'; input: Array<Draft>; output: Draft; };
+
+/**
+* @class
+* Operation that takes one input and generates many (N) output drafts.
+* @method perform OpPerform function:
+* - INPUT: exactly one Draft
+* - OUTPUT: Array of Drafts
+*/
+export class Branch implements TopologyDef { type: 'branch'; input: Draft; output: Array<Draft>; };
+
+/**
+* @class
+* Operation that takes many (N) inputs and generates many (M) output drafts.
+* Number of inputs does not necessarily match number of outputs (N ?= M).
+* @method perform OpPerform function:  
+* - INPUT: Array of Drafts
+* - OUTPUT: Array of Drafts
+*/
+export class Bus implements TopologyDef { type: 'bus'; input: Array<Draft>; output: Array<Draft>; };
+
+type TopologyIndex = {
   'seed': Seed,
   'pipe': Pipe,
   'merge': Merge,
   'branch': Branch,
-  'bus': Bus,
+  'bus': Bus
+}
+type OpTopology = TopologyIndex[TopologyName];
+
+export const ConstraintOptions = {
+  req: 'req', 
+  opt: 'opt', 
+  none: 'none'
+} as const;
+export type ConstraintOptions = keyof typeof ConstraintOptions;
+
+export const ConstraintName = {
+  no_drafts: { input_drafts: 'none', input_params: 'req' }, 
+  no_params: { input_drafts: 'req', input_params: 'none' }, 
+  drafts_opt: { input_drafts: 'opt', input_params: 'req' }, 
+  params_opt: { input_drafts: 'req', input_params: 'opt' }, 
+  all_req: {input_drafts: 'req', input_params: 'req' },
+} as const;
+type ConstraintName = keyof typeof ConstraintName;
+
+type ConstraintDefs = {
+  [C in keyof typeof ConstraintName]: {
+    constraint: C;
+    input_drafts: typeof ConstraintName[C]["input_drafts"];
+    input_params: typeof ConstraintName[C]["input_params"];
+  }
 }
 
-interface InputConstraintDef {name: OpConstraintType, input_drafts: OpInputConstraint, input_params: OpInputConstraint};
-export interface NoDrafts extends InputConstraintDef { name: "no_drafts", input_drafts: 'none', input_params: 'req' };
-export interface NoParams extends InputConstraintDef { name: "no_params", input_drafts: 'req', input_params: 'none' };
-export interface DraftsOptional extends InputConstraintDef { name: "drafts_opt", input_drafts: 'opt', input_params: 'req' };
-export interface ParamsOptional extends InputConstraintDef { name: "params_opt", input_drafts: 'req', input_params: 'opt' };
-export interface AllRequired extends InputConstraintDef { name: "all_req", input_drafts: 'req', input_params: 'req' };
+export type NoDrafts = ConstraintDefs["no_drafts"];
+export type NoParams = ConstraintDefs["no_params"];
+export type DraftsOptional = ConstraintDefs["drafts_opt"];
+export type ParamsOptional = ConstraintDefs["params_opt"];
+export type AllRequired = ConstraintDefs["all_req"];
 
-type OpConstraint = NoDrafts | NoParams | DraftsOptional | ParamsOptional | AllRequired;
-type OpConstraintIndex = {
-  'no_drafts': NoDrafts,
-  'no_params': NoParams,
-  'drafts_opt': DraftsOptional,
-  'params_opt': ParamsOptional,
-  'all_req': AllRequired,
+type ConstraintIndex = {
+  'no_drafts': NoDrafts, // does not accept input drafts
+  'no_params': NoParams, // does not accept params
+  'drafts_opt': DraftsOptional, // can take no params -- has default values
+  'params_opt': ParamsOptional, // can take zero input drafts
+  'all_req': AllRequired, // both inputs and params required
 }
+type OpConstraint = ConstraintIndex[ConstraintName]; 
 
 /** 
 * Generic types for perform() functions, describing options 
 * for input draft multiplicity (0, 1, N) and param requirement 
 */
+
 type NoDraftsPerform<Topo extends OpTopology> = {(params: Array<ParamValue>): Topo["output"]};
 type NoParamsPerform<Topo extends OpTopology> = {(inputs: Topo["input"]): Topo["output"]};
 type ParamsOptionalPerform<Topo extends OpTopology> = {(inputs: Topo["input"], params?: Array<ParamValue>): Topo["output"]}; 
@@ -118,47 +193,17 @@ type DraftsOptionalPerform<Topo extends OpTopology> = {(params: Array<ParamValue
 type AllRequiredPerform<Topo extends OpTopology> = {(inputs: Topo["input"], params: Array<ParamValue>): Topo["output"]};  
 
 type PerformCallSigs = {
-  no_drafts: {
-    seed: NoDraftsPerform<Seed>,
-    pipe: never,
-    merge: never,
-    branch: never, 
-    bus: never,
-  },
-  no_params: {
-    seed: NoParamsPerform<Seed>,
-    pipe: NoParamsPerform<Pipe>,
-    merge: NoParamsPerform<Merge>,
-    branch: NoParamsPerform<Branch>,
-    bus: NoParamsPerform<Bus>
-  },
-  drafts_opt: {
-    seed: DraftsOptionalPerform<Seed>,
-    pipe: DraftsOptionalPerform<Pipe>,
-    merge: DraftsOptionalPerform<Merge>,
-    branch: DraftsOptionalPerform<Branch>,
-    bus: DraftsOptionalPerform<Bus>
-  },
-  params_opt: {
-    seed: ParamsOptionalPerform<Seed>,
-    pipe: ParamsOptionalPerform<Pipe>,
-    merge: ParamsOptionalPerform<Merge>,
-    branch: ParamsOptionalPerform<Branch>,
-    bus: ParamsOptionalPerform<Bus>
-  },
-  all_req: { [Topo in keyof OpTopologyIndex]: AllRequiredPerform<OpTopologyIndex[Topo]>; }
-  //   seed: AllRequiredPerform<Seed>,
-  //   pipe: AllRequiredPerform<Pipe>,
-  //   merge: AllRequiredPerform<Merge>,
-  //   branch: AllRequiredPerform<Branch>,
-  //   bus: AllRequiredPerform<Bus>
-  // }
+  no_drafts: { [Topo in keyof TopologyIndex]: NoDraftsPerform<TopologyIndex[Topo]>; },
+  no_params: { [Topo in keyof TopologyIndex]: NoParamsPerform<TopologyIndex[Topo]>; },
+  drafts_opt: { [Topo in keyof TopologyIndex]: DraftsOptionalPerform<TopologyIndex[Topo]>; },
+  params_opt: { [Topo in keyof TopologyIndex]: ParamsOptionalPerform<TopologyIndex[Topo]>; },
+  all_req: { [Topo in keyof TopologyIndex]: AllRequiredPerform<TopologyIndex[Topo]>; }
 }
 
-export type OperationClassifier<Topo extends OpTopology, Constraint extends OpConstraint> = {
-  type: Topo["name"],
-  input_drafts: Constraint["input_drafts"],
-  input_params: Constraint["input_params"]
+interface OpClassifier<Topo extends OpTopology, Constraint extends OpConstraint> {
+  type: Topo["type"] | '';
+  input_drafts: Constraint["input_drafts"] | '';
+  input_params: Constraint["input_params"] | '';
 }
 
 /** @type User-defined descriptive strings for any Operation. */
@@ -189,27 +234,26 @@ export interface OperationProperties extends OperationDescriptors {
  * Topo  = Seed | Pipe | Merge | Branch | Bus
  * Constraint = NoDrafts | NoParams | DraftsOptional | ParamsOptional | AllRequired
  */
-export type OpPerform<Topo extends OpTopology, Constraint extends OpConstraint> = PerformCallSigs[Constraint["name"]][Topo["name"]];
+export type OpPerform<Topo extends OpTopology, Constraint extends OpConstraint> = PerformCallSigs[Constraint["constraint"]][Topo["type"]];
 
-/** 
- * Operation<Topo, Constraint> = { perform: OpPerform<Topo, Constraint> }
- */
-export class Operation<Topo extends OpTopology, Constraint extends OpConstraint> implements OperationProperties {
+export class BaseOp<Topo extends OpTopology, Constraint extends OpConstraint> implements OperationProperties {
   name: string;
   displayname: string;
   dx: string;
   params: Array<OpParam>;
   default_params?: Array<ParamValue>;
   max_inputs: number;
-  classifier: OperationClassifier<Topo, Constraint>;
+  classifier: OpClassifier<Topo, Constraint>;
   perform: OpPerform<Topo, Constraint>;
 
+  constructor (...args: OpConstructorArgs<Topo, Constraint>);
   constructor (name: string, displayname: string, dx: string, perform: OpPerform<Topo, Constraint>);
-  constructor (name: string, displayname: string, dx: string, params: Array<OpParam>, perform: OpPerform<Topo, Constraint>)
+  constructor (name: string, displayname: string, dx: string, params: Array<OpParam>, perform: OpPerform<Topo, Constraint>);
   constructor (name: string, displayname: string, dx: string, performOrParams: OpPerform<Topo, Constraint> | Array<OpParam>, performWithParams?: OpPerform<Topo, Constraint>) {
     this.name = name;
     this.displayname = displayname;
     this.dx = dx;
+    this.classifier = { type: '', input_drafts: '', input_params: '' };
     if (performWithParams) {
       let params = <Array<OpParam>> performOrParams;
       this.params = params;
@@ -220,85 +264,97 @@ export class Operation<Topo extends OpTopology, Constraint extends OpConstraint>
       this.perform = <OpPerform<Topo,Constraint>> performOrParams;
     }
   }
+
+  constrain(c: ConstraintName): void {
+    if (c == 'no_drafts') { this.max_inputs = 0; }
+    this.classifier.input_drafts = ConstraintName[c]["input_drafts"]; 
+    this.classifier.input_params = ConstraintName[c]["input_params"];
+  }
+
+  type(t: TopologyName): BaseOp<Topo, Constraint> {
+    this.classifier.type = t;
+    return this;
+  }
 }
 
-/**
-* @class
-* Operation that uses parameters to generate a draft with no inputs, may take an optional input
-* @method perform OpPerform function: 
-* - PARAMETERS: Array of OpParams
-* - INPUT: zero or one Draft
-* - OUTPUT: exactly one Draft
-*/
-export class SeedOperation<Constraint extends OpConstraint = DraftsOptional> extends Operation<Seed, Constraint> {
-  max_inputs: Constraint extends NoDrafts ? 0 : 1;
+type ConstructorArgsIndex = {
+  [C in keyof ConstraintIndex]: C extends "no_params" ? {
+    [T in keyof TopologyIndex]: [
+      name: string, displayname: string, dx: string, 
+      perform: OpPerform<TopologyIndex[T], ConstraintIndex[C]>
+    ]
+  } : {
+    [T in keyof TopologyIndex]: [
+      name: string, displayname: string, dx: string, 
+      params: OpParam[], perform: OpPerform<TopologyIndex[T], ConstraintIndex[C]>
+    ]
+  }
+}
+type OpConstructorArgs<Topo extends OpTopology, Constraint extends OpConstraint> = 
+ConstructorArgsIndex[Constraint["constraint"]][Topo["type"]];
+
+// use factory design pattern to apply classifiers to BaseOp?? Is this too convoluted
+// https://refactoring.guru/design-patterns/abstract-factory/typescript
+class AbstractOpFactory<T extends OpTopology> {
+  NoDrafts(...args: OpConstructorArgs<T, NoDrafts>): BaseOp<T, NoDrafts> {
+    let op = new BaseOp<T, NoDrafts>(...args);
+    op.constrain("no_drafts");
+    return op;
+  }
+  NoParams(...args: OpConstructorArgs<T, NoParams>): BaseOp<T, NoParams> {
+    let op = new BaseOp<T, NoParams>(...args);
+    op.constrain("no_params");
+    return op;
+  }
+  DraftsOptional(...args: OpConstructorArgs<T, DraftsOptional>): BaseOp<T, DraftsOptional> {
+    let op = new BaseOp<T, DraftsOptional>(...args);
+    op.constrain("drafts_opt");
+    return op;
+  }
+  ParamsOptional(...args: OpConstructorArgs<T, ParamsOptional>): BaseOp<T, ParamsOptional> {
+    let op = new BaseOp<T, ParamsOptional>(...args);
+    op.constrain("params_opt");
+    return op;
+  }
+  AllRequired(...args: OpConstructorArgs<T, AllRequired>): BaseOp<T, AllRequired> {
+    let op = new BaseOp<T, AllRequired>(...args);
+    op.constrain("all_req");
+    return op;
+  }
 }
 
-/**
-* @class
-* Operation that takes one input and generates one output draft. 
-* May or may not take parameters.
-* @method perform OpPerform function: 
-* - PARAMETERS: Array of OpParams
-* - INPUT: exactly one Draft
-* - OUTPUT: exactly one Draft
-*/
-export class PipeOperation<Constraint extends OpConstraint = AllRequired> extends Operation<Pipe, Constraint> { 
-  params: Constraint extends NoParams ? [] : Array<OpParam>;
-  max_inputs: 1; 
+// combine with mix-ins design pattern (link: TypeScript docs website)
+function makeTopoFactory<T extends OpTopology>(topo: TopologyName) {
+  return class TopologyFactory extends AbstractOpFactory<T> {
+    static base = new AbstractOpFactory<T>();
+    static NoDrafts(...args: OpConstructorArgs<T, NoDrafts>) {
+      return this.base.NoDrafts(...args).type(topo);
+    }
+    static NoParams(...args: OpConstructorArgs<T, NoParams>) {
+      return this.base.NoParams(...args).type(topo);
+    }
+    static DraftsOptional(...args: OpConstructorArgs<T, DraftsOptional>) {
+      return this.base.DraftsOptional(...args).type(topo);
+    }
+    static ParamsOptional(...args: OpConstructorArgs<T, ParamsOptional>) {
+      return this.base.ParamsOptional(...args).type(topo);
+    }
+    static AllRequired(...args: OpConstructorArgs<T, AllRequired>) {
+      return this.base.AllRequired(...args).type(topo);
+    }
+  }
 }
 
-/**
-* @class
-* Operation that takes many (N) inputs and generates one output draft.
-* @method perform OpPerform function: 
-* - PARAMETERS: Array of OpParams
-* - INPUT: Array of Drafts
-* - OUTPUT: exactly one Draft
-*/
-export class MergeOperation<Constraint extends OpConstraint = AllRequired> extends Operation<Merge, Constraint> {
-  params: Constraint extends NoParams ? [] : Array<OpParam>;
+export const SeedOperation = makeTopoFactory<Seed>("seed");
+export const PipeOperation = makeTopoFactory<Pipe>("pipe");
+export const MergeOperation = makeTopoFactory<Merge>("merge");
+export const BranchOperation = makeTopoFactory<Branch>("merge");
+export const BusOperation = makeTopoFactory<Bus>("bus");
+
+type TopologyOpIndex = {
+  [T in keyof TopologyIndex]: {
+    [C in keyof ConstraintIndex]: BaseOp<TopologyIndex[T], ConstraintIndex[C]>;
+  }
 }
 
-/**
-* @class
-* Operation that takes one input and generates many (N) output drafts.
-* @method perform OpPerform function: 
-* - PARAMETERS: Array of OpParams
-* - INPUT: exactly one Draft
-* - OUTPUT: Array of Drafts
-*/
-export class BranchOperation<Constraint extends OpConstraint = AllRequired> extends Operation<Branch, Constraint> {
-  params: Constraint extends NoParams ? [] : Array<OpParam>;
-  max_inputs: 1;
-}
-
-/**
-* @class
-* Operation that takes many (N) inputs and generates many (M) output drafts.
-* Number of inputs does not necessarily match number of outputs (N ?= M).
-* @method perform OpPerform function:  
-* - PARAMETERS: Array of OpParams
-* - INPUT: Array of Drafts
-* - OUTPUT: Array of Drafts
-*/
-export class BusOperation<Constraint extends OpConstraint = AllRequired> extends Operation<Bus, Constraint> {
-  params: Constraint extends NoParams ? [] : Array<OpParam>;
-}
-
-// does not accept input drafts
-export type NoDraftsOp<Topo extends OpTopology> = Operation<Topo, NoDrafts> & { max_inputs: 0 };
-
-// does not accept params
-export type NoParamsOp<Topo extends OpTopology> = Operation<Topo, NoParams> & { params: [] };
-
-// can take no params -- has default values
-export type ParamsOptionalOp<Topo extends OpTopology> = Operation<Topo, ParamsOptional>;
-
-// can take zero input drafts
-export type DraftsOptionalOp<Topo extends OpTopology> = Operation<Topo, DraftsOptional>;
-
-// both inputs and params required
-export type AllRequiredOp<Topo extends OpTopology> = Operation<Topo, AllRequired>;
-
-export type TopologyOp = Operation<OpTopology, OpConstraint>;
+export type TopologyOperation = TopologyOpIndex[TopologyName][ConstraintName];
