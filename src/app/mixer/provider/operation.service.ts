@@ -1832,8 +1832,8 @@ export class OperationService {
       (input: Draft) => {
         const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
         d.fill(d.pattern, 'invert');
-        // this.transferSystemsAndShuttles(d, input, [], 'first');
-        // d.gen_name = this.formatName(input, "invert");
+        this.transferSystemsAndShuttles(d, input, 'first');
+        d.gen_name = this.formatName(input, "invert");
         return d;
       }
     ));
@@ -1881,8 +1881,8 @@ export class OperationService {
       (input: Draft, params: Array<number>)=> {
         const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
         for (let i = 0; i < params[0]; i++) {
-          // this.transferSystemsAndShuttles(d, input, params, 'first');
-          // d.gen_name = this.formatName(input, "shiftx");
+          this.transferSystemsAndShuttles(d, input, 'first');
+          d.gen_name = this.formatName(input, "shiftx");
           d.fill(d.pattern, 'shiftLeft');
         }
         return d;
@@ -1904,7 +1904,7 @@ export class OperationService {
       ],
       (input: Draft, params: Array<number>) => {
         const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        for (let i = 0; i <params[0]; i++) {
+        for (let i = 0; i < params[0]; i++) {
           d.fill(d.pattern, 'shiftUp');
           this.transferSystemsAndShuttles(d, input, 'first');
           d.gen_name = this.formatName(input, "shifty");
@@ -1938,7 +1938,7 @@ export class OperationService {
         const d: Draft = new Draft({warps: input.warps, wefts: input.wefts});
         for (let i = 0; i < d.wefts; i++) {
           let i_shift: number = (params[1] === 0) ? 0 : Math.floor(i/params[1]);
-          for (let j = 0; j <d.warps; j++) {
+          for (let j = 0; j < d.warps; j++) {
             let j_shift: number = params[0]-1;
             let shift_total = (i_shift * j_shift) % d.warps;
             if (shift_total < 0) shift_total += d.warps;
@@ -1974,29 +1974,41 @@ export class OperationService {
       }
     ));
 
-    // const variants = this.makeOp(BranchOperation.NoParams(
-    //   'variants',
-    //   'variants',
-    //   'for any input draft, create the shifted and flipped values as well',
-    //   (input: Draft, params: Array<ParamValue>) => {
-    //     const functions: Array<Promise<Array<Draft>>> = [
-    //       (this.getOp('flip horiz')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params}]) as Promise<Array<Draft>>,
-    //       (this.getOp('invert')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params}]) as Promise<Array<Draft>>
-    //     ];
+    const variants = this.makeOp(BranchOperation.NoParams(
+      'variants',
+      'variants',
+      'for any input draft, create the shifted and flipped values as well',
+      (input: Draft) => {
+        let flip_horiz = flipx.topo_op as Op<Pipe, NoParams>;
+        let inv = invert.topo_op as Op<Pipe, NoParams>;
+        const outputs: Array<Draft> = [flip_horiz.perform(input), inv.perform(input)];
 
-    //     for (let i=1; i < input.warps; i += 2) {
-    //       functions.push( (<Operation>this.getOp('shift left')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params[i]}]) as Promise<Array<Draft>>);
-    //     }
+        let shift_left = shiftx.topo_op as Op<Pipe, AllRequired>;
+        let shift_up = shifty.topo_op as Op<Pipe, AllRequired>;
+        for (let i=1; i < input.warps; i += 2) {
+          outputs.push(shift_left.perform(input, [i]));
+          outputs.push(shift_up.perform(input, [i]));
+        }
 
-    //     for (let i=1; i < input.wefts; i += 2) {
-    //       functions.push( (<Operation>this.getOp('shift up')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params[i]}])  as Promise<Array<Draft>>);
-    //     }
-    //     return Promise.all(functions)
-    //     .then(allDrafts => allDrafts
-    //       .reduce((acc, drafts) => acc.concat(drafts), [])
-    //      )        
-    //   }
-    // ));
+        return outputs;
+        // const functions: Array<Promise<Array<Draft>>> = [
+        //   (this.getOp('flip horiz')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params}]) as Promise<Array<Draft>>,
+        //   (this.getOp('invert')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params}]) as Promise<Array<Draft>>
+        // ];
+
+        // for (let i=1; i < input.warps; i += 2) {
+        //   functions.push( (<Operation>this.getOp('shift left')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params[i]}]) as Promise<Array<Draft>>);
+        // }
+
+        // for (let i=1; i < input.wefts; i += 2) {
+        //   functions.push( (<Operation>this.getOp('shift up')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params[i]}])  as Promise<Array<Draft>>);
+        // }
+        // return Promise.all(functions)
+        // .then(allDrafts => allDrafts
+        //   .reduce((acc, drafts) => acc.concat(drafts), [])
+        //  )        
+      }
+    ));
 
     const bindweftfloats = this.makeOp(PipeOperation.AllRequired(
       'bind weft floats',
@@ -2795,66 +2807,66 @@ export class OperationService {
     this.dynamic_ops.push(dynamic_join_left);
     this.dynamic_ops.push(imagemap);
 
-    const opsList = this.ops;
+    // const opsList = this.ops;
 
-    //**push operations that you want the UI to show as options here */
-    function pushOp(op: ServiceOp): void {
-      opsList.push(op);
-    }
+    // //**push operations that you want the UI to show as options here */
+    // function pushOp(op: ServiceOp): void {
+    //   opsList.push(op);
+    // }
 
-    pushOp(rect);
-    pushOp(twill);
-    pushOp(complextwill);
-    pushOp(waffle);
-    pushOp(satin);
-    pushOp(tabby);
-    pushOp(basket);
-    pushOp(rib);
-    pushOp(random);
-    pushOp(interlace);
-    pushOp(splicein);
-    pushOp(assignwefts);
-    pushOp(assignwarps);
-    pushOp(invert);
-    pushOp(vertcut);
-    pushOp(replicate);
-    pushOp(flipx);
-    pushOp(flipy);
-    pushOp(shiftx);
-    pushOp(shifty);
-    // pushOp(layer);
-    pushOp(selvedge);
-    pushOp(bindweftfloats);
-    pushOp(bindwarpfloats);
-    pushOp(joinleft);
-    pushOp(jointop);
-    pushOp(slope);
-    pushOp(tile);
-    pushOp(stretch); 
-    pushOp(resize);
-    pushOp(margin);
-    pushOp(clear);
-    pushOp(set);
-    pushOp(unset);
-    pushOp(rotate);
-    pushOp(makesymmetric);
-    pushOp(fill);
-    pushOp(overlay);
-    pushOp(atop);
-    pushOp(mask);
-    // pushOp(germanify);
-    // pushOp(crackleify);
-    // pushOp(variants);
-    pushOp(knockout);
-    pushOp(crop);
-    pushOp(trim);
-    // pushOp(makeloom);
-    // pushOp(drawdown);
-    pushOp(warp_rep);
-    pushOp(erase_blank);
-    pushOp(apply_mats);
+    // pushOp(rect);
+    // pushOp(twill);
+    // pushOp(complextwill);
+    // pushOp(waffle);
+    // pushOp(satin);
+    // pushOp(tabby);
+    // pushOp(basket);
+    // pushOp(rib);
+    // pushOp(random);
+    // pushOp(interlace);
+    // pushOp(splicein);
+    // pushOp(assignwefts);
+    // pushOp(assignwarps);
+    // pushOp(invert);
+    // pushOp(vertcut);
+    // pushOp(replicate);
+    // pushOp(flipx);
+    // pushOp(flipy);
+    // pushOp(shiftx);
+    // pushOp(shifty);
+    // // pushOp(layer);
+    // pushOp(selvedge);
+    // pushOp(bindweftfloats);
+    // pushOp(bindwarpfloats);
+    // pushOp(joinleft);
+    // pushOp(jointop);
+    // pushOp(slope);
+    // pushOp(tile);
+    // pushOp(stretch); 
+    // pushOp(resize);
+    // pushOp(margin);
+    // pushOp(clear);
+    // pushOp(set);
+    // pushOp(unset);
+    // pushOp(rotate);
+    // pushOp(makesymmetric);
+    // pushOp(fill);
+    // pushOp(overlay);
+    // pushOp(atop);
+    // pushOp(mask);
+    // // pushOp(germanify);
+    // // pushOp(crackleify);
+    // // pushOp(variants);
+    // pushOp(knockout);
+    // pushOp(crop);
+    // pushOp(trim);
+    // // pushOp(makeloom);
+    // // pushOp(drawdown);
+    // pushOp(warp_rep);
+    // pushOp(erase_blank);
+    // pushOp(apply_mats);
 
-    console.log(this.ops);
+    // console.log(this.ops);
 
     //** Give it a classification here */
     this.classification.push(
@@ -3121,7 +3133,7 @@ export class OperationService {
       }
     }
 
-    return {
+    let new_op = {
       name: op.name,
       topo_op: op,
       displayname: op.displayname,
@@ -3130,6 +3142,9 @@ export class OperationService {
       params: op.params,
       perform: service_op_perform
     } as ServiceOp;
+
+    this.ops.push(new_op);
+    return new_op;
   }
 
   getOp(name: string): Operation {
