@@ -1,25 +1,24 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { HttpClientModule } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser'
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireStorageModule } from 'angularfire2/storage';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-import { ChecklistModule } from './checklist/checklist.module';
-
 import { CoreModule } from './core/core.module';
 import { WeaverModule } from './weaver/weaver.module';
-// import { secrets } from '../environments/secrets';
-
-// export const firebaseConfig = secrets;
+import { MixerModule } from './mixer/mixer.module';
+import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
+import { provideAnalytics,getAnalytics } from '@angular/fire/analytics';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFunctions,getFunctions } from '@angular/fire/functions';
+import { provideMessaging,getMessaging } from '@angular/fire/messaging';
+import { providePerformance,getPerformance } from '@angular/fire/performance';
+import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
+import { provideStorage,getStorage } from '@angular/fire/storage';
+import {provideDatabase,getDatabase} from '@angular/fire/database';
 
 @NgModule({
   declarations: [
@@ -29,19 +28,27 @@ import { WeaverModule } from './weaver/weaver.module';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HttpModule,
     WeaverModule,
+    MixerModule,
     BrowserAnimationsModule,
-    ChecklistModule,
-    // AngularFireModule.initializeApp(firebaseConfig),
-    // AngularFireDatabaseModule,
-    // AngularFireAuthModule,
-    // AngularFireStorageModule
-  ],
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
+    provideAnalytics(() => getAnalytics()),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+    provideFirestore(() => getFirestore()),
+    provideFunctions(() => getFunctions()),
+    provideMessaging(() => getMessaging()),
+    providePerformance(() => getPerformance()),
+    provideRemoteConfig(() => getRemoteConfig()),
+    provideStorage(() => getStorage())],
+    
   providers: [{ 
     provide: HAMMER_GESTURE_CONFIG, 
     useClass: HammerGestureConfig 
   }],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  
+}

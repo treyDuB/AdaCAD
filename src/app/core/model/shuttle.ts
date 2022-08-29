@@ -1,23 +1,52 @@
 /**
  * Definition of Shuttle object.
+* a shuttle inhertis from a material. 
  * @class
  */
 export class Shuttle {
-  color: string;
   id: number;
-  thickness: number;
   name: string;
-  type: string;
+  insert: boolean; //true is left, false is right
   visible: boolean;
-  insert: number;
-  image?: any;
+  color: string;
+  thickness: number; //percentage of base dims
+  type: number;
+  // image?: any;
   startLabel?: string;
   endLabel?: string;
-  rowsUsed: Array<number>;
+  notes: string;
 
-  constructor() {
-    this.insert = 0;
-    this.rowsUsed = [];
+
+  constructor(shuttleDict = null) {
+
+    //defaults
+    this.id = -1;
+    this.name="";
+    this.insert = true;
+    this.visible = true;
+    this.color="#666666";
+    this.thickness=100;
+    this.type = 0;
+    this.notes = "";
+
+    if (shuttleDict) this.updateVariables(shuttleDict);
+
+  }
+
+  updateVariables({id, name, insert, visible, color, thickness, type, notes}) {
+    
+    this.id = id;
+    this.name = name;
+    this.insert = insert;
+    this.visible = visible;
+    this.color = color;
+    this.thickness = thickness;
+    this.type = type;
+    if(this.type === undefined) this.type = 0;
+  // this.image = image;
+    // this.startLabel = startLabel;
+    // this.endLabel = endLabel;
+    this.notes = notes;
   }
 
   setID(id: number) {
@@ -27,8 +56,8 @@ export class Shuttle {
     }
   }
 
-  setVisible(bool: boolean) {
-    this.visible = bool;
+  getId(){
+    return this.id;
   }
 
   setColor(color: string) {
@@ -39,8 +68,13 @@ export class Shuttle {
     this.thickness = n;
   }
 
-  setType(type: string) {
+  //indexs into type list
+  setType(type: number) {
     this.type = type;
+  }
+
+  setVisible(visible:boolean){
+    this.visible = visible;
   }
 
   getColor() {
@@ -54,4 +88,9 @@ export class Shuttle {
   getType() {
     return this.type;
   }
+
+  getName(){
+    return this.name;
+  }
+
 }

@@ -1,13 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 @import '~bulma/bulma';
+@import '@fortawesome/fontawesome-free/css/all.css';
+
 
 body {
   margin: 0;
+  overscroll-behavior-x: none;
 }
 
 svg {
   overflow: visible;
+}
+
+mat-sidenav {
+  width: 60px;
 }
 
 .fill-remaining-space {
@@ -19,6 +26,13 @@ svg {
 .hidden {
   display: none !important;
 }
+
+// .mat-drawer-content{
+//    // background: #dddddd;
+  
+// }
+
+
 
 .mat-focused .mat-form-field-label {
   color: rgba(255,255,255,.7);
@@ -33,35 +47,11 @@ svg {
   padding-right: 10px;
 }
 
-.mat-drawer {
-  width: 310px !important;
+
+mat-drawer{
+  width: 60px;
 }
 
-.mat-drawer-content {
-  height: calc(100vh - 64px) !important;
-}
-
-.mat-tab-label {
-  min-width: 103px !important;
-}
-
-.mat-tab-group {
-  height: 100% !important;
-}
-
-.mat-tab-body-wrapper {
-  height: 100% !important;
-}
-
-.buttons .dropdown {
-  margin-right: .5rem;
-  flex-direction: column;
-
-  &:hover .button {
-    color: #ebebeb !important;
-    background-color: #00c4a7;
-    }
-}
 
 .is-outlined.is-active {
   background-color: #00d1b2 !important;
@@ -69,13 +59,6 @@ svg {
   color: #fff !important;
 }
 
-.dropdown-menu {
-  min-width: auto;
-
-  a.dropdown-item {
-    padding-right: 2rem;
-  }
-}
 
 .is-fullwidth {
   width: 100%;
@@ -84,15 +67,3 @@ svg {
 .mat-form-field-infix.mat-form-field-infix {
   display: flex;
 }
-
-// .mat-toolbar .mat-raised-button {
-//   color: #424242 !important;
-// }
-
-// .button {
-//   color: #424242 !important;
-
-//   &:hover {
-//     color: #ebebeb !important;
-//   }
-// }

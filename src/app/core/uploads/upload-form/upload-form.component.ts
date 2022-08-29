@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef, Output, Input, EventEmitter }
 import { HttpClient } from '@angular/common/http';
 import { UploadService } from '../upload.service';
 import { Upload } from '../upload';
-import * as _ from "lodash";
-import * as d3 from 'd3';
-import { map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
+import utilInstance from '../../model/util';
+import { ImageService } from '../../provider/image.service';
 
 @Component({
   selector: 'upload-form',
@@ -13,55 +13,89 @@ import { map } from 'rxjs/operators';
 })
 export class UploadFormComponent implements OnInit {
   @Input() warps: number;
+  @Input() type: string;
+  progress:number = 0;
   selectedFiles: FileList;
-  currentUpload: Upload;
+  uploading: boolean = false;
   imageToShow: any;
+  downloadid: string;
   @ViewChild('uploadImage') canvas: ElementRef;
-  @Output() onImageData: any = new EventEmitter();
+  @Output() onData: any = new EventEmitter();
 
-  constructor(private upSvc: UploadService, private httpClient: HttpClient) { }
+  constructor(private upSvc: UploadService, private httpClient: HttpClient, private imageService: ImageService) { }
 
   detectFiles(event) {
       this.selectedFiles = event.target.files;
   }
 
+  async uploadAda(upload: Upload, file: File){
+    await this.upSvc.pushUpload(upload).then(snapshot => {
+    return this.upSvc.getDownloadData(upload.name)
+    }).then(url => {  
+      console.log("got download", url)
+      this.httpClient.get(url).toPromise()
+      .then(data => {
+        var obj = {
+          name: file.name.split(".")[0],
+          data: data,
+          type: 'ada',
+        }
+        this.onData.emit(obj);
+        this.uploading = false;
+        this.selectedFiles = null;
+        this.upSvc.deleteUpload(upload);
+
+      })
+        
+     
+
+
+            
+    });
   
+  }
+
+  async uploadImage(upload: Upload, file: File){
+     await this.upSvc.pushUpload(upload).then(snapshot => {
+       console.log("loading :", upload.name)
+      return  this.imageService.loadFiles([upload.name]);
+    }).then(uploaded => {
+      const obj = this.imageService.getImageData(upload.name);
+      this.onData.emit(obj);
+      this.uploading = false;
+      this.selectedFiles = null;
+
+    }).catch(console.error); 
+  }
+
 
   uploadSingle() {
-    let file = this.selectedFiles.item(0)
-    this.currentUpload = new Upload(file);
-    var p, id;
-    p = this.upSvc.pushUpload(this.currentUpload);
 
-    p.subscribe((e) => {
-      var progress = this.currentUpload.progress;
-      if (progress && progress === 100) {
-        this.upSvc.getDownloadURL(this.currentUpload.name).subscribe((url) => {
-          var image = new Image();
-          image.src = url;
-          image.crossOrigin = "Anonymous";
+    this.uploading = true;
 
-          var canvas = this.canvas.nativeElement;
-          var ctx = canvas.getContext('2d');
+    let file:File = this.selectedFiles.item(0)
+    let fileType = file.name.split(".").pop();
+   const upload = new Upload(file);
 
-          image.onload = (() => {
-            canvas.width = this.warps;
-            canvas.height = image.naturalHeight * (this.warps / image.naturalWidth);
-            
-            ctx.mozImageSmoothingEnabled = false;
-            ctx.webkitImageSmoothingEnabled = false;
-            ctx.msImageSmoothingEnabled = false;
-            ctx.imageSmoothingEnabled = false;
 
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    switch(fileType){
+      case 'ada':
+        this.uploadAda(upload, file);
+      break;
 
-            var data = ctx.getImageData(0,0, canvas.width, canvas.height);
-            this.onImageData.emit(data);
-          });
-        });
-      }
-    });
-    
+      case 'jpg':
+      case 'bmp':
+      case 'png':
+
+      this.uploadImage(upload, file);
+      break;
+
+      default: 
+      break;
+    }
+
+
+
   }
 
   ngOnInit() {

@@ -1,0 +1,48 @@
+<app-topbar 
+[drawer] = "drawer"
+[filename]="filename"
+source="mixer"
+  (onUndo)="undo();" 
+  (onRedo)="redo();"
+  (onLoadNewFile)="loadNewFile($event);"
+  (onClearScreen)="clearAll();"
+  (onSave)="onSave($event);">
+
+</app-topbar>
+
+<mat-drawer-container #container class="mat-drawer-container" cdkScrollable>
+  
+  <mat-drawer #drawer class="example-sidenav" mode="side" position="end" opened>  
+
+
+        <app-sidebar #view_tool
+        [render]=""
+        source='mixer'
+        (onUndo)="undo();" 
+        (onRedo)="redo();"
+        (onDesignModeChange)='designModeChange($event)'
+        (onZoomChange) ="renderChange($event);"
+        (onOperationAdded) = "operationAdded($event)"
+        (onImport) = "importNewFile($event)"
+        (onZoomChange) ="renderChange($event);"
+        (onViewPortMove) ="setScroll($event);"
+        (onNoteCreate) ="createNote();"
+        (onMaterialChange) = "materialChange()"
+        (onGlobalLoomChange) = "globalLoomChange($event)"
+        ></app-sidebar>
+
+
+  </mat-drawer>
+
+  <app-palette  
+  [style.width.px]='vp.getAbsoluteWidth()' 
+  [style.height.px]='vp.getAbsoluteHeight()' 
+  #palette  id="scrollable-container"
+  (onDesignModeChange)="designModeChange($event)" >
+  </app-palette>
+
+  <canvas id="saver"></canvas>
+
+
+</mat-drawer-container>
+

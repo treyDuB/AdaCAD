@@ -1,17 +1,14 @@
-.draft-container {
-  text-align: center;
-  margin: 10px;
-  position: relative;
-  overflow: scroll;
+a.help{
+    width: 80% !important;
+    margin: 10%;
+    border: thin solid #ff4081 !important;
+    color: #ff4081;
+    padding: 8px;
+    text-align: center;
 
-  canvas {
-    position: relative;
-    margin-left: 65px;
-    margin-right: 70px;
-    cursor: pointer;
-  }
 }
 
+<<<<<<< HEAD
 .selection {
   position: absolute;
   border: dashed black 2px;
@@ -66,4 +63,8 @@
       }
     }
   }
+=======
+.design-container{
+    text-align: center;
+>>>>>>> upstream/master
 }

@@ -1,8 +1,8 @@
 [
   {
-    "name": "Plain Weave",
+    "name": "Tabby",
     "id": 0,
-    "favorite": false,
+    "favorite": true,
     "height": 2,
     "width": 2,
     "pattern": [
@@ -14,7 +14,7 @@
   {
     "name": "Balanced Twill",
     "id": 1,
-    "favorite": true,
+    "favorite": false,
     "height": 4,
     "width": 4,
     "pattern": [
@@ -59,6 +59,26 @@
                 [true, false, false, false],
                 [true, false, true, true],
                 [false, false, true, false]
+               ]
+  },
+  {
+    "name": "Heddles Down",
+    "id": 5,
+    "favorite": true,
+    "height": 1,
+    "width": 1,
+    "pattern": [
+                [false]
+               ]
+  },
+  {
+    "name": "Heddles Up",
+    "id": 6,
+    "favorite": true,
+    "height": 1,
+    "width": 1,
+    "pattern": [
+                [true]
                ]
   }
 ]
