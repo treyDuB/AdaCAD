@@ -208,6 +208,9 @@ export class DraftPlayerService {
     const rotate = <ServiceOp> this.oss.getOp('rotate');
     const invert = <ServiceOp> this.oss.getOp('invert');
     const shiftx = <ServiceOp> this.oss.getOp('shift left');
+    const slope = <ServiceOp> this.oss.getOp('slope');
+    const flipx = <ServiceOp> this.oss.getOp('flip horiz');
+    const stretch = <ServiceOp> this.oss.getOp('stretch');
     
     this.pedalOps.addOperation(playerOpFrom(rotate)); 
     this.pedalOps.addOperation(playerOpFrom(tabby));
@@ -215,6 +218,9 @@ export class DraftPlayerService {
     this.pedalOps.addOperation(playerOpFrom(random));
     this.pedalOps.addOperation(playerOpFrom(invert)); 
     this.pedalOps.addOperation(playerOpFrom(shiftx)); 
+    this.pedalOps.addOperation(playerOpFrom(flipx));
+    this.pedalOps.addOperation(playerOpFrom(slope)); 
+    this.pedalOps.addOperation(playerOpFrom(stretch));
 
     // this.pds.pedal_array.on('pedal-added', (num) => {
     //   // console.log("automatically pairing first pedal", num);

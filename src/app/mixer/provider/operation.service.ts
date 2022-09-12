@@ -1097,13 +1097,13 @@ export class OperationService {
     const stretch = this.makeOp(PipeOperation.AllRequired(
       'stretch',
       'stretch',
-      'repeats each warp and/or weft by theop_input.drafts',
+      'repeats each warp and/or weft by the op_input.drafts',
       [{
         name: 'warp repeats',
         type: 'number',
         min: 1,
         max: 100,
-        value: 2,
+        value: 1,
         dx: 'number of times to repeat each warp'
         },
         {name: 'weft repeats',
@@ -1922,7 +1922,7 @@ export class OperationService {
         type: 'number',
         min: -100,
         max: 100,
-        value: 1,
+        value: 2,
         dx: 'the amount to shift rows by'
         },
         {
@@ -2934,132 +2934,134 @@ export class OperationService {
   /**
    * transfers data about systems and shuttles from input drafts to output drafts. 
    * @param d the output draft
-   * @paramop_input.drafts the input drafts
+   * @param op_input.drafts the input drafts
    * @param type how to handle the transfer (first - use the first input data, interlace, layer)
    * @returns 
    */
   transferSystemsAndShuttles(d: Draft, input: Array<Draft> | Draft, type: string) {
-    let drafts: Array<Draft>;
-    if (typeof input === typeof Draft) {
-      drafts = [<Draft> input];
-    } else {
-      drafts = <Array<Draft>> input;
-    }
-    if ( drafts.length === 0 ) return;
 
-    switch(type) {
-      case 'first':
-        //if there are multipleop_input.drafts, 
+    // let drafts: Array<Draft>;
+    // if (typeof input === typeof Draft) {
+    //   drafts = [<Draft> input];
+    // } else {
+    //   drafts = <Array<Draft>> input;
+    // }
+    // if ( drafts.length === 0 ) return;
 
-        d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
-        d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
-        d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
-        d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
-      break;
+    // switch(type) {
+    //   case 'first':
+    //     //if there are multipleop_input.drafts, 
 
-      case 'jointop':
+    //     d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
+    //     d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
+    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
+    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
+    //   break;
 
-        //if there are multipleop_input.drafts, 
+    //   case 'jointop':
 
-        d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
-        d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
+    //     //if there are multipleop_input.drafts, 
 
-      break;
+    //     d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
+    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
 
-      case 'joinleft':
-        //if there are multipleop_input.drafts, 
-        d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
-        d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
+    //   break;
+
+    //   case 'joinleft':
+    //     //if there are multipleop_input.drafts, 
+    //     d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
+    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
   
-      break;
+    //   break;
 
-      case 'second':
-        const input_to_use = (drafts.length < 2) ?drafts[0] :drafts[1];
-        d.updateWarpShuttlesFromPattern(input_to_use.colShuttleMapping);
-        d.updateWeftShuttlesFromPattern(input_to_use.rowShuttleMapping);
-        d.updateWarpSystemsFromPattern(input_to_use.colSystemMapping);
-        d.updateWeftSystemsFromPattern(input_to_use.rowSystemMapping);
-      break;
+    //   case 'second':
+    //     const input_to_use = (drafts.length < 2) ?drafts[0] :drafts[1];
+    //     d.updateWarpShuttlesFromPattern(input_to_use.colShuttleMapping);
+    //     d.updateWeftShuttlesFromPattern(input_to_use.rowShuttleMapping);
+    //     d.updateWarpSystemsFromPattern(input_to_use.colSystemMapping);
+    //     d.updateWeftSystemsFromPattern(input_to_use.rowSystemMapping);
+    //   break;
 
-      case 'materialsonly':
-        d.updateWarpShuttlesFromPattern(drafts[1].colShuttleMapping);
-        d.updateWeftShuttlesFromPattern(drafts[1].rowShuttleMapping);
-        d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
-        d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
-      break;
+    //   case 'materialsonly':
+    //     d.updateWarpShuttlesFromPattern(drafts[1].colShuttleMapping);
+    //     d.updateWeftShuttlesFromPattern(drafts[1].rowShuttleMapping);
+    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
+    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
+    //   break;
 
-      case 'interlace':
-      case 'layer':
-        const rowSystems: Array<Array<number>> = drafts.map(el => el.rowSystemMapping);
-        const colSystems: Array<Array<number>> = drafts.map(el => el.colSystemMapping);
-        const uniqueSystemRows: Array<Array<number>> = this.ss.makeWeftSystemsUnique(rowSystems);
-        const uniqueSystemCols: Array<Array<number>> = this.ss.makeWarpSystemsUnique(colSystems);
+    //   case 'interlace':
+    //   case 'layer':
+    //     const rowSystems: Array<Array<number>> = drafts.map(el => el.rowSystemMapping);
+    //     const colSystems: Array<Array<number>> = drafts.map(el => el.colSystemMapping);
+    //     const uniqueSystemRows: Array<Array<number>> = this.ss.makeWeftSystemsUnique(rowSystems);
+    //     const uniqueSystemCols: Array<Array<number>> = this.ss.makeWarpSystemsUnique(colSystems);
     
-        const rowShuttles: Array<Array<number>> = drafts.map(el => el.rowShuttleMapping);
-        const colShuttles: Array<Array<number>> = drafts.map(el => el.colShuttleMapping);
-        const standardShuttleRows: Array<Array<number>> = this.ms.standardizeLists(rowShuttles);
-        const standardShuttleCols: Array<Array<number>> = this.ms.standardizeLists(colShuttles);
+    //     const rowShuttles: Array<Array<number>> = drafts.map(el => el.rowShuttleMapping);
+    //     const colShuttles: Array<Array<number>> = drafts.map(el => el.colShuttleMapping);
+    //     const standardShuttleRows: Array<Array<number>> = this.ms.standardizeLists(rowShuttles);
+    //     const standardShuttleCols: Array<Array<number>> = this.ms.standardizeLists(colShuttles);
 
-        d.pattern.forEach((row, ndx) => {
+    //     d.pattern.forEach((row, ndx) => {
 
-          const select_array: number = ndx % drafts.length; 
-          const select_row: number = Math.floor(ndx / drafts.length);
+    //       const select_array: number = ndx % drafts.length; 
+    //       const select_row: number = Math.floor(ndx / drafts.length);
         
-          d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
-          d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
+    //       d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
+    //       d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
 
-        });
+    //     });
 
-        if (type === 'interlace') {
-          d.colShuttleMapping = standardShuttleCols.shift();
-          d.colSystemMapping = uniqueSystemCols.shift();
-        } else {
-          for (let i = 0; i < d.wefts; i++) {
-            const select_array: number = i % drafts.length; 
-            const select_col: number = Math.floor(i / drafts.length);
-            d.colSystemMapping[i] = uniqueSystemCols[select_array][select_col];
-            d.colShuttleMapping[i] = standardShuttleCols[select_array][select_col];
-          }
-          d.pattern.forEach((row, ndx) => {
-            const select_array: number = ndx % drafts.length; 
-            const select_row: number = Math.floor(ndx / drafts.length);
+    //     if (type === 'interlace') {
+    //       d.colShuttleMapping = standardShuttleCols.shift();
+    //       d.colSystemMapping = uniqueSystemCols.shift();
+    //     } else {
+    //       for (let i = 0; i < d.wefts; i++) {
+    //         const select_array: number = i % drafts.length; 
+    //         const select_col: number = Math.floor(i / drafts.length);
+    //         d.colSystemMapping[i] = uniqueSystemCols[select_array][select_col];
+    //         d.colShuttleMapping[i] = standardShuttleCols[select_array][select_col];
+    //       }
+    //       d.pattern.forEach((row, ndx) => {
+    //         const select_array: number = ndx % drafts.length; 
+    //         const select_row: number = Math.floor(ndx / drafts.length);
             
-            d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
-            d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
-          });
-        }
-      break;
+    //         d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
+    //         d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
+    //       });
+    //     }
+    //   break;
 
-      case 'stretch':
-        d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
-        d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
-        d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
-        d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
-        //need to determine how to handle this - should it stretch the existing information or copy it over
-      break;
-    }
+    //   case 'stretch':
+    //     d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
+    //     d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
+    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
+    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
+    //     //need to determine how to handle this - should it stretch the existing information or copy it over
+    //   break;
+    // }
+  
   }
 
   formatName(input: Array<Draft> | Draft, op_name: string) : string{
-    let drafts: Array<Draft>;
-    if (typeof input === typeof Draft) {
-      drafts = [<Draft> input];
-    } else {
-      drafts = <Array<Draft>> input;
-    }
+    // let drafts: Array<Draft>;
+    // if (typeof input === typeof Draft) {
+    //   drafts = [<Draft> input];
+    // } else {
+    //   drafts = <Array<Draft>> input;
+    // }
 
-    let combined: string = "";
+    // let combined: string = "";
 
-    if (drafts.length == 0) {
-      combined = op_name;
-    } else {
-      combined = drafts.reduce((acc, el) => {
-        return acc + "+" + el.getName();
-      }, "");
-      combined = op_name + "(" + combined.substring(1) + ")";
-    }
+    // if (drafts.length == 0) {
+    //   combined = op_name;
+    // } else {
+    //   combined = drafts.reduce((acc, el) => {
+    //     return acc + "+" + el.getName();
+    //   }, "");
+    //   combined = op_name + "(" + combined.substring(1) + ")";
+    // }
 
-    return combined;
+    return op_name;
   }
 
   isDynamic(name: string) : boolean{
