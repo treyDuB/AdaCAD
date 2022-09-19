@@ -26,9 +26,9 @@ import { ParamValue, NumberParam, BooleanParam, GenericParam,
  */
  export interface OpInput {
   op_name: string,
-  drafts: Array<Draft>,
+  drafts: Array<Draft | never>,
   params: Array<any>,
-  inlet: number
+  inlet: number | null
 }
 
  /**
