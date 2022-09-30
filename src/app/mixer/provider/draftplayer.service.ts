@@ -194,7 +194,7 @@ export class DraftPlayerService {
     });
 
     this.state = { draft: null, row: -1, numPicks: 0 };
-    this.loom = { warps: 1320, draftTiling: true };
+    this.loom = { warps: 2640, draftTiling: true };
 
     this.pedalOps = new PedalOpMapping(this.pedals);
 
@@ -318,10 +318,10 @@ export class DraftPlayerService {
     // - 1 pedal connected AND
     // - 1 pedal configured with operation "forward" or "reverse"
     this.pds.toggleWeaving();
-    this.pds.vacuum_on.once('change', (state) => {
-      if (state) {
-        this.pds.sendDraftRow(this.currentRow());
-      }
-    });
+    this.pds.sendDraftRow(this.currentRow());
+    // this.pds.vacuum_on.once('change', (state) => {
+    //   if (state) {
+    //   }
+    // });
   }
 }
