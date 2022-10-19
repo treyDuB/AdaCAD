@@ -282,6 +282,19 @@ export class DraftPlayerService {
     }
   }
 
+  // compound pedal operations
+  // normal pedal -> op
+  // compound pedal -> Op sequence
+  // if (compound pedal change) {
+      // sequence of operations: [Op, Op, Op]
+      // let finaldraft = starting Draft;
+      // for op in sequence:
+      //   finaldraft = finaldraft.perform(op);
+      // }
+      // do something with finaldraft
+  // }
+
+
   currentRow() {
     let {draft, row} = this.state;
     let draftRow = draft.pattern[row % draft.wefts];
