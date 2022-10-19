@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CoreModule } from '../core/core.module';
-
-
 import { MixerComponent} from './mixer.component';
 import { MixerViewComponent } from './modal/mixerview/mixerview.component';
 import { SubdraftComponent } from './palette/subdraft/subdraft.component';
@@ -17,6 +15,8 @@ import { DraftdetailComponent } from './modal/draftdetail/draftdetail.component'
 import { WeaverModule } from '../weaver/weaver.module';
 import { NoteComponent } from './palette/note/note.component';
 import { PlayerComponent } from './player/player.component';
+import { ParameterComponent } from './palette/operation/parameter/parameter.component';
+import { InletComponent } from './palette/operation/inlet/inlet.component';
 
 
 
@@ -40,6 +40,8 @@ import { PlayerComponent } from './player/player.component';
         ImageComponent,
         DraftdetailComponent,
         NoteComponent,
-        PlayerComponent    ]
+        PlayerComponent,    
+        ParameterComponent,
+        InletComponent        ]
 })
 export class MixerModule { }

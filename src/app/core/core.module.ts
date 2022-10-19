@@ -32,8 +32,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { MatChipsModule } from '@angular/material/chips';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatBadgeModule} from '@angular/material/badge';
-
-import { PatternService } from './provider/pattern.service';
 import { UploadService } from './uploads/upload.service';
 import { FilterPipe } from './pipe/filter.pipe';
 import { UploadFormComponent } from './uploads/upload-form/upload-form.component';
@@ -41,16 +39,13 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { ActionsComponent} from './modal/actions/actions.component'
 import { InitModal } from './modal/init/init.modal';
 import { AboutModal } from './modal/about/about.modal';
-import { PatternModal } from './modal/pattern/pattern.modal';
 import { MaterialModal } from './modal/material/material.modal';
 import { FileService } from './provider/file.service';
 import { DraftviewerComponent } from './draftviewer/draftviewer.component';
-
 import { WeaverViewComponent } from './modal/weaverview/weaverview.component';
 import { SelectionComponent } from './draftviewer/selection/selection.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LoomModal } from './modal/loom/loom.modal';
-import { Action } from 'rxjs/internal/scheduler/Action';
 import { VaeService } from './provider/vae.service';
 import { PatternfinderService } from './provider/patternfinder.service';
 import { LoginComponent } from './login/login.component';
@@ -105,7 +100,6 @@ import { PedalsService } from './provider/pedals.service';
         UploadFormComponent,
         TopbarComponent,
         ActionsComponent,
-        PatternModal,
         InitModal,
         AboutModal,
         MaterialModal,
@@ -120,7 +114,6 @@ import { PedalsService } from './provider/pedals.service';
         EmailComponent
         ],
     providers: [
-        PatternService,
         UploadService,
         FileService,
         VaeService,
@@ -166,7 +159,6 @@ import { PedalsService } from './provider/pedals.service';
         UploadFormComponent,
         TopbarComponent,
         ActionsComponent,
-        PatternModal,
         InitModal,
         AboutModal,
         MaterialModal,

@@ -1,19 +1,22 @@
-<h2 mat-dialog-title *ngIf="source !== 'import'">Open a Workspace</h2>
-<h2 mat-dialog-title *ngIf="source === 'import'">Import Into Block</h2>
+
+<div class="toprow">
+  <button mat-icon-button (click)="close()"><i class="fas fa-times"></i></button>
+  
+  <h2 mat-dialog-title>Open a Workspace</h2>
+
+</div>
+
 
 <mat-dialog-content>
 
 
   <form #initForm="ngForm">
 
-      <ng-container *ngIf="source !== 'import'">
+      <ng-container>
         <mat-form-field appearance="fill">
           <mat-label>Where would you like to begin?</mat-label>
         <mat-select [(value)]="selected" (selectionChange)="selectionMade(selected)">
           
-          <!-- <mat-option *ngIf="auth.isLoggedIn" value="recover">
-            Recover Previous Workspace
-          </mat-option> -->
           
           <mat-option *ngFor="let opt of opts" [value]="opt.value">
             {{opt.viewValue}}
@@ -22,19 +25,9 @@
         </mat-form-field>
       </ng-container>
 
-      <ng-container *ngIf="source === 'import'">
-        <mat-form-field appearance="fill">
-
-        <mat-label >What kind of file would you like to import?</mat-label>
-        <mat-select [(value)]="selected">
-         <mat-option *ngFor="let opt of import_opts" [value]="opt.value">
-         {{opt.viewValue}}
-         </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </ng-container>
 
     <ng-container *ngIf="(selected == 'new')">
+      <p>just so you know, you'll be able to change these values at any time</p>
 
       <mat-form-field appearance="fill">
           <mat-label>Which type of loom are you designing for?</mat-label>
@@ -70,11 +63,13 @@
 
 
 
-      <ng-container *ngIf="(loomtype == 'frame')">
+      <ng-container *ngIf="(loomtype == 'frame') || (loomtype == 'direct')">
         <mat-form-field appearance="fill">
          <input matInput  type="number" placeholder="Number of Shafts" name="frame_num" min="2" step="1" value="8" [(ngModel)]="frame_num">
         </mat-form-field>
+      </ng-container>
 
+      <ng-container *ngIf="(loomtype == 'frame') ">
      <mat-form-field appearance="fill">
       <input matInput  type ="number" placeholder="Number of Treadles" name="treadle_num" [(ngModel)]="treadle_num" min="2" step="1" value="10">
      </mat-form-field> 
@@ -93,8 +88,25 @@
   <ng-container *ngIf="(selected == 'example')">
     <div class="preloaded_files">
 
+     
       <mat-card >
-        <mat-card-title>Introduction
+        <mat-card-title>Introduction, Lesson 1
+          <button (click)="loadExample('lesson1')" mat-raised-button color="white">Load</button>
+
+        </mat-card-title>
+        <img mat-card-image src="/assets/example_img/lesson1.png" alt="Screenshot of the File Contents">
+          <mat-card-content>
+            <p>
+              If this is your first time using AdaCAD, start here to learn our vocabulary and how you can go
+            </p>
+          </mat-card-content>
+        <mat-card-actions>
+          <button (click)="loadExample('lesson1')" mat-raised-button color="primary">Load</button>
+        </mat-card-actions>
+      </mat-card>
+     
+      <mat-card >
+        <mat-card-title>A Sample Draft
           <button (click)="loadExample('intro')" mat-raised-button color="white">Load</button>
 
         </mat-card-title>
@@ -138,6 +150,53 @@
           <button (click)="loadExample('etextile')" mat-raised-button color="primary">Load</button>
         </mat-card-actions>
       </mat-card>
+
+      <mat-card>
+        <mat-card-title>Woven Electrode Sample
+          <button (click)="loadExample('electrode')" mat-raised-button color="white">Load</button>
+        </mat-card-title>
+        <img mat-card-image src="/assets/example_img/electrode.png" alt="Screenshot of the File Contents">
+          <mat-card-content>
+            <p>
+              Presents strategies and patterns for drafting woven electrodes. 
+            </p>
+          </mat-card-content>
+        <mat-card-actions>
+          <button (click)="loadExample('electrode')" mat-raised-button color="primary">Load</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Two Pick Structures
+          <button (click)="loadExample('twopic')" mat-raised-button color="white">Load</button>
+        </mat-card-title>
+        <img mat-card-image src="/assets/example_img/twopic.png" alt="Screenshot of the File Contents">
+          <mat-card-content>
+            <p>
+              Two pick structures can create really interesting graphic patterns in the cloth and you can a apply a set of operations to make any weft-facing structure a 2 pic structure
+            </p>
+          </mat-card-content>
+        <mat-card-actions>
+          <button (click)="loadExample('twopic')" mat-raised-button color="primary">Load</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Mapping Layers to an Image
+          <button (click)="loadExample('threelayer')" mat-raised-button color="white">Load</button>
+        </mat-card-title>
+        <img mat-card-image src="/assets/example_img/threelayer.png" alt="Screenshot of the File Contents">
+          <mat-card-content>
+            <p>
+            We create three variations of a three layer weave structure, each which has a different layer on top. We then map each of those to an image.
+            </p>
+          </mat-card-content>
+        <mat-card-actions>
+          <button (click)="loadExample('threelayer')" mat-raised-button color="primary">Load</button>
+        </mat-card-actions>
+      </mat-card>
+
+ 
 
       <!-- <mat-card>
         <mat-card-title>Floor Loom</mat-card-title>

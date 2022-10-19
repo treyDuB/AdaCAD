@@ -1,19 +1,15 @@
 import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, ɵNOT_FOUND_CHECK_ONLY_ELEMENT_INJECTOR, enableProdMode } from '@angular/core';
-import { PatternService } from '../core/provider/pattern.service';
 import { DesignmodesService } from '../core/provider/designmodes.service';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
-import { Pattern } from '../core/model/pattern';
 import {Subject} from 'rxjs';
 import { PaletteComponent } from './palette/palette.component';
-import { Draft } from '../core/model/draft';
-import { TreeService, TreeNode, DraftNode, IOTuple } from './provider/tree.service';
-import { FileObj, FileService, LoadResponse, NodeComponentProxy, OpComponentProxy, SaveObj, TreeNodeProxy } from '../core/provider/file.service';
+import { TreeService} from './provider/tree.service';
+import { Draft, Loom, FileObj, Node, LoadResponse, NodeComponentProxy, OpComponentProxy, SaveObj, TreeNodeProxy, LoomSettings, TreeNode, DraftNode, IOTuple  } from '../core/model/datatypes';
 import { SidebarComponent } from '../core/sidebar/sidebar.component';
 import { ViewportService } from './provider/viewport.service';
 import { NotesService } from '../core/provider/notes.service';
 import { Cell } from '../core/model/cell';
-import { GloballoomService } from '../core/provider/globalloom.service';
-import { Loom } from '../core/model/loom';
+import { WorkspaceService } from '../core/provider/workspace.service';
 import { StateService } from '../core/provider/state.service';
 import { MaterialsService } from '../core/provider/materials.service';
 import { SystemsService } from '../core/provider/systems.service';
@@ -23,9 +19,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../core/provider/auth.service';
 import {getDatabase, ref as fbref, get as fbget, child} from '@angular/fire/database'
 import {getAnalytics, logEvent} from '@angular/fire/analytics'
-import { InputSpec } from '@tensorflow/tfjs';
 import { ImageService } from '../core/provider/image.service';
 import { OperationService } from './provider/operation.service';
+import { FileService} from '../core/provider/file.service'
+import { initDraft, initDraftWithParams, loadDraftFromFile } from '../core/model/drafts';
+import * as _ from 'lodash';
+import { any } from '@tensorflow/tfjs';
+import { SubdraftComponent } from './palette/subdraft/subdraft.component';
+import utilInstance from '../core/model/util';
 
 import { PlayerComponent } from '../mixer/player/player.component';
 import { DraftPlayerService } from './provider/draftplayer.service';
@@ -63,8 +64,6 @@ export class MixerComponent implements OnInit {
 
   private unsubscribe$ = new Subject();
 
-  patterns: Array<Pattern> = [];
-
   collapsed:boolean = false;
 
   scrollingSubscription: any;
@@ -84,18 +83,21 @@ export class MixerComponent implements OnInit {
     private auth: AuthService,
     private ms: MaterialsService,
     private sys: SystemsService,
-    private ps: PatternService, 
     private tree: TreeService,
     public scroll: ScrollDispatcher,
     private fs: FileService,
+    public ws: WorkspaceService,
     public vp: ViewportService,
-    private gl: GloballoomService,
     private notes: NotesService,
     private ss: StateService,
     private dps: DraftPlayerService,
     private dialog: MatDialog,
     private image: ImageService,
-    private ops: OperationService) {
+    private ops: OperationService,
+    private http: HttpClient
+    ) {
+
+
 
     //this.dialog.open(MixerInitComponent, {width: '600px'});
 
@@ -108,9 +110,6 @@ export class MixerComponent implements OnInit {
     
     this.vp.setAbsolute(16380, 16380); //max size of canvas, evenly divisible by default cell size
    
-    this.patterns = this.ps.getPatterns();
-
-
   }
 
   /** mixer receives palette event for setting draft active, directs player component */
@@ -119,6 +118,26 @@ export class MixerComponent implements OnInit {
     this.player.drawDraft();
     // this.player.draft_set = true;
   }
+
+  ngOnInit(){
+    const analytics = getAnalytics();
+    logEvent(analytics, 'onload', {
+      items: [{ uid: this.auth.uid }]
+    });
+  }
+
+  ngAfterViewInit() {
+
+    let searchParams = new URLSearchParams(window.location.search);
+
+    if(searchParams.has('ex')){
+      this.loadExampleAtURL(searchParams.get('ex'));  
+    }else{
+      this.loadLoggedInUser();
+    }
+
+  }
+
 
   private onWindowScroll(data: any) {
     if(!this.manual_scroll){
@@ -163,7 +182,7 @@ export class MixerComponent implements OnInit {
   loadNewFile(result: LoadResponse){
 
     this.clearView();
-
+    this.tree.clear();
     console.log("loaded new file", result, result.data)
     this.processFileData(result.data).then(
       this.palette.changeDesignmode('move')
@@ -179,9 +198,15 @@ export class MixerComponent implements OnInit {
    */
    importNewFile(result: LoadResponse){
     
-    this.processFileData(result.data).then(
+    this.processFileData(result.data)
+    .then( data => {
       this.palette.changeDesignmode('move')
-    );
+      this.clearView();
+      this.tree.clear();
+      console.log("imported new file", result, result.data)
+      })
+      .catch(console.error);
+    
   }
 
 
@@ -315,6 +340,7 @@ export class MixerComponent implements OnInit {
    */
    async processFileData(data: FileObj) : Promise<string>{
 
+
     let entry_mapping = [];
     this.filename = data.filename;
 
@@ -327,7 +353,7 @@ export class MixerComponent implements OnInit {
     const images_to_load = [];
     data.ops.forEach(op => {
       const internal_op = this.ops.getOp(op.name); 
-      if(internal_op === undefined) return;
+      if(internal_op === undefined || internal_op == null|| internal_op.params === undefined) return;
       const param_types = internal_op.params.map(el => el.type);
       param_types.forEach((p, ndx) => {
         if(p === 'file') images_to_load.push(op.params[ndx]);
@@ -336,10 +362,10 @@ export class MixerComponent implements OnInit {
 
 
     this.image.loadFiles(images_to_load).then(el => {
-        this.gl.inferData(data.looms.concat(this.tree.getLooms()))
-      
+      return this.tree.replaceOutdatedOps(data.ops);
     })
-    .then(el => {     
+    .then(correctedOps => {    
+      data.ops = correctedOps; 
       return this.loadNodes(data.nodes)
     })
     .then(id_map => {
@@ -348,40 +374,48 @@ export class MixerComponent implements OnInit {
       }
     ).then(treenodes => {
 
-      //this.printTreeStatus("after load", this.tree.tree);
-
       const seednodes: Array<{prev_id: number, cur_id: number}> = treenodes
         .filter(tn => this.tree.isSeedDraft(tn.tn.node.id))
         .map(tn => tn.entry);
      
 
-      const seeds: Array<{entry, id, draft, loom}> = seednodes
+      const seeds: Array<{entry, id, draft, loom, loom_settings}> = seednodes
       .map(sn =>  {
 
-        let d = new Draft({wefts: 1, warps: 1, pattern: [[new Cell(false)]]});
-        let l = new Loom(d, this.gl.min_frames, this.gl.min_treadles);
+
+         let d:Draft =null;
+        // let ls:LoomSettings = {
+        //   this.ws.type
+        // }
+        // let l = new Loom(d, this.ws.type, this.ws.min_frames, this.ws.min_treadles);
 
         const draft_node = data.nodes.find(node => node.node_id === sn.prev_id);
+        //let d: Draft = initDraft();
+        let l: Loom = {
+          treadling: [],
+          tieup: [],
+          threading: []
+        }
 
+        let ls: LoomSettings = {
+          frames: this.ws.min_frames,
+          treadles: this.ws.min_treadles,
+          epi: this.ws.epi,
+          units: this.ws.units,
+          type: this.ws.type
+        }
         if(draft_node !== undefined){
 
-          const located_draft = data.drafts.find(draft => draft.id === draft_node.draft_id);
+          const located_draft = data.draft_nodes.find(draft => draft.draft_id === draft_node.node_id);
           if(located_draft === undefined){
+            console.log("Looking for ", draft_node.node_id,"in", data.draft_nodes.map(el => el.draft_id))
             console.error("could not find draft with id in draft list");
-            console.error("looking for draft ", draft_node.draft_id, "in ", data.drafts.map(draft => draft.id));
           }
           else{
-            d.reload(located_draft);
-            d.overloadId(located_draft.id);
-            d.overloadName(draft_node.draft_name);
+            d = _.cloneDeep(located_draft.draft);
+            ls = _.cloneDeep(located_draft.loom_settings);
+            l = _.cloneDeep(located_draft.loom);
           } 
-
-
-          const located_loom = data.looms.find(loom => loom.draft_id === draft_node.draft_id);
-          if(located_loom === undefined) console.error("could not find loom with this draft id ", draft_node.draft_id);
-          else l = located_loom;
-          
-          l.recomputeLoom(d);
 
         }else{
           console.error("draft node could not be found")
@@ -389,22 +423,25 @@ export class MixerComponent implements OnInit {
 
   
 
-        d.overloadId(sn.cur_id); //do this so that all draft ids match the component / node ids
-        l.draft_id = d.id;
+        d.id = (sn.cur_id); //do this so that all draft ids match the component / node ids
 
       return {
         entry: sn,
         id: sn.cur_id,
         draft: d,
-        loom: l
+        loom: l,
+        loom_settings: ls
         }
       });
 
-
-
       
-      const seed_fns = seeds.map(seed => this.tree.loadDraftData(seed.entry, seed.draft, seed.loom));
-     
+
+      // console.log("ALL TREADLING in Mixer");
+      // seeds.forEach(node => {
+      //   console.log(node.loom.treadling)
+      // })
+      const seed_fns = seeds.map(seed => this.tree.loadDraftData(seed.entry, seed.draft, seed.loom,seed.loom_settings));
+  
       const op_fns = data.ops.map(op => {
         const entry = entry_mapping.find(el => el.prev_id == op.node_id);
         return this.tree.loadOpData(entry, op.name, op.params, op.inlets);
@@ -418,7 +455,6 @@ export class MixerComponent implements OnInit {
     })
     .then(el => {
       //console.log("performing top level ops");
-
        return  this.tree.performTopLevelOps();
     })
     .then(el => {
@@ -427,7 +463,8 @@ export class MixerComponent implements OnInit {
       .filter(el => el.draft === null)
       .forEach(el => {
         if(this.tree.hasParent(el.id)){
-          el.draft = new Draft({warps: 1, wefts: 1, pattern: [[new Cell(false)]]});
+          el.draft = initDraftWithParams({warps: 1, wefts: 1, pattern: [[new Cell(false)]]});
+          el.draft.id = el.id;
         } else{
           console.log("removing node ", el.id, el.type, this.tree.hasParent(el.id));
           this.tree.removeNode(el.id);
@@ -446,7 +483,7 @@ export class MixerComponent implements OnInit {
         switch (node.type){
           case 'draft':
             
-            this.palette.loadSubDraft(node.id, this.tree.getDraft(node.id), data.nodes.find(el => el.node_id === entry.prev_id), data.scale);
+            this.palette.loadSubDraft(node.id, this.tree.getDraft(node.id), data.nodes.find(el => el.node_id === entry.prev_id), data.draft_nodes.find(el => el.node_id === entry.prev_id), data.scale);
             break;
           case 'op':
             const op = this.tree.getOpNode(node.id);
@@ -469,18 +506,28 @@ export class MixerComponent implements OnInit {
     })
     .then(el => {
 
-      //LOAD IN ALL OF THE DRAFT NAMES
-      data.nodes.forEach(np => {
+      //NOW GO THOUGH ALL DRAFT NODES and ADD IN DATA THAT IS REQUIRED
+      data.draft_nodes
+      .forEach(np => {
         const new_id = entry_mapping.find(el => el.prev_id === np.node_id);
         const node = this.tree.getNode(new_id.cur_id);
         if(node === undefined) return;
-        if(node.type === "draft"){
-          (<DraftNode> node).draft.overloadName(np.draft_name);
-        }
+
+       (<DraftNode> node).draft.ud_name = np.draft_name;
+       (<DraftNode> node).loom_settings = np.loom_settings; 
       })
+
+      // const dn = this.tree.getDraftNodes();
+      // dn.forEach(node => {
+      //   console.log("RES", node.draft, node.loom, node.loom_settings)
+      // })
+  
 
     })
     .catch(console.error);
+
+
+    //print out all trees:
 
 
     return Promise.resolve("all done");
@@ -491,60 +538,70 @@ export class MixerComponent implements OnInit {
  
 
   
-  ngOnInit(){
+
+
+  loadExampleAtURL(name: string){
     const analytics = getAnalytics();
-    logEvent(analytics, 'onload', {
-      items: [{ uid: this.auth.uid }]
+    logEvent(analytics, 'onurl', {
+      items: [{ uid: this.auth.uid, name: name }]
     });
-    
+
+    this.http.get('assets/examples/'+name+".ada", {observe: 'response'}).subscribe((res) => {
+      console.log(res);
+      if(res.status == 404) return;
+      return this.fs.loader.ada(name, res.body)
+     .then(loadresponse => {
+       this.loadNewFile(loadresponse)
+     });
+    }); 
   }
 
-  ngAfterViewInit() {
+
+  loadLoggedInUser(){
+
+    this.auth.user.subscribe(user => {
+
+      if(user === null){
+
+        const dialogRef = this.dialog.open(InitModal, {
+          data: {source: 'mixer'}
+        });
 
 
-      this.auth.user.subscribe(user => {
+        dialogRef.afterClosed().subscribe(loadResponse => {
+          this.palette.changeDesignmode('move');
+          if(loadResponse !== undefined){
+            if(loadResponse.status == -1){
+              this.clearAll();
+            }
+            else{
+              this.loadNewFile(loadResponse);
+            }
+          } 
+        
+    
+       });
+      }else{
 
-        if(user === null){
+        //in the case someone logs in mid way through, don't replace their work. 
+        if(this.tree.nodes.length > 0) return;
+       
 
-          const dialogRef = this.dialog.open(InitModal, {
-            data: {source: 'mixer'}
-          });
-
-
-          dialogRef.afterClosed().subscribe(loadResponse => {
-            this.palette.changeDesignmode('move');
-            if(loadResponse !== undefined) this.loadNewFile(loadResponse);
-          
-      
-         });
-        }else{
-
-          //in the case someone logs in mid way through, don't replace their work. 
-          if(this.tree.nodes.length > 0) return;
-         
-
-          const db = fbref(getDatabase());
+        const db = fbref(getDatabase());
 
 
-                  fbget(child(db, `users/${this.auth.uid}/ada`)).then((snapshot) => {
-                    if (snapshot.exists()) {
-                      this.fs.loader.ada("recovered draft", snapshot.val()).then(lr => {
-                        this.loadNewFile(lr);
-                      });
-                    }
-                  }).catch((error) => {
-                    console.error(error);
-                  });
+                fbget(child(db, `users/${this.auth.uid}/ada`)).then((snapshot) => {
+                  if (snapshot.exists()) {
+                    this.fs.loader.ada("recovered draft", snapshot.val()).then(lr => {
+                      this.loadNewFile(lr);
+                    });
+                  }
+                }).catch((error) => {
+                  console.error(error);
+                });
 
-        }
-      });
-  
-    //console.log(this.auth, this.auth.isLoggedIn);
-
-
-
-
-
+      }
+    });
 
   }
 
@@ -585,6 +642,7 @@ export class MixerComponent implements OnInit {
   }
 
   clearAll() : void{
+    console.log("CLEAR ALL from MIXER")
     this.palette.addTimelineState();
     this.fs.clearAll();
     this.clearView();
@@ -793,8 +851,6 @@ export class MixerComponent implements OnInit {
       case 'ada': 
       this.fs.saver.ada(
         'mixer', 
-        this.tree.exportDraftsForSaving(),
-        this.tree.exportLoomsForSaving(),
         false,
         this.scale).then(out => {
           link.href = "data:application/json;charset=UTF-8," + encodeURIComponent(out.json);
@@ -827,17 +883,20 @@ export class MixerComponent implements OnInit {
 
 
  
-  
+  /**
+   * global loom ahs just changed to be deafults, so we don't need to update specific looms based on the outcomes
+   * @param e 
+   */
   public globalLoomChange(e: any){
-    console.log("global loom change");
-    this.tree.updateLooms();
     
-  }
-
-
-  public updatePatterns(e: any) {
-    // this.patterns = e.patterns;
-    // this.draft.patterns = this.patterns;
+    console.log("GLOBAL LOOM CHANGE IN MIXER")
+    const dn = this.tree.getDraftNodes();
+    dn.forEach(node => {
+      const draft = this.tree.getDraft(node.id)
+      const loom = this.tree.getLoom(node.id)
+      const loom_settings = this.tree.getLoomSettings(node.id);
+      (<SubdraftComponent> node.component).drawDraft(draft)});
+    
   }
 
 
@@ -846,19 +905,6 @@ export class MixerComponent implements OnInit {
     console.log(e);
     //this.draft.notes = e;
   }
-
-  public createPattern(e: any) {
-
-    this.patterns.push(new Pattern({pattern: e.pattern}));
-  
-  }
-
-
-//should this just hide the pattern or fully remove it, could create problems with undo/redo
-   public removePattern(e: any) {
-    this.patterns = this.patterns.filter(pattern => pattern !== e.pattern);
-  }
-
 
 
   public toggleCollapsed(){
@@ -878,9 +924,4 @@ export class MixerComponent implements OnInit {
     this.palette.redrawOpenModals();
     this.palette.redrawAllSubdrafts();
  }
-
-
- 
-
-
 }

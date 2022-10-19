@@ -43,11 +43,17 @@ export class NoteComponent implements OnInit {
 
   ngOnInit() {
     this.note = this.notes.get(this.id);
-
-    this.bounds.topleft = {
-      x: this.note.interlacement.j * this.scale,
-      y: this.note.interlacement.i * this.scale
+    if(this.note == undefined){
+      this.bounds.topleft = {x: 0, y: 0};
+      console.error("cound not find note on init ", this.id, this.notes.notes);
+    }else{
+      this.bounds.topleft = {
+        x: this.note.interlacement.j * this.scale,
+        y: this.note.interlacement.i * this.scale
+      }
     }
+
+   
   }
 
   ngAfterViewInit(){
@@ -58,9 +64,7 @@ export class NoteComponent implements OnInit {
   }
 
   delete(id: number){
-    this.notes.delete(id);
     this.deleteNote.emit(id);
-
   }
     
 

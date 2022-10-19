@@ -27,12 +27,12 @@ export class InitModal implements OnInit {
 
 
   opts: StartOptions[] = [
-      {value: 'example', viewValue: 'Load an Example', mixeronly: true},
-      {value: 'ada', viewValue: 'AdaCAD (.ada) File', mixeronly: true},
+      {value: 'example', viewValue: 'Browse Examples', mixeronly: true},
+      {value: 'ada', viewValue: 'Open an AdaCAD (.ada) File from you Computer', mixeronly: true},
      // {value: 'bmp', viewValue: 'Two Color Image (.bmp, .jpg, .png) File', mixeronly: false},
       // {value: 'wif', viewValue: 'WIF (.wif) File', mixeronly: false},   
-      {value: 'new', viewValue: 'Empty Draft', mixeronly: false}
-
+      {value: 'blank', viewValue: 'Open an Empty Workspace', mixeronly: false},
+      {value: 'new', viewValue: 'Create a Blank Draft', mixeronly: false}
     ];
 
   import_opts: StartOptions[] = [];
@@ -72,21 +72,22 @@ export class InitModal implements OnInit {
     console.log("handle file", e);
 
     switch(e.type){
-      case 'image': 
-      return this.fls.loader.bmp(e.name, e.data).then(
-        res => this.dialogRef.close(res)
-      );
-      case 'wif': 
-        return this.fls.loader.wif(e.name, e.data)
-        .then(
-          res => this.dialogRef.close(res)
-        );
+      // case 'image': 
+      // return this.fls.loader.bmp(e.name, e.data).then(
+      //   res => this.dialogRef.close(res)
+      // );
+      // case 'wif': 
+      //   return this.fls.loader.wif(e.name, e.data)
+      //   .then(
+      //     res => this.dialogRef.close(res)
+      //   );
       
       case 'ada': 
         return this.fls.loader.ada(e.name, e.data)
         .then(
           res => this.dialogRef.close(res)
         );
+
         
 
     }
@@ -94,7 +95,10 @@ export class InitModal implements OnInit {
   }
 
   selectionMade(selection: any){
-
+    if(selection === 'blank') this.dialogRef.close({
+      data: null,
+      status: -1
+    });
   }
 
   loadExample(filename: string){
@@ -116,7 +120,9 @@ export class InitModal implements OnInit {
 
  
 
-
+  close(): void {
+    this.dialogRef.close(null);
+  }
 
  
   onNoClick(): void {
