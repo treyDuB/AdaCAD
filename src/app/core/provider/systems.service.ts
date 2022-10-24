@@ -1,10 +1,6 @@
-import { I } from '@angular/cdk/keycodes';
 import { Injectable } from '@angular/core';
-import { util } from '@tensorflow/tfjs';
-import { uniq } from 'lodash';
 import { Draft } from '../model/datatypes';
-import { System } from '../model/system';
-import utilInstance from '../model/util';
+import { System, makeSystemsUnique } from '../model/system';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +11,6 @@ import utilInstance from '../model/util';
  */
 export class SystemsService {
 
-  
   weft_systems: Array<System> = [];
   warp_systems: Array<System> = [];
 
@@ -192,51 +187,13 @@ export class SystemsService {
  }
 
  /**
-   * takes system maps and makes them all unique by adding a base value to the n+1th map. This helps when interlacing 
-   * drafts that have different system mappings, and making sure they are each unique. 
-   * This function will also return standard sized arrays = to the maximum sized input
-   * @param systems the system mappings to compare
+   * moved to system.ts in model
    */
-  private makeSystemsUnique(systems: Array<Array<number>>) : Array<Array<number>> {
-   
-
-     if(systems.length === 0) return [];
-
-
-    const max_in_systems: Array<number> = systems.map(el => utilInstance.getArrayMax(el));
-   
-    let last_max = 0;
-    const unique_systems = systems.map((sys, ndx) => {
-      if(ndx > 0){
-        last_max += (max_in_systems[ndx -1]+1)
-        return sys.map(el => el + last_max);
-      }else{
-        return sys;
-      }
-    });  
-
-     //standardize teh lengths of all the returned arrays 
-     const max_length:number = unique_systems.reduce((acc, el) => {
-      const len = el.length;
-      if(len > acc) return len;
-      else return acc;
-    }, 0);
-
-
-    unique_systems.forEach((sys, ndx) => {
-      if(sys.length < max_length){
-        for(let i = sys.length; i < max_length; i++){
-          sys.push(sys[0]);
-        }
-      }
-    });
-
-    return unique_systems;
-  }
+  // makeSystemsUnique(systems: Array<Array<number>>) : Array<Array<number>> {
 
   makeWeftSystemsUnique(systems: Array<Array<number>>) : Array<Array<number>> {
 
-    const unique = this.makeSystemsUnique(systems);
+    const unique = makeSystemsUnique(systems);
 
     //add any weft systems required
     unique.forEach(system => {
@@ -251,7 +208,7 @@ export class SystemsService {
 
   makeWarpSystemsUnique(systems: Array<Array<number>>) : Array<Array<number>> {
 
-    const unique = this.makeSystemsUnique(systems);
+    const unique = makeSystemsUnique(systems);
 
     unique.forEach(system => {
       system.forEach(el => {

@@ -4,7 +4,7 @@ import { DraftPlayerService } from '../provider/draftplayer.service';
 import { OperationService } from '../provider/operation.service';
 import { MaterialsService } from '../../core/provider/materials.service';
 // import { TreeService, DraftNode  } from '../provider/tree.service';
-import { Draft } from '../../core/model/draft';
+import { Draft } from '../../core/model/datatypes';
 import { T } from '@angular/cdk/keycodes';
 
 @Component({

@@ -697,32 +697,32 @@ export const isFrame = (loom_settings: LoomSettings) : boolean => {
 }
 
 
-   /**
-   * sets up the draft from the information saved in a .ada file
-   * @param data 
-   */
-  export const loadLoomFromFile = (loom: any, flips: any, version: string) : Promise<Loom> => {
+/**
+ * sets up the draft from the information saved in a .ada file
+ * @param data 
+ */
+export const loadLoomFromFile = (loom: any, flips: any, version: string) : Promise<Loom> => {
 
-    if(loom == null) return Promise.resolve(null);
+  if(loom == null) return Promise.resolve(null);
 
-    if(!utilInstance.sameOrNewerVersion(version, '3.4.5')){
-      //tranfer the old treadling style on looms to the new style updated in 3.4.5
-       loom.treadling = loom.treadling.map(treadle_id => {
-        if(treadle_id == -1) return [];
-        else return [treadle_id];
-      });
-    
-    }else{
-      //handle case where firebase does not save empty treadles
-      //console.log("IN LOAD LOOM", loom.treadling);
-      for(let i = 0; i < loom.treadling.length; i++){
-        if(loom.treadling[i].length == 1 && loom.treadling[i][0] == -1) loom.treadling[i] = [];
-      }
+  if (!utilInstance.sameOrNewerVersion(version, '3.4.5')) {
+    //tranfer the old treadling style on looms to the new style updated in 3.4.5
+    loom.treadling = loom.treadling.map(treadle_id => {
+      if(treadle_id == -1) return [];
+      else return [treadle_id];
+    });
+  
+  } else {
+    // handle case where firebase does not save empty treadles
+    // console.log("IN LOAD LOOM", loom.treadling);
+    for(let i = 0; i < loom.treadling.length; i++){
+      if (loom.treadling[i].length == 1 && loom.treadling[i][0] == -1) loom.treadling[i] = [];
     }
+  }
+  
+  return flipLoom(loom, flips.horiz, flips.vert)
+  .then(flipped => {
+    return flipped;
+  })
     
-      return flipLoom(loom, flips.horiz, flips.vert)
-      .then(flipped => {
-        return flipped;
-      })
-      
-    }
+}

@@ -1,10 +1,13 @@
 import { Injectable} from '@angular/core';
+import { wefts } from '../../core/model/drafts';
 import { PedalsService, PedalStatus, Pedal } from '../../core/provider/pedals.service';
-import { Draft } from '../../core/model/draft';
-import { BaseOp as Op, TopologyOperation as TopoOp,
-  Pipe, Seed, NoDrafts, NoParams, DraftsOptional, ParamsOptional, AllRequired 
+import { BaseOp as Op, BuildableOperation as GenericOp,
+  Seed, Pipe,
+  NoDrafts, NoParams, DraftsOptional, ParamsOptional, AllRequired
 } from '../model/operation';
-import { ServiceOp, OperationService } from '../provider/operation.service';
+import * as defs from '../model/op_definitions';
+import { Draft } from '../../core/model/datatypes';
+import { OperationService } from '../provider/operation.service';
 import { EventEmitter } from 'events';
 
 interface PedalsConfig {
@@ -16,7 +19,7 @@ interface PlayerOp {
   id?: number,
   name: string,
   dx?: string,
-  op?: ServiceOp,
+  op?: GenericOp,
   weavingOnly?: boolean,
   perform: (init: PlayerState) => Promise<PlayerState>;
 }
@@ -115,7 +118,7 @@ class PedalOpMapping {
 const forward: PlayerOp = {
   name: 'forward',
   perform: (init: PlayerState) => { 
-    let nextRow = (init.row+1) % init.draft.wefts;
+    let nextRow = (init.row+1) % wefts(init.draft.drawdown);
     return Promise.resolve({ draft: init.draft, row: nextRow, numPicks: init.numPicks+1 }); 
   }
 }
@@ -128,14 +131,14 @@ const refresh: PlayerOp = {
 const reverse: PlayerOp = {
   name: 'reverse',
   perform: (init: PlayerState) => { 
-    let nextRow = (init.row+init.draft.wefts-1) % init.draft.wefts;
+    let nextRow = (init.row+wefts(init.draft.drawdown)-1) % wefts(init.draft.drawdown);
     return Promise.resolve({ draft: init.draft, row: nextRow, numPicks: init.numPicks+1});
   }
 }
 
-function playerOpFrom(op: ServiceOp) {
+function playerOpFrom(op: GenericOp) {
   // use "rotate" op as an example
-  let dataOp: TopoOp = op.topo_op;
+  let dataOp = op;
   let perform;
   if (dataOp.classifier.type === 'pipe') {
     const pipeOp = dataOp as Op<Pipe, AllRequired>;
@@ -202,25 +205,25 @@ export class DraftPlayerService {
     this.pedalOps.addOperation(refresh);
     this.pedalOps.addOperation(reverse);
 
-    const tabby = <ServiceOp> this.oss.getOp('tabby');
-    const twill = <ServiceOp> this.oss.getOp('twill');
-    const random = <ServiceOp> this.oss.getOp('random');
-    const rotate = <ServiceOp> this.oss.getOp('rotate');
-    const invert = <ServiceOp> this.oss.getOp('invert');
-    const shiftx = <ServiceOp> this.oss.getOp('shift left');
-    const slope = <ServiceOp> this.oss.getOp('slope');
-    const flipx = <ServiceOp> this.oss.getOp('flip horiz');
-    const stretch = <ServiceOp> this.oss.getOp('stretch');
+    const tabby = playerOpFrom(defs.tabby);
+    const twill = playerOpFrom(defs.twill);
+    const random = playerOpFrom(defs.random);
+    const rotate = playerOpFrom(defs.rotate);
+    const invert = playerOpFrom(defs.invert);
+    const shiftx = playerOpFrom(defs.shiftx);
+    const slope = playerOpFrom(defs.slope);
+    const flipx = playerOpFrom(defs.flipx);
+    const stretch = playerOpFrom(defs.stretch);
     
-    this.pedalOps.addOperation(playerOpFrom(rotate)); 
-    this.pedalOps.addOperation(playerOpFrom(tabby));
-    this.pedalOps.addOperation(playerOpFrom(twill));
-    this.pedalOps.addOperation(playerOpFrom(random));
-    this.pedalOps.addOperation(playerOpFrom(invert)); 
-    this.pedalOps.addOperation(playerOpFrom(shiftx)); 
-    this.pedalOps.addOperation(playerOpFrom(flipx));
-    this.pedalOps.addOperation(playerOpFrom(slope)); 
-    this.pedalOps.addOperation(playerOpFrom(stretch));
+    this.pedalOps.addOperation(rotate) 
+    this.pedalOps.addOperation(tabby);
+    this.pedalOps.addOperation(twill);
+    this.pedalOps.addOperation(random);
+    this.pedalOps.addOperation(invert); 
+    this.pedalOps.addOperation(shiftx); 
+    this.pedalOps.addOperation(flipx);
+    this.pedalOps.addOperation(slope); 
+    this.pedalOps.addOperation(stretch);
 
     // this.pds.pedal_array.on('pedal-added', (num) => {
     //   // console.log("automatically pairing first pedal", num);
@@ -297,7 +300,7 @@ export class DraftPlayerService {
 
   currentRow() {
     let {draft, row} = this.state;
-    let draftRow = draft.pattern[row % draft.wefts];
+    let draftRow = draft.drawdown[row % wefts(draft.drawdown)];
     let data = "";
 
     let targetLength = (this.loom.draftTiling ? this.loom.warps : draftRow.length);

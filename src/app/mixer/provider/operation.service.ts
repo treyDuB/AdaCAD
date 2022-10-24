@@ -7,68 +7,21 @@ import { SystemsService } from '../../core/provider/systems.service';
 import { MaterialsService } from '../../core/provider/materials.service';
 import * as _ from 'lodash';
 import { ImageService } from '../../core/provider/image.service';
-import { BoolParam, Draft, DraftParam, DynamicOperation, Loom, LoomSettings, NumParam, Operation, OperationClassification, OpInput, SelectParam, StringParam } from '../../core/model/datatypes';
-import { applyMask, flipDraft, flipDrawdown, generateMappingFromPattern, getDraftName, initDraft, initDraftWithParams, invertDrawdown, isUp, pasteIntoDrawdown, shiftDrawdown, warps, wefts } from '../../core/model/drafts';
-import { getLoomUtilByType, numFrames, numTreadles } from '../../core/model/looms';
 import { WorkspaceService } from '../../core/provider/workspace.service';
 import { CombinatoricsService } from '../../core/provider/combinatorics.service';
 
-import { ParamValue, NumberParam, BooleanParam, GenericParam, 
-  getParamValues, OperationProperties,
-  SeedOperation, MergeOperation, PipeOperation, BranchOperation,
-  Seed, Pipe, Merge, Branch, Bus,
-  NoDrafts, NoParams, DraftsOptional, ParamsOptional, AllRequired,
-  TopologyOperation, BaseOp as Op
-} from '../model/operation'; 
+import { applyMask, flipDraft, flipDrawdown, generateMappingFromPattern, getDraftName, initDraft, initDraftWithParams, invertDrawdown, isUp, pasteIntoDrawdown, shiftDrawdown, warps, wefts } from '../../core/model/drafts';
+import { getLoomUtilByType, numFrames, numTreadles } from '../../core/model/looms';
+import { Draft, Loom, LoomSettings } from '../../core/model/datatypes';
 
-/**
- * this is a type that contains a series of smaller operations held under the banner of one larger operation (such as layer)
- * @param op_name the name of the operation or "child" if this is an assignment to an input parameter
- * @param drafts the drafts associated with this input
- * @param params the parameters associated with this operation OR child input
- * @param inlets the index of the inlet for which the draft is entering upon
- */
- export interface OpInput {
-  op_name: string,
-  drafts: Array<Draft | never>,
-  params: Array<any>,
-  inlet: number | null
-}
+import * as defs from '../model/op_definitions';
+import { BoolParam, DraftParam, NumParam, SelectParam, StringParam, 
+  DynamicOperation, TreeOperation, buildTreeOp, format,
+  OperationClassification, OpInput, BuildableOperation
+} from '../model/operation';
 
- /**
- * A container operation that takes drafts with some parameter assigned to them 
- * @param name the internal name of this operation used for index (DO NOT CHANGE THESE NAMES!)
- * @param displayname the name to show the viewer 
- * @param params the parameters that one can directly input to the parent
- * @param dynamic_param_id which parameter id should we use to dynamically create paramaterized input slots
- * @param dynamic_param_type the type of parameter that we look to generate
- * @param max_inputs but the nubmer of drafts to input directly, without parameterization.
- * @param dx the description of this operation
- */
-export interface DynamicOperation extends OperationProperties {
-  dynamic_param_id: number,
-  dynamic_param_type: string,
-  perform: {(inputs: Array<OpInput>): Promise<Array<Draft>>}
-}
-
-export interface ServiceOp extends OperationProperties {
-  topo_op: TopologyOperation;
-  perform: (op_inputs: Array<OpInput>) => Promise<Array<Draft>>
-}
-
-export type Operation = ServiceOp | DynamicOperation ;
-
-
-/**
- * @interface 
- */
-export interface OperationClassification {
-  category: string,
-  dx: string,
-  ops: Array<Operation> 
-}
-
- 
+export type Operation = TreeOperation | DynamicOperation ;
+export { DynamicOperation, TreeOperation as ServiceOp } from '../model/operation';
 
 @Injectable({
   providedIn: 'root'
@@ -86,592 +39,62 @@ export class OperationService {
     private ss: SystemsService,
     private is: ImageService,
     private ws: WorkspaceService,
-    private combos: CombinatoricsService) { 
+    private combos: CombinatoricsService
+  ) { 
 
-    const rect = this.makeOp(SeedOperation.DraftsOptional(
-      'rectangle', 
-      'rectangle', 
-      'generates a rectangle of the user specified size. If given an input, fills the rectangle with the input',
-      [
-        new NumberParam('width', 10, 1, 500, 'width'), 
-        new NumberParam('height', 10, 1, 500, 'height')
-      ],
-      (params: Array<number>, input?: Draft) => {
-        const d: Draft = new Draft({warps:params[0], wefts:params[1]});
-        
-        if (input) {
-          d.fill(input.pattern, 'original');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "rect");
-        } else {
-          d.fill([[new Cell(false)]], 'clear');
-        }
-        
-        return d;
-    const rect: Operation = {
-      name: 'rectangle',
-      displayname: 'rectangle',
-      old_names:[],
-      dx: "generates a rectangle of the user specified side, if given an input, fills the rectangle with the input",
-      params: <Array<NumParam>>[
-        {name: 'width',
-        type: 'number',
-        min: 1,
-        max: 500,
-        value: 10,
-        dx: "width"
-        },
-        {name: 'height',
-        type: 'number',
-        min: 1,
-        max: 500,
-        value: 10,
-        dx: "height"
-        }
-      ],
-      inlets: [{
-        name: 'input draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft with which you would like to fill this rectangle',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'rectangle');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
+    function addOp(op: BuildableOperation) {
+      let tree_op = buildTreeOp(op);
+      this.ops.push(tree_op);
+      return tree_op;
+    }
 
-        const draft = (child_input !== undefined && child_input.drafts.length > 0) ? child_input.drafts[0] : initDraftWithParams({drawdown: [[new Cell(true)]]});
-
-        const outputs: Array<Draft> = [];
-        const d: Draft = initDraftWithParams(
-          {warps: parent_input.params[0], 
-            wefts: parent_input.params[1], 
-            drawdown: draft.drawdown,
-            rowShuttleMapping: draft.rowShuttleMapping,
-            colShuttleMapping: draft.colShuttleMapping,
-            rowSystemMapping: draft.rowSystemMapping,
-            colSystemMapping: draft.colSystemMapping
-            });
-
-        d.gen_name = this.formatName(op_inputs[0].drafts, "rect");
-        outputs.push(d);
-
-        return Promise.resolve(outputs);
-      }        
-    ));
-
-    const clear = this.makeOp(PipeOperation.NoParams(
-      'clear',
-      'clear',
-      "this sets all heddles to lifted, allowing it to be masked by any pattern",
-      (input: Draft) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts});
-        d.fill([[new Cell(false)]], 'clear');
-        this.transferSystemsAndShuttles(d, [input], 'first');
-        d.gen_name = this.formatName([input], "clear");
-        
-        return d;
-    const clear: Operation = {
-      name: 'clear',
-      displayname: 'clear',
-      old_names:[],
-      dx: "this sets all heddles to lifted, allowing it to be masked by any pattern",
-      params: [],
-      inlets: [{
-        name: 'input draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft you would like to clear',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'clear');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-       
-
-        const outputs: Array<Draft> =child_input.drafts.map(draft => {
-          const d: Draft = initDraftWithParams({warps: warps(draft.drawdown), wefts:wefts(draft.drawdown), drawdown: [[new Cell(false)]]});
-          
-          if(child_input.drafts.length > 0){
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "clear");
-          }
-          return  d;
-        });
-        return Promise.resolve(outputs);
-      }        
-    ));
-
-    const set = this.makeOp(PipeOperation.AllRequired(
-      'set unset',
-      'set unset heddle to',
-      "this sets all unset heddles in this draft to the specified value",
-      [{name: 'up/down',
-    const set: Operation = {
-      name: 'set unset',
-      displayname: 'set unset heddle to',
-      old_names:['unset'],
-      dx: "this sets all unset heddles in this draft to the specified value",
-      params: <Array<BoolParam>>[ 
-        {name: 'up/down',
-        type: 'boolean',
-        falsestate: 'unset to heddle up',
-        truestate: 'unset to heddle down',
-        value: 1,
-        dx: "toggles the value to which to set the unset cells (heddle up or down)"
-      }],
-      (input: Draft, params: Array<ParamValue> = getParamValues(set.params)) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts});
-        input.pattern.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            if (!cell.isSet()) {
-              if (params[0] === 0) d.pattern[i][j] = new Cell(false);
-              else d.pattern[i][j] = new Cell(true);
-            } 
-            else d.pattern[i][j] = new Cell(cell.isUp());
-          });
-        }],
-       inlets: [{
-          name: 'input draft', 
-          type: 'static',
-          value: null,
-          dx: 'the draft you would like to modify',
-          num_drafts: 1
-        }],
-      perform: (op_inputs: Array<OpInput>)=> {
-        const parent_input = op_inputs.find(el => el.op_name == 'set unset');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-       
-
-        const outputs: Array<Draft> =child_input.drafts.map(draft => {
-         
-          const d: Draft = initDraftWithParams({warps: warps(draft.drawdown), wefts:wefts(draft.drawdown)});
-          draft.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              if(!cell.isSet()){
-                if(parent_input.params[0] === 0) d.drawdown[i][j] = new Cell(false);
-                else d.drawdown[i][j] = new Cell(true);
-              } 
-              else d.drawdown[i][j] = new Cell(cell.isUp());
-            });
-          });
-         
-          if(child_input.drafts.length > 0){
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "unset->down");
-          }
-          return d;
-        });
-         
-        this.transferSystemsAndShuttles(d, [input], 'first');
-        d.gen_name = this.formatName([input], "unset->down");
-
-        return d;
-      }  
-    ));
-
-    const unset = this.makeOp(PipeOperation.AllRequired(
-      'set down to unset',
-      'set heddles of type to unset',
-      "this sets all  heddles of a particular type in this draft to unset",
-      [
-    const unset: Operation = {
-      name: 'set down to unset',
-      displayname: 'set heddles of type to unset',
-      old_names:['set'],
-      dx: "this sets all  heddles of a particular type in this draft to unset",
-      params: <Array<BoolParam>>[
-        {name: 'up/down',
-        type: 'boolean',
-        falsestate: 'heddle up to unset',
-        truestate: 'heddle down to unset',
-        value: 1,
-        dx: "toggles which values to map to unselected"
-      }],
-      (input: Draft, params: Array<ParamValue> = getParamValues(unset.params)) => {
-        const d: Draft = new Draft({warps: input.warps, wefts:input.wefts});
-        input.pattern.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            if (params[0] === 1 && !cell.isUp() && cell.isSet()) d.pattern[i][j] = new Cell(null);
-            else if (params[0] === 0 && cell.isUp() && cell.isSet()) d.pattern[i][j] = new Cell(null);
-            else d.pattern[i][j] = new Cell(cell.getHeddle());
-          });
-      inlets: [{
-        name: 'input draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft you would like to modify',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'set down to unset');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-  
-        const outputs: Array<Draft> =child_input.drafts.map(draft => {
-          const d: Draft =initDraftWithParams({warps: warps(draft.drawdown), wefts:wefts(draft.drawdown)});
-          draft.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              if(parent_input.params[0] === 1 && !cell.isUp() && cell.isSet()) d.drawdown[i][j] = new Cell(null);
-              else if(parent_input.params[0] === 0 && cell.isUp() && cell.isSet()) d.drawdown[i][j] = new Cell(null);
-              else d.drawdown[i][j] = new Cell(cell.getHeddle());
-            });
-          });
-          if(child_input.drafts.length > 0){
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "unset");
-
-          }
-          return d;
-        });
-      
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "unset");
-        
-        return d;
-      }        
-    ));
-
-    const apply_mats = this.makeOp(MergeOperation.NoParams(
-      'apply materials',
-      'apply materials',      
-      "applies the materials from the second draft onto the first draft. If they are uneven sizes, it will repeat the materials as a pattern",
-      (inputs: Array<Draft>) => {
-        const d: Draft = new Draft({warps: inputs[0].warps, wefts: inputs[0].wefts});
-        if (inputs.length < 2) return d;
-
-        inputs[0].pattern.forEach((row, i) => {
-    const apply_mats: Operation = {
-      name: 'apply materials',
-      displayname: 'apply materials',  
-      old_names:[],    
-      dx: "applies the materials from the second draft onto the first draft. If they are uneven sizes, it will repeat the materials as a pattern",
-      params: [],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to which you would like to apply materials',
-        num_drafts: 1
-      },
-      {
-        name: 'materials', 
-        type: 'static',
-        value: null,
-        dx: 'a draft which has the materials youd like to apply',
-        num_drafts: 1
-      }
-    ],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'apply materials');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-        const materials = op_inputs.find(el => el.inlet == 1);
-        const inputdraft = op_inputs.find(el => el.inlet == 0);
-
-        if(child_input === undefined) return Promise.resolve([]);
-        if(materials === undefined) return Promise.resolve([inputdraft.drafts[0]])
-        if(inputdraft === undefined) return Promise.resolve([materials.drafts[0]])
-
-        const d: Draft =initDraftWithParams(
-          {warps:warps(inputdraft.drafts[0].drawdown), 
-          wefts:wefts(inputdraft.drafts[0].drawdown),
-          rowShuttleMapping: materials.drafts[0].rowShuttleMapping,
-          rowSystemMapping: inputdraft.drafts[0].rowSystemMapping,
-          colShuttleMapping: materials.drafts[0].colShuttleMapping,
-          colSystemMapping: inputdraft.drafts[0].colSystemMapping,
-        });
-        inputdraft.drafts[0].drawdown.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            d.drawdown[i][j] = new Cell(cell.getHeddle());
-          });
-        });
-
-        this.transferSystemsAndShuttles(d, inputs, 'materialsonly');
-        d.gen_name = this.formatName(inputs, 'materials')
-        return d;
-        d.gen_name = this.formatName(inputdraft.drafts, 'materials')
-        return Promise.resolve([d]);
-      }        
-    ));
-
-    const rotate = this.makeOp(PipeOperation.NoParams(
-      'rotate',
-      'rotate',      
-      "this turns the draft by 90 degrees but leaves materials in same place",
-      (input: Draft) => {
-        const d: Draft = new Draft({warps: input.wefts, wefts: input.warps});
-        //get each column from the input, save it as the ror in the output
-
-        for (var r = 0; r < input.warps; r++) {
-          const col: Array<Cell> = input.pattern.map(row => row[r]);
-          col.forEach((cell, i) => {
-            d.pattern[r][i].setHeddle(cell.getHeddle());
-          });
-        }
-
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "rot");
-
-        return d;
-  
-
-    const rotate: Operation = {
-      name: 'rotate',
-      displayname: 'rotate', 
-      old_names:[],     
-      dx: "this turns the draft by the amount specified",
-      params: [
-        <SelectParam>{name: 'amount',
-        type: 'select',
-        selectlist: [
-          {name: '90', value: 0},
-          {name: '180', value: 1},
-          {name: '270', value: 2},
-        ],
-          value: 0,
-          dx: 'corner to which this draft is rotated around 0 is top left, 1 top right, 2 bottom right, 3 bottom left'
-        },
-        <BoolParam>{
-          name: 'materials?',
-          type: 'boolean',
-          falsestate: 'no, don\'t rotate materials',
-          truestate: 'yes, rotate materials',
-          value: 1, 
-          dx: 'if your draft has materials assigned, you can choose wether you want to rotate the draft or the materials only'
-
-        }
-        ],
-      inlets: [
-        {
-        name: 'input draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft you would like to modify',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'rotate');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-
-        const outputs: Array<Draft> =child_input.drafts.map(draft => {
-
-          const num_rots = parent_input.params[0];
-          const rotate_mats = (parent_input.params[1] === 0) ? false : true;
-          const rotated_wefts = ( num_rots % 2 == 0) ? warps(draft.drawdown) : wefts(draft.drawdown);
-          const rotated_warps = ( num_rots % 2 == 0) ? wefts(draft.drawdown) : warps(draft.drawdown);
-
-          const d: Draft =initDraftWithParams({warps: rotated_warps, wefts:rotated_wefts});
-
-
-          for(var i = 0; i < wefts(draft.drawdown); i++){
-            for(var j = 0; j < warps(draft.drawdown); j++){
-              const heddle_val = draft.drawdown[i][j].getHeddle();
-              switch(num_rots){
-                case 0: 
-                  d.drawdown[(warps(draft.drawdown) - 1) - j][i].setHeddle(heddle_val);
-                 
-                break;
-                case 1: 
-                  d.drawdown[(wefts(draft.drawdown) - 1) - i][(warps(draft.drawdown) - 1) - j].setHeddle(heddle_val);
-                  
-                break;
-                case 2: 
-                  d.drawdown[j][(wefts(draft.drawdown) - 1)  - i].setHeddle(heddle_val);
-                  
-                break;
-
-              }
-            }
-          }
-
-          if(rotate_mats){
-          for(var i = 0; i < wefts(draft.drawdown); i++){
-              switch(num_rots){
-                case 0: 
-                    d.colShuttleMapping[i] = draft.rowShuttleMapping[i];
-                    d.colSystemMapping[i] = draft.rowSystemMapping[i];
-                  
-                break;
-                case 1: 
-                  d.rowShuttleMapping[(wefts(draft.drawdown) - 1) - i] = draft.rowShuttleMapping[i];
-                  d.rowSystemMapping[(wefts(draft.drawdown) - 1) - i] = draft.rowSystemMapping[i];
-
-                  
-                  
-                break;
-                case 2: 
-
-                  d.colShuttleMapping[wefts(draft.drawdown)-1-i] = draft.rowShuttleMapping[i];
-                  d.colSystemMapping[wefts(draft.drawdown)-1-i] = draft.rowSystemMapping[i];
-                  
-                break;
-
-              }
-
-              for(var j = 0; j < warps(draft.drawdown); j++){
-                switch(num_rots){
-                  case 0: 
-                    d.rowShuttleMapping[j] =  draft.colShuttleMapping[j];
-                    d.rowSystemMapping[j] = draft.colSystemMapping[j];
-                  break;
-                  case 1: 
-                    
-                    d.colShuttleMapping[(warps(draft.drawdown) - 1) - j] =  draft.colShuttleMapping[j];
-                    d.colSystemMapping[(warps(draft.drawdown) - 1) - j] = draft.colSystemMapping[j];
-
-                  break;
-                  case 2: 
-
-                    d.rowShuttleMapping[(warps(draft.drawdown) - 1)  - j] =  draft.colShuttleMapping[j];
-                    d.rowSystemMapping[(warps(draft.drawdown) - 1)  - j] = draft.colSystemMapping[j];
-             
-                  break;
-  
-                }
-              }
-              
-
-            }
-          }else{
-           for(var i = 0; i < wefts(d.drawdown); i++){
-             d.rowShuttleMapping[i] = draft.rowShuttleMapping[i];
-             d.rowSystemMapping[i] = draft.rowSystemMapping[i];
-           }
-           for(var j = 0; j < warps(d.drawdown); j++){
-            d.colShuttleMapping[j] = draft.colShuttleMapping[j];
-            d.colSystemMapping[j] = draft.colSystemMapping[j];
-          }
-          }
-
-          if(child_input.drafts.length > 0){
-            d.gen_name = this.formatName(child_input.drafts, "rot");
-          }
-
-          return d;
-        });
-        return Promise.resolve(outputs);
-      }        
-    ));
-
-    const interlace = this.makeOp(MergeOperation.AllRequired(
-      'interlace',
-      'interlace',  
-      'interlace the input drafts together in alternating lines',
-      [
-    const interlace:Operation = {
-      name: 'interlace',
-      displayname: 'interlace',  
-      old_names:[],
-      dx: 'interlace the input drafts together in alternating lines',
-      params: <Array<BoolParam>>[
-        {name: 'repeat',
-        type: 'boolean',
-        falsestate: 'do not repeat inputs to match size',
-        truestate: 'repeat inputs to match size',
-        value: 1,
-        dx: "controls if the inputs are interlaced in the exact format submitted (0) or repeated to fill evenly (1)"
-      }],
-      (inputs: Array<Draft>, params: Array<number>) => {
-        const factor_in_repeats = params[0];
-
-        let d: Draft = new Draft({warps: 1, wefts: 1});
-
-        if (inputs.length === 0) return d;
-        
-        //now just get all the drafts together
-        let total_wefts: number = 0;
-        const all_wefts = inputs.map(el => el.wefts).filter(el => el > 0);
-        if (factor_in_repeats === 1)  total_wefts = utilInstance.lcm(all_wefts);
-        else total_wefts = utilInstance.getMaxWefts(inputs);
-
-        let total_warps: number = 0;
-        const all_warps = inputs.map(el => el.warps).filter(el => el > 0);
-        if (factor_in_repeats === 1)  total_warps = utilInstance.lcm(all_warps);
-        else total_warps = utilInstance.getMaxWarps(inputs);
-
-        //create a draft to hold the merged values
-        d = new Draft({warps: total_warps, wefts: (total_wefts * inputs.length)});
-
-        d.pattern.forEach( (row, ndx) => {
-          const select_array: number = ndx % inputs.length; 
-          const select_row: number = (factor_in_repeats === 1) ? Math.floor(ndx / inputs.length) % inputs[select_array].wefts : Math.floor(ndx / inputs.length);
-
-          row.forEach( (cell, j) => {
-            const select_col = (factor_in_repeats === 1) ? j % inputs[select_array].warps : j;
-            if (inputs[select_array].hasCell(select_row, select_col)) {
-              const pattern = inputs[select_array].pattern;
-              //console.log("in interlace", cell, pattern, select_row, select_col);
-              cell.setHeddle(pattern[select_row][select_col].getHeddle());
-            } else {
-              cell.setHeddle(null);
-            }
-            /** @todo this should throw an error if all drafts are using different warp colorings. */
-          });
-        });
-
-        // extend systems out so they fit 
-
-        this.transferSystemsAndShuttles(d, inputs, 'interlace');
-        d.gen_name = this.formatName(inputs, "ilace")
-      inlets: [
-        {
-          name: 'drafts', 
-          type: 'static',
-          value: null,
-          dx: 'all the drafts you would like to interlace',
-          num_drafts: -1
-        },
-        {
-          name: 'warp system map', 
-          type: 'static',
-          value: null,
-          dx: 'if you would like to specify the warp system or materials, you can do so by adding a draft here',
-          num_drafts: 1
-        }
-      ],
-      perform: (op_inputs: Array<OpInput>) => {
-       
-
-        const parent_input = op_inputs.find(el => el.op_name == 'interlace');
-        const child_inputs = op_inputs.filter(el => el.inlet == 0);
-        let warp_systems = op_inputs.find(el => el.inlet == 1);
-
-
-        if(child_inputs === undefined) return Promise.resolve([]);
-
-        const all_drafts = child_inputs.map(el => el.drafts[0]);
-
-        let warp_system_draft = null;
-        if(warp_systems === undefined)  warp_system_draft =initDraftWithParams({warps: 1, wefts: 1});
-        else  warp_system_draft = warp_systems.drafts[0];
-
-        const factor_in_repeats = parent_input.params[0];
-        const outputs: Array<Draft> = [];
-
-        const d: Draft = utilInstance.interlace(all_drafts, factor_in_repeats, warp_system_draft);
-     
+    const rect = addOp(defs.rect);
+    const clear = addOp(defs.clear);
+    const set = addOp(defs.set);
+    const unset = addOp(defs.unset);
+    const apply_mats = addOp(defs.apply_mats);
+    const rotate = addOp(defs.rotate);
+    const interlace = addOp(defs.interlace);
+    const selvedge = addOp(defs.selvedge);
+    const overlay = addOp(defs.overlay);
+    const mask = addOp(defs.mask);
+    const atop = addOp(defs.atop);
+    const knockout = addOp(defs.knockout);
+    const fill = addOp(defs.fill);
+    const tabby = addOp(defs.tabby);
+    const basket = addOp(defs.basket);
+    const tabby_der = addOp(defs.tabby_der);
+    const stretch = addOp(defs.stretch);
+    const resize = addOp(defs.resize);
+    const margin = addOp(defs.margin);
+    const crop = addOp(defs.crop);
+    const trim = addOp(defs.trim);
+    const rib = addOp(defs.rib);
+    const twill = addOp(defs.twill);
+    const complextwill = addOp(defs.complextwill);
+    const waffle = addOp(defs.waffle);
+    const satin = addOp(defs.satin);
+    const random = addOp(defs.random);
+    const shaded_satin = addOp(defs.shaded_satin);
+    const makesymmetric = addOp(defs.makesymmetric);
+    const invert = addOp(defs.invert);
+    const flipx = addOp(defs.flipx);
+    const flipy = addOp(defs.flipy);
+    const shiftx = addOp(defs.shiftx);
+    const shifty = addOp(defs.shifty);
+    const slope = addOp(defs.slope);
+    const replicate = addOp(defs.replicate);
+    const variants = addOp(defs.variants);
+    const bindweftfloats = addOp(defs.bindweftfloats);
+    const bindwarpfloats = addOp(defs.bindwarpfloats);
+    const layer = addOp(defs.layer);
+    const tile = addOp(defs.tile);
+    const chaos = addOp(defs.chaos);
+    const erase_blank = addOp(defs.erase_blank);
+    const jointop = addOp(defs.jointop);
+    const joinleft = addOp(defs.joinleft);
     
-        this.transferSystemsAndShuttles(d,all_drafts,parent_input.params, 'interlace');
-        d.gen_name = this.formatName(all_drafts, "ilace")
-
-        return d;
-      }     
-    ));
-
-    const splicein = this.makeOp(MergeOperation.AllRequired(
-      'splice in wefts',
-      'splice in wefts',  
-      'splices the second draft into the first every nth row',
-      [{
-        name: 'distance',
-    const splicein:Operation = {
+    const splicein: Operation = {
       name: 'splice in wefts',
       displayname: 'splice in wefts',  
       old_names:[],
@@ -682,15 +105,6 @@ export class OperationService {
         min: 1,
         max: 100,
         value: 1,
-        dx: "the distance between each spliced in row"
-      }],
-      (inputs: Array<Draft>, params: Array<ParamValue> = getParamValues(splicein.params)) => {
-
-        let d: Draft = new Draft({warps: 1, wefts: 1});
-        if (inputs.length === 0) return d;
-        if (inputs.length === 1) return inputs[0];
-
-        const max_warps:number = utilInstance.getMaxWarps(inputs);
         dx: "the number of pics to keep between each splice row"
         },
         {name: 'repeat',
@@ -769,22 +183,12 @@ export class OperationService {
 
         const uniqueSystemRows = this.ss.makeWeftSystemsUnique(all_drafts.map(el => el.rowSystemMapping));
 
-        let sum_rows = inputs.reduce( 
-          (acc, el) => { return acc + el.wefts; }, 
-          0);
 
-        const uniqueSystemRows = this.ss.makeWeftSystemsUnique(inputs.map(el => el.rowSystemMapping));
 
         let array_a_ndx = 0;
         let array_b_ndx = 0;
       
         //create a draft to hold the merged values
-        d = new Draft({warps: max_warps, wefts:sum_rows, colShuttleMapping:inputs[0].colShuttleMapping, colSystemMapping:inputs[0].colSystemMapping});
-
-        for (let i = 0; i < d.wefts; i++) {
-          let select_array: number = (i % (<number> params[0] + 1) === params[0]) ? 1 : 0; 
-          if (array_b_ndx >= inputs[1].wefts) select_array = 0;
-          if (array_a_ndx >= inputs[0].wefts) select_array = 1;
         const d:Draft =initDraftWithParams({warps: total_warps, wefts:total_wefts, colShuttleMapping:static_input.colShuttleMapping, colSystemMapping:static_input.colSystemMapping});
 
         for(let i = 0; i < wefts(d.drawdown); i++){
@@ -797,16 +201,6 @@ export class OperationService {
             select_array = (i % (parent_input.params[0]+1) ===parent_input.params[0]) ? 1 : 0; 
           } 
 
-          d.pattern[i].forEach((cell, j) => {
-            if (inputs[select_array].hasCell(ndx, j)) {
-              cell.setHeddle(inputs[select_array].pattern[ndx][j].getHeddle());
-            } else {
-              cell.setHeddle(null);
-            }   
-          });
-
-          d.rowSystemMapping[i] = uniqueSystemRows[select_array][ndx];
-          d.rowShuttleMapping[i] = inputs[select_array].rowShuttleMapping[ndx];
 
           if(!factor_in_repeats){
             if(array_b_ndx >=wefts(splicing_input.drawdown)) select_array = 0;
@@ -825,30 +219,22 @@ export class OperationService {
           d.rowSystemMapping[i] = uniqueSystemRows[select_array][ndx];
           d.rowShuttleMapping[i] =all_drafts[select_array].rowShuttleMapping[ndx];
 
-          if (select_array === 0) {
+
+          if(select_array === 0){
             array_a_ndx++;
           } 
-          else {
+          else{
             array_b_ndx++;
           } 
 
         }
-        this.transferSystemsAndShuttles(d, inputs , 'interlace');
-        d.gen_name = this.formatName(inputs, "splice")
-        return d;
-        // this.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = this.formatName(all_drafts, "splice")
+        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
+        d.gen_name = format.formatName(all_drafts, "splice")
         outputs.push(d);
         return Promise.resolve(outputs);
       }     
-    ));
+    }
 
-    const assignwefts = this.makeOp(PipeOperation.AllRequired(
-      'assign weft systems',
-      'assign weft systems',  
-      'splits each pick of the draft apart, allowing it to repeat at a specified interval and shift within that interval. Currently, this will overwrite any system information that has been defined upstream.',
-      [{
-        name: 'total',
     const spliceinwarps:Operation = {
       name: 'splice in warps',
       displayname: 'splice in warps',  
@@ -983,8 +369,8 @@ export class OperationService {
           } 
 
         }
-        // this.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = this.formatName(all_drafts, "splice")
+        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
+        d.gen_name = format.formatName(all_drafts, "splice")
         outputs.push(d);
         return Promise.resolve(outputs);
       }     
@@ -1010,14 +396,6 @@ export class OperationService {
         max: 26,
         value: 0,
         dx: "which posiiton to assign this draft"
-      }],
-      (inputs: Draft, params: Array<ParamValue> = getParamValues(assignwefts.params)) => {
-        let d:Draft = new Draft({warps: 1, wefts: 1});
-
-        const systems = [];
-
-        //create a list of the systems
-        for (let n = 0;  n < params[0]; n++) {
         }],
       inlets: [
         {
@@ -1039,29 +417,17 @@ export class OperationService {
         //create a list of the systems
         for(let n = 0;  n <parent_input.params[0]; n++){
           const sys = ss.getWeftSystem(n);
-          if (sys === undefined) ss.addWeftSystemFromId(n);
+          if(sys === undefined) ss.addWeftSystemFromId(n);
           systems[n] = n;
         }
 
         // const system_maps = [inputs[0]];
-        // for (let i = 1; i <params[0] i++) {
-        //   system_maps.push(new Draft({wefts:inputs[0].wefts, warps:inputs[0].warps}));
+        // for(let i = 1; i <op_input.params[0]; i++){
+        //   system_maps.push(new Draft({wefts:op_input.drafts[0].wefts, warps:op_input.drafts[0].warps}));
         // }
 
         // const uniqueSystemRows = this.ss.makeWeftSystemsUnique(system_maps.map(el => el.rowSystemMapping));
 
-        d = new Draft({
-          warps: inputs[0].warps, 
-          wefts: inputs[0].wefts * <number> params[0], 
-          colShuttleMapping: inputs[0].colShuttleMapping, 
-          colSystemMapping: inputs[0].colSystemMapping,
-          rowSystemMapping: systems
-        });
-
-
-        d.pattern.forEach((row, i) => {
-          const use_row = i % <number> params[0] === params[1];
-          const use_index = Math.floor(i / <number> params[0]);
         const d:Draft =initDraftWithParams({
           warps:warps(child_input.drafts[0].drawdown), 
           wefts:wefts(child_input.drafts[0].drawdown)*parent_input.params[0], 
@@ -1074,12 +440,8 @@ export class OperationService {
           const use_row = i %parent_input.params[0] ===parent_input.params[1];
           const use_index = Math.floor(i /parent_input.params[0]);
           //this isn't working
-          //d.rowSystemMapping[i] = uniqueSystemRows[i % params[0][use_index];
+          //d.rowSystemMapping[i] = uniqueSystemRows[i %op_input.params[0]][use_index];
           row.forEach((cell, j)=> {
-            if (use_row) {
-              d.rowShuttleMapping[i] = inputs[0].rowShuttleMapping[use_index];
-              cell.setHeddle(inputs[0].pattern[use_index][j].getHeddle());
-            } else {
             if(use_row){
               d.rowShuttleMapping[i] =child_input.drafts[0].rowShuttleMapping[use_index];
               cell.setHeddle(child_input.drafts[0].drawdown[use_index][j].getHeddle());
@@ -1089,22 +451,15 @@ export class OperationService {
           })
         });
         
-        this.transferSystemsAndShuttles(d, inputs, 'interlace');
-        d.gen_name = this.formatName(inputs, "assign wefts")
-        const sys_char = String.fromCharCode(97 + <number> params[1]);
-        // this.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = this.formatName(child_input.drafts, "assign wefts")
+        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
+        d.gen_name = format.formatName(child_input.drafts, "assign wefts")
         const sys_char = String.fromCharCode(97 +parent_input.params[1]);
         d.gen_name = '-'+sys_char+':'+d.gen_name;
-        return d;
+        outputs.push(d);
+        return Promise.resolve(outputs);
       }     
-    ));
+    }
 
-    const assignwarps = this.makeOp(PipeOperation.AllRequired(
-      'assign warp systems',
-      'assign warp systems',  
-      'splits each warp of the draft apart, allowing it to repeat at a specified interval and shift within that interval. An additional button is used to specify if these systems correspond to layers, and fills in draft accordingly',
-      [  
     const assignwarps:Operation = {
       name: 'assign warp systems',
       displayname: 'assign warp systems', 
@@ -1133,7 +488,6 @@ export class OperationService {
         dx: "fill in the draft such that each warp system corresponds to a layer (0 is top)"
         }
       ],
-      (inputs: Draft, params: Array<number>) => {
       inlets: [
         {
           name: 'draft',
@@ -1151,47 +505,13 @@ export class OperationService {
 
         const outputs = [];
         const systems = [];
+
         //create a list of the systems
-        for (let n = 0;  n < params[0]; n++) {
         for(let n = 0;  n < parent_input.params[0]; n++){
           const sys = ss.getWarpSystem(n);
-          if (sys === undefined) ss.addWarpSystemFromId(n);
+          if(sys === undefined) ss.addWarpSystemFromId(n);
           systems[n] = n;
         }
-
-        // const system_maps = [inputs[0]];
-        // for (let i = 1; i < params[0]; i++) {
-        //   system_maps.push(new Draft({wefts:inputs[0].wefts, warps:inputs[0].warps}));
-        // }
-
-        // const uniqueSystemCols = this.ss.makeWarpSystemsUnique(system_maps.map(el => el.colSystemMapping));
-
-        // const outputs = [];
-        // //create a draft to hold the merged values
-        
-        const d: Draft = new Draft({
-          warps: inputs[0].warps * <number> params[0], 
-          wefts: inputs[0].wefts, 
-          rowShuttleMapping: inputs[0].rowShuttleMapping, 
-          rowSystemMapping: inputs[0].rowSystemMapping,
-          colSystemMapping: systems});
-
-
-        d.pattern.forEach((row, i) => {
-          const row_is_null = utilInstance.hasOnlyUnset(inputs[0].pattern[i]);
-          row.forEach((cell, j)=> {
-            const sys_id = j % params[0];
-            const use_col = sys_id === params[1];
-            const use_index = Math.floor(j / params[0]);
-            //d.colSystemMapping[j] = uniqueSystemCols[sys_id][use_index];
-            if (use_col) {
-              d.colShuttleMapping[j] = inputs[0].colShuttleMapping[use_index];
-              cell.setHeddle(inputs[0].pattern[i][use_index].getHeddle());
-            } else {
-              if (params[2] == 1 && !row_is_null) {
-                if (sys_id < params[1]) {
-                  cell.setHeddle(true);
-                } else if (sys_id >= params[1]) {
         
         const d:Draft =initDraftWithParams({
           warps:warps(child_input.drafts[0].drawdown)*parent_input.params[0], 
@@ -1218,35 +538,25 @@ export class OperationService {
                 }else if(sys_id >=parent_input.params[1]){
                   cell.setHeddle(false);
                 }
-              } else {
+              }else{
                 cell.setHeddle(null);
               }
             }
           })
         });
         
-        this.transferSystemsAndShuttles(d, inputs, 'interlace');
-        d.gen_name = this.formatName(inputs, "assign warps")
-        const sys_char = String.fromCharCode(97 + params[1]);
-        d.gen_name = '|'+ sys_char + ':' + d.gen_name;
 
-        return d;
         
-        // this.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = this.formatName(child_input.drafts, "assign warps")
+        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
+        d.gen_name = format.formatName(child_input.drafts, "assign warps")
         const sys_char = String.fromCharCode(97 +parent_input.params[1]);
         d.gen_name = '|'+sys_char+':'+d.gen_name;
 
         outputs.push(d);
         return Promise.resolve(outputs);
       }     
-    ));
+    }
 
-    const vertcut = this.makeOp(BranchOperation.AllRequired(
-      'vertical cut',
-      'vertical cut',  
-      'make a vertical of this structure across two systems, representing the left and right side of an opening in the warp',
-      [  
     
 
 
@@ -1263,15 +573,6 @@ export class OperationService {
         value: 2,
         dx: "how many different systems you want to move this structure onto"
         }],
-      (input: Draft, params: Array<number>) => {
-    
-        const outputs: Array<Draft> = [];
-        const outwefts = params[0] * input.wefts;
-
-        const rep_inputs = [];
-
-        for (let i = 0; i < params[0]; i++) {
-          rep_inputs.push(_.cloneDeep(input));
         inlets: [
           {
             name: 'draft',
@@ -1298,23 +599,7 @@ export class OperationService {
         }
 
         const uniqueSystemRows = this.ss.makeWeftSystemsUnique(rep_inputs.map(el => el.rowSystemMapping));
-        for (let i = 0; i < params[0]; i++) {
-          const d: Draft = new Draft({
-            wefts: outwefts, 
-            warps:input.warps, 
-            colShuttleMapping: input.colShuttleMapping, 
-            colSystemMapping: input.colSystemMapping
-          });
 
-          d.pattern.forEach((row, row_ndx) => {
-            row.forEach((cell, j) => {
-              const use_row: boolean = row_ndx % params[0] === i;
-              const input_ndx: number = Math.floor(row_ndx / params[0]);
-              d.rowShuttleMapping[row_ndx] = input.rowShuttleMapping[input_ndx];
-
-
-              if (use_row) {
-                cell.setHeddle(input.pattern[input_ndx][j].getHeddle());
         for(let i = 0; i <parent_input.params[0]; i++){
 
           const d: Draft =initDraftWithParams({wefts: outwefts, warps:warps(child_input.drafts[0].drawdown), colShuttleMapping:child_input.drafts[0].colShuttleMapping, colSystemMapping:child_input.drafts[0].colSystemMapping});
@@ -1330,2126 +615,20 @@ export class OperationService {
                 cell.setHeddle(child_input.drafts[0].drawdown[input_ndx][j].getHeddle());
                 d.rowSystemMapping[row_ndx] = uniqueSystemRows[i][input_ndx]
               } 
-              else {
+              else{
                 cell.setHeddle(null);
-                d.rowSystemMapping[row_ndx] = uniqueSystemRows[row_ndx % params[0]][input_ndx]
                 d.rowSystemMapping[row_ndx] = uniqueSystemRows[row_ndx%parent_input.params[0]][input_ndx]
               }
             });
           });
 
-          d.gen_name = this.formatName(input, "cut+"+i)
-          d.gen_name = this.formatName(child_input.drafts, "cut+"+i)
+          d.gen_name = format.formatName(child_input.drafts, "cut+"+i)
           outputs.push(d);
         }
-        return outputs;
+        return Promise.resolve(outputs);
       }     
-    ));
-
-    const selvedge = this.makeOp(MergeOperation.AllRequired(
-      'selvedge',
-      'selvedge',  
-      'adds a selvedge of a user defined width (in ends) on both sides of the input draft. The second input functions as the selvedge pattern, and if none is selected, a selvedge is generated',
-      [
-    
-
-    const selvedge: Operation = {
-      name: 'selvedge',
-      old_names:[],
-      displayname: 'selvedge',  
-      dx: 'adds a selvedge of a user defined width (in ends) on both sides of the input draft. The second input functions as the selvedge pattern, and if none is selected, a selvedge is generated',
-      params: <Array<NumParam>>[
-        {name: 'width',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 12,
-        dx: "the width in warps of the selvedge"
-        }
-      ],
-     (inputs: Array<Draft>, params: Array<number>)=> {
-        let d: Draft = new Draft({warps: 1, wefts: 1});
-        if (inputs.length == 0) return d;
-       
-        const num_systems = utilInstance.filterToUniqueValues(inputs[0].rowSystemMapping).length;
-      inlets: [
-        {
-          name: 'draft',
-          type: 'static',
-          value: null,
-          dx: "the draft that will have a selvedge added",
-          num_drafts: 1
-        },
-        {
-          name: 'selvedge',
-          type: 'static',
-          value: null,
-          dx: "the pattern to use for the selvedge",
-          num_drafts: 1
-        }
-      ],
-      perform: (op_inputs: Array<OpInput>)=> {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'selvedge');
-        const child_input = op_inputs.filter(el => el.op_name == 'child');
-        const draft_inlet = op_inputs.find(el => el.inlet == 0);
-        const selvedge_inlet = op_inputs.find(el => el.inlet == 1);
-
-        if(child_input.length === 0) return Promise.resolve([]);
-        if(draft_inlet === undefined) return Promise.resolve([selvedge_inlet.drafts[0]]);
-        if(selvedge_inlet === undefined) return Promise.resolve([draft_inlet.drafts[0]]);
-
-        const all_drafts = [draft_inlet.drafts[0], selvedge_inlet.drafts[0]];
-       
-        const num_systems = utilInstance.filterToUniqueValues(all_drafts[0].rowSystemMapping).length;
-        const height = 2*num_systems;
-
-        let pattern: Array<Array<Cell>> = [];
-        
-        if (inputs.length == 2) {
-          pattern = inputs[1].pattern;
-        } else {
-          for (let i = 0; i < height; i++) {
-        if(selvedge_inlet !== undefined){
-          pattern = all_drafts[1].drawdown;
-        }else{
-          for(let i = 0; i < height; i++){
-            pattern.push([]);
-            let alt: boolean =  i <num_systems;
-            for (let j = 0; j < 2; j++) {
-              pattern[i][j] = ((alt && j%2 ==0) || (!alt && j%2 ==1)) ? new Cell(true) : new Cell(false);
-            }
-          }
-        }
- 
-        const input: Draft = inputs[0];
-        d = new Draft({warps: input.warps + params[0]*2, wefts: input.wefts});
-            
-        for (let i = 0; i < d.wefts; i++) {
-          for (let j = 0; j < d.warps; j++) {
-            if (j < params[0]) {
-              //left selvedge
-              d.pattern[i][j].setHeddle(pattern[(i+1)%pattern.length][j%pattern[0].length].getHeddle());
-            } else if (j < (params[0] + input.warps)) {
-              //pattern
-              d.pattern[i][j].setHeddle(input.pattern[i][j - params[0]].getHeddle());
-            } else {
-              //right selvedge
-              d.pattern[i][j].setHeddle(pattern[i%pattern.length][j%pattern[0].length].getHeddle());
-        const input: Draft = all_drafts[0];
-        const d: Draft =initDraftWithParams({warps: warps(input.drawdown) +parent_input.params[0]*2, wefts: wefts(input.drawdown)});
-            
-            
-        for(let i = 0; i < wefts(d.drawdown); i++){
-          for(let j = 0; j < warps(d.drawdown); j++){
-            if(j < parent_input.params[0]){
-              //left selvedge
-              d.drawdown[i][j].setHeddle(pattern[i%pattern.length][j%pattern[0].length].getHeddle());
-
-            }else if(j < parent_input.params[0]+warps(input.drawdown)){
-              //pattern
-              d.drawdown[i][j].setHeddle(input.drawdown[i][j - parent_input.params[0]].getHeddle());
-
-            }else{
-              //right selvedge
-              d.drawdown[i][j].setHeddle(pattern[i%pattern.length][j%pattern[0].length].getHeddle());
-
-            }
-          }
-        }
-
-        if (inputs.length > 0) {
-          this.transferSystemsAndShuttles(d, inputs, 'first');
-          d.gen_name = this.formatName(inputs, "sel")
-        if(all_drafts.length > 0){
-          this.transferSystemsAndShuttles(d,all_drafts,parent_input.params, 'first');
-          d.gen_name = this.formatName(all_drafts, "sel")
-
-        }
-        return d;
-      }        
-    ));
-
-    const overlay = this.makeOp(MergeOperation.AllRequired(
-      'overlay, (a,b) => (a OR b)',
-      'overlay, (a,b) => (a OR b)',  
-      'keeps any region that is marked as black/true in either draft',
-      [{
-        name: 'left offset',
-    const number_to_draft: Operation = {
-      name: 'number_to_draft',
-      old_names:[],
-      displayname: 'draft by number',  
-      dx: 'sets the draft values based on a number, turned into binary, and then filled into the structure',
-      params: <Array<NumParam>>[
-        {name: 'decode',
-        type: 'number',
-        min: 1,
-        max: 100000,
-        value: 1,
-        dx: "number you'd like to decode into a draft"
-        },
-        {name: 'width',
-        type: 'number',
-        min: 1,
-        max: 20,
-        value: 5,
-        dx: "the width of your structure"
-        },
-        {name: 'height',
-        type: 'number',
-        min: 1,
-        max: 20,
-        value: 5,
-        dx: "the height of your structure"
-        }
-      ],
-      inlets: [
-      ],
-      perform: (op_inputs: Array<OpInput>)=> {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'number_to_draft');
-        const decode = parent_input.params[0];
-        const width = parent_input.params[1];
-        const height = parent_input.params[2];
-
-        const bit_size = width * height;
-        let decode_string = decode.toString(2);
-
-        while(decode_string.length < bit_size){
-          decode_string = '0'+decode_string;
-        }
-
-        let pattern:Array<Array<Cell>> = [];
-        for(let i = 0; i < height; i++){
-          pattern.push([]);
-          for(let j = 0; j < width; j++){
-            const ndx = i * width + j;
-            if(ndx < decode_string.length){
-              const cell_val:boolean = (decode_string.charAt(ndx) == '1');
-              pattern[i].push(new Cell(cell_val));
-            }else{
-              pattern[i].push(new Cell(false));
-            }
-          }
-        }
-       
-
-        const d =initDraftWithParams({wefts: height, warps: width, drawdown: pattern});
-        
-       
-  
-        
-        
- 
-
-        
-        return Promise.resolve([d]);
-      }        
     }
-
-    const overlay: Operation = {
-      name: 'overlay, (a,b) => (a OR b)',
-      displayname: 'overlay, (a,b) => (a OR b)', 
-      old_names:['overlay'], 
-      dx: 'keeps any region that is marked as black/true in either draft',
-      params: <Array<NumParam>>[
-        {name: 'left offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset b from the left"
-        },
-        {name: 'bottom offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the overlaying op_input.drafts from the bottom"
-        }
-      ],
-      (inputs: Array<Draft>, params: Array<number>) => {
-
-        if (inputs.length < 1) return new Draft({warps: 1, wefts: 1});
-
-        const inputs_divided = inputs.slice();
-        const first: Draft = inputs_divided.shift();
-
-        let width: number = utilInstance.getMaxWarps(inputs) + params[0];
-        let height: number = utilInstance.getMaxWefts(inputs) + params[1];
-        if (first.warps > width) width = first.warps;
-        if (first.wefts > height) height = first.wefts;
-        dx: "the amount to offset b from the bottom"
-        }
-      ],
-      inlets: [{
-        name: 'a', 
-        type: 'static',
-        value: null,
-        dx: 'all the drafts you would like to overlay another onto',
-        num_drafts: 1
-      },
-      {
-        name: 'b', 
-        type: 'static',
-        value: null,
-        dx: 'the draft you would like to overlay onto the base',
-        num_drafts: 1
-      }
-    ],
-      perform: (op_inputs: Array<OpInput>)=> {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'overlay, (a,b) => (a OR b)');
-        const child_inputs = op_inputs.filter(el => el.op_name == 'child');
-        const base = op_inputs.find(el => el.inlet == 0);
-        const top = op_inputs.find(el => el.inlet == 1);
-
-        if(child_inputs.length == 0) return Promise.resolve([]);
-        if(base === undefined) return Promise.resolve([top.drafts[0]]);
-        if(top === undefined) return Promise.resolve([base.drafts[0]]);
-
-        const alldrafts = [base.drafts[0], top.drafts[0]];
-        const inputs_divided =alldrafts.slice();
-        const first: Draft =inputs_divided.shift();
-
-        const outputs: Array<Draft> = [];
-
-
-        let width: number = utilInstance.getMaxWarps(alldrafts) +parent_input.params[0];
-        let height: number = utilInstance.getMaxWefts(alldrafts) +parent_input.params[1];
-        if(warps(first.drawdown) > width) width = warps(first.drawdown);
-        if(wefts(first.drawdown) > height) height = wefts(first.drawdown);
-
     
-
-        //initialize the base container with the first draft at 0,0, unset for anythign wider
-        const init_draft: Draft =initDraftWithParams({
-          wefts: height, 
-          warps: width, 
-          colSystemMapping: first.colSystemMapping, 
-          colShuttleMapping: first.colShuttleMapping,
-          rowSystemMapping: first.rowSystemMapping,
-          rowShuttleMapping: first.rowShuttleMapping
-        });
-          
-        first.drawdown.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            init_draft.drawdown[i][j].setHeddle(cell.getHeddle());
-          });
-        });
-
-        //now merge in all of the additionalop_input.drafts offset by theop_input.drafts
-        const d: Draft = inputs_divided.reduce((acc, input) => {
-          input.pattern.forEach((row, i) => {
-            const adj_i: number = i + params[1];
-
-            //if the new draft has only nulls on this row, set the value to the input value;
-            if (utilInstance.hasOnlyUnset(acc.pattern[adj_i])) {
-        const d: Draft =inputs_divided.reduce((acc, input) => {
-          input.drawdown.forEach((row, i) => {
-            const adj_i: number = i+parent_input.params[1];
-
-            //if theinitDraftWithParams has only nulls on this row, set the value to the input value
-            if(utilInstance.hasOnlyUnset(acc.drawdown[adj_i])){
-              acc.rowSystemMapping[adj_i] = input.rowSystemMapping[i]
-              acc.rowShuttleMapping[adj_i] = input.rowShuttleMapping[i]
-            }
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_j: number = j + params[0];
-              acc.pattern[adj_i][adj_j].setHeddle(utilInstance.computeFilter('or', cell.getHeddle(), acc.pattern[adj_i][adj_j].getHeddle()));
-              const adj_j: number = j+parent_input.params[0];
-              acc.drawdown[adj_i][adj_j].setHeddle(utilInstance.computeFilter('or', cell.getHeddle(), acc.drawdown[adj_i][adj_j].getHeddle()));
-            });
-          });
-          return acc;
-
-        }, init_draft);
-
-
-        this.transferSystemsAndShuttles(d, inputs, 'first');
-        d.gen_name = this.formatName(inputs, "overlay")
-        d.gen_name = inputs.reduce((acc, el) => {
-          return acc+"+"+el.getName()
-        //this.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'first');
-        //d.name = this.formatName(op_input.drafts, "overlay")
-        d.gen_name =alldrafts.reduce((acc, el) => {
-          return acc+"+"+getDraftName(el)
-        }, "").substring(1);
-        return d;
-      }        
-    ));
-
-    const atop = this.makeOp(MergeOperation.AllRequired(
-      'set atop, (a, b) => a',
-      'set atop, (a, b) => a',  
-      'sets cells of a on top of b, no matter the value of b',
-      [
-    const atop: Operation = {
-      name: 'set atop, (a, b) => a',
-      displayname: 'set atop, (a, b) => b', 
-      old_names:['set atop'], 
-      dx: 'sets cells of a on top of b, no matter the value of b',
-      params: <Array<NumParam>>[
-        {name: 'left offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the addedop_input.drafts from the left"
-        },
-        {name: 'bottom offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the overlayingop_input.drafts from the bottom"
-        }
-      ],
-      (inputs: Array<Draft>, params: Array<number>) => {
-        let d = new Draft({warps: 1, wefts: 1});
-        
-        if (inputs.length < 1) return d;
-
-        const first: Draft = inputs.shift();
-
-        let width: number = utilInstance.getMaxWarps(inputs) + params[0];
-        let height: number = utilInstance.getMaxWefts(inputs) + params[1];
-        if (first.warps > width) width = first.warps;
-        if (first.wefts > height) height = first.wefts;
-      inlets: [{
-        name: 'a', 
-        type: 'static',
-        value: null,
-        dx: 'all the drafts you would like to set another on top of',
-        num_drafts: 1
-      },
-      {
-        name: 'b', 
-        type: 'static',
-        value: null,
-        dx: 'the draft you would like to set atop the base',
-        num_drafts: 1
-      }
-    ],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'set atop, (a, b) => a');
-        const child_inputs = op_inputs.filter(el => el.op_name == 'child');
-        const base = op_inputs.find(el => el.inlet == 0);
-        const top = op_inputs.find(el => el.inlet == 1);
-
-        if(child_inputs.length == 0) return Promise.resolve([]);
-        if(base === undefined) return Promise.resolve([top.drafts[0]]);
-        if(top === undefined) return Promise.resolve([base.drafts[0]]);
-
-        const alldrafts = [base.drafts[0], top.drafts[0]];
-
-        const first: Draft =alldrafts.shift();
-
-        const outputs: Array<Draft> = [];
-
-
-        let width: number = utilInstance.getMaxWarps(alldrafts) +parent_input.params[0];
-        let height: number = utilInstance.getMaxWefts(alldrafts) +parent_input.params[1];
-        if(warps(first.drawdown) > width) width = warps(first.drawdown);
-        if(wefts(first.drawdown) > height) height = wefts(first.drawdown);
-
-        //initialize the base container with the first draft at 0,0, unset for anythign wider
-        const init_draft: Draft =initDraftWithParams({wefts: height, warps: width});
-          
-        first.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              init_draft.drawdown[i][j].setHeddle(cell.getHeddle());
-            });
-          });
-
-        //now merge in all of the additionalop_input.drafts offset by theop_input.drafts
-        d = inputs.reduce((acc, input) => {
-          input.pattern.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_i: number = i + params[1];
-              const adj_j: number = j + params[0];
-              acc.pattern[adj_i][adj_j].setHeddle(utilInstance.computeFilter('up', cell.getHeddle(), acc.pattern[adj_i][adj_j].getHeddle()));
-        const d: Draft =alldrafts.reduce((acc, input) => {
-          input.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_i: number = i+parent_input.params[1];
-              const adj_j: number = j+parent_input.params[0];
-              acc.drawdown[adj_i][adj_j].setHeddle(utilInstance.computeFilter('up', cell.getHeddle(), acc.drawdown[adj_i][adj_j].getHeddle()));
-            });
-          });
-          return acc;
-
-        }, init_draft);
-        this.transferSystemsAndShuttles(d, inputs, 'first');
-        d.gen_name = this.formatName(inputs, "atop")
-        this.transferSystemsAndShuttles(d,alldrafts,parent_input.params, 'first');
-        d.gen_name = this.formatName(alldrafts, "atop")
-
-        return d;
-      }        
-    ));
-
-    const knockout = this.makeOp(MergeOperation.AllRequired(
-      'knockout, (a, b) => (a XOR b)',
-      'knockout, (a, b) => (a XOR b)',  
-      'Flips the value of overlapping cells of the same value, effectively knocking out the image of the second draft upon the first',
-      [
-    const knockout: Operation = {
-      name: 'knockout, (a, b) => (a XOR b)',
-      displayname: 'knockout, (a, b) => (a XOR b)', 
-      old_names:['knockout'], 
-      dx: 'Flips the value of overlapping cells of the same value, effectively knocking out the image of the second draft upon the first',
-      params: <Array<NumParam>>[
-        {name: 'left offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the addedop_input.drafts from the left"
-        },
-        {name: 'bottom offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the overlayingop_input.drafts from the bottom"
-        }
-      ],
-      (inputs: Array<Draft>, params: Array<number>) => {
-        let d = new Draft({warps: 1, wefts: 1});
-
-        if (inputs.length < 1) return d;
-
-        const first: Draft = inputs.shift();
-
-        let width: number = utilInstance.getMaxWarps(inputs) + params[0];
-        let height: number = utilInstance.getMaxWefts(inputs) + params[1];
-        if (first.warps > width) width = first.warps;
-        if (first.wefts > height) height = first.wefts;
-      inlets: [{
-        name: 'a', 
-        type: 'static',
-        value: null,
-        dx: 'all the drafts you would like to xor another onto',
-        num_drafts: 1
-      },
-      {
-        name: 'b', 
-        type: 'static',
-        value: null,
-        dx: 'the draft you would like to xor over the base',
-        num_drafts: 1
-      }
-    ],
-      perform: (op_inputs: Array<OpInput>)=> {
-        const parent_input = op_inputs.find(el => el.op_name == 'knockout, (a, b) => (a XOR b)');
-        const child_inputs = op_inputs.filter(el => el.op_name == 'child');
-        const base = op_inputs.find(el => el.inlet == 0);
-        const top = op_inputs.find(el => el.inlet == 1);
-
-        if(child_inputs.length == 0) return Promise.resolve([]);
-        if(base === undefined) return Promise.resolve([top.drafts[0]]);
-        if(top === undefined) return Promise.resolve([base.drafts[0]]);
-
-        const alldrafts = [base.drafts[0], top.drafts[0]];
-        const first: Draft =alldrafts.shift();
-
-        const outputs: Array<Draft> = [];
-
-
-        let width: number = utilInstance.getMaxWarps(alldrafts) +parent_input.params[0];
-        let height: number = utilInstance.getMaxWefts(alldrafts) +parent_input.params[1];
-        if(warps(first.drawdown) > width) width = warps(first.drawdown);
-        if(wefts(first.drawdown) > height) height = wefts(first.drawdown);
-
-        //initialize the base container with the first draft at 0,0, unset for anythign wider
-        const init_draft: Draft =initDraftWithParams({wefts: height, warps: width});
-          
-        first.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              init_draft.drawdown[i][j].setHeddle(cell.getHeddle());
-            });
-          });
-
-        //now merge in all of the additionalop_input.drafts offset by theop_input.drafts
-        d = inputs.reduce((acc, input) => {
-          input.pattern.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_i: number = i + params[1];
-              const adj_j: number = j + params[0];
-              acc.pattern[adj_i][adj_j].setHeddle(utilInstance.computeFilter('neq', cell.getHeddle(), acc.pattern[adj_i][adj_j].getHeddle()));
-        const d: Draft =alldrafts.reduce((acc, input) => {
-          input.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_i: number = i+parent_input.params[1];
-              const adj_j: number = j+parent_input.params[0];
-              acc.drawdown[adj_i][adj_j].setHeddle(utilInstance.computeFilter('neq', cell.getHeddle(), acc.drawdown[adj_i][adj_j].getHeddle()));
-            });
-          });
-          return acc;
-
-        }, init_draft);
-        this.transferSystemsAndShuttles(d, inputs, 'first');
-        d.gen_name = this.formatName(inputs, "ko");
-        return d;
-        this.transferSystemsAndShuttles(d,alldrafts,parent_input.params, 'first');
-        d.gen_name = this.formatName(alldrafts, "ko");
-        outputs.push(d);
-        return Promise.resolve(outputs);
-      }        
-    ));
-
-    const mask = this.makeOp(MergeOperation.AllRequired(
-      'mask, (a,b) => (a AND b)',
-      'mask, (a,b) => (a AND b)',
-      'only shows areas of the first draft in regions where the second draft has black/true cells',
-      [
-    const mask: Operation = {
-      name: 'mask, (a,b) => (a AND b)',
-      displayname: 'mask, (a,b) => (a AND b)',
-      old_names:['mask'],
-      dx: 'only shows areas of the first draft in regions where the second draft has black/true cells',
-      params: <Array<NumParam>>[
-        {name: 'left offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the addedop_input.drafts from the left"
-        },
-        {name: 'bottom offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the overlayingop_input.drafts from the bottom"
-        }
-      ],
-      (inputs: Array<Draft>, params: Array<number>) => {
-        let d = new Draft({warps: 1, wefts: 1});
-        if (inputs.length < 1) return d;
-      inlets: [{
-        name: 'a', 
-        type: 'static',
-        value: null,
-        dx: 'all the draft you would like to mask',
-        num_drafts: 1
-      },
-      {
-        name: 'b', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to use as the mask',
-        num_drafts: 1
-      }
-    ],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'mask, (a,b) => (a AND b)');
-        const child_inputs = op_inputs.filter(el => el.op_name == 'child');
-        const base = op_inputs.find(el => el.inlet == 0);
-        const top = op_inputs.find(el => el.inlet == 1);
-
-        if(child_inputs.length == 0) return Promise.resolve([]);
-        if(base === undefined) return Promise.resolve([top.drafts[0]]);
-        if(top === undefined) return Promise.resolve([base.drafts[0]]);
-
-        const alldrafts = [base.drafts[0], top.drafts[0]];
-        const first: Draft =alldrafts.shift();
-
-        const first: Draft = inputs.shift();
-        const outputs: Array<Draft> = [];
-
-        let width: number = utilInstance.getMaxWarps(inputs) + params[0];
-        let height: number = utilInstance.getMaxWefts(inputs) + params[1];
-        if (first.warps > width) width = first.warps;
-        if (first.wefts > height) height = first.wefts;
-
-        let width: number = utilInstance.getMaxWarps(alldrafts) +parent_input.params[0];
-        let height: number = utilInstance.getMaxWefts(alldrafts) +parent_input.params[1];
-        if(warps(first.drawdown) > width) width = warps(first.drawdown);
-        if(wefts(first.drawdown) > height) height = wefts(first.drawdown);
-
-        //initialize the base container with the first draft at 0,0, unset for anythign wider
-        const init_draft: Draft =initDraftWithParams({wefts: height, warps: width});
-          
-        first.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              init_draft.drawdown[i][j].setHeddle(cell.getHeddle());
-            });
-          });
-
-        //now merge in all of the additionalop_input.drafts offset by theop_input.drafts
-        d = inputs.reduce((acc, input) => {
-          input.pattern.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_i: number = i + params[1];
-              const adj_j: number = j + params[0];
-              acc.pattern[adj_i][adj_j].setHeddle(utilInstance.computeFilter('and', cell.getHeddle(), acc.pattern[adj_i][adj_j].getHeddle()));
-        const d: Draft =alldrafts.reduce((acc, input) => {
-          input.drawdown.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_i: number = i+parent_input.params[1];
-              const adj_j: number = j+parent_input.params[0];
-              acc.drawdown[adj_i][adj_j].setHeddle(utilInstance.computeFilter('and', cell.getHeddle(), acc.drawdown[adj_i][adj_j].getHeddle()));
-            });
-          });
-          return acc;
-
-        }, init_draft);
-        this.transferSystemsAndShuttles(d, inputs, 'first');
-        d.gen_name = this.formatName(inputs, "mask")
-        return d;
-      }        
-    ));
-
-    const erase = this.makeOp(MergeOperation.AllRequired(
-      'erase,  (a,b) => (NOT a OR b)',
-      'erase,  (a,b) => (NOT a OR b)',
-      'Flips the value of overlapping cells of the same value, effectively knocking out the image of the second draft upon the first',
-      [
-        {name: 'left offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the addedop_input.drafts from the left"
-        },
-        {name: 'bottom offset',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: "the amount to offset the overlayingop_input.drafts from the bottom"
-        }
-      ],
-      (inputs: Array<Draft>, params: Array<number>) => {
-        let d = new Draft({warps: 1, wefts: 1});
-
-        if (inputs.length < 1) return d;
-
-        const first: Draft = inputs.shift();
-
-        const outputs: Array<Draft> = [];
-
-
-        let width: number = utilInstance.getMaxWarps(inputs) + params[0];
-        let height: number = utilInstance.getMaxWefts(inputs) + params[1];
-        if (first.warps > width) width = first.warps;
-        if (first.wefts > height) height = first.wefts;
-
-        //initialize the base container with the first draft at 0,0, unset for anythign wider
-        const init_draft: Draft = new Draft({wefts: height, warps: width});
-          
-        first.pattern.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              init_draft.pattern[i][j].setHeddle(cell.getHeddle());
-            });
-          });
-
-        //now merge in all of the additionalop_input.drafts offset by theop_input.drafts
-        d = inputs.reduce((acc, input) => {
-          input.pattern.forEach((row, i) => {
-            row.forEach((cell, j) => {
-              //if i or j is less than input params 
-              const adj_i: number = i + params[1];
-              const adj_j: number = j + params[0];
-              acc.pattern[adj_i][adj_j].setHeddle(utilInstance.computeFilter('down', cell.getHeddle(), acc.pattern[adj_i][adj_j].getHeddle()));
-            });
-          });
-          return acc;
-
-        }, init_draft);
-        this.transferSystemsAndShuttles(d, inputs, 'first');
-        d.gen_name = this.formatName(inputs, "erase");
-        return d;
-        this.transferSystemsAndShuttles(d,alldrafts,parent_input.params, 'first');
-        d.gen_name = this.formatName(alldrafts, "mask")
-        outputs.push(d);
-        return Promise.resolve(outputs);
-      }        
-    ));
-
-    const fill = this.makeOp(MergeOperation.NoParams(
-      'fill',
-      'fill',
-      'fills black cells of the first input with the pattern specified by the second input, white cells with third input',
-      (inputs: Array<Draft>) => {
-        let d: Draft;
-        
-        if (inputs.length == 0) {
-          d = new Draft({warps:0, wefts: 0});
-        }
-
-        if (inputs.length == 1) {
-          d = new Draft(
-            { warps: inputs[0].warps, 
-              wefts: inputs[0].wefts, 
-              pattern: inputs[0].pattern,
-              rowShuttleMapping: inputs[0].rowShuttleMapping,
-              colShuttleMapping: inputs[0].colSystemMapping,
-              rowSystemMapping: inputs[0].rowSystemMapping,
-              colSystemMapping: inputs[0].colSystemMapping
-            });
-        }
-
-        if (inputs.length == 2) {
-          d = new Draft({
-            warps:inputs[0].warps, 
-            wefts:inputs[0].wefts, 
-            pattern:inputs[0].pattern,
-            rowShuttleMapping:inputs[1].rowShuttleMapping,
-            colShuttleMapping:inputs[1].colSystemMapping,
-            rowSystemMapping:inputs[1].rowSystemMapping,
-            colSystemMapping:inputs[1].colSystemMapping});
-          d.fill(inputs[1].pattern, 'mask');          
-        }
-
-        if (inputs.length === 3) {
-          d = new Draft({warps:inputs[0].warps, wefts:inputs[0].wefts, pattern:inputs[0].pattern});
-          let di = new Draft({warps:inputs[0].warps, wefts:inputs[0].wefts, pattern:inputs[0].pattern});
-          di.fill(inputs[0].pattern, 'invert');
-          di.fill(inputs[2].pattern, 'mask');
-          d.fill(inputs[1].pattern, 'mask');
-
-          const op: Operation = <Operation> this.getOp('overlay, (a,b) => (a OR b)');
-        
-          const gen_inputs:Array<OpInput> = [];
-          gen_inputs.push({
-            op_name: "fill",
-            drafts:[d, di], 
-            inlet: 0,
-            params:[0, 0 ]
-          })
-
-          let overlay_op = overlay.topo_op as Op<Merge, AllRequired>;
-          d = overlay_op.perform([d, di], [0, 0]);
-          d.gen_name = this.formatName(inputs, "fill")
-        }
-
-        /** @todo ADD Transfer here */
-
-        return d;
-   
-
-    const fill: Operation = {
-      name: 'fill',
-      displayname: 'fill',
-      old_names:[],
-      dx: 'fills black cells of the first input with the pattern specified by the second input, white cells with third input',
-      params: [],
-      inlets: [{
-        name: 'pattern', 
-        type: 'static',
-        value: null,
-        dx: 'the draft you would like to fill',
-        num_drafts: 1
-      },
-      {
-        name: 'black cell structure', 
-        type: 'static',
-        value: null,
-        dx: 'the structure you would like to repeat in in the black regions of the base draft',
-        num_drafts: 1
-      },
-      {
-        name: 'white cell structure', 
-        type: 'static',
-        value: null,
-        dx: 'the structure you would like to repeat in in the white regions of the base draft',
-        num_drafts: 1
-      }
-    ],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const child_inputs = op_inputs.filter(el => el.op_name == 'child');
-        const base = op_inputs.find(el => el.inlet == 0);
-        const black = op_inputs.find(el => el.inlet == 1);
-        const white = op_inputs.find(el => el.inlet == 2);
-
-        if(child_inputs.length == 0) return Promise.resolve([]);
-        if(base === undefined) return Promise.resolve([]);
-        if(black === undefined && white === undefined) return Promise.resolve([base.drafts[0]]);
-
-        const alldrafts = [base.drafts[0], black?.drafts[0], white?.drafts[0]];
-    
-        const d =initDraftWithParams(
-          {warps: warps(alldrafts[0].drawdown), 
-            wefts:wefts(alldrafts[0].drawdown), 
-            pattern:alldrafts[0].drawdown,
-            rowShuttleMapping:alldrafts[0].rowShuttleMapping,
-            colShuttleMapping:alldrafts[0].colSystemMapping,
-            rowSystemMapping:alldrafts[0].rowSystemMapping,
-            colSystemMapping:alldrafts[0].colSystemMapping});
-      
-        for(let i = 0; i < wefts(d.drawdown); i++){
-          for(let j = 0; j < warps(d.drawdown); j++){
-            const val = d.drawdown[i][j].getHeddle();
-            if(val !== null){
-              if(val && black !== undefined){
-                const adj_i = i%wefts(alldrafts[1].drawdown);
-                const adj_j = j%warps(alldrafts[1].drawdown);
-                d.drawdown[i][j].setHeddle(alldrafts[1].drawdown[adj_i][adj_j].getHeddle())
-              }else if(!val && white !== undefined){
-                const adj_i = i%wefts(alldrafts[2].drawdown);
-                const adj_j = j%warps(alldrafts[2].drawdown);
-                d.drawdown[i][j].setHeddle(alldrafts[2].drawdown[adj_i][adj_j].getHeddle())
-              }
-            }
-          }
-        }    
-
-        return Promise.resolve([d]);
-      }        
-    ));
-
-    const tabby = this.makeOp(SeedOperation.DraftsOptional(
-      'tabby',
-      'tabby',
-      'also known as plain weave generates or fills input a draft with tabby structure or derivitae',
-      [
-    const tabby: Operation = {
-      name: 'tabby',
-      displayname: 'tabby',
-      old_names:[],
-      dx: 'also known as plain weave generates or fills input a draft with tabby structure or derivitae',
-      params: <Array<NumParam>>[
-        {name: 'repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: 'the number or reps to adjust evenly through the structure'
-        },
-      ],
-      (params: Array<any> = [tabby.params[0]], input?: Draft) => {
-        console.log(params, input);
-
-        const width: number = params[0]*2;
-        const height: number = params[0]*2;
-
-        let alt_rows, alt_cols, val: boolean = false;
-        const pattern:Array<Array<Cell>> = [];
-        for (let i = 0; i < height; i++) {
-          alt_rows = (i < params[0]);
-          pattern.push([]);
-          for (let j = 0; j < width; j++) {
-            alt_cols = (j < params[0]);
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with tabby',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'tabby');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        const width: number =parent_input.params[0]*2;
-        const height: number =parent_input.params[0]*2;
-
-        let alt_rows, alt_cols, val: boolean = false;
-        const pattern:Array<Array<Cell>> = [];
-        for(let i = 0; i < height; i++){
-          alt_rows = (i <parent_input.params[0]);
-          pattern.push([]);
-          for(let j = 0; j < width; j++){
-            alt_cols = (j <parent_input.params[0]);
-            val = (alt_cols && alt_rows) || (!alt_cols && !alt_rows);
-            pattern[i][j] =  new Cell(val);
-          }
-        }
-
-        let d: Draft;
-        if (!input) {
-          d = new Draft({warps: width, wefts: height, pattern: pattern});
-        } else {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "tabby");
-        let outputs: Array<Draft> = [];
-        if(child_input  == undefined){
-          const d: Draft =initDraftWithParams({warps: width, wefts: height, pattern: pattern});
-          d.gen_name = this.formatName([], "tabby");
-          outputs.push(d);
-        }else{
-          outputs =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "tabby")
-            return d;
-          });
-        }
-        return d;
-      }
-    ));
-
-    const basket = this.makeOp(SeedOperation.DraftsOptional(
-      'basket',
-      'basket',
-      'generates a basket structure defined by theop_input.drafts',
-      [
-    const tabby_der: Operation = {
-      name: 'tabbyder',
-      displayname: 'tabby',
-      old_names:[],
-      dx: 'also known as plain weave generates or fills input a draft with tabby structure or derivative',
-      params: <Array<NumParam>>[
-        {name: 'warps raised',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 1,
-        dx: 'the number of warp ends to have lifted in the first pic'
-        },
-        {name: 'warps lowered',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 1,
-        dx: 'the number of warp ends to keep lowered in the first tabby pic'
-        },
-        {name: 'pics',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 1,
-        dx: 'the number of pics upon which the first tabby pic will be repeated'
-        },
-        {name: 'alt pics',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 1,
-        dx: 'the number of pics upon which the repeat the alteranting pattern'
-        },
-      ],
-      inlets: [],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'tabbyder');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        const raised: number =parent_input.params[0];
-        const lowered: number =parent_input.params[1];
-        const rep: number =parent_input.params[2];
-        const alt_rep: number =parent_input.params[3];
-
-        const d: Draft = initDraftWithParams({warps: raised + lowered, wefts: rep+alt_rep});
-
-        for(let i = 0; i < warps(d.drawdown); i++){
-          if(i < raised) d.drawdown[0][i].setHeddle(true);
-          else d.drawdown[0][i].setHeddle(false);
-        }
-
-        for(let i = 1; i < wefts(d.drawdown); i++){
-          if(i < rep) d.drawdown[i] = d.drawdown[0].slice();
-          else{
-            for(let j = 0; j < warps(d.drawdown); j++){
-              d.drawdown[i][j].setHeddle(!d.drawdown[0][j].getHeddle());
-            }
-          } 
-        }
-
-        return Promise.resolve([d]);
-      
-
-      }
-    }
-
-
-    const basket: Operation = {
-      name: 'basket',
-      displayname: 'basket',
-      old_names:[],
-      dx: 'generates a basket structure defined by theop_input.drafts',
-      params: <Array<NumParam>>[
-        {name: 'unders',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'number of weft unders'
-        },
-        {name: 'overs',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'number of weft overs'
-        }
-      ],
-      (params: Array<number>, input?: Draft) => {
-        const sum: number = params.reduce( (acc, param) => {
-            return param + acc;
-        }, 0);
-
-        let alt_rows, alt_cols, val: boolean = false;
-        const pattern: Array<Array<Cell>> = [];
-        for (let i = 0; i < sum; i++) {
-          alt_rows = (i % sum < params[0]);
-          pattern.push([]);
-          for (let j = 0; j < sum; j++) {
-            alt_cols = (j % sum < params[0]);
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with this twill',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'basket');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        const sum: number =parent_input.params.reduce( (acc, val) => {
-            return val + acc;
-        }, 0);
-
-        let alt_rows, alt_cols, val: boolean = false;
-        const pattern:Array<Array<Cell>> = [];
-        for(let i = 0; i < sum; i++){
-          alt_rows = (i % sum <parent_input.params[0]);
-          pattern.push([]);
-          for(let j = 0; j < sum; j++){
-            alt_cols = (j % sum <parent_input.params[0]);
-            val = (alt_cols && alt_rows) || (!alt_cols && !alt_rows);
-            pattern[i][j] =  new Cell(val);
-          }
-        }
-
-        let d: Draft;
-        if (!input) {
-          d = new Draft({warps: sum, wefts: sum, pattern: pattern});
-        } else {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "basket");
-        let outputs: Array<Draft> = [];
-        if(child_input  == undefined){
-          const d: Draft =initDraftWithParams({warps: sum, wefts: sum, pattern: pattern});
-          d.gen_name = this.formatName([], "basket");
-          outputs.push(d);
-        }else{
-          outputs =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "basket")
-            return d;
-          });
-        }
-        return d;
-      }
-    ));
-
-    const stretch = this.makeOp(PipeOperation.AllRequired(
-      'stretch',
-      'stretch',
-      'repeats each warp and/or weft by the op_input.drafts',
-      [{
-        name: 'warp repeats',
-
-    const stretch: Operation = {
-      name: 'stretch',
-      displayname: 'stretch',
-      old_names:[],
-      dx: 'repeats each warp and/or weft by theop_input.drafts',
-      params: <Array<NumParam>>[
-        {name: 'warp repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: 'number of times to repeat each warp'
-        },
-        {name: 'weft repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'number of weft overs in a pic'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const d: Draft = new Draft({ warps:params[0]*input.warps, wefts:params[1]*input.wefts });
-        input.pattern.forEach((row, i) => {
-          for (let p = 0; p <params[1]; p++) {
-            let i_ndx = params[1]* i + p;
-            row.forEach((cell, j) => {
-              for (let r = 0; r <params[0]; r++) {
-                let j_ndx = params[0]* j + r;
-                d.pattern[i_ndx][j_ndx].setHeddle(cell.getHeddle());
-              }
-            });
-          }
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to stretch',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'stretch');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-        if(child_input == undefined) return Promise.resolve([]);
-
-        const outputs: Array<Draft> =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps:parent_input.params[0]*warps(input.drawdown), wefts:parent_input.params[1]*wefts(input.drawdown)});
-            input.drawdown.forEach((row, i) => {
-              for(let p = 0; p <parent_input.params[1]; p++){
-                let i_ndx =parent_input.params[1] * i + p;
-                row.forEach((cell, j) => {
-                  for(let r = 0; r <parent_input.params[0]; r++){
-                    let j_ndx =parent_input.params[0] * j + r;
-                    d.drawdown[i_ndx][j_ndx].setHeddle(cell.getHeddle());
-                  }
-                });
-
-              }
-            });
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'stretch');
-            d.gen_name = this.formatName(child_input.drafts, "stretch")
-            return d;
-            
-        });
-        this.transferSystemsAndShuttles(d, input, 'stretch');
-        d.gen_name = this.formatName(input, "stretch")
-        return d;   
-      }
-    ));
-
-    const resize = this.makeOp(PipeOperation.AllRequired(
-      'resize',
-      'resize',
-      'stretches or squishes the draft to fit the boundary',
-      [
-    const resize: Operation = {
-      name: 'resize',
-      displayname: 'resize',
-      old_names:[],
-      dx: 'stretches or squishes the draft to fit the boundary',
-      params: <Array<NumParam>>[
-        {name: 'warps',
-        type: 'number',
-        min: 1,
-        max: 10000,
-        value: 2,
-        dx: 'number of warps to resize to'
-        },
-        {name: 'weft repeats',
-        type: 'number',
-        min: 1,
-        max: 10000,
-        value: 2,
-        dx: 'number of wefts to resize to'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const weft_factor = params[1]/input.wefts ;
-        const warp_factor = params[0]/ input.warps;
-        const d: Draft = new Draft({warps:params[0], wefts:params[1]});
-        d.pattern.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            const mapped_cell: Cell = input.pattern[Math.floor(i/weft_factor)][Math.floor(j/warp_factor)];
-            d.pattern[i][j].setHeddle(mapped_cell.getHeddle());
-        
-          });
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to resize',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'resize');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-        if(child_input == undefined) return Promise.resolve([]);
-
-
-        const outputs: Array<Draft> =child_input.drafts.map(input => {
-          const weft_factor =parent_input.params[1] /wefts(input.drawdown) ;
-          const warp_factor =parent_input.params[0] / warps(input.drawdown);
-          const d: Draft =initDraftWithParams({warps:parent_input.params[0], wefts:parent_input.params[1]});
-            d.drawdown.forEach((row, i) => {
-                row.forEach((cell, j) => {
-                    const mapped_cell: Cell = input.drawdown[Math.floor(i/weft_factor)][Math.floor(j/warp_factor)];
-                    d.drawdown[i][j].setHeddle(mapped_cell.getHeddle());
-                
-                });
-            });
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'stretch');
-            d.gen_name = this.formatName(child_input.drafts, "resize")
-            return d;
-        });
-        this.transferSystemsAndShuttles(d, input, 'stretch');
-        d.gen_name = this.formatName(input, "resize");
-        return d;
-      }   
-    ));
-
-    const margin = this.makeOp(PipeOperation.AllRequired(
-      'margin',
-      'margin',
-      'adds padding of unset cells to the top, right, bottom, left of the block',
-      [
-        {name: 'bottom',
-        min: 1,
-        return Promise.resolve(outputs);
-      }
-          
-    }
-
-    const margin: Operation = {
-      name: 'margin',
-      displayname: 'add margins',
-      old_names:[],
-      dx: 'adds margins of unset cells, or a user defined draft, to the top, right, bottom, left of the draft',
-      params: <Array<NumParam>>[
-        {name: 'starting pics',
-        min: 0,
-        max: 10000,
-        value: 12,
-        type: 'number',
-        dx: 'number of pics to add to the bottom of the draft'
-        },
-        {name: 'ending pics',
-        min: 0,
-        max: 10000,
-        value: 12,
-        type: 'number',
-        dx: 'number of pics to add to the end of the draft'
-        },
-        {name: 'starting ends',
-        min: 0,
-        max: 10000,
-        value: 12,
-        type: 'number',
-        dx: 'number of ends of padding to the start of the draft'
-        },
-        {name: 'ending ends',
-        min: 0,
-        max: 10000,
-        value: 12,
-        type: 'number',
-        dx: 'number of ends to add to the end of the draft'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const new_warps = params[1] + params[3] + input.warps;
-        const new_wefts = params[0] + params[2] + input.wefts;
-
-        const d: Draft = new Draft({warps: new_warps, wefts: new_wefts});
-
-        //unset all cells to default
-        d.pattern.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            d.pattern[i][j].unsetHeddle();
-          });
-        });
-        input.pattern.forEach((row, i) => {
-          d.rowShuttleMapping[i + params[0]] = input.rowShuttleMapping[i];
-          d.rowSystemMapping[i + params[0]] = input.rowSystemMapping[i];
-          row.forEach((cell, j) => {
-            d.pattern[i+ params[0]][j + params[3]].setHeddle(cell.getHeddle());
-            d.colShuttleMapping[j + params[3]] = input.colShuttleMapping[j];
-            d.colSystemMapping[j + params[3]] = input.colSystemMapping[j];
-          });
-        });
-        d.gen_name = this.formatName(input, "margin");
-        return d;
-      }      
-    ));
-
-    const crop = this.makeOp(PipeOperation.AllRequired(
-      'crop',
-      'crop',
-      'crops to a region of the input draft. The crop size and placement is given by the parameters',
-      [
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to add margins to',
-        num_drafts: 1
-      },
-      {
-        name: 'margin', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to repeat within the margins',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'margin');
-        const child_inputs = op_inputs.filter(el => el.op_name == 'child');
-       
-        if(child_inputs.length == 0) return Promise.resolve([]);
-
-
-        const main_input = child_inputs.find(el => el.inlet == 0);
-        let main_draft: Draft = null;
-
-        if(main_input === undefined || main_input.drafts.length == 0) main_draft = initDraftWithParams({wefts: 0, warps: 0, pattern: [[new Cell(null)]]});
-        else main_draft = main_input.drafts[0];
-
-
-       
-       
-        const margin_input = child_inputs.find(el => el.inlet == 1);
-        let margin_draft: Draft = null;
-
-        if(margin_input === undefined || margin_input.drafts.length == 0) margin_draft = initDraftWithParams({wefts: 1, warps: 1, pattern: [[new Cell(null)]]});
-        else margin_draft = margin_input.drafts[0];
-
-
-        
-
-          const new_warps =parent_input.params[2] +parent_input.params[3] + warps(main_draft.drawdown);
-          const new_wefts =parent_input.params[0] +parent_input.params[1] + wefts(main_draft.drawdown);
-
-          const d: Draft =initDraftWithParams({warps: new_warps, wefts: new_wefts, pattern: margin_draft.drawdown});
-
-
-          main_draft.drawdown.forEach((row, i) => {
-              d.rowShuttleMapping[i+parent_input.params[0]] = d.rowShuttleMapping[i];
-              d.rowSystemMapping[i+parent_input.params[0]] = d.rowSystemMapping[i];
-              row.forEach((cell, j) => {
-                d.drawdown[i+parent_input.params[0]][j+parent_input.params[3]].setHeddle(cell.getHeddle());
-                d.colShuttleMapping[j+parent_input.params[3]] = d.colShuttleMapping[j];
-                d.colSystemMapping[j+parent_input.params[3]] = d.colSystemMapping[j];
-              });
-              
-          });
-          d.gen_name = this.formatName([main_draft], "margin");
-     
-
-        return Promise.resolve([d]);
-      }
-          
-    }
-
-    const crop: Operation = {
-      name: 'crop',
-      displayname: 'crop',
-      old_names:[],
-      dx: 'crops to a region of the input draft. The crop size and placement is given by the parameters',
-      params: <Array<NumParam>>[
-        {name: 'left',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: 'number of pics from the left to start the cut'
-        },
-        {name: 'bottom',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: 'number of pics from the bottom to start the cut'
-        },
-        {name: 'width',
-        type: 'number',
-        min: 1,
-        max: 10000,
-        value: 10,
-        dx: 'total width of cut'
-        },
-        {name: 'height',
-        type: 'number',
-        min: 1,
-        max: 10000,
-        value: 10,
-        dx: 'height of the cutting box'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const new_warps = params[2];
-        const new_wefts = params[3];
-
-        const d: Draft = new Draft({warps: new_warps, wefts: new_wefts});
-
-        //unset all cells to default
-        d.pattern.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            if ((i+ params[1]>= input.pattern.length) || (j + params[0] >= input.pattern[0].length)) cell.setHeddle(null);
-            else cell.setHeddle(input.pattern[i+ params[1]][j + params[0]].getHeddle());
-          });
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to crop',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'crop');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-        if(child_input == undefined) return Promise.resolve([]);
-
-
-        const outputs: Array<Draft> =child_input.drafts.map(input => {
-            const new_warps =parent_input.params[2];
-            const new_wefts =parent_input.params[3];
-
-            const d: Draft =initDraftWithParams({warps: new_warps, wefts: new_wefts});
-
-            //unset all cells to default
-            d.drawdown.forEach((row, i) => {
-              row.forEach((cell, j) => {
-
-                if((i+parent_input.params[1] >= input.drawdown.length) || (j+parent_input.params[0] >= input.drawdown[0].length)) cell.setHeddle(null);
-                else cell.setHeddle(input.drawdown[i+parent_input.params[1]][j+parent_input.params[0]].getHeddle());
-               
-              });
-            });
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "crop");
-            return d;
-        });
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "crop");
-        return d;
-      }     
-    ));
-
-    const trim = this.makeOp(PipeOperation.AllRequired(
-      'trim',
-      'trim',
-      'trims off the edges of an input draft',
-      [
-        { name: 'left',
-          type: 'number',
-          min: 0,
-          max: 10000,
-          value: 0,
-          dx: 'number of warps from the left to start the cut'
-        return Promise.resolve(outputs);
-      }
-          
-    }
-
-    const trim: Operation = {
-      name: 'trim',
-      displayname: 'trim',
-      old_names:[],
-      dx: 'trims off the edges of an input draft',
-      params: <Array<NumParam>>[
-        {name: 'left',
-        type: 'number',
-        min: 0,
-        max: 10000,
-        value: 0,
-        dx: 'number of warps from the left to start the cut'
-        },
-        { name: 'top',
-          type: 'number',
-          min: 0,
-          max: 10000,
-          value: 0,
-          dx: 'number of pics from the top to start the cut'
-        },
-        { name: 'right',
-          type: 'number',
-          min: 0,
-          max: 10000,
-          value: 0,
-          dx: 'number of warps from the right to start the cut'
-        },
-        { name: 'bottom',
-          type: 'number',
-          min: 0,
-          max: 10000,
-          value: 0,
-          dx: 'number of pics from the bottom to start the cut'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const left = params[0];
-        const top = params[3];
-        const right = params[2];
-        const bottom = params[1];
-        
-        let new_warps = input.warps - right - left;
-        if (new_warps < 0) new_warps = 0;
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to trim',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        let new_wefts = input.wefts - top - bottom;
-        if (new_wefts < 0) new_wefts = 0;
-
-        const d: Draft = new Draft({warps: new_warps, wefts: new_wefts});
-
-        d.pattern.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            cell.setHeddle(input.pattern[i+top][j+left].getHeddle());                             
-          });
-        const parent_input = op_inputs.find(el => el.op_name == 'trim');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-        if(child_input == undefined) return Promise.resolve([]);
-
-        const outputs: Array<Draft> =child_input.drafts.map(input => {
-
-
-            const left = parent_input.params[0];
-            const top = parent_input.params[3];
-            const right = parent_input.params[2];
-            const bottom = parent_input.params[1];
-            
-            let new_warps = warps(input.drawdown) - right - left;
-            if(new_warps < 0) new_warps = 0;
-
-            let new_wefts = wefts(input.drawdown) - top - bottom;
-            if(new_wefts < 0) new_wefts = 0;
-
-            const d: Draft =initDraftWithParams({warps: new_warps, wefts: new_wefts});
-
-            d.drawdown.forEach((row, i) => {
-              row.forEach((cell, j) => {
-                cell.setHeddle(input.drawdown[i+top][j+left].getHeddle());                             
-              });
-            });
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "trim");
-            return d;
-        });
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "trim");
-        return d;
-      }     
-    ));
-
-    const warp_rep = this.makeOp(PipeOperation.AllRequired(
-      'warprep',
-      'warp rep',
-      'specifies an alternating pattern along the warp',
-      [
-        {name: 'unders',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'number of weft unders in a pic'
-        },
-        {name: 'overs',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'number of weft overs in a pic'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const sum: number = params[0] + params[1];
-        const repeats: number = params[2];
-        const width: number = sum;
-        const height: number = repeats * 2;
-
-        let alt_rows, alt_cols, val: boolean = false;
-        const pattern: Array<Array<Cell>> = [];
-        for (let i = 0; i < height; i++) {
-          alt_rows = (i < repeats);
-          pattern.push([]);
-          for (let j = 0; j < width; j++) {
-            alt_cols = (j % sum < params[0]);
-            val = (alt_cols && alt_rows) || (!alt_cols && !alt_rows);
-            pattern[i][j] =  new Cell(val);
-          }
-        }
-
-        let d: Draft;
-        if (input) {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-        } else {
-          d = new Draft({warps: width, wefts: height, pattern: pattern});
-        }
-        return d;
-      }        
-    ));
-    
-    const rib = this.makeOp(SeedOperation.DraftsOptional(
-      'rib',
-      'rib',
-      'generates a rib/cord/half-basket structure defined by theop_input.drafts',
-      [
-   
-    
-    const rib: Operation = {
-      name: 'rib',
-      displayname: 'rib',
-      old_names:[],
-      dx: 'generates a rib/cord/half-basket structure defined by the parameters',
-      params: <Array<NumParam>>[
-        {name: 'unders',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'number of weft unders in a pic'
-        },
-        {name: 'overs',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'number of weft overs in a pic'
-        },
-        {name: 'repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: 'number of weft pics to repeat within the structure'
-        }
-      ],
-      (params: Array<number>, input?: Draft) => {
-
-        const sum: number = params[0] + params[1];
-        const repeats: number = params[2];
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with this rib structure',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-      
-        const parent_input = op_inputs.find(el => el.op_name == 'rib');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-
-        const sum: number =parent_input.params[0] +parent_input.params[1];
-        const repeats: number =parent_input.params[2];
-        const width: number = sum;
-        const height: number = repeats * 2;
-
-        let alt_rows, alt_cols, val: boolean = false;
-        const pattern: Array<Array<Cell>> = [];
-        for (let i = 0; i < height; i++) {
-          alt_rows = (i < repeats);
-          pattern.push([]);
-          for (let j = 0; j < width; j++) {
-            alt_cols = (j % sum <params[0]);
-          for(let j = 0; j < width; j++){
-            alt_cols = (j % sum <parent_input.params[0]);
-            val = (alt_cols && alt_rows) || (!alt_cols && !alt_rows);
-            pattern[i][j] =  new Cell(val);
-          }
-        }
-
-        let d: Draft;
-        if (input) {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-          this.transferSystemsAndShuttles(d, input, 'second');
-          d.gen_name = this.formatName(input, "rib");
-        } else {
-          d = new Draft({warps: width, wefts: height, pattern: pattern});
-        let outputs: Array<Draft> = [];
-        if(child_input === undefined){
-          const d: Draft =initDraftWithParams({warps: width, wefts: height, pattern: pattern});
-          outputs.push(d);
-        }else{
-          outputs =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'second');
-            d.gen_name = this.formatName(child_input.drafts, "rib");
-            return d;
-          });
-        }
-
-        return d;
-      }   
-    ));
-
-    const twill = this.makeOp(SeedOperation.DraftsOptional(
-      'twill',
-      'twill',
-      'generates or fills with a twill structure described by the input drafts',
-      [
-        {name: 'unders',
-    const twill: Operation = {
-      name: 'twill',
-      displayname: 'twill',
-      old_names:[],
-      dx: 'generates or fills with a twill structure described by the input drafts',
-      params: [
-        <NumParam> {name: 'warps raised',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: 'number of weft unders'
-        dx: 'number of warps raised in the first pic'
-        
-        },
-        <NumParam>{name: 'warps lowered',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 3,
-        dx: 'number of warps reaminig lowered in the first pic'
-        },
-        <BoolParam> {name: 'Z/S',
-        type: 'boolean',
-        falsestate: 'S',
-        truestate: 'Z',
-        value: 0,
-        dx: 'toggle to switch the twist direction'
-        },
-        <BoolParam>{name: 'face',
-        type: 'boolean',
-        falsestate: "weft facing",
-        truestate: "warp facing",
-        value: 0,
-        dx: 'select to toggle warp and weft facing variations of this satin'
-        }
-      ],
-      (params: Array<ParamValue>, input?: Draft) => {
-        let sum: number = <number> params[0] + <number> params[1];
-
-        const pattern: Array<Array<Cell>> = [];
-        for (let i = 0; i < sum; i++) {
-          pattern.push([]);
-          for (let j = 0; j < sum; j++) {
-            pattern[i][(j+i) % sum] = (j < params[0]) ? new Cell(true) : new Cell(false);
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with twill',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'twill');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-        let sum: number = parent_input.params[0] + parent_input.params[1];
-
-       // sum -=parent_input.params[2];
-
-        const pattern:Array<Array<Cell>> = [];
-        for(let i = 0; i < sum; i++){
-          pattern.push([]);
-          for(let j = 0; j < sum; j++){
-            if(parent_input.params[3] == 0)pattern[i][(j+i)%sum] = (j <parent_input.params[0]) ? new Cell(true) : new Cell(false);
-            else pattern[i][(j+i)%sum] = (j <parent_input.params[0]) ? new Cell(false) : new Cell(true);
-          }
-        }
-
-        let d: Draft;
-        if (!input) {
-          d = new Draft({warps: sum, wefts: sum, pattern: pattern});
-          d.gen_name = this.formatName(input, "twill");
-        } else {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "twill");
-        }
-
-        if (params[2] === 1) {
-          let flipx_op = flipx.topo_op as Op<Pipe, NoParams>;
-          return flipx_op.perform(d);
-        } else {
-          return d;
-        let outputs: Array<Draft> = [];
-        if(child_input === undefined){
-          d  =initDraftWithParams({warps: sum, wefts: sum, pattern: pattern});
-          d.gen_name = this.formatName([], "twill");
-          outputs.push(d);
-
-        }else{
-           outputs =child_input.drafts.map(input => {
-            d =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "twill");
-            return d;
-          });
-        }
-
-        if(parent_input.params[2] === 1){
-          return flipDraft(d, true, false).then(draft => { return [draft]});
-          //return (<Operation>this.getOp('flip horiz')).perform([{drafts:[], params:[], inlet: 0, op_name:"flip horiz"}, {drafts:outputs, params:[], inlet: 0, op_name:"child"}]);
-        }else{
-          return Promise.resolve(outputs);
-        }
-      }        
-    ));
-
-    const complextwill = this.makeOp(SeedOperation.NoDrafts(
-      'complextwill',
-      'complex twill',
-      'generates a specified by the input parameters, alternating warp and weft facing with each input value',
-      [
-        {name: 'pattern',
-
-    const complextwill: Operation = {
-      name: 'complextwill',
-      displayname: 'complex twill',
-      old_names:[],
-      dx: 'generates a specified by the input parameters, alternating warp and weft facing with each input value',
-      params: [
-        <StringParam>{name: 'pattern',
-        type: 'string',
-        regex: /(\d+)/,
-        value: '2 2 3 3',
-        dx: 'the under over pattern of this twill (e.g. 2 2 3 3)'
-        },
-        <BoolParam>{name: 'Z/S',
-        type: 'boolean',
-        falsestate: 'Z',
-        truestate: 'S',
-        value: 0,
-        dx: 'toggle to change twill direction'
-        }
-      ],
-      (params: Array<ParamValue>) => {
-        const twist = params[1];
-        const pattern_string: String = String(params[0]);
-
-        const sequence: Array<number> = pattern_string.split(' ').map(el => parseInt(el));
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with this twill',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-
-        const parent_input = op_inputs.find(el => el.op_name == 'complextwill');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-
-        const twist = parent_input.params[1];
-        const pattern_string: String = String(parent_input.params[0]);
-
-        let sum: number = sequence.reduce( (acc, val) => {
-          return val + acc;
-        }, 0);
-
-        const starting_line: Array<boolean>  = [];
-        let under = true;
-        sequence.forEach(input => {
-          for (let j = 0; j < input; j++) {
-            starting_line.push(under);
-          }
-          under = !under;
-        });
-
-        const pattern: Array<Array<Cell>> = [];
-        let twist_val = (twist == 0) ? 1 : -1;
-        for (let i = 0; i < sum; i++) {
-        let twist_val = (twist == 0) ? -1 : 1;
-        for(let i = 0; i < sum; i++){
-          pattern.push([]);
-          for (let j = 0; j < sum; j++) {
-            let ndx = (j + (twist_val*i)) % sum;
-            if (ndx < 0) ndx = sum + ndx;
-            pattern[i].push(new Cell(starting_line[ndx]));
-          }
-        }
-
-        const d: Draft = new Draft({warps: sum, wefts: sum, pattern: pattern});
-        d.gen_name = this.formatName([], "twill");
-        return d;
-        let outputs: Array<Draft> = [];
-
-        if(child_input === undefined){
-          const d: Draft =initDraftWithParams({warps: sum, wefts: sum, pattern: pattern});
-          d.gen_name = this.formatName([], "complex twill");
-          outputs.push(d);
-  
-
-        }else{
-           outputs =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "complex twill");
-            return d;
-          });
-        }
-
-  
-
-        return  Promise.resolve(outputs)
-
-       
-      }        
-    ));
-
-    const waffle = this.makeOp(SeedOperation.DraftsOptional(
-      'waffle',
-      'waffle',
-      'generates or fills with a waffle structure',
-      [
-        {name: 'width',
-    // const layernotation: DynamicOperation = {
-    //   name: 'notation',
-    //   displayname: 'layer notation',
-    //   old_names:[],
-    //   dynamic_param_id: 0,
-    //   dynamic_param_type: 'notation',
-    //   dx: 'uses a notation system to assign drafts to different warp and weft patterns on different layers. Layers are represented by () so (1a)(2b) puts warp1 and weft a on layer 1, warp 2 and weft b on layer 2',
-    //   params: <Array<StringParam>>[
-    //     {name: 'pattern',
-    //     type: 'string',
-    //     value: '(a1)(b2)',
-    //     regex: /.*?\((.*?[a-xA-Z]+[\d]+.*?)\).*?/i, //NEVER USE THE GLOBAL FLAG - it will throw errors randomly
-    //     error: 'invalid entry',
-    //     dx: 'all system pairs must be listed as letters followed by numbers, layers are created by enclosing those system lists in pararenthesis. For example, the following are valid: (a1b2)(c3) or (c1)(a2). The following are invalid: (1a)(2b) or (2b'
-    //     }
-    //   ],
-    //   inlets: [{
-    //     name: 'systems draft', 
-    //     type: 'static',
-    //     value: null,
-    //     dx: 'the draft that describes the system ordering we will add input structures within',
-    //     num_drafts: 1
-    //   }],
-    //   perform: (op_inputs: Array<OpInput>) => {
-
-
-    //     // //split the inputs into the input associated with 
-    //     const parent_inputs: Array<OpInput> = op_inputs.filter(el => el.op_name === "layernotation");
-    //     const child_inputs: Array<OpInput> = op_inputs.filter(el => el.op_name === "child");
-
-  
-    //     if(child_inputs.length == 0) return Promise.resolve([]);
-
-    //     //now just get all the drafts
-    //     const all_drafts: Array<Draft> = child_inputs.reduce((acc, el) => {
-    //       el.drafts.forEach(draft => {acc.push(draft)});
-    //       return acc;
-    //     }, []);
-
-
-
-    //     const system_map = child_inputs.find(el => el.inlet === 0);
-
-    //     if(system_map === undefined) return Promise.resolve([]); ;
-       
-        
-    //     const draft_inlets = child_inputs.filter(el => el.inlet > 0).map(el => el.drafts[0]);
-
-    //     let total_wefts: number = 0;
-    //     const all_wefts = draft_inlets.map(el => wefts(el.drawdown)).filter(el => el > 0);
-    //     total_wefts = utilInstance.lcm(all_wefts);
-
-    //     let total_warps: number = 0;
-    //     const all_warps = draft_inlets.map(el => warps(el.drawdown)).filter(el => el > 0);
-    //     total_warps = utilInstance.lcm(all_warps);
-
-
-
-    //     //create a map that associates each warp and weft system with a draft, keeps and index, and stores a layer. 
-    //     //get the total number of layers
-    //     const system_draft_map = child_inputs
-    //     .filter(el => el.inlet > 0)
-    //     .map(el => {
-    //       return  {
-    //         wesy: el.params[0].match(/[a-zA-Z]+/g), //pull all the letters out into weft system ids
-    //         wasy: el.params[0].match(/\d/g).map(el => parseInt(el)), //pull out all the nubmers into warp systems
-    //         i: 0,
-    //         j: 0,
-    //         layer: el.inlet-1, //map layer order to the inlet id, all inlets must be ordered the same as the input
-    //         draft: el.drafts[0]
-    //       }
-    //     });
-        
-
-    //     const d: Draft = initDraftWithParams({
-    //       warps: total_warps*warps(system_map.drafts[0].drawdown), 
-    //       wefts: total_wefts* wefts(system_map.drafts[0].drawdown),
-    //       rowShuttleMapping: system_map.drafts[0].rowShuttleMapping.slice(),
-    //       rowSystemMapping: system_map.drafts[0].rowSystemMapping.slice(),
-    //       colShuttleMapping: system_map.drafts[0].colShuttleMapping.slice(),
-    //       colSystemMapping: system_map.drafts[0].colSystemMapping.slice(),
-    //     });
-
-    //     d.drawdown = [];
-    //     for(let i = 0; i < wefts(d.drawdown); i++){
-    //       let active_wesy = this.ss.getWeftSystem(d.rowSystemMapping[i]).name;
-    //       const active_weft_entry = system_draft_map.find(el => el.wesy.findIndex(wesyel => wesyel === active_wesy) !== -1);
-    //       let increment_flag = false;
-
-    //       d.drawdown.push([]);
-    //       for(let j = 0; j < warps(d.drawdown); j++){
-    //         let active_wasy = parseInt(this.ss.getWarpSystem(d.colSystemMapping[j]).name);
-    //         const active_warp_entry = system_draft_map.find(el => el.wasy.findIndex(wasyel => wasyel === active_wasy) !== -1);
-    //         const entry = system_draft_map.find(el => (el.wasy.findIndex(wasyel => wasyel === active_wasy) !== -1 && el.wesy.findIndex(wesyel => wesyel === active_wesy)!== -1));
-
-    //         if(active_weft_entry === undefined || active_warp_entry === undefined){
-    //           //no input draft is assigned to this system, set all as undefined
-    //           d.drawdown[i][j] = new Cell(null);
-
-    //         }else if(entry === undefined){
-    //           //this is unassigned or its an an alternating layer. 
-    //           //find the term in the list assigned to this. 
-    //           //if this weft systems layer is > than the layer associted with this warp system, lower, if it is less, raise. 
-    //           const wesy_layer = active_weft_entry.layer;
-    //           const wasy_layer = active_warp_entry.layer;
-    //           if(wasy_layer < wesy_layer) d.drawdown[i][j] = new Cell(true);
-    //           else if(wasy_layer > wesy_layer) d.drawdown[i][j] = new Cell(false);
-    //           else d.drawdown[i][j] = new Cell(null);
-    //         }  
-    //         else{
-    //           d.drawdown[i][j] = new Cell(entry.draft.drawdown[entry.i][entry.j].getHeddle());
-    //           entry.j = (entry.j+1)%warps(entry.draft.drawdown);
-    //           increment_flag = true;
-    //         }
-
-    //       }
-
-    //       if(increment_flag){
-    //         active_weft_entry.i = (active_weft_entry.i+1) % wefts(active_weft_entry.draft.drawdown);
-    //       } 
-
-
-    //     }
-        
-    //     d.gen_name = this.formatName([], "notation");
-    //     return  Promise.resolve([d]);
-
-       
-    //   }        
-    // }
-
     const layernotation: DynamicOperation = {
       name: 'notation',
       displayname: 'layer notation',
@@ -3581,14 +760,12 @@ export class OperationService {
 
         }
         
-        d.gen_name = this.formatName([], "notation");
+        d.gen_name = format.formatName([], "notation");
         return  Promise.resolve([d]);
 
        
       }        
     }
-
-    
 
     const warp_profile: DynamicOperation = {
       name: 'warp_profile',
@@ -3696,13 +873,12 @@ export class OperationService {
           }
         }
 
-        d.gen_name = this.formatName([], "warp profile");
+        d.gen_name = format.formatName([], "warp profile");
         return  Promise.resolve([d]);
 
        
       }        
     }
-
 
     const sample_width: DynamicOperation = {
       name: 'sample_width',
@@ -3802,7 +978,7 @@ export class OperationService {
           }
         }
 
-        d.gen_name = this.formatName([], "warp profile");
+        d.gen_name = format.formatName([], "warp profile");
         return  Promise.resolve([d]);
 
        
@@ -3848,7 +1024,6 @@ export class OperationService {
     //        return acc;
     //      }, []);
 
-
         
     //     if(child_inputs.length == 0) return Promise.resolve([]);
     //     if(profile_input === undefined || profile_input.drafts.length === 0) return Promise.resolve([]);
@@ -3862,9 +1037,6 @@ export class OperationService {
     //       if(found_ndx != -1) warp_acrx_pattern.push(found_ndx);
     //       else warp_acrx_pattern.push(0);
     //     }
-
-
-        
   
     //     // //create a map that associates each warp and weft system with a draft, keeps and index, and stores a layer. 
     //     const profile_draft_map = child_inputs
@@ -3917,1312 +1089,13 @@ export class OperationService {
     //       }
     //     }
 
-    //     d.gen_name = this.formatName([], "profile");
+    //     d.gen_name = format.formatName([], "profile");
     //     return  Promise.resolve([d]);
 
        
     //   }        
     // }
-
-
-
-
-    const waffle: Operation = {
-      name: 'waffle',
-      displayname: 'waffle-ish',
-      old_names:[],
-      dx: 'generates or fills with a waffle structure, sometimes, and some other funky structures at others',
-      params: <Array<NumParam>>[
-        {name: 'ends',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 8,
-        dx: 'width'
-        dx: 'the number of ends to be used in the waffle'
-        
-        },
-        {name: 'pics',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 8,
-        dx: 'the number of pics to use in the waffle'
-        },
-        {name: 'interlacement rows',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 1,
-        dx: 'builds tabby around the edges of the central diamond, creating some strange patterns'
-        }
-      ],
-      (params: Array<number>, input?: Draft) => {
-        const width = params[0];
-        const height = params[1];
-        const bindings = params[2];
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with waffle',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'waffle');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-
-        const width = parent_input.params[0];
-        const height = parent_input.params[1];
-        const bindings = parent_input.params[2];
-
-
-        let outputs: Array<Draft> = [];
-
-        const pattern: Array<Array<Cell>> = [];
-        const mid_warp: number = Math.floor(width / 2);  //for 5 this is 2
-        const mid_weft: number = Math.floor(height / 2); //for 5 this is 2
-        const warps_to_wefts_ratio = mid_warp/mid_weft;
-
-        //first create the diamond
-        for (let i = 0; i < height; i++) {
-          pattern.push([]);
-          const row_offset = (i > mid_weft) ? height - i : i;
-          for (let j = 0; j < width; j++) {
-            if (j >= mid_warp - row_offset*warps_to_wefts_ratio && j <= mid_warp + row_offset*warps_to_wefts_ratio) pattern[i][j] = new Cell(true);
-            else pattern[i][j] = new Cell(false);
-          }
-        }
-
-        //carve out the tabby
-        if (bindings > 0) {
-          const tabby_range_size = bindings * 2 + 1;
-          for (let i = 0; i < height; i++) {
-            const row_offset = (i > mid_weft) ? height - i : i;
-            const range_size = Math.floor((mid_warp + row_offset*warps_to_wefts_ratio) - (mid_warp - row_offset*warps_to_wefts_ratio)) + 1;
-
-            //figure out how many bindings we're dealing with here - alterlate to the inside and outside of the diamong
-            for (let b = 1; b <= bindings; b++) {
-              const inside = (b % 2 == 1) ? true : false;
-              if (inside) {
-                const increment = Math.floor(b+1 / 2)
-                const diff = Math.ceil((range_size - tabby_range_size) / 2);
-                const left_j = mid_warp - (diff * increment);
-                const right_j = mid_warp + (diff * increment);
-                if (left_j > 0 && left_j < width) pattern[i][left_j].setHeddle(false);
-                if (right_j > 0 && right_j < width) pattern[i][right_j].setHeddle(false);
-              } else {
-                const increment = Math.floor(b / 2);
-                const left_j = (mid_warp - Math.floor((range_size-1)/2)) - (increment*2);
-                const right_j = (mid_warp + Math.floor((range_size-1)/2)) + (increment*2);
-                if (left_j > 0 && left_j < width) pattern[i][left_j].setHeddle(true);
-                if (right_j > 0 && right_j < width) pattern[i][right_j].setHeddle(true);
-              }
-            }    
-          }
-        }
-
-        let d: Draft;
-        if (input) {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "waffle");
-        } else {
-          d = new Draft({warps: width, wefts: height, pattern: pattern});
-          d.gen_name = this.formatName(input, "waffle");
-        }
-        return d;
-        }        
-    ));
-    
-    const satin = this.makeOp(SeedOperation.DraftsOptional(
-      'satin',
-      'satin',
-      'generates or fills with a satin structure described by theop_input.drafts',
-      [
-
-            }
-          
-        }
-      }
-
-
-        if(child_input == undefined){
-        
-          const d: Draft =initDraftWithParams({warps: width, wefts: height, pattern: pattern});
-          d.gen_name = this.formatName([], "waffle");
-          outputs.push(d);
-
-        }else{
-           outputs =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "waffle");
-            return d;
-          });
-        }
-        return Promise.resolve(outputs);
-
-      }        
-
-
-    }
-
-    const makesymmetric: Operation = {
-      name: 'makesymmetric',
-      old_names:[],
-      displayname: 'make symmetric',
-      dx: 'rotates the draft around a corner, creating rotational symmetry around the selected point',
-      params: [
-        <SelectParam>{name: 'corner',
-        type: 'select',
-        selectlist: [
-          {name: 'top left corner', value: 0},
-          {name: 'top right corner', value: 1},
-          {name: 'bottom right corner', value: 2},
-          {name: 'bottom left corner', value: 3}
-        ],
-        value: 0,
-        dx: 'corner to which this draft is rotated around 0 is top left, 1 top right, 2 bottom right, 3 bottom left'
-        },
-        <BoolParam>{name: 'remove center repeat',
-        type: 'boolean',
-        falsestate: "center repeat kept",
-        truestate: "center repeat removed",
-        value: 0,
-        dx: 'rotating drafts creates a repeated set of columns or rows extending from the center. Use this toggle to alternative the structure by either keeping or erasing those repeated cells'
-        }
-
-      ],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to make symmetric',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name === "makesymmetric");
-        const child_input = op_inputs.find(el => el.op_name === "child");
-
-
-        const corner = parent_input.params[0];
-        const even = parent_input.params[1] === 0;
-
-        if(child_input == undefined) return Promise.resolve([]);
-        const d = child_input.drafts[0];
-        
-      
-        const pattern: Array<Array<Cell>> = [];
-
-        let use_i = 0;
-        let use_j = 0;
-
-        let weft_num = wefts(d.drawdown) * 2;
-        let warp_num = warps(d.drawdown) * 2;
-
-        for(let i =0; i < weft_num; i++){
-          pattern.push([]);
-          for(let j = 0; j < warp_num; j++){
-            switch(corner){
-
-
-              case 0:
-                use_i = (i >= wefts(d.drawdown)) ? wefts(d.drawdown) - (i - wefts(d.drawdown))-1: i;
-                use_j = (j >= warps(d.drawdown)) ? j - warps(d.drawdown) : warps(d.drawdown)-1 - j; 
-              break;
-
-              case 1:
-                use_i = (i >= wefts(d.drawdown)) ? wefts(d.drawdown) - (i - wefts(d.drawdown))-1: i;
-                use_j = (j >= warps(d.drawdown)) ? warps(d.drawdown) - (j - warps(d.drawdown))-1  : j; 
-              break;
-              
-
-              case 2:
-                use_i = (i >= wefts(d.drawdown)) ? i - wefts(d.drawdown) : wefts(d.drawdown)-1 - i;
-                use_j = (j >= warps(d.drawdown)) ? warps(d.drawdown) - (j - warps(d.drawdown))-1  : j; 
-              break;
-
-              case 3:
-                use_i = (i >= wefts(d.drawdown)) ? i - wefts(d.drawdown) : wefts(d.drawdown)-1 - i;
-                use_j = (j >= warps(d.drawdown)) ? j - warps(d.drawdown) : warps(d.drawdown)-1 - j; 
-              break;              
-            }
-            
-            const value: boolean = d.drawdown[use_i][use_j].getHeddle();
-            pattern[i].push(new Cell(value));
-          }
-        }
-
-        let usepattern; 
-        //delete one of the central rows
-        if(!even){
-          const deletedweft = pattern.filter((el, i) => i !== wefts(d.drawdown));
-          usepattern = deletedweft.map(row => row.filter((el, j) => j !== warps(d.drawdown)));
-        }else{
-          usepattern = pattern;
-        }
-
-
-      
-        const draft: Draft =initDraftWithParams({warps: usepattern[0].length, wefts: usepattern.length, pattern: usepattern});
-        draft.gen_name = this.formatName(child_input.drafts, "4-way");
-    
-
-      
-
-        return Promise.resolve([draft]);
-
-      }        
-
-
-    }
-
-
-    
-    
-    const satin: Operation = {
-      name: 'satin',
-      displayname: 'satin',
-      old_names:[],
-      dx: 'generates or fills with a satin structure described by the input parameters',
-      params: <Array<NumParam>>[
-        {name: 'repeat',
-        type: 'number',
-        min: 5,
-        max: 100,
-        value: 5,
-        dx: 'the width and height of the pattern'
-        },
-        {name: 'move',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'the move number on each row'
-        },
-        <BoolParam>{name: 'face',
-        type: 'boolean',
-        falsestate: "weft facing",
-        truestate: "warp facing",
-        value: 0,
-        dx: 'select to toggle warp and weft facing variations of this satin'
-        }
-      ],
-      (params: Array<number>, input?: Draft) => {
-        const pattern: Array<Array<Cell>> = [];
-        for (let i = 0; i <params[0]; i++) {
-          pattern.push([]);
-          for (let j = 0; j <params[0]; j++) {
-            pattern[i][j] = (j === ((i*params[1]) % params[0])) ? new Cell(true) : new Cell(false);
-          }
-        }
-
-        let d: Draft;
-        if (input) {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "satin"); 
-        } else {
-          d = new Draft({warps:params[0], wefts:params[0], pattern: pattern});
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with tabby',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'satin');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-
-        const pattern:Array<Array<Cell>> = [];
-        for(let i = 0; i <parent_input.params[0]; i++){
-          pattern.push([]);
-          for(let j = 0; j <parent_input.params[0]; j++){
-            if(parent_input.params[2]=== 0) pattern[i][j] = (j===(i*parent_input.params[1])%parent_input.params[0]) ? new Cell(true) : new Cell(false);
-            else pattern[i][j] = (j===(i*parent_input.params[1])%parent_input.params[0]) ? new Cell(false) : new Cell(true);
-          }
-        }
-
-        let outputs: Array<Draft> = [];
-        if(child_input === undefined){
-          const d: Draft =initDraftWithParams({warps:parent_input.params[0], wefts:parent_input.params[0], pattern: pattern});
-          d.gen_name = this.formatName([], "satin");
-          outputs.push(d);
-        }else{
-           outputs =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "satin");
-            return d;
-          });
-        }
-        return d;
-      }        
-    ));
-
-    const random = this.makeOp(SeedOperation.DraftsOptional(
-      'random',
-      'random',
-      'generates a random draft with width, height, and percetage of weft unders defined byop_input.drafts',
-      [
-    const shaded_satin: Operation = {
-      name: 'shaded_satin',
-      displayname: 'shaded satin',
-      old_names:[],
-      dx: 'generates or fills with a satin structure described by the input parameters',
-      params: <Array<NumParam>>[
-        {name: 'warps raised',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 2,
-        dx: 'the number of warps to raise on the first pic'
-        },
-        {name: 'warps lowered',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 5,
-        dx: 'the number of warps to keep lowered on the first pic'
-        },
-        {name: 'offset',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'amount to offset the interlacements on each row'
-        },
-        <BoolParam>{name: 'face',
-        type: 'boolean',
-        falsestate: "weft facing",
-        truestate: "warp facing",
-        value: 0,
-        dx: 'select to toggle warp and weft facing variations of this satin'
-        }
-      ],
-      inlets: [],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name == 'shaded_satin');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-        const lift = parent_input.params[0];
-        const lowered = parent_input.params[1];
-        const shift = parent_input.params[2];
-        const weft_face = parent_input.params[3];
-
-        const repeat = lift+lowered;
-
-        let first_pic: Array<Cell> = [];
-        for(let i = 0; i < repeat; i++){
-          if(i < lift) first_pic.push(new Cell(true));
-          else first_pic.push(new Cell(false));
-        }
-
-        if(weft_face == 1) first_pic = first_pic.map(el => {
-          if(el.getHeddle() == true) return new Cell(false);
-          else return new Cell(true);
-        });
-
-        const d: Draft =initDraftWithParams({warps:repeat, wefts:repeat});
-
-        for(let i = 0; i < repeat; i++){
-          for(let j = 0; j < repeat; j++){
-            let shift_j =  (j+ (shift * i)) % repeat;
-            d.drawdown[i][j].setHeddle(first_pic[shift_j].getHeddle());
-          }
-        }
-
-
-         let outputs: Array<Draft> = [];
-          d.gen_name = this.formatName([], "satin");
-          outputs.push(d);
-
-              
-      
-        return Promise.resolve(outputs);
-
-        
-      }        
-    }
-
-    const random: Operation = {
-      name: 'random',
-      displayname: 'random',
-      old_names:[],
-      dx: 'generates a random draft with width, height, and percetage of weft unders defined byop_input.drafts',
-      params: <Array<NumParam>>[
-        {name: 'width',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 8,
-        dx: 'the width of this structure'
-        },
-        {name: 'height',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 8,
-        dx: 'the height of this structure'
-        },
-        {name: 'percent weft unders',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 50,
-        dx: 'percentage of weft unders to be used'
-        }
-      ],
-      (params: Array<number>, input?: Draft) => {
-        const pattern: Array<Array<Cell>> = [];
-        for (let i = 0; i < params[1]; i++) {
-          pattern.push([]);
-          for (let j = 0; j < params[0]; j++) {
-            const rand: number = Math.random() * 100;
-            pattern[i][j] = (rand > params[2]) ? new Cell(false) : new Cell(true);
-          }
-        }
-
-        let d: Draft;
-        if (input) {
-          d = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          d.fill(pattern, 'mask');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "random");          
-        } else {
-          d = new Draft({warps:params[0], wefts:params[1], pattern: pattern});
-        }
-        return d;
-      }        
-    ));
-
-    const makesymmetric = this.makeOp(PipeOperation.AllRequired(
-      'makesymmetric',
-      'make symmetric',
-      'rotates the draft around a corner, creating rotational symmetry around the selected point',
-      [
-        {name: 'corner',
-        type: 'number',
-        min: 0,
-        max: 3,
-        value: 0,
-        dx: 'corner to which this draft is rotated around 0 is top left, 1 top right, 2 bottom right, 3 bottom left'
-        },
-        {name: 'even/odd',
-        type: 'boolean',
-        min: 0,
-        max: 1,
-        value: 0,
-        dx: 'select if you would like the output to be an even or odd number, an odd number shares a single central point'
-        }
-      ],
-      (input: Draft, params: Array<ParamValue>) => {
-        const corner = <number> params[0];
-        const even = params[1] === 0;
-
-        let d = new Draft({wefts: 1, warps: 1});
-        if (!input) return d;
-        
-        const pattern: Array<Array<Cell>> = [];
-
-        let use_i = 0;
-        let use_j = 0;
-
-        let weft_num = d.wefts * 2;
-        let warp_num = d.warps * 2;
-
-        for (let i =0; i < weft_num; i++) {
-          pattern.push([]);
-          for (let j = 0; j < warp_num; j++) {
-            switch(corner) {
-              case 0:
-                use_i = (i >= d.wefts) ? d.wefts - (i - d.wefts)-1: i;
-                use_j = (j >= d.warps) ? j - d.warps : d.warps-1 - j; 
-              break;
-
-              case 1:
-                use_i = (i >= d.wefts) ? d.wefts - (i - d.wefts)-1: i;
-                use_j = (j >= d.warps) ? d.warps - (j - d.warps)-1  : j; 
-              break;
-              
-              case 2:
-                use_i = (i >= d.wefts) ? i - d.wefts : d.wefts-1 - i;
-                use_j = (j >= d.warps) ? d.warps - (j - d.warps)-1  : j; 
-              break;
-
-              case 3:
-                use_i = (i >= d.wefts) ? i - d.wefts : d.wefts-1 - i;
-                use_j = (j >= d.warps) ? j - d.warps : d.warps-1 - j; 
-              break;              
-            }           
-            const value: boolean = d.pattern[use_i][use_j].getHeddle();
-            pattern[i].push(new Cell(value));
-          }
-      inlets: [{
-        name: 'shape', 
-        type: 'static',
-        value: null,
-        dx: 'the shape you would like to fill with random',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'random');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-       
-        const pattern:Array<Array<Cell>> = [];
-        for(let i = 0; i <parent_input.params[1]; i++){
-          pattern.push([]);
-          for(let j = 0; j <parent_input.params[0]; j++){
-            const rand: number = Math.random() * 100;
-            pattern[i][j] = (rand >parent_input.params[2]) ? new Cell(false) : new Cell(true);
-          }
-        }
-
-        let outputs: Array<Draft> = [];
-        if(child_input === undefined){
-          const d: Draft =initDraftWithParams({warps:parent_input.params[0], wefts:parent_input.params[1], pattern: pattern});
-          d.gen_name = this.formatName([], "random");
-          outputs.push(d);
-        }else{
-           outputs =child_input.drafts.map(input => {
-            const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = applyMask(input.drawdown, pattern);         
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "random");
-            return d;
-          });
-        }
-
-        let usepattern; 
-        // delete one of the central rows
-        if (!even) {
-          const deletedweft = pattern.filter((el, i) => i !== d.wefts);
-          usepattern = deletedweft.map(row => row.filter((el, j) => j !== d.warps));
-        } else {
-          usepattern = pattern;
-        }
-
-        d = new Draft({warps: usepattern[0].length, wefts: usepattern.length, pattern: usepattern});
-        d.gen_name = this.formatName(input, "4-way");
-        return d;
-      }        
-    ));
-
-    const invert = this.makeOp(PipeOperation.NoParams(
-      'invert',
-      'invert',
-      'generates an output that is the inverse or backside of the input',
-      (input: Draft) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        d.fill(d.pattern, 'invert');
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "invert");
-        return d;
-    const invert: Operation = {
-      name: 'invert',
-      displayname: 'invert',
-      old_names:[],
-      dx: 'generates an output that is the inverse or backside of the input',
-      params: [],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to invert',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'invert');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-      
-        if(child_input === undefined) return Promise.resolve([]);
-          const outputs:Array<Draft> =child_input.drafts.map(input => {
-          let d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-          d.drawdown = invertDrawdown(d.drawdown);
-          this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-          d.gen_name = this.formatName(child_input.drafts, "invert");
-          return d;
-        });
-        return Promise.resolve(outputs);
-      }
-    ));
-
-    const flipx = this.makeOp(PipeOperation.NoParams(
-      'flip horiz',
-      'flip horiz',
-      'generates an output that is the left-right mirror of the input',
-      (input: Draft) => {
-        // console.log("recomputing flip horiz with ", op_input)
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        d.fill(d.pattern, 'mirrorY');
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "fhoriz");
-        return d;
-    const flipx: Operation = {
-      name: 'flip horiz',
-      displayname: 'flip horiz',
-      old_names:[],
-      dx: 'generates an output that is the left-right mirror of the input',
-      params: [],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to flip horizontally',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'flip horiz');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-      
-        if(child_input === undefined) return Promise.resolve([]);
-
-          const outputs:Array<Draft> =child_input.drafts.map(input => {
-            let d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-            d.drawdown = flipDrawdown(d.drawdown, true);
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "fhoriz");
-            return d;
-        
-           
-           
-            
-          });
-          
-          return  Promise.resolve(outputs);
-      }
-    ));
-
-    const flipy = this.makeOp(PipeOperation.NoParams(
-      'flip vert',
-      'flip vert',
-      'generates an output that is the top-bottom mirror of the input',
-      (input: Draft) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        d.fill(d.pattern, 'mirrorX');
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "fvert");
-        return d;
-    const flipy: Operation = {
-      name: 'flip vert',
-      displayname: 'flip vert',
-      old_names:[],
-      dx: 'generates an output that is the top-bottom mirror of the input',
-      params: [],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to flip vertically',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>)=> {
-        const parent_input = op_inputs.find(el => el.op_name == 'flip vert');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-
-
-          const outputs:Array<Draft> =child_input.drafts.map(input => {
-          const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-          d.drawdown = flipDrawdown(d.drawdown, false);
-          this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-          d.gen_name = this.formatName(child_input.drafts, "fvert");
-          return d;
-        });
-        return  Promise.resolve(outputs);
-      }
-    ));
-
-    const shiftx = this.makeOp(PipeOperation.AllRequired(
-      'shift left',
-      'shift left',
-      'generates an output that is shifted left by the number of warps specified in theop_input.drafts',
-      [
-    const shiftx: Operation = {
-      name: 'shift left',
-      displayname: 'shift left',
-      old_names:[],
-      dx: 'generates an output that is shifted left by the number of warps specified in theop_input.drafts',
-      params: <Array<NumParam>>[
-        {name: 'amount',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: 'the amount of warps to shift by'
-        }
-      ],
-      (input: Draft, params: Array<number>)=> {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        for (let i = 0; i < params[0]; i++) {
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "shiftx");
-          d.fill(d.pattern, 'shiftLeft');
-        }
-        return d;
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to shift',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>)=> {
-        const parent_input = op_inputs.find(el => el.op_name == 'shift left');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-
-
-        
-          const outputs:Array<Draft> =child_input.drafts.map(input => {
-            console.log("input", input)
-          const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-          d.drawdown = shiftDrawdown(d.drawdown, false, parent_input.params[0]);
-          this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-          d.gen_name = this.formatName(child_input.drafts, "shiftx");
-        
-          return d;
-        });
-        return  Promise.resolve(outputs);
-      }
-    ));
-
-    const shifty = this.makeOp(PipeOperation.AllRequired(
-      'shift up',
-      'shift up',
-      'generates an output that is shifted up by the number of wefts specified in theop_input.drafts',
-      [
-    const shifty: Operation = {
-      name: 'shift up',
-      displayname: 'shift up',
-      old_names:[],
-      dx: 'generates an output that is shifted up by the number of wefts specified in theop_input.drafts',
-      params: <Array<NumParam>>[
-        {name: 'amount',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: 'the number of wefts to shift by'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        for (let i = 0; i < params[0]; i++) {
-          d.fill(d.pattern, 'shiftUp');
-          this.transferSystemsAndShuttles(d, input, 'first');
-          d.gen_name = this.formatName(input, "shifty");
-        }
-        return d;
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to shift',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'shift up');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-
-
-        
-          const outputs:Array<Draft> =child_input.drafts.map(input => {
-          const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-          d.drawdown = shiftDrawdown(d.drawdown, true, parent_input.params[0]);
-          this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-          d.gen_name = this.formatName(child_input.drafts, "shifty");
-        
-          return d;
-        });
-        return  Promise.resolve(outputs);
-      }
-    ));
-
-    const slope = this.makeOp(PipeOperation.AllRequired(
-      'slope',
-      'slope',
-      'offsets every nth row by the vaule given in col',
-      [
-    const slope: Operation = {
-      name: 'slope',
-      displayname: 'slope',
-      old_names:[],
-      dx: 'offsets every nth row by the vaule given in col',
-      params: <Array<NumParam>>[
-        {name: 'col shift',
-        type: 'number',
-        min: -100,
-        max: 100,
-        value: 2,
-        dx: 'the amount to shift rows by'
-        },
-        {
-        name: 'row shift (n)',
-        type: 'number',
-        min: 0,
-        max: 100,
-        value: 1,
-        dx: 'describes how many rows we should apply the shift to'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts});
-        for (let i = 0; i < d.wefts; i++) {
-          let i_shift: number = (params[1] === 0) ? 0 : Math.floor(i/params[1]);
-          for (let j = 0; j < d.warps; j++) {
-            let j_shift: number = params[0]-1;
-            let shift_total = (i_shift * j_shift) % d.warps;
-            if (shift_total < 0) shift_total += d.warps;
-            d.pattern[i][j].setHeddle(input.pattern[i][(j + shift_total)%d.warps].getHeddle()); 
-          }
-        }
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "slope");
-        return d;
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to slope',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'slope');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-
-          const outputs:Array<Draft> =child_input.drafts.map(input => {
-          const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown)});
-          for(let i = 0; i < wefts(d.drawdown); i++){
-            
-              let i_shift: number = (parent_input.params[1] === 0) ? 0 : Math.floor(i/parent_input.params[1]);
-              for(let j = 0; j <warps(d.drawdown); j++){
-                let j_shift: number =parent_input.params[0]*-1;
-                let shift_total = (i_shift * j_shift)%warps(d.drawdown);
-                if(shift_total < 0) shift_total += warps(d.drawdown);
-                
-                d.drawdown[i][j].setHeddle(input.drawdown[i][(j+shift_total)%warps(d.drawdown)].getHeddle());
-                
-              }
-            }
-            this.transferSystemsAndShuttles(d,child_input.drafts,parent_input.params, 'first');
-            d.gen_name = this.formatName(child_input.drafts, "slope");
-          return d;
-        });
-        return  Promise.resolve(outputs);
-      }
-    ));
-
-    const replicate = this.makeOp(BranchOperation.AllRequired(
-      'mirror',
-      'mirror',
-      'generates an linked copy of the input draft, changes to the input draft will then populate on the replicated draft',
-      [{
-
-    const replicate: Operation = {
-      name: 'mirror',
-      displayname: 'mirror',
-      old_names:[],
-      dx: 'generates an linked copy of the input draft, changes to the input draft will then populate on the replicated draft',
-      params: <Array<NumParam>>[ {
-        name: 'copies',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 1,
-        dx: 'the number of mirrors to produce'
-      }],
-      (input: Draft, params: Array<number>) => {
-        let outputs: Array<Draft> = [];
-
-        for (let i = 0; i < params[0]; i++) {
-          let d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-          outputs = outputs.concat(d);
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to mirror',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        
-        const parent_input = op_inputs.find(el => el.op_name == 'mirror');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-
-
-        let outputs:Array<Draft> = [];
-
-        for(let i = 0; i <parent_input.params[0]; i++){
-            const ds:Array<Draft> =child_input.drafts.map(input => {
-              const d: Draft =initDraftWithParams(
-                {warps: warps(input.drawdown), 
-                  wefts: wefts(input.drawdown), 
-                  pattern: input.drawdown,
-                  rowShuttleMapping: input.rowShuttleMapping,
-                  rowSystemMapping: input.rowSystemMapping,
-                  colShuttleMapping: input.colShuttleMapping,
-                  colSystemMapping: input.colSystemMapping
-                });
-                d.gen_name = this.formatName([input], "mirror");
-              return d;
-            });
-            outputs = outputs.concat(ds);
-        }
-        return outputs;
-      }
-    ));
-
-    const variants = this.makeOp(BranchOperation.NoParams(
-      'variants',
-      'variants',
-      'for any input draft, create the shifted and flipped values as well',
-      (input: Draft) => {
-        let flip_horiz = flipx.topo_op as Op<Pipe, NoParams>;
-        let inv = invert.topo_op as Op<Pipe, NoParams>;
-        const outputs: Array<Draft> = [flip_horiz.perform(input), inv.perform(input)];
-
-        let shift_left = shiftx.topo_op as Op<Pipe, AllRequired>;
-        let shift_up = shifty.topo_op as Op<Pipe, AllRequired>;
-        for (let i=1; i < input.warps; i += 2) {
-          outputs.push(shift_left.perform(input, [i]));
-          outputs.push(shift_up.perform(input, [i]));
-        }
-
-        return outputs;
-        // const functions: Array<Promise<Array<Draft>>> = [
-        //   (this.getOp('flip horiz')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params}]) as Promise<Array<Draft>>,
-        //   (this.getOp('invert')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params}]) as Promise<Array<Draft>>
-        // ];
-
-        // for (let i=1; i < input.warps; i += 2) {
-        //   functions.push( (<Operation>this.getOp('shift left')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params[i]}]) as Promise<Array<Draft>>);
-        // }
-
-        // for (let i=1; i < input.wefts; i += 2) {
-        //   functions.push( (<Operation>this.getOp('shift up')).perform([{op_name:"", drafts: inputs,inlet: 0, params: params[i]}])  as Promise<Array<Draft>>);
-        // }
-        // return Promise.all(functions)
-        // .then(allDrafts => allDrafts
-        //   .reduce((acc, drafts) => acc.concat(drafts), [])
-        //  )        
-    const variants: Operation = {
-      name: 'variants',
-      displayname: 'variants',
-      old_names:[],
-      dx: 'for any input draft, create the shifted and flipped values as well',
-      params: [],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to create varients of',
-        num_drafts: 1
-      }], 
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name == 'variants');
-        const child_input = op_inputs.find(el => el.op_name == 'child');
-
-        if(child_input === undefined) return Promise.resolve([]);
-
-        const functions: Array<Promise<Array<Draft>>> = [
-        (<Operation>this.getOp('flip horiz')).perform([{op_name:"", drafts: child_input.drafts,inlet: 0,params: parent_input.params}]),
-        (<Operation>this.getOp('invert')).perform([{op_name:"", drafts: child_input.drafts,inlet: 0,params: parent_input.params}])
-      ];
-
-        for(let i = 1; i < warps(child_input.drafts[0].drawdown); i+=2){
-          functions.push( (<Operation>this.getOp('shift left')).perform([{op_name:"", drafts: child_input.drafts,inlet: 0, params: parent_input.params[i]}]));
-        }
-
-        for(let i = 1; i < wefts(child_input.drafts[0].drawdown); i+=2){
-          functions.push( (<Operation>this.getOp('shift up')).perform([{op_name:"", drafts: child_input.drafts,inlet: 0, params: parent_input.params[i]}]))
-        }
-        return Promise.all(functions)
-        .then(allDrafts => allDrafts
-          .reduce((acc, drafts) => acc.concat(drafts), [])
-         )        
-      }
-    ));
-
-    const bindweftfloats = this.makeOp(PipeOperation.AllRequired(
-      'bind weft floats',
-      'bind weft floats',
-      'adds interlacements to weft floats over the user specified length',
-      [{
-        name: 'length',
-
-    }
-
-    const bindweftfloats: Operation = {
-      name: 'bind weft floats',
-      displayname: 'bind weft floats',
-      old_names:[],
-      dx: 'adds interlacements to weft floats over the user specified length',
-      params: <Array<NumParam>>[
-        {name: 'length',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 10,
-        dx: 'the maximum length of a weft float'
-      }],
-      (input: Draft, params: Array<number>) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        let float: number = 0;
-        let last: boolean = false;
-        d.pattern.forEach(row => {
-          float = 0;
-          last = null;
-          row.forEach(c => {
-            if (c.getHeddle == null) float = 0;
-            if (last != null && c.getHeddle() == last) float++;
-
-            if (float >= params[0]) {
-              c.toggleHeddle();
-              float = 0;
-            }
-            last = c.getHeddle();
-        }
-      ],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to bind',
-        num_drafts: 1
-      },
-      {
-        name: 'binding pattern', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to bind',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const op_input = op_inputs[0];
-
-          const outputs:Array<Draft> =op_input.drafts.map(input => {
-          const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-          let float: number = 0;
-          let last:boolean = false;
-          d.drawdown.forEach(row => {
-            float = 0;
-            last = null;
-            row.forEach(c => {
-
-              if(c.getHeddle == null) float = 0;
-              if(last != null && c.getHeddle() == last) float++;
-
-              if(float >=op_input.params[0]){
-                c.toggleHeddle();
-                float = 0;
-              }
-              last = c.getHeddle();
-            });
-          });
-        });
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "bindweft");
-        return d;
-      }
-    ));
-
-    const bindwarpfloats = this.makeOp(PipeOperation.AllRequired(
-      'bind warp floats',
-      'bind warp floats',
-      'adds interlacements to warp floats over the user specified length',
-      [
-    const bindwarpfloats: Operation = {
-      name: 'bind warp floats',
-      displayname: 'bind warp floats',
-      old_names:[],
-      dx: 'adds interlacements to warp floats over the user specified length',
-      params: <Array<NumParam>>[
-        {name: 'length',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 10,
-        dx: 'the maximum length of a warp float'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const d: Draft = new Draft({warps: input.warps, wefts: input.wefts, pattern: input.pattern});
-        let float: number = 0;
-        let last:boolean = false;
-
-        for (let j = 0; j < d.warps; j++) {
-          const col: Array<Cell> = d.pattern.map(row => row[j]);
-          float = 0;
-          last = null;
-          col.forEach(c => {
-            if (c.getHeddle == null) float = 0;
-            if (last != null && c.getHeddle() == last) float++;
-            if (float >= params[0]) {
-              c.toggleHeddle();
-              float = 0;
-            }
-            last = c.getHeddle();
-          });
-        }
-        return d;
-      }
-    ));
-
-    // const layer = this.makeOp(new MergeOperation<NoParams>(
-    //   'layer',
-    //   'layer',
-    //   'creates a draft in which each input is assigned to a layer in a multilayered structure, assigns 1 to top layer and so on',
-    //   (inputs: Array<Draft>)=> {
-    //     const layers = inputs.length;
-    //     if (layers == 0) return Promise.resolve([]);
-
-    //     const max_wefts:number = utilInstance.getMaxWefts(inputs);
-    //     const max_warps:number = utilInstance.getMaxWarps(inputs);
-
-    //     //set's base pattern that assigns warp 1...n to layers 1...n 
-    //     const pattern: Array<Array<Cell>> = [];
-    //     for (let i = 0; i < layers; i++) {
-    //       pattern.push([]);
-    //       for (let j = 0; j < layers; j++) {
-    //         let val: boolean = (j < i) ? true : false; 
-    //         pattern[i].push(new Cell(val));
-    //       }
-    //     }
-
-    //     return  (<Operation>this.getOp('interlace')).perform([{op_name:"", drafts: inputs,inlet: 0, params: []}])
-    //     .then(overlay => {
-          
-    //       const d: Draft = new Draft({warps: max_warps*layers, wefts: max_wefts*layers});
-    //       d.fill(pattern, "original");
-
-    //       overlay[0].pattern.forEach((row, ndx) => {
-    //         const layer_id:number = ndx % layers;
-    //         row.forEach((c, j) => {
-    //           d.pattern[ndx][j*layers+layer_id].setHeddle(c.getHeddle());
-    //         });
-    //       });
-
-    //       this.transferSystemsAndShuttles(d, inputs, 'layer');
-    //       d.gen_name = this.formatName(inputs, "layer");
-    //       return [d];
-    //     });
-    //   }
-    // ));
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to bind',
-        num_drafts: 1
-      }], 
-      perform: (op_inputs: Array<OpInput>) => {
-        const op_input = op_inputs[0];
-
-          const outputs:Array<Draft> =op_input.drafts.map(input => {
-          const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
-          let float: number = 0;
-          let last:boolean = false;
-
-          for(let j = 0; j < warps(d.drawdown); j++){
-            const col: Array<Cell> = d.drawdown.map(row => row[j]);
-            float = 0;
-            last = null;
-            col.forEach(c => {
-
-              if(c.getHeddle == null) float = 0;
-              if(last != null && c.getHeddle() == last) float++;
-
-              if(float >=op_input.params[0]){
-                c.toggleHeddle();
-                float = 0;
-              }
-              last = c.getHeddle();
-            });
-          }
-
-          return d;
-        });
-        return  Promise.resolve(outputs);
-      }
-    }
-
-    const layer: Operation = {
-      name: 'layer',
-      displayname: 'layer',
-      old_names:[],
-      dx: 'creates a draft in which each input is assigned to a layer in a multilayered structure, assigns 1 to top layer and so on',
-      params: [],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the drafts to layer (from top to bottom)',
-        num_drafts: -1
-      }],
-      perform: (op_inputs: Array<OpInput>)=> {
-        const parent_input = op_inputs.find(el => el.op_name == 'layer');
-        const child_inputs = op_inputs.filter(el => el.op_name == 'child');
-
-        if(child_inputs === undefined) return Promise.resolve([]);
-        const alldrafts = child_inputs.map(el => el.drafts[0]);
-
-        const layers =alldrafts.length;
-        if(layers == 0) return Promise.resolve([]);
-
-
-        const all_wefts = alldrafts.map(el => wefts(el.drawdown)).filter(el => el > 0);
-        const total_wefts = utilInstance.lcm(all_wefts);
-      
-        const all_warps = alldrafts.map(el => warps(el.drawdown)).filter(el => el > 0);
-        const total_warps = utilInstance.lcm(all_warps);
-      
-        const d: Draft =initDraftWithParams({warps: total_warps*layers, wefts: total_wefts*layers});
-        for(let i = 0; i < wefts(d.drawdown); i++){
-          const select_array = i%layers;
-          const adj_i = (Math.floor(i/layers))%wefts(alldrafts[select_array].drawdown);
-          for(let j = 0; j < warps(d.drawdown); j++){
-            const adj_j = (Math.floor(j/layers))%warps(alldrafts[select_array].drawdown);
-            if(select_array === j%layers){
-              d.drawdown[i][j] = new Cell (alldrafts[select_array].drawdown[adj_i][adj_j].getHeddle());
-            }else{
-              const val = (j%layers < select_array) ? true : false;
-              d.drawdown[i][j] = new Cell(val);
-            }
-
-          }
-        }
-      
-
-        this.transferSystemsAndShuttles(d,alldrafts,parent_input.params, 'layer');
-        d.gen_name = this.formatName(alldrafts, "layer");
-        return Promise.resolve([d]);
-      }
-          
-    }
-      
-    
-
+   
     const assignlayers: DynamicOperation = {
       name: 'assignlayers',
       displayname: 'assign drafts to layers',
@@ -5232,14 +1105,14 @@ export class OperationService {
       dynamic_param_id: 0,
       inlets: [],
       params: [
-        <NumParam>{name: 'layers',
+        <NumParam> {name: 'layers',
           type: 'number',
           min: 1,
           max: 100,
           value: 2,
           dx: 'the total number of layers in this cloth'
         },
-        <BoolParam>{name: 'repeat',
+        <BoolParam> {name: 'repeat',
           type: 'boolean',
           value: 1,
           truestate: 'repeat inputs to matching size',
@@ -5247,9 +1120,8 @@ export class OperationService {
           dx: 'automatically adjust the width and height of draft to ensure equal repeats (checked) or just assign to layers directly as provided'
         }
       ],
-      perform: (inputs: Array<OpInput>)=> {
-          
-
+      perform: (inputs: Array<OpInput>) => {
+        
         //split the inputs into the input associated with 
         const parent_inputs: Array<OpInput> = inputs.filter(el => el.op_name === "assignlayers");
         const child_inputs: Array<OpInput> = inputs.filter(el => el.op_name === "child");
@@ -5257,128 +1129,103 @@ export class OperationService {
         //parent param
         const num_layers = parent_inputs[0].params[0];
         const factor_in_repeats = parent_inputs[0].params[1];
-
-
+  
+  
         //now just get all the drafts
         const all_drafts: Array<Draft> = child_inputs.reduce((acc, el) => {
            el.drafts.forEach(draft => {acc.push(draft)});
            return acc;
         }, []);
-
       
         if (all_drafts.length === 0) return Promise.resolve([]);
         
         let total_wefts: number = 0;
-        const all_wefts = all_drafts.map(el => el.wefts).filter(el => el > 0);
-        if (factor_in_repeats === 1)  total_wefts = utilInstance.lcm(all_wefts);
-        else  total_wefts = utilInstance.getMaxWefts(all_drafts);
-
-        let total_warps: number = 0;
-        const all_warps = all_drafts.map(el => el.warps).filter(el => el > 0);
-        if (factor_in_repeats === 1)  total_warps = utilInstance.lcm(all_warps);
         const all_wefts = all_drafts.map(el => wefts(el.drawdown)).filter(el => el > 0);
         if(factor_in_repeats === 1)  total_wefts = utilInstance.lcm(all_wefts);
         else  total_wefts = utilInstance.getMaxWefts(all_drafts);
-
+  
         let total_warps: number = 0;
         const all_warps = all_drafts.map(el => warps(el.drawdown)).filter(el => el > 0);
         if(factor_in_repeats === 1)  total_warps = utilInstance.lcm(all_warps);
         else  total_warps = utilInstance.getMaxWarps(all_drafts);
-
-
+  
         const layer_draft_map: Array<any> = child_inputs.map((el, ndx) => { return {layer: el.inlet, system: el.params[0], drafts: el.drafts}}); 
-
+  
         const max_system = layer_draft_map.reduce((acc, el) => {
-          if (el.system > acc) return el.system;
+          if(el.system > acc) return el.system;
           return acc;
         }, 0);
-
-      
-
-
+  
         const outputs = [];
-        const warp_systems = [];
-
+        const warp_systems = [];  
 
         //create a list of systems as large as the total number of layers
-        for (let n = 0;  n < num_layers; n++) {
+        for(let n = 0;  n < num_layers; n++){
           const sys = ss.getWarpSystem(n);
-          if (sys === undefined) ss.addWarpSystemFromId(n);
+          if(sys === undefined) ss.addWarpSystemFromId(n);
           warp_systems[n] = n;
         }
-
+  
         const layer_draft_map_sorted = [];
         //sort the layer draft map by system, push empty drafts
-        for (let i = 0; i <= max_system; i++) {
+        for(let i = 0; i <= max_system; i++){
           const ldms:Array<any> = layer_draft_map.filter(el => el.system == i);
-          if (ldms.length == 0) {
+          if(ldms.length == 0){
             layer_draft_map_sorted.push({layer: -1, system: i, drafts:[]})
-          } else {
+          }else{
             ldms.forEach(ldm => {layer_draft_map_sorted.push(ldm);})
           }
         }
-
+  
         layer_draft_map_sorted.forEach(layer_map => {
 
-          const layer_num = layer_map.layer -1;
-          if (layer_num < 0) {
-            outputs.push(new Draft(
-
-        layer_draft_map_sorted.forEach(layer_map => {
-
-          const layer_num = layer_map.layer;
-          if(layer_num < 0){
-            outputs.push(initDraftWithParams(
-              {warps: total_warps*warp_systems.length, 
-                wefts: total_wefts,
-                rowSystemMapping: [layer_map.system]}));
-          } else {
-            layer_map.drafts.forEach(draft => {
-              const d:Draft =initDraftWithParams({
-                warps:total_warps*warp_systems.length, 
-                wefts:total_wefts, 
-                rowShuttleMapping:draft.rowShuttleMapping, 
-                rowSystemMapping: [layer_map.system],
-                colShuttleMapping: draft.colShuttleMapping,
-                colSystemMapping: warp_systems});
+        const layer_num = layer_map.layer;
+        if (layer_num < 0) {
+          outputs.push(initDraftWithParams(
+            {warps: total_warps*warp_systems.length, 
+              wefts: total_wefts,
+              rowSystemMapping: [layer_map.system]}));
+        } else {
+          layer_map.drafts.forEach(draft => {
+            const d:Draft =initDraftWithParams({
+              warps:total_warps*warp_systems.length, 
+              wefts:total_wefts, 
+              rowShuttleMapping:draft.rowShuttleMapping, 
+              rowSystemMapping: [layer_map.system],
+              colShuttleMapping: draft.colShuttleMapping,
+              colSystemMapping: warp_systems
+            });
           
-                d.drawdown.forEach((row, i) => {
-                  row.forEach((cell, j)=> {
-                    const sys_id = j % num_layers;
-                    const use_col = sys_id === layer_num;
-                    const use_index = Math.floor(j /num_layers);
-                    if (use_col) {
-                        //handle non-repeating here if we want
-                        if (factor_in_repeats == 1) {
-                          d.colShuttleMapping[j] = draft.colShuttleMapping[use_index%draft.warps];
-                          cell.setHeddle(draft.pattern[i%draft.wefts][use_index%draft.warps].getHeddle());
-                        } else {
-                          if (i < draft.wefts && use_index < draft.warps) cell.setHeddle(draft.pattern[i][use_index].getHeddle());
-                        if(factor_in_repeats == 1){
-                          d.colShuttleMapping[j] =draft.colShuttleMapping[use_index%warps(draft.drawdown)];
-                          cell.setHeddle(draft.drawdown[i%wefts(draft.drawdown)][use_index%warps(draft.drawdown)].getHeddle());
-                        }else{
-                          if(i < wefts(draft.drawdown) && use_index < warps(draft.drawdown)) cell.setHeddle(draft.drawdown[i][use_index].getHeddle());
-                          else cell.setHeddle(null);
-                        }
-                      
-                    } else {
-                      if (sys_id < layer_num) {
-                        cell.setHeddle(true);
-                      } else if (sys_id >= layer_num) {
-                        cell.setHeddle(false);
-                      }
-                    }
-                  })
-                });
-                d.gen_name = this.formatName([draft], "");
-                outputs.push(d);
-
-            })
-
-          }
+            d.drawdown.forEach((row, i) => {
+              row.forEach((cell, j)=> {
+                const sys_id = j % num_layers;
+                const use_col = sys_id === layer_num;
+                const use_index = Math.floor(j /num_layers);
+                if(use_col){
+                  //handle non-repeating here if we want
+                  if (factor_in_repeats == 1) {
+                    d.colShuttleMapping[j] = draft.colShuttleMapping[use_index%warps(draft.drawdown)];
+                    cell.setHeddle(draft.drawdown[i%wefts(draft.drawdown)][use_index%warps(draft.drawdown)].getHeddle());
+                  } else {
+                    if(i < wefts(draft.drawdown) && use_index < warps(draft.drawdown)) cell.setHeddle(draft.drawdown[i][use_index].getHeddle());
+                    else cell.setHeddle(null);
+                  }
+                
+                } else {
+                  if(sys_id < layer_num){
+                    cell.setHeddle(true);
+                  } else if(sys_id >=layer_num) {
+                    cell.setHeddle(false);
+                  }
+                }
+              })
+            });
+            d.gen_name = format.formatName([draft], "");
+            outputs.push(d);
+          });
+        }
       });
-
+  
       //outputs has all the drafts now we need to interlace them (all layer 1's then all layer 2's)
       const pattern: Array<Array<Cell>> = [];
       const row_sys_mapping: Array<number> = [];
@@ -5390,16 +1237,12 @@ export class OperationService {
         row_sys_mapping.push(outputs[use_draft_id].rowSystemMapping[use_row])
         row_shut_mapping.push(outputs[use_draft_id].rowShuttleMapping[use_row])
         for (let j = 0; j < total_warps * warp_systems.length; j++) {
-          const val:boolean = outputs[use_draft_id].pattern[use_row][j].getHeddle();
-        for(let j = 0; j < total_warps * warp_systems.length; j++){
           const val:boolean = outputs[use_draft_id].drawdown[use_row][j].getHeddle();
           pattern[i].push(new Cell(val));
         }
       }
-
-
-
-      const interlaced =initDraftWithParams({
+  
+      const interlaced = initDraftWithParams({
         warps: total_warps * warp_systems.length,
         wefts: total_wefts * outputs.length,
         colShuttleMapping: outputs[0].colShuttleMapping,
@@ -5407,16 +1250,13 @@ export class OperationService {
         pattern: pattern,
         rowSystemMapping: row_sys_mapping,
         rowShuttleMapping: row_shut_mapping
-      })
+      });
      
-        
-      interlaced.gen_name = this.formatName(outputs, "layer");
+      interlaced.gen_name = format.formatName(outputs, "layer");
       return Promise.resolve([interlaced]);
-
-      }
-      
-    }
-
+      }      
+    }      
+    
     const imagemap: DynamicOperation = {
       name: 'imagemap',
       displayname: 'image map',
@@ -5424,9 +1264,6 @@ export class OperationService {
       dx: 'uploads an image and creates an input for each color found in the image. Assigning a draft to the color fills the color region with the selected draft',
       dynamic_param_type: 'color',
       dynamic_param_id: 0,
-      max_inputs: 0,
-      params: [
-        {name: 'image file (.jpg or .png)',
       inlets: [],
       params: <Array<NumParam>>[
           {name: 'image file (.jpg or .png)',
@@ -5437,31 +1274,32 @@ export class OperationService {
           dx: 'the total number of layers in this cloth'
         },
         {name: 'draft width',
-          type: 'number',
-          min: 1,
-          max: 10000,
-          value: 300,
-          dx: 'resize the input image to the width specified'
-        },
+        type: 'number',
+        min: 1,
+        max: 10000,
+        value: 300,
+        dx: 'resize the input image to the width specified'
+      },
         {name: 'draft height',
-          type: 'number',
-          min: 1,
-          max: 10000,
-          value: 200,
-          dx: 'resize the input image to the height specified'
-        }
+        type: 'number',
+        min: 1,
+        max: 10000,
+        value: 200,
+        dx: 'resize the input image to the height specified'
+    }
       ],
-      perform: (inputs: Array<OpInput>)=> {
+      perform: (op_inputs: Array<OpInput>)=> {
           
         //split the inputs into the input associated with 
-        const parent_inputs: Array<OpInput> = inputs.filter(el => el.op_name === "imagemap");
-        const child_inputs: Array<OpInput> = inputs.filter(el => el.op_name === "child");
+        const parent_inputs: Array<OpInput> = op_inputs.filter(el => el.op_name === "imagemap");
+        const child_inputs: Array<OpInput> = op_inputs.filter(el => el.op_name === "child");
 
         const image_data = this.is.getImageData(parent_inputs[0].params[0]);
         const res_w = parent_inputs[0].params[1];
         const res_h = parent_inputs[0].params[2];
 
-        if (image_data === undefined) return Promise.resolve([]);
+
+        if(image_data === undefined) return Promise.resolve([]);
         const data = image_data.data;
 
         //we need to flip the image map here because it will be flipped back on return. 
@@ -5474,15 +1312,15 @@ export class OperationService {
 
         const color_to_drafts = data.colors.map((color, ndx) => {
           const child_of_color = child_inputs.find(input => (input.params.findIndex(param => param === color) !== -1));
-          if (child_of_color === undefined) return {color: color, draft: null};
+          if(child_of_color === undefined) return {color: color, draft: null};
           else return {color: color, draft: child_of_color.drafts[0]};
         });
 
 
         const pattern: Array<Array<Cell>> = [];
-        for (let i = 0; i < res_h; i++) {
+        for(let i = 0; i < res_h; i++){
           pattern.push([]);
-          for (let j = 0; j < res_w; j++) {
+          for(let j = 0; j < res_w; j++){
 
             const i_ratio = data.height / res_h;
             const j_ratio = data.width / res_w;
@@ -5493,7 +1331,7 @@ export class OperationService {
             const color_ndx = fliped_image[map_i][map_j]; //
             const color_draft = color_to_drafts[color_ndx].draft;
 
-            if (color_draft === null) pattern[i].push(new Cell(false));
+            if(color_draft === null) pattern[i].push(new Cell(false));
             else {
               const draft_i = i % wefts(color_draft.drawdown);
               const draft_j = j % warps(color_draft.drawdown);
@@ -5507,10 +1345,9 @@ export class OperationService {
 
         let first_draft: Draft = null;
         child_inputs.forEach(el =>{
-          if (el.drafts.length > 0 && first_draft == null) first_draft = el.drafts[0];
+          if(el.drafts.length > 0 && first_draft == null) first_draft = el.drafts[0];
         });
 
-        if (first_draft == null) first_draft = new Draft({warps: 1, wefts: 1, pattern: [[new Cell(null)]]})
         if(first_draft == null) first_draft =initDraftWithParams({warps: 1, wefts: 1, pattern: [[new Cell(null)]]})
 
         
@@ -5518,7 +1355,7 @@ export class OperationService {
         const draft: Draft =initDraftWithParams({
           wefts: res_h, 
           warps: res_w,
-          pattern: pattern,
+           pattern: pattern,
           rowSystemMapping: first_draft.rowSystemMapping,
           rowShuttleMapping: first_draft.rowShuttleMapping,
           colSystemMapping: first_draft.colSystemMapping,
@@ -5529,522 +1366,6 @@ export class OperationService {
       }
       
     }
-
-    const tile = this.makeOp(PipeOperation.AllRequired(
-      'tile',
-      'tile',
-      'repeats this block along the warp and weft',
-      [
-  
-    const tile: Operation = {
-      name: 'tile',
-      displayname: 'tile',
-      dx: 'repeats one or more input drafts along the warp and weft',
-      old_names:[],
-      params: <Array<NumParam>>[
-        {name: 'warp-repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'the number of times to repeat this time across the width'
-        },
-        {name: 'weft-repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'the number of times to repeat this time across the length'
-        }
-      ],
-      (input: Draft, params: Array<number>) => {
-        const width: number = params[0]*input.warps;
-        const height: number = params[1]*input.wefts;
-
-        const d: Draft = new Draft({warps: width, wefts: height});
-        d.fill(input.pattern, 'original');
-        this.transferSystemsAndShuttles(d, input, 'first');
-        d.gen_name = this.formatName(input, "tile");
-        return d;
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the drafts to tile',
-        num_drafts: -1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        //split the inputs into the input associated with 
-        const parent_input = op_inputs.find(el => el.op_name === "tile");
-        const child_input = op_inputs.filter(el => el.op_name === "child");
-        
-        if(child_input === undefined) return Promise.resolve([]);
-    
-        const all_drafts = child_input.reduce((acc, el) => {
-          return acc = acc.concat(el.drafts);
-        }, []);
-
-        const all_warps = all_drafts.map(el => warps(el.drawdown)).filter(el => el > 0);
-        const total_warps = utilInstance.lcm(all_warps);
-
-        const all_wefts = all_drafts.map(el => wefts(el.drawdown)).filter(el => el > 0);
-        const total_wefts = utilInstance.lcm(all_wefts);
-        const num_inputs = all_drafts.length;
-
-        const warp_repeats = parent_input.params[0];
-        const weft_repeats = parent_input.params[1];
-
-        const draft_indexing: Array<Array<number>> = [];
-        let ndx = 0;
-        for(let i = 0; i < weft_repeats; i++){
-          draft_indexing.push([]);
-          for(let j = 0; j < warp_repeats; j++){
-            draft_indexing[i].push(ndx);
-            ndx = (ndx + 1 ) % num_inputs;
-          }
-        }
-
-        const width: number =warp_repeats*total_warps;
-        const height: number =weft_repeats*total_wefts;
-        const output: Draft =initDraftWithParams({warps: width, wefts: height});
-
-        output.drawdown.forEach((row, i) => {
-          let draft_index_row  = Math.floor(i / total_wefts);
-          let within_draft_row = i % total_wefts;
-          row.forEach((cell, j) => {
-            let draft_index_col  = Math.floor(j / total_warps);
-            let within_draft_col  = j % total_warps;
-            const select_draft_id = draft_indexing[draft_index_row][draft_index_col];
-
-            const draft = all_drafts[select_draft_id];
-            const w = warps(draft.drawdown);
-            const h = wefts(draft.drawdown);
-            cell.setHeddle(draft.drawdown[within_draft_row%w][within_draft_col%h].getHeddle()); 
-
-
-          });
-        });
-        
-
-        this.transferSystemsAndShuttles(output,all_drafts,parent_input.params, 'first');
-        output.gen_name = this.formatName(all_drafts, "chaos");
-      
-        return Promise.resolve([output]);
-      
-      }
-          
-    }
-
-    const chaos: Operation = {
-      name: 'chaos',
-      displayname: 'chaos sequence',
-      dx: 'tiles the input drafts, randomly selecting which draft to place at which position',
-      old_names:[],
-      params: <Array<NumParam>>[
-        {name: 'warp-repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'the number of times to repeat this time across the width'
-        },
-        {name: 'weft-repeats',
-        type: 'number',
-        min: 1,
-        max: 100,
-        value: 2,
-        dx: 'the number of times to repeat this time across the length'
-        }
-      ],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to tile in the chaos sequence',
-        num_drafts: -1
-      }],
-      perform: async (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name === "chaos");
-        const child_input = op_inputs.filter(el => el.op_name === "child");
-        
-        if(child_input === undefined || child_input.length == 0) return Promise.resolve([]);
-    
-        const all_drafts = child_input.reduce((acc, el) => {
-          return acc = acc.concat(el.drafts);
-        }, []);
-
-        const all_warps = all_drafts.map(el => warps(el.drawdown)).filter(el => el > 0);
-        const total_warps = utilInstance.lcm(all_warps);
-
-        const all_wefts = all_drafts.map(el => wefts(el.drawdown)).filter(el => el > 0);
-        const total_wefts = utilInstance.lcm(all_wefts);
-        const num_inputs = all_drafts.length;
-
-        const warp_repeats = parent_input.params[0];
-        const weft_repeats = parent_input.params[1];
-
-        const draft_indexing: Array<Array<Draft>> = [];
-        let ndx = Math.floor(Math.random()*num_inputs);
-        for(let i = 0; i < weft_repeats; i++){
-          draft_indexing.push([]);
-          for(let j = 0; j < warp_repeats; j++){
-            const x_flip = (Math.random() < 0.5) ? false: true; 
-            const y_flip = (Math.random() < 0.5) ? false: true; 
-            draft_indexing[i].push(await flipDraft(all_drafts[ndx], x_flip, y_flip));
-            ndx = Math.floor(Math.random()*num_inputs);
-          }
-        }
-
-        const width: number =warp_repeats*total_warps;
-        const height: number =weft_repeats*total_wefts;
-        const output: Draft =initDraftWithParams({warps: width, wefts: height});
-
-        output.drawdown.forEach((row, i) => {
-          let draft_index_row  = Math.floor(i / total_wefts);
-          let within_draft_row = i % total_wefts;
-          row.forEach((cell, j) => {
-            let draft_index_col  = Math.floor(j / total_warps);
-            let within_draft_col  = j % total_warps;
-
-            const draft = draft_indexing[draft_index_row][draft_index_col];
-
-            const w = warps(draft.drawdown);
-            const h = wefts(draft.drawdown);
-            cell.setHeddle(draft.drawdown[within_draft_row%w][within_draft_col%h].getHeddle()); 
-
-
-          });
-        });
-        
-
-        this.transferSystemsAndShuttles(output,all_drafts,parent_input.params, 'first');
-        output.gen_name = this.formatName(all_drafts, "chaos");
-      
-        return Promise.resolve([output]);
-      
-      }
-    ));
-
-    const erase_blank = this.makeOp(PipeOperation.NoParams(
-      'erase blank rows',
-      'erase blank rows',
-      'erases any rows that are entirely unset',
-      (input: Draft) => {
-        const rows_out = input.pattern.reduce((acc, el, ndx) => {
-          if (!utilInstance.hasOnlyUnset(el)) acc++;
-          return acc;
-        }, 0);
-
-        const out = new Draft({wefts: rows_out, warps: input.warps, 
-          colShuttleMapping: input.colShuttleMapping, colSystemMapping: input.colSystemMapping});
-        let ndx = 0;
-        input.pattern.forEach((row, i) => {
-          if (!utilInstance.hasOnlyUnset(row)) {
-    const erase_blank: Operation = {
-      name: 'erase blank rows',
-      displayname: 'erase blank rows',
-      old_names:[],
-      dx: 'erases any rows that are entirely unset',
-      params: [],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to erase blank rows from',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name === "erase blank rows");
-        const child_input = op_inputs.find(el => el.op_name === "child");
-        
-        if(child_input === undefined) return Promise.resolve([]);
-
-        const rows_out =child_input.drafts[0].drawdown.reduce((acc, el, ndx) => {
-          if(!utilInstance.hasOnlyUnset(el)) acc++;
-          return acc;
-        }, 0);
-
-        const out =initDraftWithParams({wefts: rows_out, warps: warps(child_input.drafts[0].drawdown), colShuttleMapping:child_input.drafts[0].colShuttleMapping, colSystemMapping:child_input.drafts[0].colSystemMapping});
-        let ndx = 0;
-        child_input.drafts[0].drawdown.forEach((row, i) => {
-          if(!utilInstance.hasOnlyUnset(row)){
-            row.forEach((cell, j) => {
-              out.drawdown[ndx][j].setHeddle(cell.getHeddle()); 
-            });
-            out.rowShuttleMapping[ndx] = input.rowShuttleMapping[i];
-            out.rowSystemMapping[ndx] = input.rowSystemMapping[i];
-            out.rowShuttleMapping[ndx] =child_input.drafts[0].rowShuttleMapping[i];
-            out.rowSystemMapping[ndx] =child_input.drafts[0].rowSystemMapping[i];
-            ndx++;
-          }
-        })
-
-        return out;        
-      }
-    ));
-
-    const jointop = this.makeOp(MergeOperation.NoParams(
-      'join top',
-      'join top',
-      'attaches input drafts toether into one draft in a column orientation',
-      (inputs: Array<Draft>) => {
-        const total_wefts: number = inputs.reduce((acc, draft)=>{
-          return acc + draft.wefts;
-        }, 0);
-
-        const max_warps: number = utilInstance.getMaxWarps(inputs);
-        const draft: Draft = new Draft({warps: max_warps, wefts: total_wefts});
-        //make a array of the values from col j
-        for (let j = 0; j < max_warps; j++) {      
-          const col_as_row: Array<Cell> = inputs.reduce((acc, input, arr_ndx) => {
-              let c = [];
-              if (j < input.pattern[0].length) {
-                 c = input.pattern.map(el => el[j]);
-              } else {
-                const d = new Draft({warps: 1, wefts: input.wefts});
-                d.pattern.forEach(el => el[0].setHeddle(null));
-                c = d.pattern.map(el => el[0]);
-
-    const jointop: Operation = {
-      name: 'join top',
-      displayname: 'join top',
-      old_names:[],
-      dx: 'attachesop_input.drafts toether into one draft in a column orientation',
-      params: [ 
-        <BoolParam>{name: 'repeat',
-        type: 'boolean',
-        falsestate: 'do not repeat inputs to match size',
-        truestate: 'repeat inputs to match size',
-        value: 1,
-        dx: "controls if the inputs are repeated along the width so they repeat in even intervals"
-    }],
-      inlets: [{
-        name: 'drafts', 
-        type: 'static',
-        value: null,
-        dx: 'the drafts you would like to join vertically',
-        num_drafts: -1
-      },
-      {
-        name: 'warp pattern', 
-        type: 'static',
-        value: null,
-        dx: 'optional, define a custom warp material or system pattern here',
-        num_drafts: -1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-        const parent_input = op_inputs.find(el => el.op_name === "join top");
-        const child_input = op_inputs.find(el => el.op_name === "child");
-        const drafts_in = op_inputs.filter(el => el.inlet == 0);
-        const warp_system = op_inputs.find(el => el.inlet == 1);
-        const factor_in_repeats = parent_input.params[0];
-
-        if(child_input === undefined || drafts_in == undefined) return Promise.resolve([]);
-        
-        let warp_mapping;
-        if(warp_system === undefined) warp_mapping =initDraftWithParams({warps: 1, wefts:1});
-        else warp_mapping = warp_system.drafts[0];
-    
-        const all_drafts = drafts_in.map(el => el.drafts[0])
-
-        const total_wefts:number =all_drafts.reduce((acc, draft)=>{
-            return acc + wefts(draft.drawdown);
-        }, 0);
-
-        let total_warps: number = 0;
-        const all_warps = all_drafts.map(el => warps(el.drawdown)).filter(el => el > 0);
-        if(factor_in_repeats === 1) total_warps = utilInstance.lcm(all_warps);
-        else  total_warps = utilInstance.getMaxWarps(all_drafts);
-
-
-        const d: Draft =initDraftWithParams(
-          {warps: total_warps, 
-          wefts: total_wefts,
-          colSystemMapping: warp_mapping.colSystemMapping,
-          colShuttleMapping: warp_mapping.colShuttleMapping
-          });
-
-
-          let i = 0;
-          all_drafts.forEach((draft) => {
-
-            draft.drawdown.forEach((row, row_ndx) => {
-              for(let j = 0; j < total_warps; j++){
-                const adj_j = j % warps(draft.drawdown); 
-                const repeats = Math.floor(j / warps(draft.drawdown));
-                d.rowShuttleMapping[i] = draft.rowShuttleMapping[row_ndx];
-                d.rowSystemMapping[i] = draft.rowSystemMapping[row_ndx];
-                if(factor_in_repeats){
-                  d.drawdown[i][j] = new Cell(draft.drawdown[row_ndx][adj_j].getHeddle());
-                }else{
-                  if(repeats == 0) d.drawdown[i][j] = new Cell(draft.drawdown[row_ndx][j].getHeddle());
-                  else d.drawdown[i][j] = new Cell(null);
-                }
-              }
-              i++;
-            });
-
-          for (let i = 0; i < total_wefts; i++) {
-            draft.pattern[i][j].setHeddle(col_as_row[i].getHeddle());
-          }
-        }
-
-        draft.rowSystemMapping = inputs.reduce((acc, draft) => {
-          return acc.concat(draft.rowSystemMapping);
-        }, []);
-       
-        draft.rowShuttleMapping = inputs.reduce((acc, draft) => {
-          return acc.concat(draft.rowShuttleMapping);
-        }, []);
-
-        this.transferSystemsAndShuttles(draft, inputs, 'jointop');
-        draft.gen_name = this.formatName(inputs, "top");
-        return draft;
-      }
-    ));
-
-    const joinleft = this.makeOp(MergeOperation.NoParams(
-      'join left',
-      'join left',
-      'joins drafts together from left to right',
-      (inputs: Array<Draft>) => {
-        const outputs: Array<Draft> = [];
-        const total:number = inputs.reduce((acc, draft)=>{
-            return acc + draft.warps;
-        }, 0);
-
-        const max_wefts:number = utilInstance.getMaxWefts(inputs);
-        
-        const d: Draft = new Draft({warps: total, wefts: max_wefts});
-        for (let i = 0; i < max_wefts; i++) {
-           
-          const combined_rows: Array<Cell> = inputs.reduce((acc, draft) => {
-             
-              let  r: Array<Cell> = [];
-              //if the draft doesn't have this row, just make a blank one
-              if (i >= draft.wefts) {
-                const nd = new Draft({warps: draft.warps, wefts: 1});
-                nd.pattern[0].forEach(el => el.setHeddle(null));
-                r = nd.pattern[0];
-
-          })
-
-
-
-        d.gen_name = this.formatName(child_input.drafts, "top");
-        return Promise.resolve([d]);
-        
-      }
-    }
-
-
-    const joinleft: Operation = {
-      name: 'join left',
-      displayname: 'join left',
-      old_names:[],
-      dx: 'joins drafts together from left to right',
-      params: [ 
-        <BoolParam>{name: 'repeat',
-        type: 'boolean',
-        falsestate: 'do not repeat inputs to match size',
-        truestate: 'repeat inputs to match size',
-        value: 1,
-        dx: "controls if the inputs are repeated along the width so they repeat in even intervals"
-    }],
-      inlets: [{
-        name: 'draft', 
-        type: 'static',
-        value: null,
-        dx: 'the draft to join horizontally',
-        num_drafts: -1
-      },{
-
-        name: 'weft pattern', 
-        type: 'static',
-        value: null,
-        dx: 'optional, define a custom weft material or system pattern here',
-        num_drafts: 1
-      }],
-      perform: (op_inputs: Array<OpInput>) => {
-
-        const parent_input = op_inputs.find(el => el.op_name === "join left");
-        const child_input = op_inputs.find(el => el.op_name === "child");
-        const drafts_in = op_inputs.filter(el => el.inlet == 0);
-        const warp_system = op_inputs.find(el => el.inlet == 1);
-        const factor_in_repeats = parent_input.params[0];
-
-        if(child_input === undefined || drafts_in == undefined) return Promise.resolve([]);
-        
-        let weft_mapping;
-        if(warp_system === undefined) weft_mapping =initDraftWithParams({warps: 1, wefts:1});
-        else weft_mapping = warp_system.drafts[0];
-    
-        const all_drafts = drafts_in.map(el => el.drafts[0])
-
-        const total_warps:number =all_drafts.reduce((acc, draft)=>{
-            return acc + warps(draft.drawdown);
-        }, 0);
-
-        let total_wefts: number = 0;
-        const all_wefts = all_drafts.map(el => wefts(el.drawdown)).filter(el => el > 0);
-        if(factor_in_repeats === 1) total_wefts = utilInstance.lcm(all_wefts);
-        else  total_wefts = utilInstance.getMaxWefts(all_drafts);
-
-
-        const d: Draft =initDraftWithParams(
-          {warps: total_warps, 
-          wefts: total_wefts,
-          rowSystemMapping: weft_mapping.rowSystemMapping,
-          rowShuttleMapping: weft_mapping.rowShuttleMapping
-          });
-
-
-        for(let i = 0; i < total_wefts; i++){
-           
-          const combined_rows: Array<Cell> =all_drafts.reduce((acc, draft) => {
-             
-              let  r: Array<Cell> = [];
-              //if the draft doesn't have this row, just make a blank one
-              if(i >= wefts(draft.drawdown) && factor_in_repeats == 0){
-                const nd =initDraftWithParams({warps: warps(draft.drawdown), wefts: 1});
-                nd.drawdown[0].forEach(el => el.setHeddle(null));
-                r = nd.drawdown[0];
-              }
-              else {
-                r =  draft.drawdown[i%wefts(draft.drawdown)];
-              } 
-              
-              return acc.concat(r);
-            }, []);
-            
-            combined_rows.forEach((cell,j) => {
-              d.drawdown[i][j].setHeddle(cell.getHeddle());
-            });
-        }
-      
-        d.colSystemMapping = inputs.reduce((acc, draft) => {
-          return acc.concat(draft.colSystemMapping);
-        }, []);
-
-        d.colShuttleMapping = inputs.reduce((acc, draft) => {
-        d.colSystemMapping =all_drafts.reduce((acc, draft) => {
-          return acc.concat(draft.colSystemMapping);
-        }, []);
-
-        d.colShuttleMapping =all_drafts.reduce((acc, draft) => {
-          return acc.concat(draft.colShuttleMapping);
-        }, []);
-             
-
-        this.transferSystemsAndShuttles(d, inputs, 'joinleft');
-        d.gen_name = this.formatName(inputs, "left");
-        d.gen_name = this.formatName(all_drafts, "left");
-
-        return Promise.resolve([d]);
-        
-        return d;
-      }
-    ));
 
     const dynamic_join_left: DynamicOperation = {
       name: 'dynamicjoinleft',
@@ -6058,23 +1379,6 @@ export class OperationService {
         type: 'number',
         min: 1,
         max: 100,
-        value: 1,
-        dx: 'the number of equally sized sections to include in the draft'
-        },
-        {name: 'width',
-          type: 'number',
-          min: 1,
-          max: 10000,
-          value: 100,
-          dx: 'the total width of the draft'
-        }],
-      max_inputs: 0, 
-      perform: (inputs: Array<OpInput>) => {
-      
-        //split the inputs into the input associated with 
-        const parent_inputs: Array<OpInput> = inputs.filter(el => el.op_name === "dynamicjoinleft");
-        const child_inputs: Array<OpInput> = inputs.filter(el => el.op_name === "child");
-        
         value: 3,
         dx: 'the number of equally sized divisions to include in the draft'
     },
@@ -6130,32 +1434,13 @@ export class OperationService {
         };
 
 
-       if (all_drafts.length === 0) return Promise.resolve([]);
+       if(all_drafts.length === 0) return Promise.resolve([]);
        
        let total_warps: number = 0;
        const all_warps = all_drafts.map(el => warps(el.drawdown)).filter(el => el > 0);
         total_warps = utilInstance.lcm(all_warps);
 
 
-        const section_draft_map: Array<any> = child_inputs.map(el => { return {section: el.inlet-1, draft: el.drafts.shift()}}); 
-        const first_draft: Draft = section_draft_map[0].draft;
-        if (first_draft === undefined ) return Promise.resolve([]);
-        const d:Draft = new Draft({
-          warps:total_width, 
-          wefts:total_warps,
-          rowShuttleMapping: first_draft.rowShuttleMapping,
-          rowSystemMapping: first_draft.rowSystemMapping
-        });
-
-        d.pattern.forEach((row, i) => {
-          row.forEach((cell, j) => {
-            const use_section = Math.floor(j / warps_in_section);
-            const warp_in_section = j % warps_in_section;
-            const use_draft_map = section_draft_map.find(el => el.section === use_section);
-            if (use_draft_map !== undefined) {
-              const use_draft = use_draft_map.draft;
-              cell.setHeddle(use_draft.pattern[i%use_draft.wefts][warp_in_section%use_draft.warps].getHeddle());
-            }
         const section_draft_map: Array<any> = child_inputs.map(el => { return {section: el.params[0]-1, draft: el.drafts.shift()}}); 
         const d:Draft =initDraftWithParams({
           warps:total_width, 
@@ -6174,18 +1459,8 @@ export class OperationService {
                 cell.setHeddle(use_draft.drawdown[i%wefts(use_draft.drawdown)][warp_in_section%warps(use_draft.drawdown)].getHeddle());
               }
           });
-        });
+         });
 
-        d.colShuttleMapping.forEach((val, j) => {
-          const use_section = Math.floor(j / warps_in_section);
-          const warp_in_section = j % warps_in_section;
-          const use_draft_map = section_draft_map.find(el => el.section === use_section);
-          if (use_draft_map !== undefined) {
-            const use_draft = use_draft_map.draft;
-            val = use_draft.colShuttleMapping[warp_in_section%use_draft.warps];
-            d.colSystemMapping = use_draft.colSystemMapping[warp_in_section%use_draft.warps];
-          }
-        });
          d.colShuttleMapping.forEach((val, j) => {
               const use_section = Math.floor(j / warps_in_section);
               const warp_in_section = j % warps_in_section;
@@ -6197,158 +1472,13 @@ export class OperationService {
               }
          });
 
-        return Promise.resolve([d]); 
+
+
+        return Promise.resolve([d]);
+        
       }
     }
 
-    // const germanify: Operation = {
-    //   name: 'gemanify',
-    //   displayname: 'gemanify',
-    //   dx: 'uses ML to edit the input based on patterns in a german drafts weave set',
-    //   params: [
-    //     {name: 'output selection',
-    //     type: 'number',
-    //     min: 1,
-    //     max: 10,
-    //     value: 1,
-    //     dx: 'which pattern to select from the variations'
-    //     }
-    //   ],
-    //   max_inputs: 1,
-    //   perform: (inputs: Array<Draft>, params: Array<ParamValue>) => {
-    //     if (inputs.length === 0) return Promise.resolve([]);
-    //     const inputDraft = inputs[0]
-
-    //     const loom: Loom = new Loom(inputDraft, 8, 10);
-    //     loom.recomputeLoom(inputDraft);
-    //     let pattern = this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.pattern);
-    //     const draft_seed =  utilInstance.patternToSize(pattern, 48, 48);
-
-    //     return this.vae.generateFromSeed(draft_seed, 'german')
-    //       .then(suggestions => suggestions.map(suggestion => {
-    //         const treadlingSuggest = this.pfs.getTreadlingFromArr(suggestion);
-    //         const threadingSuggest = this.pfs.getThreadingFromArr(suggestion);
-    //         const pattern = this.pfs.computePatterns(threadingSuggest, treadlingSuggest, suggestion);
-    //         const draft:Draft = new Draft({warps: pattern[0].length, wefts: pattern.length});
-    //           for (var i = 0; i < pattern.length; i++) {
-    //             for (var j = 0; j < pattern[i].length; j++) {
-    //               draft.pattern[i][j].setHeddle((pattern[i][j] == 1 ? true : false));
-    //             }
-    //           }
-    //           this.transferSystemsAndShuttles(draft, inputs, params, 'first');
-    //           draft.gen_name = this.formatName(inputs, "germanify");
-    //         return draft;
-    //       })
-    //     );
-    //   }
-    // }  
-
-    // const crackleify: Operation = {
-    //     name: 'crackle-ify',
-    //     displayname: 'crackle-ify',
-    //     dx: 'uses ML to edit the input based on patterns in a german drafts weave set',
-    //     params: [
-    //       {name: 'output selection',
-    //       type: 'number',
-    //       min: 1,
-    //       max: 10,
-    //       value: 1,
-    //       dx: 'which pattern to select from the variations'
-    //       }
-    //     ],
-    //     max_inputs: 1,
-    //     perform: (inputs: Array<Draft>, params: Array<ParamValue>) => {
-    //       if (inputs.length === 0) return Promise.resolve([]);
-    //       const inputDraft = inputs[0]
-
-    //       const loom:Loom = new Loom(inputDraft, 8, 10);
-    //       loom.recomputeLoom(inputDraft);
-    //       let pattern = this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.pattern);
-        
-    //       const draft_seed =  utilInstance.patternToSize(pattern, 52, 52);
-    
-    //       return this.vae.generateFromSeed(draft_seed, 'crackle_weave')
-    //         .then(suggestions => suggestions.map(suggestion => {
-    //                 const treadlingSuggest = this.pfs.getTreadlingFromArr(suggestion);
-    //                 const threadingSuggest = this.pfs.getThreadingFromArr(suggestion);
-    //                 const pattern = this.pfs.computePatterns(threadingSuggest, treadlingSuggest, suggestion)
-    //                 const draft:Draft = new Draft({warps: pattern[0].length, wefts: pattern.length});
-    //                   for (var i = 0; i < pattern.length; i++) {
-    //                     for (var j = 0; j < pattern[i].length; j++) {
-    //                         draft.pattern[i][j].setHeddle((pattern[i][j] == 1 ? true : false));
-    //                     }
-    //                   }
-    //                   this.transferSystemsAndShuttles(draft, inputs, params, 'first');
-    //                   draft.gen_name = this.formatName(inputs, "crackleify");
-    //                 return draft
-                  
-    //               })
-    //             )
-    //       }
-    // }  
-        
-    // const makeloom: BranchOperation = {
-    //   name: 'floor loom',
-    //   displayname: 'floor loom',
-    //   dx: 'uses the input draft as drawdown and generates a threading, tieup and treadling pattern',
-    //   params: [],
-    //   max_inputs: 1,
-    //   perform: (input: Draft, params: Array<ParamValue>) => {
-    //     const l: Loom = new Loom(input, 8, 10);
-    //     l.recomputeLoom(input[0]);
-
-    //     const threading: Draft = new Draft({warps: input.warps, wefts: l.num_frames});
-    //     threading.gen_name = "threading_" + input.getName();
-
-    //     l.threading.forEach((frame, j) =>{
-    //       if (frame !== -1) threading.pattern[frame][j].setHeddle(true);
-    //     });
-
-    //     const treadling: Draft = new Draft({warps: l.num_treadles, wefts: input.wefts});
-    //     l.treadling.forEach((treadle_num, i) =>{
-    //       if (treadle_num !== -1) treadling.pattern[i][treadle_num].setHeddle(true);
-    //     });
-    //     treadling.gen_name = "treadling_" + input.getName();
-
-    //     const tieup: Draft = new Draft({warps: l.num_treadles, wefts: l.num_frames});
-    //     l.tieup.forEach((row, i) => {
-    //       row.forEach((val, j) => {
-    //         tieup.pattern[i][j].setHeddle(val);
-    //       })
-    //     });
-    //     tieup.gen_name = "tieup_" + input.getName();
-    //     return Promise.resolve([threading, tieup, treadling]);
-    //   }
-    // } 
-          
-    // const drawdown = this.makeOp(<MergeOperation = {
-    //   name: 'drawdown',
-    //   displayname: 'drawdown',
-    //   dx: 'create a drawdown from the input drafts (order 1. threading, 2. tieup, 3.treadling)',
-    //   params: [],
-    //   max_inputs: 3,
-    //   perform: (inputs: Array<Draft>) => {
-    //     let dd: Draft = new Draft({warps: 1, wefts: 1});
-
-    //     if (inputs.length < 3) return Promise.resolve(dd);
-
-    //     const threading: Array<number> = [];
-    //     for (let j = 0; j < inputs[0].warps; j++) {
-    //       const col: Array<Cell> = inputs[0].pattern.reduce((acc, row, ndx) => {
-    //         acc[ndx] = row[j];
-    //         return acc;
-    //       }, []);
-
-    //       threading[j] = col.findIndex(cell => cell.getHeddle());
-
-    //     }
-      
-    //     const treadling: Array<number> = inputs[2].pattern
-    //     .map(row => row.findIndex(cell => cell.getHeddle()));
-
-    //     const tieup = inputs[1].pattern.map(row => {
-    //       return row.map(cell => cell.getHeddle());
-    //     });
     const germanify: Operation = {
       name: 'gemanify',
       displayname: 'germanify',
@@ -6402,8 +1532,8 @@ export class OperationService {
                         }
                       }
   
-                      this.transferSystemsAndShuttles(draft,child_input.drafts,parent_input.params, 'first');
-                      draft.gen_name = this.formatName(child_input.drafts, "germanify");
+                      format.transferSystemsAndShuttles(draft,child_input.drafts,parent_input.params, 'first');
+                      draft.gen_name = format.formatName(child_input.drafts, "germanify");
                     return draft
                   
                   })
@@ -6414,77 +1544,77 @@ export class OperationService {
        
        
         }
-      }  
-      const crackleify: Operation = {
-        name: 'crackle-ify',
-        displayname: 'crackle-ify',
-        old_names:[],
-        dx: 'uses ML to edit the input based on patterns in a german drafts weave set',
-        params: <Array<NumParam>>[
-          {name: 'output selection',
-          type: 'number',
-          min: 1,
-          max: 10,
-          value: 1,
-          dx: 'which pattern to select from the variations'
-          }
-        ],
-        inlets: [{
-          name: 'draft', 
-          type: 'static',
-          value: null,
-          dx: 'the draft to craclify',
-          num_drafts: 1
-        }],
-        perform: (op_inputs: Array<OpInput>) => {
-          const parent_input = op_inputs.find(el => el.op_name === "crackle-ify");
-          const child_input= op_inputs.find(el => el.op_name === "child");
-          if(child_input === undefined) return Promise.resolve([]);
+    }  
 
-          if(child_input.drafts.length === 0) return Promise.resolve([]);
-          const inputDraft =child_input.drafts[0]
-
-          const loom_settings:LoomSettings = {
-            type: 'frame',
-            epi: 10, 
-            units: 'in',
-            frames: 8,
-            treadles: 10
-          }
-          const utils = getLoomUtilByType('frame');
-          return utils.computeLoomFromDrawdown(inputDraft.drawdown, loom_settings,  0).then(loom => {
-            let pattern = this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.drawdown);
-        
-            const draft_seed =  utilInstance.patternToSize(pattern, 52, 52);
-      
-            return this.vae.generateFromSeed(draft_seed, 'crackle_weave')
-              .then(suggestions => suggestions.map(suggestion => {
-               
-                const treadlingSuggest = this.pfs.getTreadlingFromArr(suggestion);
-                const threadingSuggest = this.pfs.getThreadingFromArr(suggestion);
-                const pattern = this.pfs.computePatterns(threadingSuggest, treadlingSuggest, suggestion)
-                const draft:Draft =initDraftWithParams({warps: pattern[0].length, wefts: pattern.length});
-                  for (var i = 0; i < pattern.length; i++) {
-                    for (var j = 0; j < pattern[i].length; j++) {
-                        draft.drawdown[i][j].setHeddle((pattern[i][j] == 1 ? true : false));
-                    }
-                  }
-                  // this.transferSystemsAndShuttles(draft,child_input.drafts,parent_input.params, 'first');
-                  // draft.gen_name = this.formatName(child_input.drafts, "crackleify");
-                return draft
-              }));
-                    
-               
-            });  
-        }
-      }  
-        
-        
-    const makeloom: Operation = {
-      name: 'floor loom',
-      displayname: 'shaft/treadle loom',
+    const crackleify: Operation = {
+      name: 'crackle-ify',
+      displayname: 'crackle-ify',
       old_names:[],
-      dx: 'uses the input draft as drawdown and generates a threading, tieup and treadling pattern',
+      dx: 'uses ML to edit the input based on patterns in a german drafts weave set',
+      params: <Array<NumParam>>[
+        {name: 'output selection',
+        type: 'number',
+        min: 1,
+        max: 10,
+        value: 1,
+        dx: 'which pattern to select from the variations'
+        }
+      ],
+      inlets: [{
+        name: 'draft', 
+        type: 'static',
+        value: null,
+        dx: 'the draft to craclify',
+        num_drafts: 1
+      }],
+      perform: (op_inputs: Array<OpInput>) => {
+        const parent_input = op_inputs.find(el => el.op_name === "crackle-ify");
+        const child_input= op_inputs.find(el => el.op_name === "child");
+        if(child_input === undefined) return Promise.resolve([]);
+
+        if(child_input.drafts.length === 0) return Promise.resolve([]);
+        const inputDraft =child_input.drafts[0]
+
+        const loom_settings:LoomSettings = {
+          type: 'frame',
+          epi: 10, 
+          units: 'in',
+          frames: 8,
+          treadles: 10
+        }
+        const utils = getLoomUtilByType('frame');
+        return utils.computeLoomFromDrawdown(inputDraft.drawdown, loom_settings,  0).then(loom => {
+          let pattern = this.pfs.computePatterns(loom.threading, loom.treadling, inputDraft.drawdown);
+      
+          const draft_seed =  utilInstance.patternToSize(pattern, 52, 52);
+    
+          return this.vae.generateFromSeed(draft_seed, 'crackle_weave')
+            .then(suggestions => suggestions.map(suggestion => {
+              
+              const treadlingSuggest = this.pfs.getTreadlingFromArr(suggestion);
+              const threadingSuggest = this.pfs.getThreadingFromArr(suggestion);
+              const pattern = this.pfs.computePatterns(threadingSuggest, treadlingSuggest, suggestion)
+              const draft:Draft =initDraftWithParams({warps: pattern[0].length, wefts: pattern.length});
+                for (var i = 0; i < pattern.length; i++) {
+                  for (var j = 0; j < pattern[i].length; j++) {
+                      draft.drawdown[i][j].setHeddle((pattern[i][j] == 1 ? true : false));
+                  }
+                }
+                // format.transferSystemsAndShuttles(draft,child_input.drafts,parent_input.params, 'first');
+                // draft.gen_name = format.formatName(child_input.drafts, "crackleify");
+              return draft
+            }));
+                  
+              
+          });  
+      }
+    }  
+      
+    const makedirectloom: Operation = {
+      name: 'direct loom',
+      displayname: 'generate direct tie loom threading and lift plan',
+      old_names:[],
+      dx: 'uses the input draft as drawdown and generates a threading and lift plan pattern',
       params: [],
       inlets: [{
         name: 'drawdown', 
@@ -6495,18 +1625,18 @@ export class OperationService {
       }],
       perform: (op_inputs: Array<OpInput>) => {
 
-        const parent_input = op_inputs.find(el => el.op_name === "floor loom");
+        const parent_input = op_inputs.find(el => el.op_name === "direct loom");
         const child_input= op_inputs.find(el => el.op_name === "child");
 
         if(child_input === undefined || child_input.drafts === undefined) return Promise.resolve([]);
 
       
         const loom_settings:LoomSettings = {
-          type: 'frame',
+          type: 'direct',
           epi: 10, 
           units: 'in',
           frames: 8,
-          treadles: 10
+          treadles: 8
         }
         const utils = getLoomUtilByType(loom_settings.type);
         return utils.computeLoomFromDrawdown(child_input.drafts[0].drawdown, loom_settings, this.ws.selected_origin_option)
@@ -6514,7 +1644,7 @@ export class OperationService {
 
           const frames = Math.max(numFrames(l), loom_settings.frames);
           const treadles = Math.max(numTreadles(l), loom_settings.treadles);
-       
+        
           const threading: Draft =initDraftWithParams({warps:warps(child_input.drafts[0].drawdown), wefts: frames});
         l.threading.forEach((frame, j) =>{
           if(frame !== -1) threading.drawdown[frame][j].setHeddle(true);
@@ -6546,11 +1676,71 @@ export class OperationService {
       }
 
 
+    }   
+
+    const makeloom: Operation = {
+      name: 'floor loom',
+      displayname: 'generate floor loom threading and treadling',
+      old_names:[],
+      dx: 'uses the input draft as drawdown and generates a threading, tieup and treadling pattern',
+      params: [],
+      inlets: [{
+        name: 'drawdown', 
+        type: 'static',
+        value: null,
+        dx: 'the drawdown from which to create threading, tieup and treadling data from',
+        num_drafts: 1
+      }],
+      perform: (op_inputs: Array<OpInput>) => {
+
+        const parent_input = op_inputs.find(el => el.op_name === "floor loom");
+        const child_input= op_inputs.find(el => el.op_name === "child");
+
+        if(child_input === undefined || child_input.drafts === undefined) return Promise.resolve([]);
+
+        const loom_settings:LoomSettings = {
+          type: 'frame',
+          epi: 10, 
+          units: 'in',
+          frames: 8,
+          treadles: 10
+        }
+        const utils = getLoomUtilByType(loom_settings.type);
+        return utils.computeLoomFromDrawdown(child_input.drafts[0].drawdown, loom_settings, this.ws.selected_origin_option)
+        .then(l => {
+
+          const frames = Math.max(numFrames(l), loom_settings.frames);
+          const treadles = Math.max(numTreadles(l), loom_settings.treadles);
+       
+          const threading: Draft =initDraftWithParams({warps:warps(child_input.drafts[0].drawdown), wefts: frames});
+        l.threading.forEach((frame, j) =>{
+          if(frame !== -1) threading.drawdown[frame][j].setHeddle(true);
+        });
+        threading.gen_name = "threading"+getDraftName(child_input.drafts[0]);
+
+        const treadling: Draft =initDraftWithParams({warps:treadles, wefts:wefts(child_input.drafts[0].drawdown)});   
+        l.treadling.forEach((treadle_row, i) =>{
+          treadle_row.forEach(treadle_num => {
+            treadling.drawdown[i][treadle_num].setHeddle(true);
+          })
+        });
+        treadling.gen_name = "treadling_"+getDraftName(child_input.drafts[0]);
+
+        const tieup: Draft =initDraftWithParams({warps: treadles, wefts: frames});
+        l.tieup.forEach((row, i) => {
+          row.forEach((val, j) => {
+            tieup.drawdown[i][j].setHeddle(val);
+          })
+        });
+        tieup.gen_name = "tieup_"+getDraftName(child_input.drafts[0]);
+        return Promise.resolve([threading, tieup, treadling]);
+        });
+      }
     }
 
     const drawdown: Operation = {
       name: 'drawdown',
-      displayname: 'drawdown',
+      displayname: 'make drawdown from threading, tieup, and treadling',
       old_names:[],
       dx: 'create a drawdown from the input drafts (order 1. threading, 2. tieup, 3.treadling)',
       params: [
@@ -6592,11 +1782,10 @@ export class OperationService {
           || tieup_inlet === undefined
           || treadling_inlet == undefined) return Promise.resolve([]);
   
-        const threading_draft = treadling_inlet.drafts[0];
+        const threading_draft = threading_inlet.drafts[0];
         const tieup_draft = tieup_inlet.drafts[0];
         const treadling_draft = treadling_inlet.drafts[0];
-  
-        
+     
         const threading: Array<number> = [];
         for(let j = 0; j < warps(threading_draft.drawdown); j++){
           const col: Array<Cell> = threading_draft.drawdown.reduce((acc, row, ndx) => {
@@ -6615,6 +1804,7 @@ export class OperationService {
           return row.map(cell => cell.getHeddle());
         });
   
+        console.log(threading_draft, treadling_draft)
         const draft: Draft = initDraftWithParams({warps:warps(threading_draft.drawdown), wefts:wefts(treadling_draft.drawdown)});
         const utils = getLoomUtilByType('frame');
         const loom = {
@@ -6625,16 +1815,82 @@ export class OperationService {
         return utils.computeDrawdownFromLoom(loom, 0).then(drawdown => {
           draft.drawdown = drawdown;
           return Promise.resolve([draft]);
-
-        })
-       
-  
-        }
-  
-  
-  
+        });
       }
-
+    }
+      
+    const directdrawdown: Operation = {
+      name: 'directdrawdown',
+      displayname: 'make drawdown from threading and lift plan',
+      old_names:[],
+      dx: 'create a drawdown from the input drafts (order 1. threading, 2. tieup, 3.lift plan)',
+      params: [],
+      inlets: [{
+        name: 'threading', 
+        type: 'static',
+        value: null,
+        dx: 'the draft to use as threading',
+        num_drafts: 1
+      }, {
+        name: 'tieup', 
+        type: 'static',
+        value: null,
+        dx: 'the draft to use as tieup',
+        num_drafts: 1
+      },
+      {
+        name: 'lift plan', 
+        type: 'static',
+        value: null,
+        dx: 'the draft to use as the lift plan',
+        num_drafts: 1
+      }],
+      perform: (op_inputs: Array<OpInput>) => {
+  
+        const parent_input = op_inputs.find(el => el.op_name === "directdrawdown");
+        const child_input= op_inputs.find(el => el.op_name === "child");
+        const threading_inlet = op_inputs.find(el => el.inlet === 0);
+        const tieup_inlet = op_inputs.find(el => el.inlet === 1);
+        const treadling_inlet = op_inputs.find(el => el.inlet === 2);
+    
+        if(child_input === undefined 
+          || threading_inlet === undefined
+          || tieup_inlet === undefined
+          || treadling_inlet == undefined) return Promise.resolve([]);
+  
+        const threading_draft = threading_inlet.drafts[0];
+        const tieup_draft = tieup_inlet.drafts[0];
+        const treadling_draft = treadling_inlet.drafts[0];
+          
+        const threading: Array<number> = [];
+        for(let j = 0; j < warps(threading_draft.drawdown); j++){
+          const col: Array<Cell> = threading_draft.drawdown.reduce((acc, row, ndx) => {
+            acc[ndx] = row[j];
+            return acc;
+          }, []);
+          threading[j] = col.findIndex(cell => cell.getHeddle());
+        }
+        
+        const treadling: Array<Array<number>> =treadling_draft.drawdown
+        .map(row => [row.findIndex(cell => cell.getHeddle())]);
+    
+        const tieup =tieup_draft.drawdown.map(row => {
+          return row.map(cell => cell.getHeddle());
+        });
+    
+        const draft: Draft = initDraftWithParams({warps:warps(threading_draft.drawdown), wefts:wefts(treadling_draft.drawdown)});
+        const utils = getLoomUtilByType('frame');
+        const loom = {
+          threading: threading,
+          tieup: tieup,
+          treadling:treadling
+        }
+        return utils.computeDrawdownFromLoom(loom, 0).then(drawdown => {
+          draft.drawdown = drawdown;
+          return Promise.resolve([draft]);
+        });   
+      }
+    }
 
     const combinatorics: Operation = {
       name: 'combos',
@@ -6716,33 +1972,115 @@ export class OperationService {
               a.download = "allvalid_"+size+"x"+size+"_drafts_"+set_id+".jpg";
               a.click();
             }
-
-          }
-
-          
+          }      
           return Promise.resolve([this.combos.getDraft(show).draft]);
-
-        })
-        
-
-       
-      
-  
-    
+        })     
       }
-  
-  
-  
     }
 
-    
-    
+    const sinewave: Operation = {
+      name: 'sine',
+      displayname: 'sine wave sample', 
+      old_names:[], 
+      dx: 'samples a sin wave at a rate accordinging to the interval, and stretches it to the size of amplitude',
+      params: <Array<NumParam>>[
+        {name: 'ends',
+        type: 'number',
+        min: 1,
+        max: 10000,
+        value: 100,
+        dx: "the total ends of the draft"
+        },
+        {name: 'amplitude',
+        type: 'number',
+        min: 0,
+        max: 10000,
+        value: 20,
+        dx: "the total number of pics for the sin wave to move through"
+        },
+        {name: 'frequency',
+        type: 'number',
+        min: 0,
+        max: 10000,
+        value: 1,
+        dx: "controls number of waves to include "
+        }
+      ],
+      inlets: [],
+      perform: (op_inputs: Array<OpInput>) => {
+        const parent_input = op_inputs.find(el => el.op_name == 'sine');
+        const child_input = op_inputs.find(el => el.op_name == 'child');
+        const warpnum =  parent_input.params[0];
+        const amps =  parent_input.params[1];
+        const inc =  parent_input.params[2];
+        console.log(parent_input);
+       
 
-    //     dd = new Draft({warps:inputs[0].warps, wefts:inputs[2].wefts});
-    //     dd.recalculateDraft(tieup, treadling, threading);
-    //     return Promise.resolve(dd);
-    //   }
-    // }
+        //initialize the base container with the first draft at 0,0, unset for anythign wider
+        const draft: Draft =initDraftWithParams({warps: warpnum, wefts:amps});
+          
+        for(let j = 0; j < warps(draft.drawdown); j++){
+          let i = Math.floor((amps/2)*Math.sin(j * inc) + (amps/2));
+          draft.drawdown[i][j].setHeddle(true);
+        }
+      
+        return Promise.resolve([draft]);
+      }        
+    }
+
+    const sawtooth: Operation = {
+      name: 'sawtooth',
+      displayname: 'sawtooth', 
+      old_names:[], 
+      dx: 'samples a sin wave at a rate accordinging to the interval, and stretches it to the size of amplitude',
+      params: <Array<NumParam>>[
+        {name: 'ends',
+        type: 'number',
+        min: 1,
+        max: 10000,
+        value: 100,
+        dx: "the total ends of the draft"
+        },
+        {name: 'pics',
+        type: 'number',
+        min: 0,
+        max: 10000,
+        value: 20,
+        dx: "the total number of pics for the saw path to move through"
+        },
+        {name: 'segments',
+        type: 'number',
+        min: 0,
+        max: 10000,
+        value: 1,
+        dx: "the total number of segments, each segment represents one half of the saw tooth's path "
+        }
+      ],
+      inlets: [],
+      perform: (op_inputs: Array<OpInput>) => {
+        const parent_input = op_inputs.find(el => el.op_name == 'sawtooth');
+        const child_input = op_inputs.find(el => el.op_name == 'child');
+        const warpnum =  parent_input.params[0];
+        const pics =  parent_input.params[1];
+        const peaks =  parent_input.params[2];
+       
+
+        //initialize the base container with the first draft at 0,0, unset for anythign wider
+        const draft: Draft =initDraftWithParams({warps: warpnum, wefts:pics});
+        const run = (warpnum/peaks);
+        const slope = pics /run;
+
+          
+        for(let j = 0; j < warps(draft.drawdown); j++){
+          let x = j % Math.floor(run*2);
+          let i = Math.floor(slope * x);
+          if(i < pics)  draft.drawdown[i][j].setHeddle(true);
+          else draft.drawdown[(pics-1)-(i-pics)][j].setHeddle(true);
+        }
+      
+        return Promise.resolve([draft]);
+      }        
+    }
 
     this.dynamic_ops.push(assignlayers);
     this.dynamic_ops.push(dynamic_join_left);
@@ -6751,229 +2089,101 @@ export class OperationService {
     this.dynamic_ops.push(warp_profile);
     this.dynamic_ops.push(sample_width);
 
-
-    // const opsList = this.ops;
     //**push operations that you want the UI to show as options here */
-    this.ops.push(rect);
-    this.ops.push(twill);
-    this.ops.push(complextwill);
-    this.ops.push(waffle);
-    this.ops.push(satin);
-    this.ops.push(shaded_satin);
-    this.ops.push(tabby);
-    this.ops.push(tabby_der);
-    this.ops.push(rib);
-    this.ops.push(random);
-    this.ops.push(interlace);
     this.ops.push(splicein);
     this.ops.push(spliceinwarps);
     this.ops.push(assignwefts);
     this.ops.push(assignwarps);
-    this.ops.push(invert);
     this.ops.push(vertcut);
-   this.ops.push(replicate);
-    this.ops.push(flipx);
-    this.ops.push(flipy);
-    this.ops.push(shiftx);
-    this.ops.push(shifty);
-    this.ops.push(layer);
-    this.ops.push(selvedge);
-    // this.ops.push(bindweftfloats);
-    // this.ops.push(bindwarpfloats);
-    this.ops.push(joinleft);
-    this.ops.push(jointop);
-    this.ops.push(slope);
-    this.ops.push(tile);
-    this.ops.push(chaos);
-    this.ops.push(stretch);
-    this.ops.push(resize);
-    this.ops.push(margin);
-    this.ops.push(clear);
-    this.ops.push(set);
-    this.ops.push(unset);
-    this.ops.push(rotate);
-    this.ops.push(makesymmetric);
-    this.ops.push(fill);
-    this.ops.push(overlay);
-    this.ops.push(atop);
-    this.ops.push(mask);
     this.ops.push(germanify);
     this.ops.push(crackleify);
-    //this.ops.push(variants);
-    this.ops.push(knockout);
-    this.ops.push(crop);
-    this.ops.push(trim);
     this.ops.push(makeloom);
     this.ops.push(drawdown);
-    this.ops.push(erase_blank);
-    this.ops.push(apply_mats);
     this.ops.push(combinatorics);
-
-    // //**push operations that you want the UI to show as options here */
-    // function pushOp(op: ServiceOp): void {
-    //   opsList.push(op);
-    // }
-
-    // pushOp(rect);
-    // pushOp(twill);
-    // pushOp(complextwill);
-    // pushOp(waffle);
-    // pushOp(satin);
-    // pushOp(tabby);
-    // pushOp(basket);
-    // pushOp(rib);
-    // pushOp(random);
-    // pushOp(interlace);
-    // pushOp(splicein);
-    // pushOp(assignwefts);
-    // pushOp(assignwarps);
-    // pushOp(invert);
-    // pushOp(vertcut);
-    // pushOp(replicate);
-    // pushOp(flipx);
-    // pushOp(flipy);
-    // pushOp(shiftx);
-    // pushOp(shifty);
-    // // pushOp(layer);
-    // pushOp(selvedge);
-    // pushOp(bindweftfloats);
-    // pushOp(bindwarpfloats);
-    // pushOp(joinleft);
-    // pushOp(jointop);
-    // pushOp(slope);
-    // pushOp(tile);
-    // pushOp(stretch); 
-    // pushOp(resize);
-    // pushOp(margin);
-    // pushOp(clear);
-    // pushOp(set);
-    // pushOp(unset);
-    // pushOp(rotate);
-    // pushOp(makesymmetric);
-    // pushOp(fill);
-    // pushOp(overlay);
-    // pushOp(atop);
-    // pushOp(mask);
-    // // pushOp(germanify);
-    // // pushOp(crackleify);
-    // // pushOp(variants);
-    // pushOp(knockout);
-    // pushOp(crop);
-    // pushOp(trim);
-    // // pushOp(makeloom);
-    // // pushOp(drawdown);
-    // pushOp(warp_rep);
-    // pushOp(erase_blank);
-    // pushOp(apply_mats);
-
+    this.ops.push(sinewave);
+    this.ops.push(sawtooth);
     // console.log(this.ops);
 
     //** Give it a classification here */
     this.classification.push(
       {category: 'structure',
       dx: "0-1 input, 1 output, algorithmically generates weave structures based on parameters",
-      ops: [tabby, twill, satin, basket, rib, waffle, complextwill, random]
-      });
       ops: [tabby_der, twill, satin, shaded_satin, waffle, complextwill, random, combinatorics]}
     );
 
     this.classification.push(
       {category: 'block design',
       dx: "1 input, 1 output, describes the arragements of regions in a weave. Fills region with input draft",
-      ops: [rect, crop, trim, margin, tile]
-      });
+      ops: [rect, crop, trim, margin, tile, chaos, warp_profile, sample_width]
+    });
 
-      ops: [rect, crop, trim, margin, tile, chaos, warp_profile]
-    }
-    );
     this.classification.push(
       {category: 'transformations',
       dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
-      ops: [invert, flipx, flipy, shiftx, shifty, rotate, makesymmetric, slope, stretch, resize, clear, set, unset]
-    });
+      ops: [invert, flipx, flipy, shiftx, shifty, rotate, makesymmetric, slope, stretch, resize, clear, set, unset]}
+      );
 
     this.classification.push(
         {category: 'combine',
         dx: "2 inputs, 1 output, operations take more than one input and integrate them into a single draft in some way",
-        ops: [imagemap, interlace, splicein, assignlayers, fill, joinleft, dynamic_join_left, jointop] // layer
-      });
         ops: [imagemap, interlace, splicein, spliceinwarps, assignlayers, layer, layernotation,  fill, joinleft, dynamic_join_left, jointop]}
         );
     
      this.classification.push(
           {category: 'binary',
-          dx: "2 inputs, 1 output, operations take two op_input.drafts and perform binary operations on the interlacements",
-          ops: [atop, overlay, mask, knockout]
-        });
+          dx: "2 inputs, 1 output, operations take two inputs and perform binary operations on the interlacements",
+          ops: [atop, overlay, mask, knockout]}
+          );
     
+      this.classification.push(
+        {category: 'math',
+        dx: "0 or more inputs, 1 output, generates drafts from mathmatical functions",
+        ops: [sinewave, sawtooth]}
+        );
+      
+
       this.classification.push(
         {category: 'helper',
         dx: "variable inputs, variable outputs, supports common drafting requirements to ensure good woven structure",
-        ops: [selvedge]//[selvedge, variants]
-      });
-            {category: 'helper',
-            dx: "variable inputs, variable outputs, supports common drafting requirements to ensure good woven structure",
-            ops: [selvedge]}
-            );
+        ops: [selvedge, bindweftfloats, bindwarpfloats]}
+        );
 
 
       this.classification.push(
         {category: 'machine learning',
         dx: "1 input, 1 output, experimental functions that attempt to apply a style from one genre of weaving to your draft. Currently, we have trained models on German Weave Drafts and Crackle Weave Drafts ",
-        ops: []//[germanify, crackleify]
-      });
+        ops: [germanify, crackleify]}
+      );
 
       this.classification.push(
         {category: 'jacquard',
         dx: "1 input, 1 output, functions designed specifically for working with jacquard-style drafting",
-        ops: [assignwarps, assignwefts, erase_blank]
-      });
-
-    // this.classification.push(
-    //   {category: 'frame loom support',
-    //   dx: "variable input drafts, variable outputs, offer specific supports for working with frame looms",
-    //   ops: [makeloom, drawdown]}
-    // );
+        ops: [assignwarps, assignwefts, erase_blank]}
+      );
 
     this.classification.push(
-      {category: 'aesthetics',
+      {category: 'frame loom support',
+      dx: "variable input drafts, variable outputs, offer specific supports for working with frame looms",
+      ops: [makeloom, makedirectloom, drawdown, directdrawdown]}
+    );
+
+    this.classification.push(
+      {category: 'color effects',
       dx: "2 inputs, 1 output: applys pattern information from second draft onto the first. To be used for specifiying color repeats",
       ops: [apply_mats]}
     );
   }
 
-  /**
+
+ /**
    * transfers data about systems and shuttles from input drafts to output drafts. 
    * @param d the output draft
    * @param op_input.drafts the input drafts
    * @param type how to handle the transfer (first - use the first input data, interlace, layer)
    * @returns 
    */
-  transferSystemsAndShuttles(d: Draft, input: Array<Draft> | Draft, type: string) {
-
-    // let drafts: Array<Draft>;
-    // if (typeof input === typeof Draft) {
-    //   drafts = [<Draft> input];
-    // } else {
-    //   drafts = <Array<Draft>> input;
-    // }
-    // if ( drafts.length === 0 ) return;
-
-    // switch(type) {
-    //   case 'first':
-    //     //if there are multipleop_input.drafts, 
-
-    //     d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
-    //     d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
-    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
-    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
-    //   break;
-   * @param drafts the input drafts
-   * @param type how to handle the transfer (first - use the first input data, interlace, layer)
-   * @returns 
-   */
-  transferSystemsAndShuttles(d: Draft, drafts:Array<Draft>,params: any, type: string){
-    if(drafts.length === 0) return;
+  transferSystemsAndShuttles(d: Draft, drafts: Array<Draft>, params: any, type: string){
+    if (drafts.length === 0) return;
 
     let rowSystems: Array<Array<number>> =[];
     let colSystems: Array<Array<number>> =[];
@@ -6986,84 +2196,41 @@ export class OperationService {
     let standardShuttleCols: Array<Array<number>> = [];
 
 
-    switch(type){
+    switch (type) {
       case 'first':
-
-        //if there are multipleop_input.drafts, 
+        // if there are multiple op_input.drafts, 
         d.colShuttleMapping =  generateMappingFromPattern(d.drawdown, drafts[0].colShuttleMapping,'col', 3);
         d.rowShuttleMapping =  generateMappingFromPattern(d.drawdown, drafts[0].rowShuttleMapping,'row', 3);
         d.colSystemMapping =  generateMappingFromPattern(d.drawdown, drafts[0].colSystemMapping,'col', 3);
         d.rowSystemMapping =  generateMappingFromPattern(d.drawdown, drafts[0].rowSystemMapping,'row', 3);
         
         break;
+
       case 'jointop':
+        // if there are multipleop_input.drafts, 
+        d.colShuttleMapping = generateMappingFromPattern(d.drawdown, drafts[0].colShuttleMapping, 'col', 3);
+        d.colSystemMapping = generateMappingFromPattern(d.drawdown, drafts[0].colSystemMapping, 'col', 3);
 
-    //   case 'jointop':
+        break;
 
-    //     //if there are multipleop_input.drafts, 
-
-    //     d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
-    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
-
-    //   break;
-
-    //   case 'joinleft':
-    //     //if there are multipleop_input.drafts, 
-    //     d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
-    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
-  
-    //   break;
-          d.colShuttleMapping =  generateMappingFromPattern(d.drawdown, drafts[0].colShuttleMapping,'col', 3);
-          d.colSystemMapping =  generateMappingFromPattern(d.drawdown, drafts[0].colSystemMapping,'col', 3);
-
-    //   case 'second':
-    //     const input_to_use = (drafts.length < 2) ?drafts[0] :drafts[1];
-    //     d.updateWarpShuttlesFromPattern(input_to_use.colShuttleMapping);
-    //     d.updateWeftShuttlesFromPattern(input_to_use.rowShuttleMapping);
-    //     d.updateWarpSystemsFromPattern(input_to_use.colSystemMapping);
-    //     d.updateWeftSystemsFromPattern(input_to_use.rowSystemMapping);
-    //   break;
-
-    //   case 'materialsonly':
-    //     d.updateWarpShuttlesFromPattern(drafts[1].colShuttleMapping);
-    //     d.updateWeftShuttlesFromPattern(drafts[1].rowShuttleMapping);
-    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
-    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
-    //   break;
-
-    //   case 'interlace':
-    //   case 'layer':
-    //     const rowSystems: Array<Array<number>> = drafts.map(el => el.rowSystemMapping);
-    //     const colSystems: Array<Array<number>> = drafts.map(el => el.colSystemMapping);
-    //     const uniqueSystemRows: Array<Array<number>> = this.ss.makeWeftSystemsUnique(rowSystems);
-    //     const uniqueSystemCols: Array<Array<number>> = this.ss.makeWarpSystemsUnique(colSystems);
-    
-    //     const rowShuttles: Array<Array<number>> = drafts.map(el => el.rowShuttleMapping);
-    //     const colShuttles: Array<Array<number>> = drafts.map(el => el.colShuttleMapping);
-    //     const standardShuttleRows: Array<Array<number>> = this.ms.standardizeLists(rowShuttles);
-    //     const standardShuttleCols: Array<Array<number>> = this.ms.standardizeLists(colShuttles);
-
-    //     d.pattern.forEach((row, ndx) => {
-
-    //       const select_array: number = ndx % drafts.length; 
-    //       const select_row: number = Math.floor(ndx / drafts.length);
-        
-    //       d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
-    //       d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
       case 'joinleft':
-          //if there are multipleop_input.drafts, 
-          d.rowShuttleMapping =  generateMappingFromPattern(d.drawdown, drafts[0].rowShuttleMapping,'row', 3);
-          d.rowSystemMapping =  generateMappingFromPattern(d.drawdown, drafts[0].rowSystemMapping,'row', 3);
+        //if there are multiple op_input.drafts, 
+        d.rowShuttleMapping =  generateMappingFromPattern(d.drawdown, drafts[0].rowShuttleMapping,'row', 3);
+        d.rowSystemMapping =  generateMappingFromPattern(d.drawdown, drafts[0].rowSystemMapping,'row', 3);
 
-            break;
+        break;
+
       case 'second':
-          const input_to_use = (drafts.length < 2) ?drafts[0] :drafts[1];
-          d.colShuttleMapping =  generateMappingFromPattern(d.drawdown, input_to_use.colShuttleMapping,'col',3);
-          d.rowShuttleMapping =  generateMappingFromPattern(d.drawdown, input_to_use.rowShuttleMapping,'row',3);
-          d.colSystemMapping =  generateMappingFromPattern(d.drawdown, input_to_use.colSystemMapping,'col',3);
-          d.rowSystemMapping =  generateMappingFromPattern(d.drawdown, input_to_use.rowSystemMapping,'row',3);
-         
 
+        const input_to_use = (drafts.length < 2) ? drafts[0] : drafts[1];
+
+        d.colShuttleMapping =  generateMappingFromPattern(d.drawdown, input_to_use.colShuttleMapping,'col',3);
+        d.rowShuttleMapping =  generateMappingFromPattern(d.drawdown, input_to_use.rowShuttleMapping,'row',3);
+        d.colSystemMapping =  generateMappingFromPattern(d.drawdown, input_to_use.colSystemMapping,'col',3);
+        d.rowSystemMapping =  generateMappingFromPattern(d.drawdown, input_to_use.rowSystemMapping,'row',3);
+
+        break;
+        
       case 'materialsonly':
 
         d.colShuttleMapping =  generateMappingFromPattern(d.drawdown, drafts[1].colShuttleMapping,'col',3);
@@ -7073,245 +2240,102 @@ export class OperationService {
        
         break;
 
-    case 'interlace':
-         rowSystems =drafts.map(el => el.rowSystemMapping);
-         uniqueSystemRows = this.ss.makeWeftSystemsUnique(rowSystems);
-    
-         rowShuttles =drafts.map(el => el.rowShuttleMapping);
-         standardShuttleRows = this.ms.standardizeLists(rowShuttles);
+      case 'interlace':
+        rowSystems =drafts.map(el => el.rowSystemMapping);
+        uniqueSystemRows = this.ss.makeWeftSystemsUnique(rowSystems);
+
+        rowShuttles =drafts.map(el => el.rowShuttleMapping);
+        standardShuttleRows = this.ms.standardizeLists(rowShuttles);
 
         d.drawdown.forEach((row, ndx) => {
 
-          const select_array: number = ndx %drafts.length; 
-          const select_row: number = Math.floor(ndx /drafts.length)%wefts(drafts[select_array].drawdown);
+          const select_array: number = ndx % drafts.length; 
+          const select_row: number = Math.floor(ndx / drafts.length) % wefts(drafts[select_array].drawdown);
           d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
           d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
 
-    //     });
-
-    //     if (type === 'interlace') {
-    //       d.colShuttleMapping = standardShuttleCols.shift();
-    //       d.colSystemMapping = uniqueSystemCols.shift();
-    //     } else {
-    //       for (let i = 0; i < d.wefts; i++) {
-    //         const select_array: number = i % drafts.length; 
-    //         const select_col: number = Math.floor(i / drafts.length);
-    //         d.colSystemMapping[i] = uniqueSystemCols[select_array][select_col];
-    //         d.colShuttleMapping[i] = standardShuttleCols[select_array][select_col];
-    //       }
-    //       d.pattern.forEach((row, ndx) => {
-    //         const select_array: number = ndx % drafts.length; 
-    //         const select_row: number = Math.floor(ndx / drafts.length);
-            
-    //         d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
-    //         d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
-    //       });
-    //     }
-    //   break;
-
-    //   case 'stretch':
-    //     d.updateWarpShuttlesFromPattern(drafts[0].colShuttleMapping);
-    //     d.updateWeftShuttlesFromPattern(drafts[0].rowShuttleMapping);
-    //     d.updateWarpSystemsFromPattern(drafts[0].colSystemMapping);
-    //     d.updateWeftSystemsFromPattern(drafts[0].rowSystemMapping);
-    //     //need to determine how to handle this - should it stretch the existing information or copy it over
-    //   break;
-    // }
-  
-  
+        });
      
-      break;
+        break;
 
+      case 'layer':
+        rowSystems=drafts.map(el => el.rowSystemMapping);
+        colSystems =drafts.map(el => el.colSystemMapping);
+        uniqueSystemRows = this.ss.makeWeftSystemsUnique(rowSystems);
+        uniqueSystemCols= this.ss.makeWarpSystemsUnique(colSystems);
+  
+        rowShuttles = drafts.map(el => el.rowShuttleMapping);
+        colShuttles = drafts.map(el => el.colShuttleMapping);
+        standardShuttleRows = this.ms.standardizeLists(rowShuttles);
+        standardShuttleCols = this.ms.standardizeLists(colShuttles);
+  
+        d.drawdown.forEach((row, ndx) => {
+  
+          const select_array: number = ndx %drafts.length; 
+          const select_row: number = Math.floor(ndx /drafts.length)%wefts(drafts[select_array].drawdown);
+        
+          d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
+          d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
 
-        case 'layer':
-           rowSystems=drafts.map(el => el.rowSystemMapping);
-           colSystems =drafts.map(el => el.colSystemMapping);
-           uniqueSystemRows = this.ss.makeWeftSystemsUnique(rowSystems);
-           uniqueSystemCols= this.ss.makeWarpSystemsUnique(colSystems);
-      
-           rowShuttles =drafts.map(el => el.rowShuttleMapping);
-           colShuttles =drafts.map(el => el.colShuttleMapping);
-           standardShuttleRows = this.ms.standardizeLists(rowShuttles);
-           standardShuttleCols = this.ms.standardizeLists(colShuttles);
+        });
   
-          d.drawdown.forEach((row, ndx) => {
-  
-            const select_array: number = ndx %drafts.length; 
-            const select_row: number = Math.floor(ndx /drafts.length)%wefts(drafts[select_array].drawdown);
-          
-            d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];
-            d.rowShuttleMapping[ndx] = standardShuttleRows[select_array][select_row];
-  
-          });
-  
-  
-        for(let i = 0; i < wefts(d.drawdown); i++){
-          const select_array: number = i %drafts.length; 
-          const select_col: number = Math.floor(i /drafts.length)%warps(drafts[select_array].drawdown);
+        for (let i = 0; i < wefts(d.drawdown); i++) {
+          const select_array: number = i % drafts.length; 
+          const select_col: number = Math.floor(i /drafts.length) % warps(drafts[select_array].drawdown);
           d.colSystemMapping[i] = uniqueSystemCols[select_array][select_col];
           d.colShuttleMapping[i] = standardShuttleCols[select_array][select_col];
-
-        }
-
-
-
-  
-          
+        }     
        
         break;
   
-
       case 'stretch':
-        d.colShuttleMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].colShuttleMapping,'col', 3);
-        d.rowShuttleMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].rowShuttleMapping,'row', 3);
-        d.colSystemMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].colSystemMapping,'col', 3);
-        d.rowSystemMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].rowSystemMapping,'row', 3);
-        
-        //need to determine how to handle this - should it stretch the existing information or copy it over
-      break;
-
-      
-                
+          d.colShuttleMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].colShuttleMapping,'col', 3);
+          d.rowShuttleMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].rowShuttleMapping,'row', 3);
+          d.colSystemMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].colSystemMapping,'col', 3);
+          d.rowSystemMapping =  generateMappingFromPattern(drafts[0].drawdown, drafts[0].rowSystemMapping,'row', 3);
+          
+          //need to determine how to handle this - should it stretch the existing information or copy it over
+      break; 
     }
-
-
-
-
   }
 
-  formatName(input: Array<Draft> | Draft, op_name: string) : string{
-    // let drafts: Array<Draft>;
-    // if (typeof input === typeof Draft) {
-    //   drafts = [<Draft> input];
-    // } else {
-    //   drafts = <Array<Draft>> input;
-    // }
-
-    // let combined: string = "";
-
-    // if (drafts.length == 0) {
-    //   combined = op_name;
-    // } else {
-    //   combined = drafts.reduce((acc, el) => {
-    //     return acc + "+" + el.getName();
-    //   }, "");
-    //   combined = op_name + "(" + combined.substring(1) + ")";
-    // }
-
-    return op_name;
-      combined =drafts.reduce((acc, el) => {
-        return acc+"+"+getDraftName(el);
+  formatName(drafts: Array<Draft>, op_name: string) : string {
+    let combined: string = "";
+    if (drafts.length == 0) {
+      combined = op_name;
+    } else {
+      combined = drafts.reduce((acc, el) => {
+        return acc + "+" + getDraftName(el);
       }, "");
-      combined = op_name+"("+combined.substring(1)+")";
-    }
 
+      combined = op_name + "(" + combined.substring(1) + ")";
+    }
     return combined;
   }
 
-  isDynamic(name: string) : boolean{
+  isDynamic(name: string) : boolean {
     const parent_ndx: number = this.dynamic_ops.findIndex(el => el.name === name);
     if (parent_ndx == -1) return false;
     return true;
   }
 
-  makeOp(op: TopologyOperation): ServiceOp {
-    let service_op_perform: ServiceOp["perform"];
-   drawCell(cx, draft, cell_size, i, j, top,  left){
+  drawCell(cx, draft, cell_size, i, j, top,  left){
     let is_up = isUp(draft.drawdown, i, j);
     let color = "#ffffff"
    
-    if(is_up){
+    if (is_up) {
       color = '#000000';
-    }else{
+    } else{
       color = '#ffffff';
     }
     cx.fillStyle = color;
     cx.strokeStyle = '#000000';
 
- 
-
     //hack, draw upside down to account for later flip
-    i = (wefts(draft.drawdown)-1) - i;
+    i = (wefts(draft.drawdown) - 1) - i;
 
     cx.strokeRect(left+j*cell_size, top+i*cell_size, cell_size, cell_size);
     cx.fillRect(left+j*cell_size, top+i*cell_size, cell_size, cell_size);
-  }
-
-
-    // check what type of op, topologically with I/O (seed, pipe, merge, branch, bus, dynamic)
-      // convert perform args to Array<OpInput>
-    // check for special case of args (no drafts, no params, everything else is ok)
-      // only seed -> no drafts, everything else
-      // pipe/merge/branch/bus -> no params, everything else
-    // check if there is a param or draft in op_inputs[0] to put into an optional arg
-    if (op.classifier.type === 'seed') {
-      if (op.classifier.input_drafts === 'none') {
-        let seedOp = op as Op<Seed, NoDrafts>;
-        service_op_perform = (op_inputs: Array<OpInput>) => {
-          return Promise.resolve([seedOp.perform(op_inputs[0].params)]);
-        }
-      } else {
-        let seedOp = op as Op<Seed, DraftsOptional>;
-        service_op_perform = (op_inputs: Array<OpInput>) => {
-          if (op_inputs[0].drafts.length > 0) {
-            return Promise.resolve([seedOp.perform(op_inputs[0].params, op_inputs[0].drafts[0])]);
-          } else {
-            return Promise.resolve([seedOp.perform(op_inputs[0].params)]);
-          }
-        }
-      }
-    } else if (op.classifier.type === 'pipe') {
-      // let pipeOp;
-      if (op.classifier.input_params === 'none') {
-        let pipeOp = op as Op<Pipe,NoParams> ;
-        service_op_perform = (op_inputs: Array<OpInput>) => {
-          return Promise.resolve([pipeOp.perform(op_inputs[0].drafts[0])]);
-        }
-      } else if (op.classifier.input_params === 'req') {
-        let pipeOp = op as Op<Pipe,AllRequired> ;
-        service_op_perform = (op_inputs: Array<OpInput>) => {
-          return Promise.resolve([pipeOp.perform(op_inputs[0].drafts[0], op_inputs[0].params)]);
-        }
-      } else {
-        let pipeOp = op as Op<Pipe,ParamsOptional>;
-        service_op_perform = (op_inputs: Array<OpInput>) => {
-          if (op_inputs[0].params.length > 0) {
-            return Promise.resolve([pipeOp.perform(op_inputs[0].drafts[0], op_inputs[0].params)]);
-          } else {
-            return Promise.resolve([pipeOp.perform(op_inputs[0].drafts[0])]);
-          }
-        }
-      }
-    } else if (op.classifier.type === 'merge') { /** @todo */
-      if (op.classifier.input_params === 'none') {
-        let mergeOp = op as Op<Merge,NoParams>;
-        service_op_perform = (op_inputs: Array<OpInput>) => {
-          return Promise.resolve([mergeOp.perform(op_inputs[0].drafts)]);
-        }
-      } else if (op.classifier.input_drafts === 'req') {
-
-      } else {
-
-      }
-    } else if (op.classifier.type === 'branch') { /** @todo */
-    } else { /** @todo bus ops */
-      service_op_perform = (op_inputs: Array<OpInput>) => {
-        return Promise.resolve([]) as Promise<Array<Draft>>;
-      }
-    }
-
-    let new_op = {
-      name: op.name,
-      topo_op: op,
-      displayname: op.displayname,
-      dx: op.dx,
-      max_inputs: op.max_inputs,
-      params: op.params,
-      perform: service_op_perform
-    } as ServiceOp;
-
-    this.ops.push(new_op);
-    return new_op;
   }
 
   getOp(name: string): Operation {
@@ -7335,6 +2359,5 @@ export class OperationService {
     }else{
       return old_name[0]; 
     }
-
   }
 }

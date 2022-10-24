@@ -3,91 +3,88 @@ import { warps, wefts } from "./drafts";
 import { Shuttle } from "./shuttle";
 
 
-  export const getDirection = (neighbors:number, is_up:boolean) : string =>{
+export const getDirection = (neighbors:number, is_up:boolean) : string =>{
 
-    var is_up_dirs =     ["ew","ew", "ns", "sw", "ew", "ew", "se", "ew", "ns", "nw", "ns", "ew", "ne", "ew", "ew", "ew"];
-    var not_is_up_dirs = ["x", "x", "x",  "sw", "x",  "ew", "se", "ew", "x",  "nw", "ns", "sw", "ne", "ew", "sw", "ew"];
+  var is_up_dirs =     ["ew","ew", "ns", "sw", "ew", "ew", "se", "ew", "ns", "nw", "ns", "ew", "ne", "ew", "ew", "ew"];
+  var not_is_up_dirs = ["x", "x", "x",  "sw", "x",  "ew", "se", "ew", "x",  "nw", "ns", "sw", "ne", "ew", "sw", "ew"];
+  
+  if(is_up) return is_up_dirs[neighbors];
+  else return not_is_up_dirs[neighbors];
+
+}
+
+//searches to the west (on this row only) for an interlacement
+export const hasWestNeighbor = (drawdown: Drawdown, i:number, j:number): boolean =>{
+
+    for(var ndx = j-1; ndx >= 0; ndx--){
+      if(drawdown[i][ndx].isUp()) return true;
+    }
+    return false;
+}
+
+
+/***
+If this doesn't have east set, then there is nothing to the west
+*/
+export const setWestNeighbors = (yarnsim: YarnSim, drawdown: Drawdown, i:number, j:number) : YarnSim => {
+
+    for(var ndx = j-1; ndx >= 0; ndx--){
+      yarnsim[i][ndx] = setEast(yarnsim[i][ndx]);
+      if(drawdown[i][ndx].isUp()) return;
+    }
+
+    return yarnsim;
+}
+
+export const unsetWestNeighbors = (yarnsim: YarnSim, drawdown: Drawdown, i:number, j:number) : YarnSim => {
+
+    //there is something else for the western cells to reference
+    if(hasEastNeighbor(drawdown, i,j)) return; 
+
+    //unset until you find the next set cell
+    for(var ndx = j-1; ndx >= 0; ndx--){
+      yarnsim[i][ndx] = unsetEast(yarnsim[i][ndx]); 
+      if(drawdown[i][ndx].isUp()) return;
+    }
+
+    return yarnsim;
+}
+
+
+//searches to the east (on this row only) for an interlacement
+export const hasEastNeighbor = (drawdown: Drawdown, i:number, j:number): boolean =>{
     
-    if(is_up) return is_up_dirs[neighbors];
-    else return not_is_up_dirs[neighbors];
-
-  }
-
-
-
-
-  //searches to the west (on this row only) for an interlacement
-  export const hasWestNeighbor = (drawdown: Drawdown, i:number, j:number): boolean =>{
-
-      for(var ndx = j-1; ndx >= 0; ndx--){
-        if(drawdown[i][ndx].isUp()) return true;
-      }
-      return false;
-  }
+    for(var ndx = j+1; ndx < warps(drawdown); ndx++){
+      if(drawdown[i][ndx].isUp()) return true;
+    }
+    return false;
+}
 
 
-  /***
-  If this doesn't have east set, then there is nothing to the west
-  */
-  export const setWestNeighbors = (yarnsim: YarnSim, drawdown: Drawdown, i:number, j:number) : YarnSim => {
+//walks to the east until it hits another set cell, adds "west" to each 
+export const setEastNeighbors = (drawdown: Drawdown, yarnsim: YarnSim, i:number, j:number) : YarnSim =>{
 
-      for(var ndx = j-1; ndx >= 0; ndx--){
-        yarnsim[i][ndx] = setEast(yarnsim[i][ndx]);
-        if(drawdown[i][ndx].isUp()) return;
-      }
+    for(var ndx = j+1; ndx < warps(drawdown); ndx++){
+      yarnsim[i][ndx] = setWest( yarnsim[i][ndx]);
+      if(drawdown[i][ndx].isUp()) return;
+    }
 
-      return yarnsim;
-  }
+    return yarnsim;
+}
 
-  export const unsetWestNeighbors = (yarnsim: YarnSim, drawdown: Drawdown, i:number, j:number) : YarnSim => {
+export const unsetEastNeighbors = (drawdown: Drawdown, yarnsim: YarnSim,i:number, j:number) : YarnSim => {
 
-      //there is something else for the western cells to reference
-      if(hasEastNeighbor(drawdown, i,j)) return; 
+    //there is something else for the western cells to reference
+    if(hasWestNeighbor(drawdown, i,j)) return; 
 
-      //unset until you find the next set cell
-      for(var ndx = j-1; ndx >= 0; ndx--){
-        yarnsim[i][ndx] = unsetEast(yarnsim[i][ndx]); 
-        if(drawdown[i][ndx].isUp()) return;
-      }
-
-      return yarnsim;
-  }
-
-
-  //searches to the east (on this row only) for an interlacement
-  export const hasEastNeighbor = (drawdown: Drawdown, i:number, j:number): boolean =>{
-      
+    //unset until you find the next set cell
       for(var ndx = j+1; ndx < warps(drawdown); ndx++){
-        if(drawdown[i][ndx].isUp()) return true;
-      }
-      return false;
-  }
+        yarnsim[i][ndx] = unsetWest( yarnsim[i][ndx]); 
+      if(drawdown[i][ndx].isUp()) return;
+    }
 
-
-  //walks to the east until it hits another set cell, adds "west" to each 
-  export const setEastNeighbors = (drawdown: Drawdown, yarnsim: YarnSim, i:number, j:number) : YarnSim =>{
-
-      for(var ndx = j+1; ndx < warps(drawdown); ndx++){
-        yarnsim[i][ndx] = setWest( yarnsim[i][ndx]);
-        if(drawdown[i][ndx].isUp()) return;
-      }
-
-      return yarnsim;
-  }
-
-  export const unsetEastNeighbors = (drawdown: Drawdown, yarnsim: YarnSim,i:number, j:number) : YarnSim => {
-
-      //there is something else for the western cells to reference
-      if(hasWestNeighbor(drawdown, i,j)) return; 
-
-      //unset until you find the next set cell
-       for(var ndx = j+1; ndx < warps(drawdown); ndx++){
-         yarnsim[i][ndx] = unsetWest( yarnsim[i][ndx]); 
-        if(drawdown[i][ndx].isUp()) return;
-      }
-
-      return yarnsim;
-  }
+    return yarnsim;
+}
 
   //searches rows to the north for any interlacement on the same shuttle
   export const hasNorthNeighbor = (draft: Draft, i:number, j:number, shuttle_id: number): boolean =>{

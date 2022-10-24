@@ -1,12 +1,12 @@
 import { Cell } from "./cell";
-import { Draft, Drawdown, Loom } from "./datatypes";
+import { Draft, Drawdown } from "./datatypes";
 import utilInstance from "./util";
 
 /**
  * generates an empty draft with a unique id
  * @returns 
  */
- export const initDraft = () : Draft => {
+export const initDraft = () : Draft => {
   const d: Draft = {
     id: utilInstance.generateId(8),
     gen_name: 'draft',
@@ -26,7 +26,7 @@ import utilInstance from "./util";
  * @param params allowable params are id, weft, warp, drawdown, pattern, ud_name, gen_name, rowShuttleMapping, rowSystemMapping, colShuttleMapping, colSystemMapping.
  * @returns 
  */
- export const initDraftWithParams = (params:any) : Draft => {
+export const initDraftWithParams = (params: any) : Draft => {
   const d: Draft = {
     id: utilInstance.generateId(8),
     gen_name: 'draft',

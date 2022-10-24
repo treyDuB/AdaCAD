@@ -25,7 +25,8 @@ export class ParameterComponent implements OnInit {
   opnode: OpNode;
   name: any;
 
-  @Input() param:  NumParam | StringParam | SelectParam | BoolParam | FileParam;
+  @Input() param:  NumParam | StringParam | SelectParam | BoolParam | FileParam 
+  | DraftParam;
   @Input() opid:  number;
   @Input() paramid:  number;
   @Output() onOperationParamChange = new EventEmitter <any>(); 
