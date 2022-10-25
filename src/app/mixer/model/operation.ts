@@ -70,6 +70,18 @@ export interface TreeOperation {
   perform: (op_inputs: Array<OpInput>) => Promise<Array<Draft>>
 }
 
+export function getDefaultParams(op: TreeOperation | GenericOp): Array<ParamValue> {
+  if (!op.params || op.params.length == 0) {
+    return [] as Array<ParamValue>;
+  }
+  return op.params.map((el) => el.value);
+}
+
+/** 
+ * @function 
+ * The big function to pack an operation from op_definitions (working directly with params and drafts)
+ * into an operation that the tree can recognize (uses OpInputs)
+ */
 export function buildTreeOp(base: GenericOp): TreeOperation {
   let tree_op_perform: TreeOperation["perform"];
   // check what type of op, topologically with I/O (seed, pipe, merge, branch, bus, dynamic)

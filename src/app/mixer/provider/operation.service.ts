@@ -170,7 +170,7 @@ export class OperationService {
         }  
         else  {
           //sums the wefts from all the drafts
-          total_wefts =all_drafts.reduce((acc, el) => {
+          total_wefts = all_drafts.reduce((acc, el) => {
             return acc + wefts(el.drawdown);
           }, 0);
   

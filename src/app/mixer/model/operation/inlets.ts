@@ -15,6 +15,8 @@ export type OperationInlet = {
   value: number | string,
   num_drafts: number
 }
+
+export type SingleInlet = OperationInlet & { num_drafts: 1 };
   
 /**
  * An extension of Inlet that handles extra requirements for numeric data inputs

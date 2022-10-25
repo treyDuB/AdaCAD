@@ -1,9 +1,9 @@
 import { Injectable} from '@angular/core';
 import { wefts } from '../../core/model/drafts';
 import { PedalsService, PedalStatus, Pedal } from '../../core/provider/pedals.service';
-import { BaseOp as Op, BuildableOperation as GenericOp,
-  Seed, Pipe,
-  NoDrafts, NoParams, DraftsOptional, ParamsOptional, AllRequired
+import { BaseOp as Op, BuildableOperation as GenericOp, TreeOperation as TreeOp,
+  Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
+  SingleInlet, OpInput
 } from '../model/operation';
 import * as defs from '../model/op_definitions';
 import { Draft } from '../../core/model/datatypes';
@@ -115,6 +115,7 @@ class PedalOpMapping {
   }
 }
 
+/** @const forward a player-specific function to progress through the draft */
 const forward: PlayerOp = {
   name: 'forward',
   perform: (init: PlayerState) => { 
@@ -123,11 +124,13 @@ const forward: PlayerOp = {
   }
 }
 
+/** @const refresh a player-specific function to progress through the draft (re-sends the row to give more time) */
 const refresh: PlayerOp = {
   name: 'refresh',
   perform: (init: PlayerState) => Promise.resolve(init)
 }
 
+/** @const reverse a player-specific function to progress backwards through the draft */
 const reverse: PlayerOp = {
   name: 'reverse',
   perform: (init: PlayerState) => { 
@@ -138,18 +141,17 @@ const reverse: PlayerOp = {
 
 function playerOpFrom(op: GenericOp) {
   // use "rotate" op as an example
-  let dataOp = op;
   let perform;
-  if (dataOp.classifier.type === 'pipe') {
-    const pipeOp = dataOp as Op<Pipe, AllRequired>;
+  if (op.classifier.type === 'pipe') {
+    const pipeOp = op as Op<Pipe, AllRequired>;
     perform = function(init: PlayerState) {
-      let d: Draft = pipeOp.perform(init.draft, pipeOp.default_params);
+      let d: Draft = pipeOp.perform(init.draft, getDefaultParams(pipeOp));
       return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });
     }
-  } else if (dataOp.classifier.type === 'seed') {
-    const seedOp = dataOp as Op<Seed, DraftsOptional>;
+  } else if (op.classifier.type === 'seed') {
+    const seedOp = op as Op<Seed, DraftsOptional>;
     perform = function(init: PlayerState) {
-      let d: Draft = seedOp.perform(seedOp.default_params);
+      let d: Draft = seedOp.perform(getDefaultParams(seedOp));
       return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });
     }
   }
@@ -162,19 +164,46 @@ function playerOpFrom(op: GenericOp) {
   return p;
 }
 
+/** 
+ * @type 
+ * a TreeOperation is compatible with the player if it takes one or zero draft inputs 
+ * and outputs one draft.
+ */
+type PlayableTreeOp = TreeOp & ({ inlets: [ SingleInlet ] } | { inlets: [] });
+
+/** @function playerOpFromTree (untested) */
+function playerOpFromTree(op: PlayableTreeOp) {
+  let perform: PlayerOp["perform"];
+  let param_input: OpInput = { op_name: op.name, drafts: [], params: getDefaultParams(op), inlet: -1 }
+  if (op.inlets.length == 0) {
+    perform = function(init: PlayerState) {
+      return op.perform([param_input]).then((output) => {
+        return { draft: output[0], row: init.row, numPicks: init.numPicks };
+      });
+    }
+  } else {
+    perform = function(init: PlayerState) {
+      let draft_input: OpInput = { op_name: 'child', drafts: [init.draft], params: [], inlet: 0}
+      return op.perform([param_input, draft_input]).then((output) => {
+        return { draft: output[0], row: init.row, numPicks: init.numPicks };
+      });
+    }
+  }
+
+  var p: PlayerOp = { 
+    name: op.name,
+    perform: perform
+  }
+  return p;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class DraftPlayerService {
   state: PlayerState;
-  // draft: Draft;
   loom: LoomConfig;
   pedalOps: PedalOpMapping;
-  // options: Array<PlayerOp> = [];
-
-  // pairs = {}; // pedal ID -> op name
-  // opsDict = {};     // op name -> pedal ID
-
   redraw = new EventEmitter();
 
   constructor(
@@ -195,29 +224,47 @@ export class DraftPlayerService {
 
     this.pedalOps = new PedalOpMapping(this.pedals);
 
+    // load the draft progress ops
     this.pedalOps.addOperation(forward);
     this.pedalOps.addOperation(refresh);
     this.pedalOps.addOperation(reverse);
 
-    const tabby = playerOpFrom(defs.tabby);
-    const twill = playerOpFrom(defs.twill);
-    const random = playerOpFrom(defs.random);
-    const rotate = playerOpFrom(defs.rotate);
-    const invert = playerOpFrom(defs.invert);
-    const shiftx = playerOpFrom(defs.shiftx);
-    const slope = playerOpFrom(defs.slope);
-    const flipx = playerOpFrom(defs.flipx);
-    const stretch = playerOpFrom(defs.stretch);
+    const ops = this.pedalOps;
+
+    function addOp(op: GenericOp) {
+      let p_op = playerOpFrom(op);
+      ops.addOperation(p_op);
+      return p_op;
+    }
+
+    // load ops from the main mixer
+    const tabby = addOp(defs.tabby);
+    const twill = addOp(defs.twill);
+    const satin = addOp(defs.satin);
+    const waffle = addOp(defs.waffle);
+    const random = addOp(defs.random);
+    const rotate = addOp(defs.rotate);
+    const invert = addOp(defs.invert);
+    const shiftx = addOp(defs.shiftx);
+    const shifty = addOp(defs.shifty);
+    const slope = addOp(defs.slope);
+    const flipx = addOp(defs.flipx);
+    const flipy = addOp(defs.flipy);
+    const symm = addOp(defs.makesymmetric);
+    const stretch = addOp(defs.stretch);
+
+    //test this
+    const germanify = this.pedalOps.addOperation(playerOpFromTree(<PlayableTreeOp> this.oss.getOp('germanify'));
     
-    this.pedalOps.addOperation(rotate) 
-    this.pedalOps.addOperation(tabby);
-    this.pedalOps.addOperation(twill);
-    this.pedalOps.addOperation(random);
-    this.pedalOps.addOperation(invert); 
-    this.pedalOps.addOperation(shiftx); 
-    this.pedalOps.addOperation(flipx);
-    this.pedalOps.addOperation(slope); 
-    this.pedalOps.addOperation(stretch);
+    // this.pedalOps.addOperation(rotate) 
+    // this.pedalOps.addOperation(tabby);
+    // this.pedalOps.addOperation(twill);
+    // this.pedalOps.addOperation(random);
+    // this.pedalOps.addOperation(invert); 
+    // this.pedalOps.addOperation(shiftx); 
+    // this.pedalOps.addOperation(flipx);
+    // this.pedalOps.addOperation(slope); 
+    // this.pedalOps.addOperation(stretch);
 
     // this.pds.pedal_array.on('pedal-added', (num) => {
     //   // console.log("automatically pairing first pedal", num);
