@@ -5,7 +5,7 @@ import { OperationService } from '../provider/operation.service';
 import { MaterialsService } from '../../core/provider/materials.service';
 // import { TreeService, DraftNode  } from '../provider/tree.service';
 import { Draft } from '../../core/model/datatypes';
-import { T } from '@angular/cdk/keycodes';
+import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
 
 @Component({
   selector: 'app-player',
@@ -99,47 +99,47 @@ export class PlayerComponent implements OnInit {
 
     } else {
       this.draft_set = true;
-      this.draftCanvas.width = (this.pls.draft.warps+2) * this.default_cell;
-      this.draftCanvas.height = this.pls.draft.wefts * this.default_cell;
+      this.draftCanvas.width = (warps(this.pls.draft.drawdown)+2) * this.default_cell;
+      this.draftCanvas.height = wefts(this.pls.draft.drawdown) * this.default_cell;
 
-      for (let i = 0; i < this.pls.draft.wefts; i++) {
-        for (let j = 0; j < this.pls.draft.warps; j++) {
+      for (let i = 0; i < wefts(this.pls.draft.drawdown); i++) {
+        for (let j = 0; j < warps(this.pls.draft.drawdown); j++) {
           this.drawCell(this.default_cell, i, j, false, flipY);
         }
         if (i == this.pls.state.row) {
-          this.drawProgressBar(this.default_cell, i, this.pls.draft.warps, flipY);
+          this.drawProgressBar(this.default_cell, i, warps(this.pls.draft.drawdown), flipY);
         }
       }
     }
   }
 
   drawCell(cell_size: number, i: number, j: number, usecolor: boolean, flipY: boolean = true){
-    let is_up = this.pls.draft.isUp(i,j);
-    let is_set = this.pls.draft.isSet(i, j);
+    let is_up = isUp(this.pls.draft.drawdown, i,j);
+    let is_set = isSet(this.pls.draft.drawdown, i, j);
     let color = "#ffffff"
     if(is_set){
       if(this.ink === 'unset' && is_up){
         this.cx.fillStyle = "#999999"; 
       }else{
-        if(is_up){
-          color = usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : '#000000';
+        if (is_up) {
+          color = '#000000'; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
         }else if (i == this.pls.state.row) { // highlight current row in yellow
-          color = usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : '#ffff00';
+          color = '#ffff00'; //usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) :
         } else {
-          color = usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : '#ffffff';
+          color = '#ffffff'; // usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : 
         }
         this.cx.fillStyle = color;
       }
     } else {
       this.cx.fillStyle =  '#0000000d';
     }
-    let y = flipY ? this.pls.draft.wefts-1 - i : i;
+    let y = flipY ? wefts(this.pls.draft.drawdown)-1 - i : i;
     this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
 
   drawProgressBar(cell_size: number, i: number, width: number, flipY: boolean = true) {
     this.cx.fillStyle =  '#ffff00';
-    let y = flipY ? this.pls.draft.wefts-1 - i : i;
+    let y = flipY ? wefts(this.pls.draft.drawdown)-1 - i : i;
     this.cx.fillRect(0, y*cell_size, cell_size, cell_size);
     this.cx.fillRect((width+1)*cell_size, y*cell_size, cell_size, cell_size);
   }

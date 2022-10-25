@@ -1,4 +1,4 @@
-import { Draft, LoomSettings} from "../../core/model/datatypes";
+import { Draft } from "../../core/model/datatypes";
 import { Cell } from "../../core/model/cell";
 import { initDraftWithParams, applyMask, warps, wefts, 
   shiftDrawdown, getDraftName, invertDrawdown, flipDrawdown,
@@ -61,12 +61,14 @@ export const tabby = Seed.DraftsOptional({
     } else {
       const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
-      format.transferSystemsAndShuttles(d, [input], params, 'first');
+      // format.transferSystemsAndShuttles(d, [input], params, 'first');
       d.gen_name = format.formatName([input], "tabby")
       return d;
     }
   }
 });
+
+console.log(tabby);
 
 export const tabby_der = Seed.NoDrafts({
   name: 'tabbyder',
@@ -185,7 +187,7 @@ export const rib = Seed.DraftsOptional({
 
     const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = applyMask(input.drawdown, pattern);         
-    format.transferSystemsAndShuttles(d, [input], params, 'second');
+    // format.transferSystemsAndShuttles(d, [input], params, 'second');
     d.gen_name = format.formatName([input], "rib");
     return d;
   }
@@ -255,7 +257,7 @@ export const twill = Seed.DraftsOptional({
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
-      format.transferSystemsAndShuttles(d, [input], params, 'first');
+      // format.transferSystemsAndShuttles(d, [input], params, 'first');
       d.gen_name = format.formatName([input], "twill");
     }
 
@@ -331,7 +333,7 @@ export const complextwill = Seed.DraftsOptional({
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
-      format.transferSystemsAndShuttles(d, [input], params, 'first');
+      // format.transferSystemsAndShuttles(d, [input], params, 'first');
       d.gen_name = format.formatName([input], "complex twill");
     }
 
@@ -391,7 +393,7 @@ export const basket = Seed.DraftsOptional({
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
-      format.transferSystemsAndShuttles(d, [input], params, 'first');
+      // format.transferSystemsAndShuttles(d, [input], params, 'first');
       d.gen_name = format.formatName([input], "basket")
     }
 
@@ -491,7 +493,7 @@ export const waffle = Seed.DraftsOptional({
     } else {
       const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
-      format.transferSystemsAndShuttles(d, [input], params, 'first');
+      // format.transferSystemsAndShuttles(d, [input], params, 'first');
       d.gen_name = format.formatName([input], "waffle");
     }
     return d;
@@ -550,7 +552,7 @@ export const satin = Seed.DraftsOptional({
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
-      format.transferSystemsAndShuttles(d,[input],params, 'first');
+      // format.transferSystemsAndShuttles(d,[input],params, 'first');
       d.gen_name = format.formatName([input], "satin");
     }
     return d;
@@ -678,7 +680,7 @@ export const random = Seed.DraftsOptional({
       } else {
         d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
         d.drawdown = applyMask(input.drawdown, pattern);         
-        format.transferSystemsAndShuttles(d,[input],params, 'first');
+        // format.transferSystemsAndShuttles(d,[input],params, 'first');
         d.gen_name = format.formatName([input], "random");
       }
       return d;
@@ -764,7 +766,7 @@ export const rect = Seed.DraftsOptional({
     const d: Draft = initDraftWithParams({   
       warps: params[0], 
       wefts: params[1], 
-      drawdown: input.drawdown,
+      drawdown: draft.drawdown,
       rowShuttleMapping: draft.rowShuttleMapping,
       colShuttleMapping: draft.colShuttleMapping,
       rowSystemMapping: draft.rowSystemMapping,
@@ -790,7 +792,7 @@ export const clear = Pipe.NoParams({
     }],
     perform: (input: Draft): Draft => {
       const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), drawdown: [[new Cell(false)]]});
-      format.transferSystemsAndShuttles(d, [input], {}, 'first');
+      // format.transferSystemsAndShuttles(d, [input], {}, 'first');
       d.gen_name = format.formatName([input], "clear");
       return d;
   }
@@ -827,7 +829,7 @@ export const set = Pipe.AllRequired({
         else d.drawdown[i][j] = new Cell(cell.isUp());
       });
     });
-    format.transferSystemsAndShuttles(d, [input], params, 'first');
+    // format.transferSystemsAndShuttles(d, [input], params, 'first');
     d.gen_name = format.formatName([input], "unset->down");
     return d;
   }
@@ -863,7 +865,7 @@ export const unset = Pipe.AllRequired({
       });
     });
     
-    format.transferSystemsAndShuttles(d, [input], params, 'first');
+    // format.transferSystemsAndShuttles(d, [input], params, 'first');
     d.gen_name = format.formatName([input], "unset");
     return d;
   }
@@ -1021,8 +1023,8 @@ export const interlace = Merge.AllRequired({
 
     const d: Draft = utilInstance.interlace(all_drafts, factor_in_repeats, warp_system_draft);
   
-    format.transferSystemsAndShuttles(d,all_drafts,params, 'interlace');
-    d.gen_name = format.formatName(all_drafts, "ilace")
+    // format.transferSystemsAndShuttles(d, all_drafts,params, 'interlace');
+    // d.gen_name = format.formatName(all_drafts, "ilace")
     return d;
   }     
 });
@@ -1101,7 +1103,7 @@ export const selvedge = Merge.AllRequired({
         }
       }
     }
-    format.transferSystemsAndShuttles(d, inputs, params, 'first');
+    // format.transferSystemsAndShuttles(d, inputs, params, 'first');
     d.gen_name = format.formatName(inputs, "sel");
     return d;
   }
@@ -1196,9 +1198,9 @@ export const overlay = Merge.AllRequired({
 
     }, init_draft);
 
-    format.transferSystemsAndShuttles(d, inputs, params, 'first');
-    d.gen_name =alldrafts.reduce((acc, el) => {
-      return acc+"+"+getDraftName(el)
+    // format.transferSystemsAndShuttles(d, inputs, params, 'first');
+    d.gen_name = alldrafts.reduce((acc, el) => {
+      return acc + "+"+getDraftName(el)
     }, "").substring(1);
     return d;
   }        
@@ -1275,7 +1277,7 @@ export const mask = Merge.AllRequired({
       return acc;
 
     }, init_draft);
-    format.transferSystemsAndShuttles(d, inputs, params, 'first');
+    // format.transferSystemsAndShuttles(d, inputs, params, 'first');
     d.gen_name = format.formatName(inputs, "mask")
     return d;
   }        
@@ -1354,9 +1356,8 @@ export const atop = Merge.AllRequired({
       return acc;
 
     }, init_draft);
-    format.transferSystemsAndShuttles(d, inputs, params, 'first');
+    // format.transferSystemsAndShuttles(d, inputs, params, 'first');
     d.gen_name = format.formatName(inputs, "atop")
-
     return d;
   }        
 });
@@ -1364,7 +1365,7 @@ export const atop = Merge.AllRequired({
 export const knockout = Merge.AllRequired({
   name: 'knockout, (a, b) => (a XOR b)',
   displayname: 'knockout, (a, b) => (a XOR b)', 
-  old_names:['knockout'], 
+  old_names: ['knockout'], 
   dx: 'Flips the value of overlapping cells of the same value, effectively knocking out the image of the second draft upon the first',
   params: <Array<NumParam>>[
     {name: 'left offset',
@@ -1432,7 +1433,7 @@ export const knockout = Merge.AllRequired({
       return acc;
 
     }, init_draft);
-    format.transferSystemsAndShuttles(d,inputs,params, 'first');
+    // format.transferSystemsAndShuttles(d,inputs,params, 'first');
     d.gen_name = format.formatName(inputs, "ko");
     return d;
   }        
@@ -1537,14 +1538,14 @@ export const stretch = Pipe.AllRequired({
       for (let p = 0; p < params[1]; p++) {
         let i_ndx = params[1] * i + p;
         row.forEach((cell, j) => {
-          for (let r = 0; r <params[0]; r++) {
+          for (let r = 0; r < params[0]; r++) {
             let j_ndx =params[0] * j + r;
             d.drawdown[i_ndx][j_ndx].setHeddle(cell.getHeddle());
           }
         });
       }
     });
-    format.transferSystemsAndShuttles(d,[input], params, 'stretch');
+    // format.transferSystemsAndShuttles(d,[input], params, 'stretch');
     d.gen_name = format.formatName([input], "stretch")
     return d; 
   }
@@ -1590,7 +1591,7 @@ export const resize = Pipe.AllRequired({
         d.drawdown[i][j].setHeddle(mapped_cell.getHeddle());
       });
     });
-    format.transferSystemsAndShuttles(d,[input],params, 'stretch');
+    // format.transferSystemsAndShuttles(d,[input],params, 'stretch');
     d.gen_name = format.formatName([input], "resize")
     return d;
   }
@@ -1735,7 +1736,7 @@ export const crop = Pipe.AllRequired({
         
       });
     });
-    format.transferSystemsAndShuttles(d,[input],params, 'first');
+    // format.transferSystemsAndShuttles(d,[input],params, 'first');
     d.gen_name = format.formatName([input], "crop");
     return d;
   } 
@@ -1803,7 +1804,7 @@ export const trim = Pipe.AllRequired({
         cell.setHeddle(input.drawdown[i+top][j+left].getHeddle());                             
       });
     });
-    format.transferSystemsAndShuttles(d,[input],params, 'first');
+    // format.transferSystemsAndShuttles(d,[input],params, 'first');
     d.gen_name = format.formatName([input], "trim");
     return d;
   }     
@@ -1967,7 +1968,7 @@ export const invert = Pipe.NoParams({
       wefts: wefts(input.drawdown), 
       pattern: input.drawdown});
     d.drawdown = invertDrawdown(d.drawdown);
-    format.transferSystemsAndShuttles(d, [input], {}, 'first');
+    // format.transferSystemsAndShuttles(d, [input], {}, 'first');
     d.gen_name = format.formatName([input], "invert");
     return d;
   }
@@ -1988,7 +1989,7 @@ export const flipx = Pipe.NoParams({
   perform: (input: Draft) => {
     let d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = flipDrawdown(d.drawdown, true);
-    format.transferSystemsAndShuttles(d,[input], {}, 'first');
+    // format.transferSystemsAndShuttles(d,[input], {}, 'first');
     d.gen_name = format.formatName([input], "fhoriz");
     return d;
   }
@@ -2013,7 +2014,7 @@ export const flipy = Pipe.NoParams({
       pattern: input.drawdown
     });
     d.drawdown = flipDrawdown(d.drawdown, false);
-    format.transferSystemsAndShuttles(d,[input], {}, 'first');
+    // format.transferSystemsAndShuttles(d,[input], {}, 'first');
     d.gen_name = format.formatName([input], "fvert");
     return d;
   }
@@ -2043,7 +2044,7 @@ export const shiftx = Pipe.AllRequired({
   perform: (input: Draft, params: Array<number>) => {
     const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = shiftDrawdown(d.drawdown, false, params[0]);
-    format.transferSystemsAndShuttles(d, [input], params, 'first');
+    // format.transferSystemsAndShuttles(d, [input], params, 'first');
     d.gen_name = format.formatName([input], "shiftx");
   
     return d;
@@ -2074,7 +2075,7 @@ export const shifty = Pipe.AllRequired({
   perform: (input: Draft, params: Array<number>) => {
     const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = shiftDrawdown(d.drawdown, true, params[0]);
-    format.transferSystemsAndShuttles(d,[input],params, 'first');
+    // format.transferSystemsAndShuttles(d,[input],params, 'first');
     d.gen_name = format.formatName([input], "shifty");
   
     return d;
@@ -2121,7 +2122,7 @@ export const slope = Pipe.AllRequired({
         d.drawdown[i][j].setHeddle(input.drawdown[i][(j+shift_total)%warps(d.drawdown)].getHeddle());
       }
     }
-    format.transferSystemsAndShuttles(d,[input],params, 'first');
+    // format.transferSystemsAndShuttles(d,[input],params, 'first');
     d.gen_name = format.formatName([input], "slope");
     return d;
   }
@@ -2238,7 +2239,7 @@ export const bindweftfloats = Pipe.AllRequired({
       });
     });
   
-    format.transferSystemsAndShuttles(d, [input], params, 'first');
+    // format.transferSystemsAndShuttles(d, [input], params, 'first');
     d.gen_name = format.formatName([input], "bindweft");
     return d;
   }
@@ -2330,7 +2331,7 @@ export const layer = Merge.NoParams({
       }
     }
   
-    format.transferSystemsAndShuttles(d, inputs, {}, 'layer');
+    // format.transferSystemsAndShuttles(d, inputs, {}, 'layer');
     d.gen_name = format.formatName(inputs, "layer");
     return d;
   }     
@@ -2406,7 +2407,7 @@ export const tile = Merge.AllRequired({
       });
     });
     
-    format.transferSystemsAndShuttles(output, all_drafts, params, 'first');
+    // format.transferSystemsAndShuttles(output, all_drafts, params, 'first');
     output.gen_name = format.formatName(all_drafts, "tile");
   
     return output;
@@ -2493,7 +2494,7 @@ export const chaos = Merge.AllRequired({
       });
       
 
-      format.transferSystemsAndShuttles(output, all_drafts, params, 'first');
+      // format.transferSystemsAndShuttles(output, all_drafts, params, 'first');
       output.gen_name = format.formatName(all_drafts, "chaos");
     
       return output;  
@@ -2614,7 +2615,7 @@ export const jointop = Merge.AllRequired({
         i++;
       });
     });
-    format.transferSystemsAndShuttles(d, all_drafts, params, 'jointop');
+    // format.transferSystemsAndShuttles(d, all_drafts, params, 'jointop');
     d.gen_name = format.formatName(all_drafts, "top");
     return d;
   }
@@ -2702,7 +2703,7 @@ export const joinleft = Merge.AllRequired({
     }, []);
           
 
-    format.transferSystemsAndShuttles(d, all_drafts, params, 'joinleft');
+    // format.transferSystemsAndShuttles(d, all_drafts, params, 'joinleft');
     d.gen_name = format.formatName(all_drafts, "left");
     
     return d;

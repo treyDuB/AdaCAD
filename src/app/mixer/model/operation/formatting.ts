@@ -67,10 +67,10 @@ export function transferSystemsAndShuttles(d: Draft, drafts: Array<Draft>, param
         break;
 
       case 'interlace':
-        rowSystems =drafts.map(el => el.rowSystemMapping);
+        rowSystems = drafts.map(el => el.rowSystemMapping);
         uniqueSystemRows = this.ss.makeWeftSystemsUnique(rowSystems);
 
-        rowShuttles =drafts.map(el => el.rowShuttleMapping);
+        rowShuttles = drafts.map(el => el.rowShuttleMapping);
         standardShuttleRows = this.ms.standardizeLists(rowShuttles);
 
         d.drawdown.forEach((row, ndx) => {

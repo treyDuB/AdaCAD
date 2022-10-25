@@ -41,10 +41,12 @@ export class OperationService {
     private ws: WorkspaceService,
     private combos: CombinatoricsService
   ) { 
+    const ops = this.ops;
 
     function addOp(op: BuildableOperation) {
       let tree_op = buildTreeOp(op);
-      this.ops.push(tree_op);
+      console.log(tree_op);
+      ops.push(tree_op);
       return tree_op;
     }
 
@@ -228,8 +230,8 @@ export class OperationService {
           } 
 
         }
-        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = format.formatName(all_drafts, "splice")
+        this.transferSystemsAndShuttles(d, all_drafts, 'interlace');
+        d.gen_name = this.formatName(all_drafts, "splice")
         outputs.push(d);
         return Promise.resolve(outputs);
       }     
@@ -369,8 +371,8 @@ export class OperationService {
           } 
 
         }
-        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = format.formatName(all_drafts, "splice")
+        // this.transferSystemsAndShuttles(d,op_input.drafts, 'interlace');
+        d.gen_name = this.formatName(all_drafts, "splice")
         outputs.push(d);
         return Promise.resolve(outputs);
       }     
@@ -451,8 +453,8 @@ export class OperationService {
           })
         });
         
-        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = format.formatName(child_input.drafts, "assign wefts")
+        // this.transferSystemsAndShuttles(d,op_input.drafts, 'interlace');
+        d.gen_name = this.formatName(child_input.drafts, "assign wefts")
         const sys_char = String.fromCharCode(97 +parent_input.params[1]);
         d.gen_name = '-'+sys_char+':'+d.gen_name;
         outputs.push(d);
@@ -547,8 +549,8 @@ export class OperationService {
         
 
         
-        // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-        d.gen_name = format.formatName(child_input.drafts, "assign warps")
+        // this.transferSystemsAndShuttles(d,op_input.drafts, 'interlace');
+        d.gen_name = this.formatName(child_input.drafts, "assign warps")
         const sys_char = String.fromCharCode(97 +parent_input.params[1]);
         d.gen_name = '|'+sys_char+':'+d.gen_name;
 
@@ -557,10 +559,8 @@ export class OperationService {
       }     
     }
 
-    
 
-
-    const vertcut:Operation = {
+    const vertcut: Operation = {
       name: 'vertical cut',
       displayname: 'vertical cut',  
       dx: 'make a vertical of this structure across two systems, representing the left and right side of an opening in the warp',
@@ -622,7 +622,7 @@ export class OperationService {
             });
           });
 
-          d.gen_name = format.formatName(child_input.drafts, "cut+"+i)
+          d.gen_name = this.formatName(child_input.drafts, "cut+"+i)
           outputs.push(d);
         }
         return Promise.resolve(outputs);
@@ -760,7 +760,7 @@ export class OperationService {
 
         }
         
-        d.gen_name = format.formatName([], "notation");
+        d.gen_name = this.formatName([], "notation");
         return  Promise.resolve([d]);
 
        
@@ -873,7 +873,7 @@ export class OperationService {
           }
         }
 
-        d.gen_name = format.formatName([], "warp profile");
+        d.gen_name = this.formatName([], "warp profile");
         return  Promise.resolve([d]);
 
        
@@ -978,7 +978,7 @@ export class OperationService {
           }
         }
 
-        d.gen_name = format.formatName([], "warp profile");
+        d.gen_name = this.formatName([], "warp profile");
         return  Promise.resolve([d]);
 
        
@@ -1089,7 +1089,7 @@ export class OperationService {
     //       }
     //     }
 
-    //     d.gen_name = format.formatName([], "profile");
+    //     d.gen_name = this.formatName([], "profile");
     //     return  Promise.resolve([d]);
 
        
@@ -1220,7 +1220,7 @@ export class OperationService {
                 }
               })
             });
-            d.gen_name = format.formatName([draft], "");
+            d.gen_name = this.formatName([draft], "");
             outputs.push(d);
           });
         }
@@ -1252,7 +1252,7 @@ export class OperationService {
         rowShuttleMapping: row_shut_mapping
       });
      
-      interlaced.gen_name = format.formatName(outputs, "layer");
+      interlaced.gen_name = this.formatName(outputs, "layer");
       return Promise.resolve([interlaced]);
       }      
     }      
@@ -1532,17 +1532,14 @@ export class OperationService {
                         }
                       }
   
-                      format.transferSystemsAndShuttles(draft,child_input.drafts,parent_input.params, 'first');
-                      draft.gen_name = format.formatName(child_input.drafts, "germanify");
+                      this.transferSystemsAndShuttles(draft,child_input.drafts, 'first');
+                      draft.gen_name = this.formatName(child_input.drafts, "germanify");
                     return draft
                   
                   })
                 )
-
         });
 
-       
-       
         }
     }  
 
@@ -1600,8 +1597,8 @@ export class OperationService {
                       draft.drawdown[i][j].setHeddle((pattern[i][j] == 1 ? true : false));
                   }
                 }
-                // format.transferSystemsAndShuttles(draft,child_input.drafts,parent_input.params, 'first');
-                // draft.gen_name = format.formatName(child_input.drafts, "crackleify");
+                this.transferSystemsAndShuttles(draft, child_input.drafts, 'first');
+                draft.gen_name = this.formatName(child_input.drafts, "crackleify");
               return draft
             }));
                   
@@ -2182,7 +2179,7 @@ export class OperationService {
    * @param type how to handle the transfer (first - use the first input data, interlace, layer)
    * @returns 
    */
-  transferSystemsAndShuttles(d: Draft, drafts: Array<Draft>, params: any, type: string){
+  transferSystemsAndShuttles(d: Draft, drafts: Array<Draft>, type: string){
     if (drafts.length === 0) return;
 
     let rowSystems: Array<Array<number>> =[];
@@ -2271,7 +2268,7 @@ export class OperationService {
   
         d.drawdown.forEach((row, ndx) => {
   
-          const select_array: number = ndx %drafts.length; 
+          const select_array: number = ndx % drafts.length; 
           const select_row: number = Math.floor(ndx /drafts.length)%wefts(drafts[select_array].drawdown);
         
           d.rowSystemMapping[ndx] = uniqueSystemRows[select_array][select_row];

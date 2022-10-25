@@ -112,7 +112,14 @@ export class Params {
       max: number; }
   ): NumParam;
   static Number(objOrName: any, dx?: string, value?: number, min?: number, max?: number) {
-    return { type: 'number', name: objOrName, value: value, min: min, max: max, dx: dx };
+    if (dx) {
+      return { type: 'number', name: objOrName, value: value, min: min, max: max, dx: dx };
+    } else {
+      return { 
+        type: 'number', name: objOrName.name, value: objOrName.value,
+        min: objOrName.min, max: objOrName.max, dx: objOrName.dx 
+      };
+    }
   }
 
   static String(name: string, dx: string, value: string, regex: RegExp, error: string): StringParam;
@@ -124,7 +131,14 @@ export class Params {
       error: string; }
   ): StringParam;
   static String(objOrName: any, dx?: string, value?: string, regex?: RegExp, error?: string) {
-    return { type: 'string', name: objOrName, dx: dx, value: value, regex: regex, error: error };
+    if (dx) {
+      return { type: 'string', name: objOrName, dx: dx, value: value, regex: regex, error: error };
+    } else {
+      return {
+        type: 'string', name: objOrName.name, value: objOrName.value,
+        regex: objOrName.regex, error: objOrName.error, dx: objOrName.dx 
+      };
+    }
   }
 
   // static Bool(

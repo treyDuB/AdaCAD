@@ -183,18 +183,18 @@ export class DraftPlayerService {
   ) {
     // this.draft = null; 
     console.log("draft player constructor");
-    const startPattern = this.oss.getOp('tabby');
-    console.log(startPattern);
-    const nullOpInput = [{
-      params: [1],
-      drafts: [],
-      op_name: "",
-      inlet: null
-    }];
-    startPattern.perform(nullOpInput).then((result) => {
-      console.log(result);
-      this.setDraft(result[0]);
-    });
+    // const startPattern = playerOpFrom(defs.tabby);
+    // console.log(startPattern);
+    // const nullOpInput = [{
+    //   params: [1],
+    //   drafts: [],
+    //   op_name: "",
+    //   inlet: null
+    // }];
+    // startPattern.perform(nullOpInput).then((result) => {
+    //   console.log(result);
+    //   this.setDraft(result[0]);
+    // });
 
     this.state = { draft: null, row: -1, numPicks: 0 };
     this.loom = { warps: 2640, draftTiling: true };

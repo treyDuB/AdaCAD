@@ -1,10 +1,11 @@
 import { Draft } from '../../core/model/datatypes';
-import { OperationParam } from './operation/params';
-import { OperationInlet } from './operation/inlets';
+import { OperationParam, ParamValue } from './operation/params';
+import { InletDrafts, OperationInlet } from './operation/inlets';
 import { BaseOp as Op, BuildableOperation as GenericOp,
   Seed, Pipe, Merge, Branch, Bus,
   NoDrafts, NoParams, DraftsOptional, ParamsOptional, AllRequired
 } from './operation/topology';
+import { filter } from 'mathjs';
 
 
 /** ALL OBJECTS/TYPES/UTILITY FUNCTIONS RELATED to OPERATIONS *****************/
@@ -28,6 +29,26 @@ export * as format from './operation/formatting';
   drafts: Array<Draft | never>,
   params: Array<any>,
   inlet: number | null
+}
+
+function getParamsFromInputs(inputs: Array<OpInput>): Array<ParamValue> {
+  let res = inputs.map((el) => el.params).reduce((acc, el) => acc.concat(el), []);
+  console.log(res);
+  return res;
+}
+
+function getDraftsFromInputs(inputs: Array<OpInput>): Array<Draft> {
+  return inputs.map((el) => el.drafts).reduce((acc, ds) => acc.concat(ds), []);
+}
+
+function getInletsFromInputs(inputs: Array<OpInput>, n: number): InletDrafts {
+  let res: InletDrafts;
+  for (let i = 0; i < n; i++) {
+    let this_inlet = inputs.filter((el) => el.inlet == i);
+    let inlet_drafts = this_inlet.map((el) => el.drafts);
+    res[i] = inlet_drafts.reduce((acc, ds) => acc.concat(ds), []);
+  }
+  return res;
 }
   
 /**
@@ -67,8 +88,9 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
     } else {
       let seedOp = base as Op<Seed, DraftsOptional>;
       tree_op_perform = (op_inputs: Array<OpInput>) => {
-        if (op_inputs[0].drafts.length > 0) {
-          return Promise.resolve([seedOp.perform(op_inputs[0].params, op_inputs[0].drafts[0])]);
+        console.log("op inputs: ", op_inputs);
+        if (op_inputs.filter((el) => (el.op_name == 'child')).length > 0) {
+          return Promise.resolve([seedOp.perform(op_inputs[0].params, getDraftsFromInputs(op_inputs)[0])]);
         } else {
           return Promise.resolve([seedOp.perform(op_inputs[0].params)]);
         }
@@ -79,12 +101,18 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
     if (base.classifier.input_params === 'none') {
       let pipeOp = base as Op<Pipe,NoParams> ;
       tree_op_perform = (op_inputs: Array<OpInput>) => {
-        return Promise.resolve([pipeOp.perform(op_inputs[0].drafts[0])]);
+        if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
+          return Promise.resolve([]) as Promise<Array<Draft>>;
+        }
+        return Promise.resolve([pipeOp.perform(getDraftsFromInputs(op_inputs)[0])]);
       }
     } else if (base.classifier.input_params === 'req') {
-      let pipeOp = base as Op<Pipe,AllRequired> ;
+      let pipeOp = base as Op<Pipe,AllRequired>;
       tree_op_perform = (op_inputs: Array<OpInput>) => {
-        return Promise.resolve([pipeOp.perform(op_inputs[0].drafts[0], op_inputs[0].params)]);
+        if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
+          return Promise.resolve([]) as Promise<Array<Draft>>;
+        }
+        return Promise.resolve([pipeOp.perform(getDraftsFromInputs(op_inputs)[0], op_inputs[0].params)]);
       }
     } else {
       let pipeOp = base as Op<Pipe,ParamsOptional>;
@@ -96,21 +124,79 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
         }
       }
     }
-  } else if (base.classifier.type === 'merge') { /** @todo */
+  } else if (base.classifier.type === 'merge') {
     if (base.classifier.input_params === 'none') {
       let mergeOp = base as Op<Merge, NoParams>;
-      tree_op_perform = (op_inputs: Array<OpInput>) => {
-        return Promise.resolve([mergeOp.perform(op_inputs[0].drafts)]);
+      if (base.inlets.filter((i) => i.num_drafts != 1).length) {
+        // complex merge, at least one inlet can take multiple drafts, so we have to prepare
+        // the inputs a little differently
+        tree_op_perform = (op_inputs: Array<OpInput>) => {
+          if (op_inputs.filter((el) => (el.op_name == 'child')).length <= 1) {
+            return Promise.resolve([]) as Promise<Array<Draft>>;
+          }
+          let inputs: InletDrafts = {};
+          for (let i = 0; i < base.inlets.length; i++) {
+            let this_inlet = op_inputs.filter((el) => el.inlet == i);
+            let inlet_drafts = this_inlet.map((el) => el.drafts);
+            inputs[i] = inlet_drafts.reduce((acc, ds) => acc.concat(ds), []);
+          }
+          return Promise.resolve([mergeOp.perform(inputs)]);
+        }
+      } else {
+        // simple merge, either 1 multi-inlet or mulitple single inlets
+        tree_op_perform = (op_inputs: Array<OpInput>) => {
+          if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
+            return Promise.resolve([]) as Promise<Array<Draft>>;
+          }
+          let inputs: Array<Draft>;
+          inputs = op_inputs.map((el) => el.drafts).reduce((acc, ds) => acc.concat(ds), []);
+          return Promise.resolve([mergeOp.perform(inputs)]);
+        }
       }
-    } else if (base.classifier.input_drafts === 'req') {
+    } else if (base.classifier.input_params === 'req') {
       let mergeOp = base as Op<Merge, AllRequired>;
-      tree_op_perform = (op_inputs: Array<OpInput>) => {
-        return Promise.resolve([mergeOp.perform(op_inputs[0].drafts, op_inputs[0].params)]);
+      if (base.inlets.filter((i) => i.num_drafts != 1).length) {
+        // complex merge, at least one inlet can take multiple drafts, so we have to prepare
+        // the inputs a little differently
+        tree_op_perform = (op_inputs: Array<OpInput>) => {
+          if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
+            return Promise.resolve([]) as Promise<Array<Draft>>;
+          }
+          let inputs: InletDrafts = {};
+          for (let i = 0; i < base.inlets.length; i++) {
+            let this_inlet = op_inputs.filter((el) => el.inlet == i);
+            let inlet_drafts = this_inlet.map((el) => el.drafts);
+            inputs[i] = inlet_drafts.reduce((acc, ds) => acc.concat(ds), []);
+          }
+          return Promise.resolve([mergeOp.perform(inputs, op_inputs[0].params)]);
+        }
+      } else {
+        // simple merge, either 1 multi-inlet or mulitple single inlets
+        tree_op_perform = (op_inputs: Array<OpInput>) => {
+          if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
+            return Promise.resolve([]) as Promise<Array<Draft>>;
+          }
+          let inputs: Array<Draft>;
+          inputs = op_inputs.map((el) => el.drafts).reduce((acc, ds) => acc.concat(ds));
+          return Promise.resolve([mergeOp.perform(inputs, op_inputs[0].params)]);
+        }
       }
-    } else {
-
     }
   } else if (base.classifier.type === 'branch') { /** @todo */
+    if (base.classifier.input_params === 'req') {
+      let branchOp = base as Op<Branch, AllRequired>;
+      tree_op_perform = (op_inputs: Array<OpInput>) => {
+        return Promise.resolve(branchOp.perform(op_inputs[1].drafts[0], getParamsFromInputs(op_inputs))) as Promise<Array<Draft>>;
+      }
+    } else {
+      let branchOp = base as Op<Branch, NoParams>;
+      tree_op_perform = (op_inputs: Array<OpInput>) => {
+        if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
+          return Promise.resolve([]) as Promise<Array<Draft>>;
+        }
+        return Promise.resolve(branchOp.perform(op_inputs[1].drafts[0])) as Promise<Array<Draft>>;
+      }
+    }
   } else { /** @todo bus ops */
     tree_op_perform = (op_inputs: Array<OpInput>) => {
       return Promise.resolve([]) as Promise<Array<Draft>>;
@@ -129,9 +215,9 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
     perform: tree_op_perform
   } as TreeOperation;
 
-  this.ops.push(new_op);
   return new_op;
 }
+
 /**
  * A container operation that takes drafts with some parameter assigned to them 
  * @param name the internal name of this operation used for index (DO NOT CHANGE THESE NAMES!)

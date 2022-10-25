@@ -198,7 +198,7 @@ export interface OperationProperties extends OperationDescriptors {
 export type OpPerform<Topo extends OpTopology, Constraint extends OpConstraint> = PerformCallSigs[Constraint["constraint"]][Topo["type"]];
 // type PerformArgs<T extends OpTopology, C extends OpConstraint> = Parameters<OpPerform<T, C>>;
 
-/** TODO add inlets (field for input drafts) */
+/** TODO doublecheck inlets have been added correctly (fields for input drafts) */
 export class BaseOp<Topo extends OpTopology, Constraint extends OpConstraint> implements OperationProperties {
   name: string;
   old_names: Array<string>;
@@ -218,18 +218,31 @@ export class BaseOp<Topo extends OpTopology, Constraint extends OpConstraint> im
   constructor (name: string, displayname: string, dx: string, perform: OpPerform<Topo, Constraint>);
   constructor (name: string, displayname: string, dx: string, params: Array<OpParam>, perform: OpPerform<Topo, Constraint>);
   constructor (nameOrArgs: any, displayname?: string, dx?: string, performOrParams?: OpPerform<Topo, Constraint> | Array<OpParam>, performWithParams?: OpPerform<Topo, Constraint>) {
-    this.name = nameOrArgs;
-    this.displayname = displayname;
-    this.dx = dx;
+    // console.log((nameOrArgs.name != undefined));
     this.classifier = { type: '', input_drafts: '', input_params: '' };
-    if (performWithParams) {
-      let params = <Array<OpParam>> performOrParams;
-      this.params = params;
-      this.default_params = getParamValues(params);
-      this.perform = performWithParams;
+    if (nameOrArgs.name) {
+      let args = nameOrArgs;
+      this.name = args.name;
+      this.displayname = args.displayname;
+      this.dx = args.dx;
+      this.perform = args.perform;
+      if (args.params) this.params = args.params;
+      else this.params = [];
+      if (args.inlets) this.inlets = args.inlets;
+      else this.inlets = [];
     } else {
-      this.params = [];
-      this.perform = <OpPerform<Topo,Constraint>> performOrParams;
+      this.name = nameOrArgs;
+      this.displayname = displayname;
+      this.dx = dx;
+      if (performWithParams) {
+        let params = <Array<OpParam>> performOrParams;
+        this.params = params;
+        this.default_params = getParamValues(params);
+        this.perform = performWithParams;
+      } else {
+        this.params = [];
+        this.perform = <OpPerform<Topo,Constraint>> performOrParams;
+      }
     }
   }
 
