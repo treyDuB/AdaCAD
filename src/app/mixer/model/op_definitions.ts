@@ -68,7 +68,6 @@ export const tabby = Seed.DraftsOptional({
   }
 });
 
-console.log(tabby);
 
 export const tabby_der = Seed.NoDrafts({
   name: 'tabbyder',

@@ -5,7 +5,6 @@ import { BaseOp as Op, BuildableOperation as GenericOp,
   Seed, Pipe, Merge, Branch, Bus,
   NoDrafts, NoParams, DraftsOptional, ParamsOptional, AllRequired
 } from './operation/topology';
-import { filter } from 'mathjs';
 
 
 /** ALL OBJECTS/TYPES/UTILITY FUNCTIONS RELATED to OPERATIONS *****************/
@@ -42,7 +41,7 @@ function getDraftsFromInputs(inputs: Array<OpInput>): Array<Draft> {
 }
 
 function getInletsFromInputs(inputs: Array<OpInput>, n: number): InletDrafts {
-  let res: InletDrafts;
+  let res: InletDrafts = {};
   for (let i = 0; i < n; i++) {
     let this_inlet = inputs.filter((el) => el.inlet == i);
     let inlet_drafts = this_inlet.map((el) => el.drafts);
@@ -182,7 +181,7 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
         }
       }
     }
-  } else if (base.classifier.type === 'branch') { /** @todo */
+  } else if (base.classifier.type === 'branch') { 
     if (base.classifier.input_params === 'req') {
       let branchOp = base as Op<Branch, AllRequired>;
       tree_op_perform = (op_inputs: Array<OpInput>) => {
@@ -197,7 +196,7 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
         return Promise.resolve(branchOp.perform(op_inputs[1].drafts[0])) as Promise<Array<Draft>>;
       }
     }
-  } else { /** @todo bus ops */
+  } else { /** @todo bus ops, but there aren't any operations in this category currently */
     tree_op_perform = (op_inputs: Array<OpInput>) => {
       return Promise.resolve([]) as Promise<Array<Draft>>;
     }
