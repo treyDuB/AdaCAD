@@ -87,7 +87,7 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
     } else {
       let seedOp = base as Op<Seed, DraftsOptional>;
       tree_op_perform = (op_inputs: Array<OpInput>) => {
-        console.log("op inputs: ", op_inputs);
+        console.log("op inputs: ", base.name, op_inputs);
         if (op_inputs.filter((el) => (el.op_name == 'child')).length > 0) {
           return Promise.resolve([seedOp.perform(op_inputs[0].params, getDraftsFromInputs(op_inputs)[0])]);
         } else {

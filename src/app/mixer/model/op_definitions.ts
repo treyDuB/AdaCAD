@@ -487,14 +487,15 @@ export const waffle = Seed.DraftsOptional({
 
     let d: Draft;
     if(input == undefined){
-      const d: Draft =initDraftWithParams({warps: width, wefts: height, pattern: pattern});
+      d = initDraftWithParams({warps: width, wefts: height, pattern: pattern});
       d.gen_name = format.formatName([], "waffle");
     } else {
-      const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
+      d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
       // format.transferSystemsAndShuttles(d, [input], params, 'first');
       d.gen_name = format.formatName([input], "waffle");
     }
+    console.log(d);
     return d;
   }
 });
