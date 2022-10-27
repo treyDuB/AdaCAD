@@ -253,8 +253,10 @@ export class DraftPlayerService {
     const symm = addOp(defs.makesymmetric);
     const stretch = addOp(defs.stretch);
 
-    //test this
-    const germanify = this.pedalOps.addOperation(playerOpFromTree(<PlayableTreeOp> this.oss.getOp('germanify'));
+    // //test this
+    // console.log(this.oss.getOp('germanify'));
+    // const germanify = this.pedalOps.addOperation(playerOpFromTree(<PlayableTreeOp> this.oss.getOp('germanify')));
+    
     
     // this.pedalOps.addOperation(rotate) 
     // this.pedalOps.addOperation(tabby);
