@@ -1,25 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaletteComponent } from './palette.component';
+import { ShuttlesComponent } from './shuttles.component';
 
-describe('PaletteComponent', () => {
-  let component: PaletteComponent;
-  let fixture: ComponentFixture<PaletteComponent>;
+describe('ShuttlesComponent', () => {
+  let component: ShuttlesComponent;
+  let fixture: ComponentFixture<ShuttlesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PaletteComponent ]
+      declarations: [ ShuttlesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PaletteComponent);
+    fixture = TestBed.createComponent(ShuttlesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
   });
 });

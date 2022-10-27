@@ -1,0 +1,22 @@
+.shape-container {
+  text-align: center;
+
+  .shape-block {
+    stroke: black;
+    fill: black;
+    stroke-width: 2px;
+    stroke-dasharray: 1,4;
+  }
+
+  .bound-block {
+  	cursor: move;
+  	stroke: black;
+  	fill: yellow;
+  	stroke-width: 2px;
+  	stroke-dasharray: 1,4;
+  }
+
+  .start, .end {
+    
+  }
+}

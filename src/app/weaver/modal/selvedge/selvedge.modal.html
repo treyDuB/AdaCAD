@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>View/Edit Selvedge</h2>
+
+<mat-dialog-content>
+	<form #selvedgeForm="ngForm">
+    <!--do I need a container for each selvedge edge? or a rect class for each one?-->
+		<div id="wrapper" class="selvedge-container is-fullwidth">
+      <span id="L">
+        <svg [attr.width]="20" [attr.height]="data.L.length * 20" style="background:#fefefe;">
+          <ng-container *ngFor="let up of data.L; let i = index">
+        	 <rect class="selvedge-block" [attr.x]="0" [attr.y]="i * 20" width="20" height="20" [attr.fill]="up ? '#000' : '#fff'" (click)="data.L[i] = !data.L[i]"/>
+          </ng-container>
+        </svg>
+      </span>
+      <span id="spacer"></span>
+      <span id="R">
+        <svg [attr.width]="20" [attr.height]="data.R.length * 20" style="background:#fefefe;">
+          <ng-container *ngFor="let up of data.R; let i = index">
+            <rect class="selvedge-block" [attr.x]="0" [attr.y]="i * 20" width="20" height="20" [attr.fill]="up ? '#000' : '#fff'" (click)="data.R[i] = !data.R[i]"/>
+          </ng-container>
+        </svg>
+      </span>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="close()">Close</button>
+    <button class="mat-raised-button mat-primary"(click)="save()">Save</button>
+</mat-dialog-actions>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button" (click)="addSelvedge()">Add Selvedge</button>
+    <button class="mat-raised-button" (click)="replaceSelvedge()">Replace Selvedge</button>
+    <button class="mat-raised-button" (click)="removeSelvedge()">Remove Selvedge</button>
+</mat-dialog-actions>
