@@ -26,74 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatChipsModule } from '@angular/material/chips';
 import { ScrollingModule} from '@angular/cdk/scrolling';
-
-<<<<<<< HEAD
-import { WeaverComponent } from './weaver.component';
-import { TopbarComponent } from './topbar/topbar.component';
-import { DesignComponent } from './tool/design/design.component';
-import { ShuttlesComponent } from './tool/shuttles/shuttles.component';
-import { ShuttlesModal } from './modal/shuttles/shuttles.modal';
-import { PatternsComponent } from './tool/patterns/patterns.component';
-
-import { CoreModule } from '../core/core.module';
-import { PatternModal } from './modal/pattern/pattern.modal';
-import { ConnectionModal } from './modal/connection/connection.modal';
-import { InitModal } from './modal/init/init.modal';
-import { LabelModal } from './modal/label/label.modal';
-import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
-import { ShapeModal } from './modal/shape/shape.modal';
-
-
-@NgModule({
-  imports: [
-    CommonModule,
-    CoreModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    ColorPickerModule,
-  ],
-  declarations: [
-    WeaverComponent, 
-    TopbarComponent, 
-    DesignComponent, 
-    ShuttlesComponent, 
-    PatternsComponent,
-    ShuttlesModal,
-    PatternModal,
-    ConnectionModal,
-    InitModal,
-    LabelModal,
-    SelvedgeModal,
-    ShapeModal
-  ],
-  entryComponents: [
-    ShuttlesModal,
-    PatternModal,
-    ConnectionModal,
-    InitModal,
-    LabelModal,
-    SelvedgeModal,
-    ShapeModal
-  ],
-=======
-
 import { CoreModule } from '../core/core.module';
 import { WeaverComponent } from './weaver.component';
 
@@ -134,6 +66,5 @@ import { WeaverComponent } from './weaver.component';
     exports: [
         WeaverComponent
     ]
->>>>>>> upstream/master
 })
 export class WeaverModule { }
