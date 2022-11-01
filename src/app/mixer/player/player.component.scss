@@ -18,10 +18,21 @@
   height: inherit;
 }
 
-.loom-field, .pedals-field, .draft-field {
+.loom-field, .pedals-field, .draft-field, .op-field {
   display: block;
   margin-top: 10px;
   margin-bottom: 5px;
+}
+
+.op-menu {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.op-field{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 }
 
 .online {

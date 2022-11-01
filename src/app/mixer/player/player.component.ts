@@ -80,7 +80,7 @@ export class PlayerComponent implements OnInit {
     let h = this.ownElement.getBoundingClientRect().height;
     let t = document.querySelector("app-topbar").getBoundingClientRect().height;
     // console.log("player height is " + h.toString());
-    this.mixerElement.style.height = 'calc(100vh - '+ (h+t).toString() + 'px)';
+    this.mixerElement.style.height = 'calc(100vh - '+ (2.3*h+t).toString() + 'px)';
   }
 
   /**
