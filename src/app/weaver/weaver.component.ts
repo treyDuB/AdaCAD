@@ -26,6 +26,21 @@ import { SubdraftComponent } from '../mixer/palette/subdraft/subdraft.component'
 // enableProdMode();
 
 
+<<<<<<< HEAD
+import { PatternService } from '../core/provider/pattern.service';
+import { WeaveDirective } from '../core/directives/weave.directive';
+import { Draft } from '../core/model/draft';
+import { Shuttle } from '../core/model/shuttle';
+import { Pattern } from '../core/model/pattern';
+import { Shape } from '../core/model/shape';
+import { MatDialog, MatDialogConfig } from "@angular/material";
+import { ConnectionModal } from './modal/connection/connection.modal';
+import { InitModal } from './modal/init/init.modal';
+import { LabelModal } from './modal/label/label.modal';
+import { SelvedgeModal } from './modal/selvedge/selvedge.modal';
+import { ShapeModal } from './modal/shape/shape.modal';
+=======
+>>>>>>> upstream/master
 
 @Component({
   selector: 'app-weaver',
@@ -47,9 +62,34 @@ export class WeaverComponent implements OnInit {
   viewonly: boolean; 
   render: Render;
   /**
+<<<<<<< HEAD
+   * The weave Draft object.
+   * @property {Draft}
+   */
+  draft: Draft;
+
+  /**
+   * The list of all patterns saved. Provided by pattern service.
+   * @property {Array<Pattern>}
+   */
+  patterns;
+
+  /**
+   * List of all shapes defined on the draft
+   * @property {Array<Shape>}
+   */
+  shapes: Array<Shape>;
+
+  /**
+   * The name of the current view being shown.
+   * @property {string}
+   */
+  view: string = 'pattern';
+=======
   The current selection, as a Pattern 
   **/
   copy: Drawdown;
+>>>>>>> upstream/master
 
   selected;
 
@@ -80,10 +120,19 @@ export class WeaverComponent implements OnInit {
     private ws: WorkspaceService,
     private tree: TreeService) {
 
+<<<<<<< HEAD
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.draft = new Draft(20, result.warps, result.epi);
+        this.draft.shuttles[0].setColor('#3d3d3d');
+        this.shapes = this.draft.shapes;
+      }
+=======
     this.scrollingSubscription = this.scroll
           .scrolled()
           .subscribe((data: any) => {
             this.onWindowScroll(data);
+>>>>>>> upstream/master
     });
 
 
@@ -360,6 +409,110 @@ export class WeaverComponent implements OnInit {
 
 
 
+<<<<<<< HEAD
+    const dialogRef = this.dialog.open(ConnectionModal, {data: {shuttles: this.draft.shuttles}});
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.draft.connections.push(result);
+      }
+    });
+  }
+
+  /**
+   * Open the label modal.
+   * @extends WeaveComponent
+   * @returns {void}
+   */
+  public openLabelDialog() {
+
+    const dialogRef = this.dialog.open(LabelModal);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result);
+      }
+    });
+  }
+
+  /**
+   * Generates simulated floating selvedge.
+   */
+  public generateSelvedge() {
+    this.weaveRef.generateSelvedge();
+  }
+
+  /**
+   * Open the selvedge modal.
+   * @extends WeaveComponent
+   * @returns ???
+   */
+  public openSelvedgeDialog() {
+    const dialogRef = this.dialog.open(SelvedgeModal, 
+      {data: {draft: this.draft, L: this.draft.selvedgeL, R: this.draft.selvedgeR} 
+      // and anything else you need or would just help shorten code
+      });
+
+    dialogRef.afterClosed().subscribe(result => {console.log(result)});
+  }
+
+  /**
+   * Open shape modal.
+   * @extends WeaveComponent
+   * @returns {void}
+   */
+  public openShapeDialog(shape) {
+    var create = false;
+    if (!shape) {
+      shape = new Shape();
+      this.draft.addShape(shape);
+      create = true;
+    }
+
+    const dialogRef = this.dialog.open(ShapeModal, 
+      {data: {draft: this.draft, shapes: this.draft.shapes, shape: shape, shuttles: this.draft.shuttles}
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!create && result) {
+        console.log("shape edited");
+        this.draft.shapes[result.id] = result;
+      } else { // new shape created
+        console.log("shape created");
+      }
+      if (result) {
+        //console.log(result);
+        //console.log(this.draft.shapes);
+        this.redraw();
+      }
+    });
+
+    this.shapes = this.draft.shapes;
+  }
+
+  /**
+   * Change shuttle of row to next in list.
+   * @extends WeaveComponent
+   * @param {number} shuttle - ID of previous shuttle
+   * @param {number} the index of row within the pattern.
+   * @returns {void}
+   */
+  public rowShuttleChange(row, index) {
+
+    const len = this.draft.shuttles.length;
+    var shuttle = this.draft.rowShuttleMapping[row];
+
+    var newShuttle = (shuttle + 1) % len;
+    while (!this.draft.shuttles[newShuttle].visible) {
+      var newShuttle = (newShuttle + 1) % len;
+    }
+
+    this.draft.rowShuttleMapping[row] = newShuttle;
+
+    this.weaveRef.redrawRow(index * 20, index);
+  }
+=======
+>>>>>>> upstream/master
 
   /// PUBLIC FUNCTIONS
   /**
@@ -374,6 +527,18 @@ export class WeaverComponent implements OnInit {
 
   /**
    */
+<<<<<<< HEAD
+  public insertRow(i, shuttle) {
+    this.draft.insertRow(i, shuttle);
+    this.draft.updateConnections(i, 1);
+    this.weaveRef.updateSize();
+  }
+
+  public cloneRow(i, c, shuttle) {
+    this.draft.cloneRow(i, c, shuttle);
+    this.draft.updateConnections(i, 1);
+    this.weaveRef.updateSize();
+=======
    public materialChange() {
     const draft = this.tree.getDraft(this.id);
     const loom = this.tree.getLoom(this.id);
@@ -395,6 +560,7 @@ export class WeaverComponent implements OnInit {
     const loom_settings = this.tree.getLoomSettings(this.id);
     this.weaveRef.redraw(draft, loom, loom_settings, {drawdown: true, warp_materials:true,  weft_materials:true});
    // this.timeline.addHistoryState(this.draft);
+>>>>>>> upstream/master
   }
 
   public updateWarpSystems(pattern: Array<number>) {
@@ -415,6 +581,12 @@ export class WeaverComponent implements OnInit {
     this.weaveRef.redraw(draft, loom, loom_settings, {drawdown: true, weft_systems: true});
   }
 
+<<<<<<< HEAD
+  public createShuttle(e: any) {
+    this.draft.addShuttle(e.shuttle);
+    if (e.shuttle.image) {
+      this.weaveRef.updateSize();
+=======
   public updateWarpShuttles(pattern: Array<number>) {
     const draft = this.tree.getDraft(this.id);
     const loom = this.tree.getLoom(this.id);
@@ -493,12 +665,23 @@ export class WeaverComponent implements OnInit {
       this.weaveRef.isFrame = true;
     }else{
       this.weaveRef.isFrame = false;
+>>>>>>> upstream/master
     }
     this.weaveRef.colShuttleMapping = draft.colShuttleMapping.slice();
     this.weaveRef.rowShuttleMapping = draft.rowShuttleMapping.slice();
     this.weaveRef.redraw(draft, loom, loom_settings,{drawdown: true, loom:true, warp_systems: true, warp_materials: true, weft_systems: true, weft_materials:true});
   }
 
+<<<<<<< HEAD
+  public hideShuttle(e:any) {
+    this.draft.updateVisible();
+    this.weaveRef.updateSize();
+  }
+
+  public showShuttle(e:any) {
+    this.draft.updateVisible();
+    this.weaveRef.updateSize();
+=======
   /**
    * when a change happens to the defaults for looms, we must update all looms on screen
    */
@@ -532,6 +715,7 @@ export class WeaverComponent implements OnInit {
 
   //   console.log(e);
   //  this.draft.notes = e;
+>>>>>>> upstream/master
   }
 
   // public hideShuttle(e:any) {
