@@ -84,8 +84,9 @@ class PedalOpMapping {
 
   pair(pedalId: number, opName: string) {
     let o = this.unpairedOps.findIndex((op) => op.name == opName);
-    let thisOp = this.unpairedOps.splice(o, 1);
-    this.pairs[pedalId] = thisOp[0];
+    // let thisOp = this.unpairedOps.splice(o, 1);
+    let thisOp = this.ops;
+    this.pairs[pedalId] = thisOp[o];
   }
 
   opIsPaired(opName: string) {
@@ -104,8 +105,8 @@ class PedalOpMapping {
 
   unpairPedal(id: number) {
     console.log(`unpairing pedal ${id}`);
-    let op = this.pairs[id];
-    this.unpairedOps.splice(op.id, 0, op);
+    // let op = this.pairs[id];
+    // this.unpairedOps.splice(op.id, 0, op);
     delete this.pairs[id];
   }
 
@@ -299,13 +300,13 @@ export class DraftPlayerService {
     console.log("state is ", this.state);
   }
 
-  // e is from select event, with value = op name (string)
+  // e is a string = op.name
   setPedalOp(e: any, p: Pedal) {
     console.log(e, p);
     if (this.pedalOps.pedalIsPaired(p.id)) {
       this.pedalOps.unpairPedal(p.id);
     }
-    this.pedalOps.pair(p.id, e.value);
+    this.pedalOps.pair(p.id, e);
     console.log("pedals dict", this.pedalOps.pairs);
   }
 

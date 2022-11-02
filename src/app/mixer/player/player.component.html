@@ -77,7 +77,7 @@
       </mat-expansion-panel-header>
   
         <div id="op-container" class="op-field">
-          <ng-container *ngFor="let op of pls.pedalOps.unpairedOps">
+          <ng-container *ngFor="let op of pls.pedalOps.ops">
                 <button mat-stroked-button 
                   [name]=op.name 
                   [matMenuTriggerFor]="menu">
@@ -86,7 +86,7 @@
                 <mat-menu #menu="matMenu">
                   <ng-container *ngFor="let p of pls.pedals">
                     <button mat-stroked-menu-item
-                    (click) ="pls.setPedalOp($event, p)">
+                    (click) ="pls.setPedalOp(op.name, p)">
                     <!-- <ng-container *ngIf="pls.pedalOps.pairs[p.id]">
                       <mat-option [value]="pls.pedalOps.pairs[p.id].name">
                         {{pls.pedalOps.pairs[p.id].name}}
