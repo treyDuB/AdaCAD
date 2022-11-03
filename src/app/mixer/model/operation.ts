@@ -119,6 +119,7 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
       }
     } else if (base.classifier.input_params === 'req') {
       let pipeOp = base as Op<Pipe,AllRequired>;
+      console.log("perform op, pipe all required");
       tree_op_perform = (op_inputs: Array<OpInput>) => {
         if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
           return Promise.resolve([]) as Promise<Array<Draft>>;
@@ -166,8 +167,8 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
       }
     } else if (base.classifier.input_params === 'req') {
       let mergeOp = base as Op<Merge, AllRequired>;
-      if (base.inlets.filter((i) => i.num_drafts != 1).length) {
-        // complex merge, at least one inlet can take multiple drafts, so we have to prepare
+      if (base.inlets.length > 1 && base.inlets.filter((i) => i.num_drafts != 1).length) {
+        // complex merge, more than one inlet and at least one inlet can take multiple drafts, so we have to prepare
         // the inputs a little differently
         tree_op_perform = (op_inputs: Array<OpInput>) => {
           if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
@@ -182,7 +183,7 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
           return Promise.resolve([mergeOp.perform(inputs, op_inputs[0].params)]);
         }
       } else {
-        // simple merge, either 1 multi-inlet or mulitple single inlets
+        // simple merge, either 1 multi-inlet or multple single inlets
         tree_op_perform = (op_inputs: Array<OpInput>) => {
           if (op_inputs.filter((el) => (el.op_name == 'child')).length == 0) {
             return Promise.resolve([]) as Promise<Array<Draft>>;

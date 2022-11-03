@@ -1,21 +1,25 @@
 import { Injectable} from '@angular/core';
 import { wefts } from '../../core/model/drafts';
-import { PedalsService, PedalStatus, Pedal } from '../../core/provider/pedals.service';
-import { BaseOp as Op, BuildableOperation as GenericOp, TreeOperation as TreeOp,
+import { Draft } from '../../core/model/datatypes';
+import { PedalsService, PedalStatus, Pedal } from './pedals.service';
+import { BaseOp as Op, BuildableOperation as GenericOp, 
+  TreeOperation as TreeOp,
   Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
   SingleInlet, OpInput
 } from '../model/operation';
 import * as defs from '../model/op_definitions';
-import { Draft } from '../../core/model/datatypes';
+import { OpChain, OpRoulette, OpPairing, PedalOpMapping,
+  makeOpPairing, makeOpChain
+} from '../model/op_mappings';
 import { OperationService } from '../provider/operation.service';
 import { EventEmitter } from 'events';
 
-interface PedalsConfig {
-  numPedals: number,
-  ops: Array<PlayerOp>
-}
+// interface PedalsConfig {
+//   numPedals: number,
+//   ops: Array<PlayerOp>
+// }
 
-interface PlayerOp {
+export interface PlayerOp {
   id?: number,
   name: string,
   dx?: string,
@@ -43,77 +47,87 @@ export interface WeavingPick {
 /**
  * @class PedalOpMapping
  * @desc Represents a set of two-way bindings between a set of Pedals
- * and a set of (Player)Operations. An Op can only be bound to one Pedal, 
- * and a Pedal can only be bound to one Op
- * 
+ * and a set of (Player)Operations. A pedal can only be bound to one
+ * Action (a single Op, a chain of Ops, or to control an OpRoulette)
  * @todo The second restriction may change, it might make sense for pedals to
  * get bound to a sequence of operations.
  */
-class PedalOpMapping {
+class PedalConfig {
   // numPedals: number;
   pedals: Array<Pedal>;
   ops: Array<PlayerOp>;
-  unpairedOps: Array<PlayerOp>;
-  pairs: any;  // pedal ID (number) <-> op (PlayerOp)
+  availPedals: Array<number>;
+  mapping: PedalOpMapping;  // pedal ID (number) <-> op (PlayerOp)
 
-  constructor(pedalArray) {
+  constructor(pedalArray: Array<Pedal>, loadConfig = false) {
     this.pedals = pedalArray;
     this.ops = []
-    this.unpairedOps = [];
-    this.pairs = {};
+    this.availPedals = pedalArray.map((p) => p.id);
+    this.mapping = [];
   }
 
   get numPedals() {
     return this.pedals.length;
   }
 
-  get numPairs() {
-    return Object.entries(this.pairs).length;
+  get numMappings() {
+    return Object.entries(this.mapping).length;
   }
 
   addPedal(p: Pedal) {
-    this.pedals.push(p);
+    // this.pedals.push(p);
+    this.availPedals.push(p.id);
+  }
+
+  remPedal() {
+    // this.pedals.pop();
+    this.availPedals.filter((id) => id != this.pedals.length);
   }
 
   addOperation(o: PlayerOp) {
     o.id = this.ops.length;
     this.ops.push(o);
-    this.unpairedOps.push(o);
+    // this.unpairedOps.push(o);
     // console.log(this.ops);
   }
 
   pair(pedalId: number, opName: string) {
-    let o = this.unpairedOps.findIndex((op) => op.name == opName);
+    let o = this.ops.findIndex((op) => op.name == opName);
     // let thisOp = this.unpairedOps.splice(o, 1);
     let thisOp = this.ops;
-    this.pairs[pedalId] = thisOp[o];
+    this.mapping[pedalId] = makeOpPairing(pedalId, thisOp[o]); 
   }
 
-  opIsPaired(opName: string) {
-    let opPairs = [];
+  opIsPaired(opName: string): boolean {
+    // let opPairs = [];
     // console.log(this.pairs);
-    if (this.numPairs > 0) {
-      opPairs = Object.values(this.pairs).map((x: PlayerOp) => x.name);
-    }
-    // console.log(opPairs);
-    return (opPairs.indexOf(opName));
+    if (this.mapping.filter((m) => m.name.includes(opName)).length > 0) {
+      return true;
+    } else return false;
   }
+  //   }
+  //   if (this.numMappings > 0) {
+  //     opPairs = Object.values(this.mapping).map((x: PlayerOp) => x.name);
+  //   }
+  //   // console.log(opPairs);
+  //   return (opPairs.indexOf(opName));
+  // }
 
   pedalIsPaired(pedalId: number) {
-    return (this.pairs[pedalId]);
+    return (this.mapping[pedalId]);
   }
 
   unpairPedal(id: number) {
     console.log(`unpairing pedal ${id}`);
     // let op = this.pairs[id];
     // this.unpairedOps.splice(op.id, 0, op);
-    delete this.pairs[id];
+    delete this.mapping[id];
   }
 
-  unpairOp(name: string) {
-    let pid = this.opIsPaired(name);
-    this.unpairPedal(pid);
-  }
+  // unpairOp(name: string) {
+  //   let pid = this.opIsPaired(name);
+  //   this.unpairPedal(pid);
+  // }
 }
 
 /** @const forward a player-specific function to progress through the draft */
@@ -170,7 +184,9 @@ function playerOpFrom(op: GenericOp) {
  * a TreeOperation is compatible with the player if it takes one or zero draft inputs 
  * and outputs one draft.
  */
-type PlayableTreeOp = TreeOp & ({ inlets: [ SingleInlet ] } | { inlets: [] });
+type PlayableTreeOp = TreeOp & 
+  ( { inlets: [ SingleInlet ] } | 
+    { inlets: [] });
 
 /** @function playerOpFromTree (untested) */
 function playerOpFromTree(op: PlayableTreeOp) {
@@ -198,13 +214,16 @@ function playerOpFromTree(op: PlayableTreeOp) {
   return p;
 }
 
+/**
+ * The Draft Player Service is in charge of 
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class DraftPlayerService {
   state: PlayerState;
   loom: LoomConfig;
-  pedalOps: PedalOpMapping;
+  pedalOps: PedalConfig;
   redraw = new EventEmitter();
 
   constructor(
@@ -223,7 +242,7 @@ export class DraftPlayerService {
     this.state = { draft: defs.tabby.perform([1]), row: 0, numPicks: 0 };
     this.loom = { warps: 2640, draftTiling: true };
 
-    this.pedalOps = new PedalOpMapping(this.pedals);
+    this.pedalOps = new PedalConfig(this.pedals);
 
     // load the draft progress ops
     this.pedalOps.addOperation(forward);
@@ -276,13 +295,13 @@ export class DraftPlayerService {
     //     this.setPedalOp({value: 'forward'}, this.pedals[0]);
     //   }
     // });
-    this.pds.pedal_array.on('child-change', (e) => this.onPedal(e.id));
+    this.pds.on('pedal-step', (id) => this.onPedal(id));
   }
 
   get pedals() { return this.pds.pedals; }
   get readyToWeave() {  // need either one pedal forward or one pedal reverse, in order to progress through draft
     return (this.pds.readyToWeave && 
-      ((this.pedalOps.opIsPaired('forward') > -1) || (this.pedalOps.opIsPaired('reverse') > -1))
+      (this.pedalOps.opIsPaired('forward') || this.pedalOps.opIsPaired('reverse'))
     );
   }
   get weaving() {
@@ -307,12 +326,12 @@ export class DraftPlayerService {
       this.pedalOps.unpairPedal(p.id);
     }
     this.pedalOps.pair(p.id, e);
-    console.log("pedals dict", this.pedalOps.pairs);
+    console.log("pedals dict", this.pedalOps.mapping);
   }
 
   onPedal(id: number) {
-    if (this.pedalOps.pairs[id]) {
-      this.pedalOps.pairs[id].perform(this.state)
+    if (this.pedalOps.mapping[id]) {
+      this.pedalOps.mapping[id].perform(this.state)
       .then((state: PlayerState) => {
         this.state = state;
         console.log(this.state);

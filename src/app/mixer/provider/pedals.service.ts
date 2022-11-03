@@ -1,10 +1,18 @@
 import { Injectable, Query } from '@angular/core';
-import { DraftPlayerService, WeavingPick } from "../../mixer/provider/draftplayer.service";
-import { Operation } from '../../mixer/provider/operation.service';
+import { DraftPlayerService, WeavingPick } from "./draftplayer.service";
+import { Operation } from './operation.service';
 import { EventEmitter } from 'events';
 import { getDatabase } from "firebase/database";
 import { Database } from '@angular/fire/database';
-import { DBListener, OnlineStatus, DBWriter, DBListenerArray } from './dbnodes.service';
+import { DBListener, OnlineStatus, DBWriter, DBListenerArray } from '../model/dbnodes';
+
+/**
+ * The Pedals service is in charge of updating the database 
+ * connections to communicate with the loom hardware. In AdaCAD, 
+ * its main responsibility is to keep an up-to-date list of the pedals
+ * and when they get stepped on; as well as any other hardware 
+ * statuses.
+ */
 
 export interface Pedal {
   id: number,
@@ -91,7 +99,7 @@ export class PedalStatus extends EventEmitter {
 @Injectable({
   providedIn: 'root'
 })
-export class PedalsService {
+export class PedalsService extends EventEmitter {
 
   db: Database;
   dbNodes: Array<any>;
@@ -110,6 +118,7 @@ export class PedalsService {
   pedals: Array<Pedal> = [];
 
   constructor() { 
+    super();
     // init: start listening to changes in Firebase DB from the Pi
     console.log("pedals service constructor");
     this.db = getDatabase();
@@ -135,13 +144,18 @@ export class PedalsService {
 
     this.pedal_array.on('child-added', (newNode) => {
       this.pedals.push(this.nodeToPedal(newNode));
-      this.pedal_array.emit('pedal-added', this.pedals.length);
+      this.emit('pedal-added', this.pedals.length);
+    })
+
+    this.pedal_array.on('child-removed', () => {
+      this.pedals.pop();
+      this.emit('pedal-removed');
     })
 
     /** @todo */
     this.pedal_array.on('child-change', (e) => {
-      console.log("child change ", e);
       this.pedals[e.id].state = e.val;
+      this.emit('pedal-step', e.id);
       // e = {id: which pedal's id, val: pedal state}
       // call pedal.execute or whatever it ends up being
       // this.player.onPedal(e.id, e.val);

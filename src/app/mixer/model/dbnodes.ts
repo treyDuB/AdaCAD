@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
-import { getDatabase, child, ref, set, get, query, onValue, DatabaseReference, onChildAdded, onChildChanged, onChildRemoved} from "firebase/database";
+import { child, ref, set, get, query, onValue, DatabaseReference, onChildAdded, onChildChanged, onChildRemoved} from "firebase/database";
 import { Database } from '@angular/fire/database';
 import { EventEmitter } from 'events';
-import { NumericDataType } from '@tensorflow/tfjs';
 
 interface NodeParams {
   db?: Database,
@@ -254,7 +252,7 @@ export class DBListenerArray extends EventEmitter {
     }));
 
     this.unsubscribers.push(
-      onChildRemoved(this.parentNode.ref, (snapshot) => {
+      onChildRemoved(this.parentNode.ref, () => {
         // console.log("child removed", snapshot);
         this.popNode();
         this.emit('child-removed');
@@ -379,11 +377,3 @@ export class OnlineStatus extends DBListener {
   }
 }
 
-
-@Injectable({
-  providedIn: 'root'
-})
-export class DbNodesService {
-
-  constructor() { }
-}

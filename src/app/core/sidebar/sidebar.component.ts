@@ -12,7 +12,7 @@ import { ActionsComponent } from '../modal/actions/actions.component';
 import { InitModal } from '../../core/modal/init/init.modal';
 import { MaterialsService } from '../provider/materials.service';
 import { StateService } from '../provider/state.service';
-import { PedalsService } from '../provider/pedals.service';
+import { PedalsService } from '../../mixer/provider/pedals.service';
 import { Draft, Loom, LoomSettings } from '../model/datatypes';
 import { TreeService } from '../../mixer/provider/tree.service';
 

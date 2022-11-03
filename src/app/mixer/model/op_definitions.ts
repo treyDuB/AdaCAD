@@ -19,11 +19,14 @@ const { Seed, Pipe, Merge, Branch, Bus } = OpFactories;
 
 /************** BASIC OPERATIONS **********************/
 /** 
- * The operations that have been refactored into this file (from the operations service)
- * are the ones that work exclusively with Draft data that is not dependent on any other
- * contextual information, like warp/weft systems (which span multiple Draft objects in 
- * the tree). These operations also don't require any of the services to work, such as
- * the ML service (vae) which the "germanify" and "crackleify" operations rely on.
+ * The operations that have been refactored into this file 
+ * (from the operations service) are the ones that work exclusively
+ *  with Draft data that is not dependent on any other
+ * contextual information, like warp/weft systems (which span 
+ * multiple Draft objects in the tree). 
+ * These operations also don't require any of the services to work, 
+ * such as the ML service (vae) which the "germanify" and 
+ * "crackleify" operations rely on.
  */
 
 export const tabby = Seed.DraftsOptional({
@@ -2375,7 +2378,7 @@ export const tile = Merge.AllRequired({
     num_drafts: -1
   }],
   perform: (inputs: Array<Draft>, params: Array<number>) => {
-    const all_drafts = inputs
+    const all_drafts = inputs;
 
     const all_warps = all_drafts.map(el => warps(el.drawdown)).filter(el => el > 0);
     const total_warps = utilInstance.lcm(all_warps);

@@ -19,7 +19,7 @@ import { ViewportService } from '../provider/viewport.service';
 import { NoteComponent } from './note/note.component';
 import { Note, NotesService } from '../../core/provider/notes.service';
 import { StateService } from '../../core/provider/state.service';
-import { PedalsService } from '../../core/provider/pedals.service';
+import { PedalsService } from '../provider/pedals.service';
 import { OperationService } from '../provider/operation.service';
 import { timeStamp } from 'console';
 import { getDraftName, initDraftWithParams, warps, wefts } from '../../core/model/drafts';

@@ -56,7 +56,7 @@ import { AuthService } from './provider/auth.service';
 
 import { PlayerComponent } from '../mixer/player/player.component';
 import { DraftPlayerService } from '../mixer/provider/draftplayer.service';
-import { PedalsService } from './provider/pedals.service';
+import { PedalsService } from '../mixer/provider/pedals.service';
 
 @NgModule({
     imports: [
