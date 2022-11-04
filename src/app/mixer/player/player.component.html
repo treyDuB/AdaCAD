@@ -86,7 +86,7 @@
                 <mat-menu #menu="matMenu">
                   <ng-container *ngFor="let p of pls.pedals">
                     <button mat-stroked-menu-item
-                    (click) ="pls.setPedalOp(op.name, p)">
+                    (click) ="pls.pedalOps.chain(p.id, op.name)">
                     <!-- <ng-container *ngIf="pls.pedalOps.pairs[p.id]">
                       <mat-option [value]="pls.pedalOps.pairs[p.id].name">
                         {{pls.pedalOps.pairs[p.id].name}}

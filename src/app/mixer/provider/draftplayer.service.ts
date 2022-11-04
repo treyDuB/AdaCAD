@@ -25,6 +25,7 @@ export interface PlayerOp {
   dx?: string,
   op?: GenericOp,
   weavingOnly?: boolean,
+  chain?: boolean,
   perform: (init: PlayerState) => Promise<PlayerState>;
 }
 
@@ -84,9 +85,12 @@ class PedalConfig {
     this.availPedals.filter((id) => id != this.pedals.length);
   }
 
-  addOperation(o: PlayerOp) {
+  addOperation(o: PlayerOp, chain?: boolean) {
     o.id = this.ops.length;
     this.ops.push(o);
+    if (chain) {
+      o.chain = chain;
+    }
     // this.unpairedOps.push(o);
     // console.log(this.ops);
   }
@@ -98,6 +102,36 @@ class PedalConfig {
     this.mapping[pedalId] = makeOpPairing(pedalId, thisOp[o]); 
   }
 
+  chain(pedalId: number, opName: string) {
+    let o = this.ops[this.ops.findIndex((op) => op.name == opName)];
+    if (this.pedalIsChained(pedalId)) {
+      let curr_ops = (<OpChain> this.mapping[pedalId]).ops;
+      this.mapping[pedalId] = makeOpChain(curr_ops.concat([o]), pedalId);
+    } else if (this.pedalIsPaired(pedalId)) {
+      let first_op = (<OpPairing> this.mapping[pedalId]).op;
+      this.mapping[pedalId] = makeOpChain([first_op].concat([o]), pedalId);
+    } else {
+      this.mapping[pedalId] = makeOpChain([o], pedalId);
+    }
+  }
+
+  chainToPedal(pedalId: number, ops: Array<string>) {
+    let op_array = ops.map((name) => this.ops[this.ops.findIndex((op) => op.name == name)]);
+    if (this.pedalIsChained(pedalId)) { 
+      // if pedal already has a chain, add ops to the chain
+      let curr_ops = (<OpChain> this.mapping[pedalId]).ops;
+      this.mapping[pedalId] = makeOpChain(curr_ops.concat(op_array), pedalId);
+    } else if (this.pedalIsPaired(pedalId)) {
+      // if pedal is paired, you can turn it into a chain
+      let first_op = (<OpPairing> this.mapping[pedalId]).op;
+      this.mapping[pedalId] = makeOpChain([first_op].concat(op_array), pedalId);
+    } else {
+      // pedal doesn't have anything mapped, just add a new chain
+      this.mapping[pedalId] = makeOpChain(op_array, pedalId);
+    }
+  }
+
+  // will return true if an op is paired or part of a chain
   opIsPaired(opName: string): boolean {
     // let opPairs = [];
     // console.log(this.pairs);
@@ -115,6 +149,11 @@ class PedalConfig {
 
   pedalIsPaired(pedalId: number) {
     return (this.mapping[pedalId]);
+  }
+
+  pedalIsChained(pedalId: number) {
+    if (this.pedalIsPaired(pedalId) && this.mapping[pedalId].name.startsWith('ch')) { return true; }
+    else {return false; }
   }
 
   unpairPedal(id: number) {
@@ -142,7 +181,9 @@ const forward: PlayerOp = {
 /** @const refresh a player-specific function to progress through the draft (re-sends the row to give more time) */
 const refresh: PlayerOp = {
   name: 'refresh',
-  perform: (init: PlayerState) => Promise.resolve(init)
+  perform: (init: PlayerState) => { 
+    return Promise.resolve({ draft: init.draft, row: init.row, numPicks: init.numPicks+1});
+  }
 }
 
 /** @const reverse a player-specific function to progress backwards through the draft */
@@ -161,13 +202,13 @@ function playerOpFrom(op: GenericOp) {
     const pipeOp = op as Op<Pipe, AllRequired>;
     perform = function(init: PlayerState) {
       let d: Draft = pipeOp.perform(init.draft, getDefaultParams(pipeOp));
-      return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });
+      return Promise.resolve({ draft: d, row: (init.row) % wefts(d.drawdown), numPicks: init.numPicks });
     }
   } else if (op.classifier.type === 'seed') {
     const seedOp = op as Op<Seed, DraftsOptional>;
     perform = function(init: PlayerState) {
       let d: Draft = seedOp.perform(getDefaultParams(seedOp));
-      return Promise.resolve({ draft: d, row: init.row, numPicks: init.numPicks });
+      return Promise.resolve({ draft: d, row: (init.row) % wefts(d.drawdown), numPicks: init.numPicks });
     }
   }
   
@@ -295,7 +336,16 @@ export class DraftPlayerService {
     //     this.setPedalOp({value: 'forward'}, this.pedals[0]);
     //   }
     // });
+    console.log('pedal ops added');
+
     this.pds.on('pedal-step', (id) => this.onPedal(id));
+
+    this.pds.on('pedal-added', (n) => {
+      if (n == 1) {
+        this.pedalOps.pair(0, 'forward');
+        console.log("pedals dict", this.pedalOps.mapping);
+      }
+    })
   }
 
   get pedals() { return this.pds.pedals; }
@@ -330,7 +380,9 @@ export class DraftPlayerService {
   }
 
   onPedal(id: number) {
+    console.log('pedal ', id);
     if (this.pedalOps.mapping[id]) {
+      console.log('mapping exists for pedal');
       this.pedalOps.mapping[id].perform(this.state)
       .then((state: PlayerState) => {
         this.state = state;

@@ -143,6 +143,7 @@ export class PedalsService extends EventEmitter {
       this.weavingWriters(state));
 
     this.pedal_array.on('child-added', (newNode) => {
+      console.log('pedals service: pedal added');
       this.pedals.push(this.nodeToPedal(newNode));
       this.emit('pedal-added', this.pedals.length);
     })

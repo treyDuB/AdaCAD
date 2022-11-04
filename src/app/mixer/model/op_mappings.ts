@@ -2,7 +2,7 @@
  * More complex ways to combine operations and pedals 
  * in the Draft Player
  */
-import { Draft, getDefaultParams } from "../../core/model/datatypes";
+import { Draft, DraftsOptional, getDefaultParams, Seed } from "../../core/model/datatypes";
 import { BaseOp as Op, Pipe, AllRequired } from "../../core/model/datatypes";
 import { PlayerOp, PlayerState } from "../provider/draftplayer.service";
 
@@ -46,7 +46,12 @@ export interface OpChain extends PedalEvent{
 }
 
 export function makeOpChain(ops: Array<PlayerOp>, p?: number): OpChain {
-  let res: OpChain;
+  let res: OpChain = {
+    pedal: -1,
+    name: "",
+    ops: [],
+    perform: (init: PlayerState) => {return Promise.resolve(init);}
+  };
   if (p) {
     res.pedal = p;
   } else { res.pedal = -1; }
@@ -57,14 +62,21 @@ export function makeOpChain(ops: Array<PlayerOp>, p?: number): OpChain {
 
   res.ops = ops;
   res.perform = (init: PlayerState) => {
-    let d: Draft;
+    let d: Draft = init.draft;
     for (let o of ops) {
-      let base_op = o.op as Op<Pipe, AllRequired>;
-      d = base_op.perform(d, getDefaultParams(base_op));
+      if (o.op.classifier.type == 'seed') {
+        let base_op = o.op as Op<Seed, DraftsOptional>;
+        d = base_op.perform(getDefaultParams(base_op));
+      } else if (o.op.classifier.type == 'pipe') {
+        let base_op = o.op as Op<Pipe, AllRequired>;
+        d = base_op.perform(d, getDefaultParams(base_op));
+      }
     }
 
     return Promise.resolve({draft: d, row: init.row, numPicks: init.numPicks});
   }
+
+  console.log('op chain: ', res);
 
   return res;
 }
