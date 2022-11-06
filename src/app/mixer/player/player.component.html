@@ -75,10 +75,15 @@
           Operations
         </mat-panel-title>
       </mat-expansion-panel-header>
-  
-        <div id="op-container" class="op-field">
-          <ng-container *ngFor="let op of pls.pedalOps.ops">
-                <button mat-stroked-button 
+        
+        <ng-container *ngFor="let class of pls.draftClassification">
+          <div id="op-container" class="op-field">
+          <h3>{{class.category}}</h3>
+          <p> {{class.dx}}</p>
+          <ng-container *ngFor="let op of class.ops">
+              <button mat-stroked-button
+                  [matTooltip] =op.dx
+                  matTooltipClass="visibleTooltip" 
                   [name]=op.name 
                   [matMenuTriggerFor]="menu">
                   {{op.name}}
@@ -96,9 +101,9 @@
                     </button>
                   </ng-container>
                 </mat-menu>
-
           </ng-container>
         </div>
+        </ng-container>
 
         <!-- 
       

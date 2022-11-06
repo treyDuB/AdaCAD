@@ -29,6 +29,12 @@ export interface PlayerOp {
   perform: (init: PlayerState) => Promise<PlayerState>;
 }
 
+export interface DraftOperationClassification {
+  category: string,
+  dx: string,
+  ops: Array<PlayerOp> 
+ }
+
 interface LoomConfig {
   warps: number,
   draftTiling: boolean
@@ -266,6 +272,7 @@ export class DraftPlayerService {
   loom: LoomConfig;
   pedalOps: PedalConfig;
   redraw = new EventEmitter();
+  draftClassification: Array<DraftOperationClassification> = [];
 
   constructor(
     public pds: PedalsService,
@@ -313,6 +320,18 @@ export class DraftPlayerService {
     const flipy = addOp(defs.flipy);
     const symm = addOp(defs.makesymmetric);
     const stretch = addOp(defs.stretch);
+
+    this.draftClassification.push(
+      {category: 'structure',
+      dx: "0-1 input, 1 output, algorithmically generates weave structures based on parameters",
+      ops: [tabby, twill, satin, waffle, random]}
+    );
+
+    this.draftClassification.push(
+      {category: 'transformation',
+      dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
+      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm]}
+    );
 
     // //test this
     // console.log(this.oss.getOp('germanify'));
