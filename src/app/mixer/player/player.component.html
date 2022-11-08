@@ -82,9 +82,9 @@
           <p> {{class.dx}}</p>
           <ng-container *ngFor="let op of class.ops">
               <button mat-stroked-button
-                  [matTooltip] =op.dx
-                  matTooltipClass="visibleTooltip" 
-                  [name]=op.name 
+                  [matTooltip] = op.dx
+                  matTooltipClass= "visibleTooltip" 
+                  [name] = op.name 
                   [matMenuTriggerFor]="menu">
                   {{op.name}}
                 </button> 

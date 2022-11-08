@@ -354,6 +354,8 @@ export class DBListenerArray extends EventEmitter {
   }
 }
 
+/** special types of DBNodes */
+
 export class OnlineStatus extends DBListener {
   _name: string;
   _ref: DatabaseReference;

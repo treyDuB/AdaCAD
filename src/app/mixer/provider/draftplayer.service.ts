@@ -8,26 +8,13 @@ import { BaseOp as Op, BuildableOperation as GenericOp,
   SingleInlet, OpInput
 } from '../model/operation';
 import * as defs from '../model/op_definitions';
-import { OpChain, OpRoulette, OpPairing, PedalOpMapping,
-  makeOpPairing, makeOpChain
-} from '../model/op_mappings';
+import { PlayerOp, playerOpFrom, OpChain, OpRoulette, OpPairing, PedalOpMapping,
+  makeOpPairing, makeOpChain, forward, refresh, reverse
+} from '../model/player_ops';
+import { PlayerState, WeavingPick, copyState, initState } from '../model/player';
 import { OperationService } from '../provider/operation.service';
 import { EventEmitter } from 'events';
 
-// interface PedalsConfig {
-//   numPedals: number,
-//   ops: Array<PlayerOp>
-// }
-
-export interface PlayerOp {
-  id?: number,
-  name: string,
-  dx?: string,
-  op?: GenericOp,
-  weavingOnly?: boolean,
-  chain?: boolean,
-  perform: (init: PlayerState) => Promise<PlayerState>;
-}
 
 export interface DraftOperationClassification {
   category: string,
@@ -40,20 +27,10 @@ interface LoomConfig {
   draftTiling: boolean
 }
 
-export interface PlayerState {
-  draft: Draft,
-  row: number,
-  numPicks: number,
-}
-
-export interface WeavingPick {
-  pickNum: number,
-  rowData: string
-}
-
 /**
- * @class PedalOpMapping
- * @desc Represents a set of two-way bindings between a set of Pedals
+ * @class PedalConfig
+ * @desc OLD, UPDATE THIS ---> 
+ * Represents a set of two-way bindings between a set of Pedals
  * and a set of (Player)Operations. A pedal can only be bound to one
  * Action (a single Op, a chain of Ops, or to control an OpRoulette)
  * @todo The second restriction may change, it might make sense for pedals to
@@ -175,56 +152,6 @@ class PedalConfig {
   // }
 }
 
-/** @const forward a player-specific function to progress through the draft */
-const forward: PlayerOp = {
-  name: 'forward',
-  perform: (init: PlayerState) => { 
-    let nextRow = (init.row+1) % wefts(init.draft.drawdown);
-    return Promise.resolve({ draft: init.draft, row: nextRow, numPicks: init.numPicks+1 }); 
-  }
-}
-
-/** @const refresh a player-specific function to progress through the draft (re-sends the row to give more time) */
-const refresh: PlayerOp = {
-  name: 'refresh',
-  perform: (init: PlayerState) => { 
-    return Promise.resolve({ draft: init.draft, row: init.row, numPicks: init.numPicks+1});
-  }
-}
-
-/** @const reverse a player-specific function to progress backwards through the draft */
-const reverse: PlayerOp = {
-  name: 'reverse',
-  perform: (init: PlayerState) => { 
-    let nextRow = (init.row+wefts(init.draft.drawdown)-1) % wefts(init.draft.drawdown);
-    return Promise.resolve({ draft: init.draft, row: nextRow, numPicks: init.numPicks+1});
-  }
-}
-
-function playerOpFrom(op: GenericOp) {
-  // use "rotate" op as an example
-  let perform;
-  if (op.classifier.type === 'pipe') {
-    const pipeOp = op as Op<Pipe, AllRequired>;
-    perform = function(init: PlayerState) {
-      let d: Draft = pipeOp.perform(init.draft, getDefaultParams(pipeOp));
-      return Promise.resolve({ draft: d, row: (init.row) % wefts(d.drawdown), numPicks: init.numPicks });
-    }
-  } else if (op.classifier.type === 'seed') {
-    const seedOp = op as Op<Seed, DraftsOptional>;
-    perform = function(init: PlayerState) {
-      let d: Draft = seedOp.perform(getDefaultParams(seedOp));
-      return Promise.resolve({ draft: d, row: (init.row) % wefts(d.drawdown), numPicks: init.numPicks });
-    }
-  }
-  
-  var p: PlayerOp = { 
-    name: op.name,
-    op: op,
-    perform: perform
-  }
-  return p;
-}
 
 /** 
  * @type 
@@ -242,14 +169,25 @@ function playerOpFromTree(op: PlayableTreeOp) {
   if (op.inlets.length == 0) {
     perform = function(init: PlayerState) {
       return op.perform([param_input]).then((output) => {
-        return { draft: output[0], row: init.row, numPicks: init.numPicks };
+        return { 
+          draft: output[0], 
+          row: init.row, 
+          weaving: init.weaving, 
+          pedal: op.name, 
+          numPicks: init.numPicks 
+        };
       });
     }
   } else {
     perform = function(init: PlayerState) {
       let draft_input: OpInput = { op_name: 'child', drafts: [init.draft], params: [], inlet: 0}
       return op.perform([param_input, draft_input]).then((output) => {
-        return { draft: output[0], row: init.row, numPicks: init.numPicks };
+        return { 
+          draft: output[0], 
+          row: init.row, 
+          weaving: init.weaving,
+          pedal: op.name,
+          numPicks: init.numPicks };
       });
     }
   }
@@ -262,7 +200,7 @@ function playerOpFromTree(op: PlayableTreeOp) {
 }
 
 /**
- * The Draft Player Service is in charge of 
+ * The Draft Player Service is in charge of updating the the global PlayerState and tracking where the weaver is in the draft.
  */
 @Injectable({
   providedIn: 'root'
@@ -287,7 +225,9 @@ export class DraftPlayerService {
     //   this.setDraft(result[0]);
     // });
 
-    this.state = { draft: defs.tabby.perform([1]), row: 0, numPicks: 0 };
+    this.state = initState();
+    this.state.draft = defs.tabby.perform([1]);
+
     this.loom = { warps: 2640, draftTiling: true };
 
     this.pedalOps = new PedalConfig(this.pedals);
@@ -402,12 +342,12 @@ export class DraftPlayerService {
     console.log('pedal ', id);
     if (this.pedalOps.mapping[id]) {
       console.log('mapping exists for pedal');
-      this.pedalOps.mapping[id].perform(this.state)
+      this.pedalOps.mapping[id].perform(this.state, id)
       .then((state: PlayerState) => {
         this.state = state;
         console.log(this.state);
         this.redraw.emit('redraw');
-        if (this.weaving) {
+        if (this.state.weaving) {
           // this.pds.loom_ready.once('change', (state) => {
           //   if (state) {
               console.log("draft player: sending row");
