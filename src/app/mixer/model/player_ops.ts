@@ -8,12 +8,6 @@ import { BaseOp as Op, BuildableOperation as GenericOp,
   Seed, Pipe, AllRequired } from "../../core/model/datatypes";
 import { PlayerState, initState, copyState } from "./player";
 
-interface PedalEvent {
-  pedal?: number,
-  name: string
-  perform: (init: PlayerState, ...args) => Promise<PlayerState>;
-}
-
 export interface SingleOp {
   id?: number,
   name: string,
@@ -88,6 +82,13 @@ export function playerOpFrom(op: GenericOp) {
     perform: perform
   }
   return p;
+}
+
+/** things that can happen in response to a pedal */
+interface PedalEvent {
+  pedal?: number,
+  name: string
+  perform: (init: PlayerState, ...args) => Promise<PlayerState>;
 }
 
 /** 
@@ -181,7 +182,7 @@ export class OpRoulette implements PedalEvent {
   p_select_b?: number;
   p_conf: number;
   pos: number = -1;
-  ops: Array<SingleOp | OpChain>;
+  ops: Array<SingleOp | OpChain> = [];
   selecting: boolean = false;
 
   /** 
@@ -215,10 +216,12 @@ export class OpRoulette implements PedalEvent {
 
   addOp(o: SingleOp | OpChain) {
     this.ops.push(o);
+    if (this.pos < 0) this.pos = 0;
   }
 
   delOp(x: number) {
     this.ops.splice(x, 1);
+    if (this.ops.length == 0) this.pos = -1;
   }
 
   perform(init: PlayerState, n: number): Promise<PlayerState> {
@@ -235,14 +238,25 @@ export class OpRoulette implements PedalEvent {
     } else {
       res.weaving = false;
       this.selecting = true;
-      if (n == this.p_select_a) {
-        this.pos = (this.pos + 1) % this.ops.length;
-      } else if (n == this.p_select_b) {
-        this.pos = (this.pos - 1) % this.ops.length;
+      if (this.ops.length > 0) {
+        if (n == this.p_select_a) {
+          this.pos = (this.pos + 1) % this.ops.length;
+        } else if (n == this.p_select_b) {
+          this.pos = (this.pos - 1) % this.ops.length;
+        }
+        return this.current.perform(res);
+      } else {
+        return Promise.resolve(res); // we really can't do anything without any operations on the roulette
       }
-      return this.current.perform(res);
     }
   }
+}
+
+export function makeOpRoulette(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | OpChain>) {
+  let pedals = [conf, sel_fwd];
+  if (sel_back) pedals.push(sel_back);
+  if (start_ops) return new OpRoulette(pedals, start_ops);
+  return new OpRoulette(pedals);
 }
 
 export type PedalAction = OpPairing | OpChain | OpRoulette;

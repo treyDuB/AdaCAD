@@ -95,6 +95,9 @@ export class PedalStatus extends EventEmitter {
 /**
  * Definition of pedal provider
  * @class
+ * @event `pedal-added` data: how many pedals
+ * @event `pedal-removed` data: how many pedals
+ * @event `pedal-step` data: which pedal
  */
 @Injectable({
   providedIn: 'root'
@@ -150,7 +153,7 @@ export class PedalsService extends EventEmitter {
 
     this.pedal_array.on('child-removed', () => {
       this.pedals.pop();
-      this.emit('pedal-removed');
+      this.emit('pedal-removed', this.pedals.length);
     })
 
     /** @todo */
