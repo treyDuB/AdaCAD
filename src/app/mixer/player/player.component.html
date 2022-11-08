@@ -51,7 +51,7 @@
           <h2 class="player-field-header">Pedal Mappings </h2>
           <!-- <p>{{pls.pedals}}</p> -->
           <div class="pedal-array pedals-field">
-            <ng-container *ngFor="let p of pls.pedals">
+            <ng-container *ngFor="let p of pls.pds.pedals">
               <button 
               [name] =p.id
               class="pedal-box">
@@ -89,17 +89,18 @@
                   {{op.name}}
                 </button> 
                 <mat-menu #menu="matMenu">
-                  <ng-container *ngFor="let p of pls.pedals">
+                  <!-- <ng-container *ngFor="let p of pls.pds.pedals"> -->
                     <button mat-stroked-menu-item
-                    (click) ="pls.pedalOps.chain(p.id, op.name)">
+                    (click) ="pls.addToRoulette(op.name)">
                     <!-- <ng-container *ngIf="pls.pedalOps.pairs[p.id]">
                       <mat-option [value]="pls.pedalOps.pairs[p.id].name">
                         {{pls.pedalOps.pairs[p.id].name}}
                       </mat-option>
                     </ng-container> -->
-                      {{p.id}}
+                      <!-- {{p.id}} -->
+                      Add to Roulette
                     </button>
-                  </ng-container>
+                  <!-- </ng-container> -->
                 </mat-menu>
           </ng-container>
         </div>

@@ -321,6 +321,24 @@ export class DraftPlayerService {
     return this.state.draft;
   }
 
+  hasRoulette(): number {
+    let res = this.pedals.mapping.filter((m) => m.name.includes('roulette'));
+    if (res.length > 0) {
+      let roul = res[0] as OpRoulette;
+      return roul.p_conf;
+    } else { return -1; }
+  }
+
+  addToRoulette(o: PlayerOp | OpChain) {
+    let roulPos = this.hasRoulette();
+    if (roulPos > -1) {
+      const roulette = this.pedals.mapping[roulPos] as OpRoulette;
+      roulette.addOp(o);
+    } else {
+      console.log('no roulette to add to!');
+    }
+  }
+
   setDraft(d: Draft) {
     this.state.draft = d;
     this.state.row = 0;
