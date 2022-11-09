@@ -1,11 +1,10 @@
 import { Component, Input, Output, OnInit} from '@angular/core';
-import { DraftPlayerService } from '../provider/draftplayer.service';
+import { PlayerService } from './player.service';
 // import { PedalsService } from '../../core/provider/pedals.service';
-import { OperationService } from '../provider/operation.service';
-import { MaterialsService } from '../../core/provider/materials.service';
+import { MaterialsService } from '../core/provider/materials.service';
 // import { TreeService, DraftNode  } from '../provider/tree.service';
-import { Draft } from '../../core/model/datatypes';
-import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
+import { Draft } from '../core/model/datatypes';
+import { wefts, warps, isUp, isSet } from '../core/model/drafts';
 
 @Component({
   selector: 'app-player',
@@ -36,7 +35,7 @@ export class PlayerComponent implements OnInit {
   ink = 'neq'; //can be or, and, neq, not, splice
 
   constructor(
-    public pls: DraftPlayerService,
+    public pls: PlayerService,
     private ms: MaterialsService
   ) { 
     this.default_cell = 10;

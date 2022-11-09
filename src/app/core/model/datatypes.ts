@@ -10,5 +10,3 @@ export * from './datatypes/selectlists';
 export * from './datatypes/tree';
 export * from './datatypes/yarnpaths';
 export * from './datatypes/yarnsim';
-
-export * from '../../mixer/model/operation';

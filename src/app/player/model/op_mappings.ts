@@ -1,12 +1,15 @@
 /**
- * More complex ways to combine operations and pedals 
+ * MAPPINGS: More complex ways to combine operations and pedals 
  * in the Draft Player
  */
-import { Draft, DraftsOptional, getDefaultParams } from "../../core/model/datatypes";
+import { Draft } from "../../core/model/datatypes";
 import { wefts } from "../../core/model/drafts";
-import { BaseOp as Op, BuildableOperation as GenericOp, 
-  Seed, Pipe, AllRequired } from "../../core/model/datatypes";
-import { PlayerState, initState, copyState } from "./player";
+import { OpInput, TreeOperation as TreeOp, SingleInlet,
+  BaseOp as Op, BuildableOperation as GenericOp, 
+  Seed, Pipe, AllRequired, DraftsOptional, 
+  getDefaultParams 
+} from "../../mixer/model/operation";
+import { PlayerState, initState, copyState } from "./state";
 
 export interface SingleOp {
   id?: number,
@@ -84,6 +87,53 @@ export function playerOpFrom(op: GenericOp) {
   return p;
 }
 
+
+/** 
+ * @type 
+ * a TreeOperation is compatible with the player if it takes one or zero draft inputs 
+ * and outputs one draft.
+ */
+type PlayableTreeOp = TreeOp & 
+  ( { inlets: [ SingleInlet ] } | 
+    { inlets: [] });
+
+/** @function playerOpFromTree (untested) */
+function playerOpFromTree(op: PlayableTreeOp) {
+  let perform: PlayerOp["perform"];
+  let param_input: OpInput = { op_name: op.name, drafts: [], params: getDefaultParams(op), inlet: -1 }
+  if (op.inlets.length == 0) {
+    perform = function(init: PlayerState) {
+      return op.perform([param_input]).then((output) => {
+        return { 
+          draft: output[0], 
+          row: init.row, 
+          weaving: init.weaving, 
+          pedal: op.name, 
+          numPicks: init.numPicks 
+        };
+      });
+    }
+  } else {
+    perform = function(init: PlayerState) {
+      let draft_input: OpInput = { op_name: 'child', drafts: [init.draft], params: [], inlet: 0}
+      return op.perform([param_input, draft_input]).then((output) => {
+        return { 
+          draft: output[0], 
+          row: init.row, 
+          weaving: init.weaving,
+          pedal: op.name,
+          numPicks: init.numPicks };
+      });
+    }
+  }
+
+  var p: PlayerOp = { 
+    name: op.name,
+    perform: perform
+  }
+  return p;
+}
+
 /** things that can happen in response to a pedal */
 interface PedalEvent {
   pedal?: number,
@@ -128,16 +178,20 @@ export interface OpChain extends PedalEvent{
   ops:    Array<SingleOp>,
 }
 
-export function makeOpChain(ops: Array<SingleOp>, p?: number): OpChain {
+export function makeBlankOpChain(p?: number): OpChain {
   let res: OpChain = {
     pedal: -1,
     name: "",
     ops: [],
     perform: (init: PlayerState, ...args) => {return Promise.resolve(init);}
-  };
-  if (p) {
-    res.pedal = p;
-  } else { res.pedal = -1; }
+  }
+  
+  if (p) res.pedal = p;
+  return res;
+}
+
+export function makeOpChain(ops: Array<SingleOp>, p?: number): OpChain {
+  let res = makeBlankOpChain(p);
   res.name = "ch";
   for (let o of ops) {
     res.name += "-" + o.name;
@@ -259,8 +313,12 @@ export function makeOpRoulette(conf: number = 0, sel_fwd: number = 1, sel_back?:
   return new OpRoulette(pedals);
 }
 
-export type PedalAction = OpPairing | OpChain | OpRoulette;
+export type MappingType = 'pairing' | 'chain' | 'roulette';
 
-export type PedalOpMapping = Array<PedalAction> & {
-  [key: number]: PedalAction,
-}
+export type MappingShapes = {
+  'pairing': OpPairing,
+  'chain': OpChain,
+  'roulette': OpRoulette
+};
+
+export type PedalAction = MappingShapes[keyof MappingShapes];

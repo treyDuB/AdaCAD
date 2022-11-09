@@ -12,19 +12,20 @@ import { OpsComponent } from './modal/ops/ops.component';
 import { OpHelpModal } from './modal/ophelp/ophelp.modal';
 import { ImageComponent } from './palette/image/image.component';
 import { DraftdetailComponent } from './modal/draftdetail/draftdetail.component';
-import { WeaverModule } from '../weaver/weaver.module';
 import { NoteComponent } from './palette/note/note.component';
-import { PlayerComponent } from './player/player.component';
+// import { PlayerComponent } from '../player/component/player.component';
 import { ParameterComponent } from './palette/operation/parameter/parameter.component';
 import { InletComponent } from './palette/operation/inlet/inlet.component';
-
-
+import { WeaverModule } from '../weaver/weaver.module';
+import { PlayerModule } from '../player/player.module';
+import { PlayerComponent } from '../player/player.component';
 
 
 @NgModule({
     imports: [
         CoreModule,
-        WeaverModule
+        WeaverModule,
+        PlayerModule,
     ],
     declarations: [
         MixerComponent,
@@ -40,8 +41,9 @@ import { InletComponent } from './palette/operation/inlet/inlet.component';
         ImageComponent,
         DraftdetailComponent,
         NoteComponent,
-        PlayerComponent,    
         ParameterComponent,
-        InletComponent        ]
+        InletComponent,
+        PlayerComponent,      
+    ]
 })
 export class MixerModule { }

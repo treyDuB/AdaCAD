@@ -28,8 +28,8 @@ import { any } from '@tensorflow/tfjs';
 import { SubdraftComponent } from './palette/subdraft/subdraft.component';
 import utilInstance from '../core/model/util';
 
-import { PlayerComponent } from '../mixer/player/player.component';
-import { DraftPlayerService } from './provider/draftplayer.service';
+import { PlayerComponent } from '../player/player.component';
+import { PlayerService } from '../player/player.service';
 
 //disables some angular checking mechanisms
 enableProdMode();
@@ -90,7 +90,7 @@ export class MixerComponent implements OnInit {
     public vp: ViewportService,
     private notes: NotesService,
     private ss: StateService,
-    private dps: DraftPlayerService,
+    private dps: PlayerService,
     private dialog: MatDialog,
     private image: ImageService,
     private ops: OperationService,

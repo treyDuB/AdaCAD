@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { WeaverModule } from './weaver/weaver.module';
 import { MixerModule } from './mixer/mixer.module';
+import { PlayerModule } from './player/player.module';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
@@ -30,6 +31,7 @@ import {provideDatabase,getDatabase} from '@angular/fire/database';
     HttpClientModule,
     WeaverModule,
     MixerModule,
+    PlayerModule,
     BrowserAnimationsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
