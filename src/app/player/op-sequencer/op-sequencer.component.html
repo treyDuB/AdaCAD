@@ -1,0 +1,48 @@
+<div class = "op-block">
+  <mat-expansion-panel id ="operations-menu" class="op-menu-block">
+    <mat-expansion-panel-header id ="operations-header" class="op-header">
+      <mat-panel-title>
+        Operations
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+      
+      <ng-container *ngFor="let class of pls.draftClassification">
+        <div id="op-container" class="op-field">
+        <h3>{{class.category}}</h3>
+        <p> {{class.dx}}</p>
+        <ng-container *ngFor="let op of class.ops">
+            <button mat-stroked-button
+                [matTooltip] = op.dx
+                matTooltipClass= "visibleTooltip" 
+                [name] = op.name 
+                [matMenuTriggerFor]="menu">
+                {{op.name}}
+              </button> 
+              <mat-menu #menu="matMenu">
+                <!-- <ng-container *ngFor="let p of pls.pds.pedals"> -->
+                  <button mat-stroked-menu-item
+                  (click) ="pls.addToSequencer(op.name)">
+                    <!-- {{p.id}} -->
+                    Add to Sequencer
+                  </button>
+                <!-- </ng-container> -->
+              </mat-menu>
+        </ng-container>
+      </div>
+      </ng-container>
+  </mat-expansion-panel>
+  </div>
+
+  <div id="sequencer-container" class="sequencer-block">
+    <h2 class="player-field-header">Operation Sequencer </h2>
+    <!-- <p>{{pls.pedals}}</p> -->
+    <div class="pedal-array pedals-field">
+      <ng-container *ngFor="let p of pls.pds.pedals">
+        <button 
+        [name] =p.id
+        class="pedal-box">
+        {{p.id}}
+        </button>
+      </ng-container>
+    </div>
+  </div>

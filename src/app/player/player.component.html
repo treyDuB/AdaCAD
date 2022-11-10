@@ -1,0 +1,28 @@
+<mat-accordion id="player-container">
+  <mat-expansion-panel
+    [expanded] = "playOpen"
+    (opened) = "playOpen = true"
+    (closed) = "playOpen = false"
+    (afterCollapse)="resizeContainer()"
+    (afterExpand)="resizeContainer()">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ playOpen? 'Close' : 'Open'}} Draft Player
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div id="player-content" class="player">
+
+      <app-weaving-state></app-weaving-state>
+      
+      <div class="break"></div>
+
+      <app-op-sequencer></app-op-sequencer>
+
+    </div>
+
+    
+  </mat-expansion-panel>
+
+</mat-accordion>
+

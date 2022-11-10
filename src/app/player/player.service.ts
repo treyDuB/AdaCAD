@@ -1,20 +1,20 @@
 import { Injectable} from '@angular/core';
-import { wefts } from '../../core/model/drafts';
-import { Draft } from '../../core/model/datatypes';
-import { PedalsService, PedalStatus, Pedal } from './pedals.service';
+import { wefts } from '../core/model/drafts';
+import { Draft } from '../core/model/datatypes';
+import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
 import { BaseOp as Op, BuildableOperation as GenericOp, 
   TreeOperation as TreeOp,
   Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
   SingleInlet, OpInput
-} from '../model/operation';
-import * as defs from '../model/op_definitions';
+} from '../mixer/model/operation';
+import * as defs from '../mixer/model/op_definitions';
 import { PlayerOp, playerOpFrom, 
   OpChain, OpSequencer, OpPairing, PedalOpMapping,
   makeOpPairing, makeOpChain, makeOpSequencer,
   forward, refresh, reverse
-} from '../model/player_ops';
-import { PlayerState, WeavingPick, copyState, initState } from '../model/player';
-import { OperationService } from '../provider/operation.service';
+} from './model/player_ops';
+import { PlayerState, WeavingPick, copyState, initState } from './model/player';
+import { OperationService } from '../mixer/provider/operation.service';
 import { EventEmitter } from 'events';
 
 
@@ -202,7 +202,7 @@ function playerOpFromTree(op: PlayableTreeOp) {
 @Injectable({
   providedIn: 'root'
 })
-export class DraftPlayerService {
+export class PlayerService {
   state: PlayerState;
   loom: LoomConfig;
   pedals: PedalConfig;

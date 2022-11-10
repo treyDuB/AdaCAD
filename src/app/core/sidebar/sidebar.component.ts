@@ -12,7 +12,6 @@ import { ActionsComponent } from '../modal/actions/actions.component';
 import { InitModal } from '../../core/modal/init/init.modal';
 import { MaterialsService } from '../provider/materials.service';
 import { StateService } from '../provider/state.service';
-import { PedalsService } from '../../mixer/provider/pedals.service';
 import { Draft, Loom, LoomSettings } from '../model/datatypes';
 import { TreeService } from '../../mixer/provider/tree.service';
 
@@ -79,8 +78,7 @@ export class SidebarComponent implements OnInit {
     private tree: TreeService,
     private ss: StateService,
     private ms: MaterialsService, 
-    private dialog: MatDialog,
-    public pedals: PedalsService) { 
+    private dialog: MatDialog) { 
     this.view = this.dm.getSelectedDesignMode('view_modes').value;
 
   }
@@ -93,10 +91,6 @@ export class SidebarComponent implements OnInit {
     if(this.source == 'weaver'){
     this.front = this.render.view_front;
     }
-  }
-
-  toggleWeaving() {
-    this.pedals.toggleWeaving();
   }
 
   select(){
