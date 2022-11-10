@@ -1,22 +1,48 @@
-.player-field {
-  border: #666 1px;
-  border-right-style: solid;
+.player { 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  height: inherit; 
+}
+
+.loom-block, .roulette-block, .draft-block, .op-block {
+  display: inline-block;
+}
+
+.draft-block{
+  flex-wrap: nowrap;
+  flex: 1;
+}
+
+.roulette-block {
+  height: inherit;
+  flex: 8;
+}
+
+.op-menu-block {
+  display: block;
+  max-width: 210px;
+}
+
+.break{
+  flex-basis: 100%
 }
 
 .player-field-header {
-  padding: 10px;
+  padding: 14px;
   margin: unset;
   background: #3f51b5;
   color: #ffffff;
 }
 
-.player { height: inherit; }
-
-.column {
-  float: left;
-  padding: unset;
-  height: inherit;
+.pedal-field-header {
+  padding: 10px;
+  margin: unset;
+  //background: #3f51b5;
+  margin-bottom: 5px;
+  color: #0a0000;
 }
+
 
 .loom-field, .pedals-field, .draft-field, .op-field {
   display: block;
@@ -24,10 +50,10 @@
   margin-bottom: 5px;
 }
 
-.op-menu {
-  display: block;
-  max-width: 1000px;
-  width: 20%;
+.draft-scroll{
+  max-width: 1255px;
+  max-height: 370px;
+  overflow: scroll;
 }
 
 .op-field h3{
@@ -46,7 +72,7 @@
 .op-field{
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  //padding: 10px;
 }
 
 .online {
@@ -129,11 +155,13 @@
 .mat-expansion-panel, .mat-accordion, .mat-expansion-panel-header,
 .mat-accordion .mat-expansion-panel:last-of-type, 
 .mat-accordion .mat-expansion-panel:first-of-type  {
+  border: #ffffff 1px;
   border-radius: 0pt;
   border-bottom-left-radius: 0pt;
   border-bottom-right-radius: 0pt;
   border-top-left-radius: 0pt;
   border-top-right-radius: 0pt;
+  border-bottom: 0pt;
 }
 
 .mat-expansion-panel-header:hover, 

@@ -12,7 +12,7 @@
     </mat-expansion-panel-header>
 
     <div id="player-content" class="player">
-      <div id="loom-container" class="column player-field">
+      <div id="loom-container" class="loom-block">
         <div id="loom-status" class="loom-field">
           <ng-container *ngIf="pls.pds.loom_online.val; else loomOffline">
             <p class="online data-display">Loom: Online</p>
@@ -41,15 +41,9 @@
             <ng-template #isWeaving>Stop Weaving</ng-template>
           </button>
         </div>
-      </div>
-      
-            <!-- [matTooltip]="`Loom must be online AND one pedal must be set to 'forward'`"> -->
-
-      <div class="column">
-        <!-- <p>Ready to weave? {{pls.pedals.readyToWeave}}</p> -->
-        <div id="pedals-container" class="player-field">
-          <h2 class="player-field-header">Pedal Mappings </h2>
-          <!-- <p>{{pls.pedals}}</p> -->
+        
+        <div id="pedals-list" class="loom-field">
+          <h2 class="pedal-field-header">Pedals </h2>
           <div class="pedal-array pedals-field">
             <ng-container *ngFor="let p of pls.pds.pedals">
               <button 
@@ -60,71 +54,71 @@
             </ng-container>
           </div>
         </div>
-        
-        <div id="draft-container" class="player-field">
-          <h2 class="player-field-header">Draft</h2>
-          <canvas class="draft-field" id="active-draft-canvas"></canvas>
-        </div>
+
       </div>
-    </div>
 
+      <div id="draft-container" class="draft-block">
+          <h2 class="player-field-header">Draft</h2>
+          <div class="draft-scroll">
+          <canvas class="draft-field" id="active-draft-canvas"></canvas>
+          </div>
+      </div>
 
-    <mat-expansion-panel id ="operations-menu" class="op-menu">
-      <mat-expansion-panel-header id ="operations-header" class="op-header">
-        <mat-panel-title>
-          Operations
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-        
-        <ng-container *ngFor="let class of pls.draftClassification">
-          <div id="op-container" class="op-field">
-          <h3>{{class.category}}</h3>
-          <p> {{class.dx}}</p>
-          <ng-container *ngFor="let op of class.ops">
-              <button mat-stroked-button
-                  [matTooltip] = op.dx
-                  matTooltipClass= "visibleTooltip" 
-                  [name] = op.name 
-                  [matMenuTriggerFor]="menu">
-                  {{op.name}}
-                </button> 
-                <mat-menu #menu="matMenu">
-                  <!-- <ng-container *ngFor="let p of pls.pds.pedals"> -->
-                    <button mat-stroked-menu-item
-                    (click) ="pls.addToRoulette(op.name)">
-                    <!-- <ng-container *ngIf="pls.pedalOps.pairs[p.id]">
-                      <mat-option [value]="pls.pedalOps.pairs[p.id].name">
-                        {{pls.pedalOps.pairs[p.id].name}}
-                      </mat-option>
-                    </ng-container> -->
-                      <!-- {{p.id}} -->
-                      Add to Roulette
-                    </button>
-                  <!-- </ng-container> -->
-                </mat-menu>
+      <div class="break"></div>
+
+      <div class = "op-block">
+      <mat-expansion-panel id ="operations-menu" class="op-menu-block">
+        <mat-expansion-panel-header id ="operations-header" class="op-header">
+          <mat-panel-title>
+            Operations
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          
+          <ng-container *ngFor="let class of pls.draftClassification">
+            <div id="op-container" class="op-field">
+            <h3>{{class.category}}</h3>
+            <p> {{class.dx}}</p>
+            <ng-container *ngFor="let op of class.ops">
+                <button mat-stroked-button
+                    [matTooltip] = op.dx
+                    matTooltipClass= "visibleTooltip" 
+                    [name] = op.name 
+                    [matMenuTriggerFor]="menu">
+                    {{op.name}}
+                  </button> 
+                  <mat-menu #menu="matMenu">
+                    <!-- <ng-container *ngFor="let p of pls.pds.pedals"> -->
+                      <button mat-stroked-menu-item
+                      (click) ="pls.addToRoulette(op.name)">
+                        <!-- {{p.id}} -->
+                        Add to Roulette
+                      </button>
+                    <!-- </ng-container> -->
+                  </mat-menu>
+            </ng-container>
+          </div>
+          </ng-container>
+      </mat-expansion-panel>
+      </div>
+
+      <div id="roulette-container" class="roulette-block">
+        <h2 class="player-field-header">Operation Roulette </h2>
+        <!-- <p>{{pls.pedals}}</p> -->
+        <div class="pedal-array pedals-field">
+          <ng-container *ngFor="let p of pls.pds.pedals">
+            <button 
+            [name] =p.id
+            class="pedal-box">
+            {{p.id}}
+            </button>
           </ng-container>
         </div>
-        </ng-container>
+      </div>
+    
+    </div>
 
-        <!-- 
-      
-            (selectionChange)="pls.setPedalOp($event, p)">
-              <ng-container *ngIf="pls.pedalOps.pairs[p.id]">
-                <mat-option [value]="pls.pedalOps.pairs[p.id].name">
-                  {{pls.pedalOps.pairs[p.id].name}}
-                </mat-option>
-              </ng-container>
-              <mat-option *ngFor="let op of pls.pedalOps.unpairedOps" 
-                [value]="op.name">
-                {{op.name}}
-              </mat-option>
-
-       <div class="pedal-box-row">
-          <span class="pedal-field">{{p.id}}</span>
-          <span class="pedal-field">{{p.u_name}}</span>
-        </div> -->
-  
-    </mat-expansion-panel>
+    
   </mat-expansion-panel>
+
 </mat-accordion>
 
