@@ -9,8 +9,8 @@ import { BaseOp as Op, BuildableOperation as GenericOp,
 } from '../model/operation';
 import * as defs from '../model/op_definitions';
 import { PlayerOp, playerOpFrom, 
-  OpChain, OpRoulette, OpPairing, PedalOpMapping,
-  makeOpPairing, makeOpChain, makeOpRoulette,
+  OpChain, OpSequencer, OpPairing, PedalOpMapping,
+  makeOpPairing, makeOpChain, makeOpSequencer,
   forward, refresh, reverse
 } from '../model/player_ops';
 import { PlayerState, WeavingPick, copyState, initState } from '../model/player';
@@ -302,7 +302,7 @@ export class DraftPlayerService {
         console.log("pedals mapping", this.pedals.mapping);
       } else if (n == 2) {
         if (this.pedals.pedalIsMapped(0)) this.pedals.unpairPedal(0);
-        this.pedals.mapping[0] = makeOpRoulette(0, 1);
+        this.pedals.mapping[0] = makeOpSequencer(0, 1);
         this.pedals.mapping[1] = this.pedals.mapping[0];
         console.log("pedals mapping", this.pedals.mapping);
       }
@@ -321,21 +321,21 @@ export class DraftPlayerService {
     return this.state.draft;
   }
 
-  hasRoulette(): number {
-    let res = this.pedals.mapping.filter((m) => m.name.includes('roulette'));
+  hasSequencer(): number {
+    let res = this.pedals.mapping.filter((m) => m.name.includes('sequencer'));
     if (res.length > 0) {
-      let roul = res[0] as OpRoulette;
+      let roul = res[0] as OpSequencer;
       return roul.p_conf;
     } else { return -1; }
   }
 
-  addToRoulette(o: PlayerOp | OpChain) {
-    let roulPos = this.hasRoulette();
+  addToSequencer(o: PlayerOp | OpChain) {
+    let roulPos = this.hasSequencer();
     if (roulPos > -1) {
-      const roulette = this.pedals.mapping[roulPos] as OpRoulette;
-      roulette.addOp(o);
+      const sequencer = this.pedals.mapping[roulPos] as OpSequencer;
+      sequencer.addOp(o);
     } else {
-      console.log('no roulette to add to!');
+      console.log('no sequencer to add to!');
     }
   }
 

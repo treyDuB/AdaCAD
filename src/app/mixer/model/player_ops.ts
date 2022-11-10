@@ -170,13 +170,13 @@ export function makeOpChain(ops: Array<SingleOp>, p?: number): OpChain {
 }
 
 /**
- * Roulette:
+ * Sequencer:
  *  - 1 or 2 pedal "select" pedals ->
  *    multiple operations in a circular queue
  *  - 1 "confirm" pedal (forward)
- *  - if pedal, go to next operation in Roulette
+ *  - if pedal, go to next operation in Sequencer
  */
-export class OpRoulette implements PedalEvent {
+export class OpSequencer implements PedalEvent {
   name: string;
   p_select_a: number;
   p_select_b?: number;
@@ -187,12 +187,12 @@ export class OpRoulette implements PedalEvent {
 
   /** 
    * @constructor Provide an array of pedals to initialize the 
-   * OpRoulette, specifying the select pedal(s) and confirm 
+   * OpSequencer, specifying the select pedal(s) and confirm 
    * pedal. Optionally, provide an array of Ops to load onto the
-   * Roulette.
+   * Sequencer.
    */
   constructor(pedals: Array<number>, ops?: Array<SingleOp | OpChain>) {
-    this.name = "roulette";
+    this.name = "sequencer";
     this.p_conf = pedals[0];
     this.p_select_a = pedals[1];
     if (pedals.length > 2) {
@@ -246,20 +246,20 @@ export class OpRoulette implements PedalEvent {
         }
         return this.current.perform(res);
       } else {
-        return Promise.resolve(res); // we really can't do anything without any operations on the roulette
+        return Promise.resolve(res); // we really can't do anything without any operations on the sequencer
       }
     }
   }
 }
 
-export function makeOpRoulette(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | OpChain>) {
+export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | OpChain>) {
   let pedals = [conf, sel_fwd];
   if (sel_back) pedals.push(sel_back);
-  if (start_ops) return new OpRoulette(pedals, start_ops);
-  return new OpRoulette(pedals);
+  if (start_ops) return new OpSequencer(pedals, start_ops);
+  return new OpSequencer(pedals);
 }
 
-export type PedalAction = OpPairing | OpChain | OpRoulette;
+export type PedalAction = OpPairing | OpChain | OpSequencer;
 
 export type PedalOpMapping = Array<PedalAction> & {
   [key: number]: PedalAction,

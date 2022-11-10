@@ -5,7 +5,7 @@
   height: inherit; 
 }
 
-.loom-block, .roulette-block, .draft-block, .op-block {
+.loom-block, .seqjencer-block, .draft-block, .op-block {
   display: inline-block;
 }
 
@@ -14,7 +14,7 @@
   flex: 1;
 }
 
-.roulette-block {
+.sequencer-block {
   height: inherit;
   flex: 8;
 }

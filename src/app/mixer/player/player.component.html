@@ -89,9 +89,9 @@
                   <mat-menu #menu="matMenu">
                     <!-- <ng-container *ngFor="let p of pls.pds.pedals"> -->
                       <button mat-stroked-menu-item
-                      (click) ="pls.addToRoulette(op.name)">
+                      (click) ="pls.addToSequencer(op.name)">
                         <!-- {{p.id}} -->
-                        Add to Roulette
+                        Add to Sequencer
                       </button>
                     <!-- </ng-container> -->
                   </mat-menu>
@@ -101,8 +101,8 @@
       </mat-expansion-panel>
       </div>
 
-      <div id="roulette-container" class="roulette-block">
-        <h2 class="player-field-header">Operation Roulette </h2>
+      <div id="sequencer-container" class="sequencer-block">
+        <h2 class="player-field-header">Operation Sequencer </h2>
         <!-- <p>{{pls.pedals}}</p> -->
         <div class="pedal-array pedals-field">
           <ng-container *ngFor="let p of pls.pds.pedals">
