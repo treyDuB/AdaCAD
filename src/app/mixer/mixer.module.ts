@@ -40,7 +40,6 @@ import { InletComponent } from './palette/operation/inlet/inlet.component';
         ImageComponent,
         DraftdetailComponent,
         NoteComponent,
-        PlayerComponent,    
         ParameterComponent,
         InletComponent        ]
 })

@@ -7,13 +7,15 @@
     (afterExpand)="resizeContainer()">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{ playOpen? 'Close' : 'Open'}} Draft Player
+        {{ playOpen? 'Close' : 'Open'}} Player
       </mat-panel-title>
     </mat-expansion-panel-header>
 
     <div id="player-content" class="player">
 
-      <app-weaving-state></app-weaving-state>
+      <app-weaving-state
+        [draft] = 
+      ></app-weaving-state>
       
       <div class="break"></div>
 
