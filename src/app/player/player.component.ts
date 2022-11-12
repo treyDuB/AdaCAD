@@ -1,5 +1,8 @@
-import { Component, Input, Output, OnInit} from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild} from '@angular/core';
 import { PlayerService } from './player.service';
+
+import { OpSequencerComponent } from './op-sequencer/op-sequencer.component';
+import { WeavingStateComponent } from './weaving-state/weaving-state.component';
 
 import { Draft } from '../core/model/datatypes';
 import { wefts, warps, isUp, isSet } from '../core/model/drafts';
@@ -10,6 +13,8 @@ import { wefts, warps, isUp, isSet } from '../core/model/drafts';
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
+  @ViewChild(WeavingStateComponent) weaving_state;
+  @ViewChild(OpSequencerComponent) op_sequencer;
 
   @Input()  default_cell: number;
   @Input('draft') active_draft: Draft;
@@ -73,6 +78,10 @@ export class PlayerComponent implements OnInit {
     let t = document.querySelector("app-topbar").getBoundingClientRect().height;
     // console.log("player height is " + h.toString());
     this.mixerElement.style.height = 'calc(100vh - '+ (2.3*h+t).toString() + 'px)';
+  }
+
+  drawDraft() {
+    this.weaving_state.drawDraft();
   }
 }
   
