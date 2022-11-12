@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Pedal, PedalsService } from './pedals.service';
 import { PlayerService } from '../player.service';
 import { PlayerOp as SingleOp,
-  OpChain, OpPairing, OpRoulette,
-  makeOpChain, makeOpPairing, makeOpRoulette,
+  OpChain, OpPairing, OpSequencer,
+  makeOpChain, makeOpPairing, makeOpSequencer,
   MappingShapes, MappingType, PedalAction
 } from '../model/op_mappings';
 
@@ -28,7 +28,7 @@ function newMapIndex(): MappingIndex {
  * @desc OLD, UPDATE THIS ---> 
  * Represents a set of two-way bindings between a set of Pedals
  * and a set of (Player)Operations. A pedal can only be bound to one
- * Action (a single Op, a chain of Ops, or to control an OpRoulette)
+ * Action (a single Op, a chain of Ops, or to control an OpSequencer)
  * @todo The second restriction may change, it might make sense for pedals to
  * get bound to a sequence of operations.
  */
@@ -42,12 +42,12 @@ export class MappingsService {
   availPedals: Array<number>;
   map: PedalOpMap = [];  // pedal ID (number) <-> op (PedalAction)
   
-  // where all of the actual OpPairing, OpChain, OpRoulette objects end up so they are only created once
+  // where all of the actual OpPairing, OpChain, OpSequencer objects end up so they are only created once
   index: MappingIndex;
 
 constructor(
   public pds: PedalsService,
-  public player: PlayerService
+  // public player: PlayerService
 ) { 
     this.ops = [];
     this.availPedals = pds.pedals.map((p) => p.id);
@@ -60,9 +60,9 @@ constructor(
     return Object.entries(this.map).length;
   }
 
-  get roulette(): OpRoulette {
-    if (this.index["roulette"].length == 0) return undefined as OpRoulette;
-    return this.index["roulette"][0] as OpRoulette;
+  get sequencer(): OpSequencer {
+    if (this.index["roulette"].length == 0) return undefined as OpSequencer;
+    return this.index["roulette"][0] as OpSequencer;
   }
 
   // onAddPedal(p: Pedal) {
@@ -102,7 +102,7 @@ constructor(
     let ind = this.index[type].push(m) - 1;
     this.map[p] = { type: type, i: ind };
     if (type === 'roulette') { // p_conf had been mapped
-      let r = m as OpRoulette;
+      let r = m as OpSequencer;
 
       // set mappings for the other roulette pedals to the same
       copyMap(p, r.p_select_a);
@@ -118,7 +118,7 @@ constructor(
     let m = this.map[id];
     let u = this.index[m.type].splice(m.i, 1);
     if (m.type == "roulette") {
-      let roul = <OpRoulette> u[0];
+      let roul = <OpSequencer> u[0];
       delete this.map[roul.p_select_a];
       if (roul.p_select_b) delete this.map[roul.p_select_b];
     }
@@ -160,11 +160,9 @@ constructor(
     }
   }
 
-  makeOpRoulette(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | OpChain>) {
-    this.setMap("roulette", conf, makeOpRoulette(conf, sel_fwd, sel_back, start_ops));
+  makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | OpChain>) {
+    this.setMap("roulette", conf, makeOpSequencer(conf, sel_fwd, sel_back, start_ops));
   }
-
-  
 
   // will return true if an op is mapped to a pedal in any way
   opIsMapped(opName: string): boolean {
@@ -187,5 +185,4 @@ constructor(
   pedalIsPaired(id: number) {
     return (this.pedalIsMapped(id) && !this.pedalIsChained(id));
   }
-
 }

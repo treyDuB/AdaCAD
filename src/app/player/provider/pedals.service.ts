@@ -1,6 +1,5 @@
 import { Injectable, Query } from '@angular/core';
-import { WeavingPick } from '../model/state';
-import { Operation } from '../../mixer/provider/operation.service';
+import { WeavingPick } from '../model/player';
 import { EventEmitter } from 'events';
 import { getDatabase } from "firebase/database";
 import { Database } from '@angular/fire/database';
@@ -21,7 +20,7 @@ export interface Pedal {
   auto_name?: string,
   dbnode: DBListener,
   state: any,
-  op?: Operation
+  // op?: Operation
 }
 
 export class PedalStatus extends EventEmitter {

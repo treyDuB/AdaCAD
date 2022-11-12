@@ -279,10 +279,10 @@ canvas{
     }
   
     .level-title {
-    margin: 0;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
+      margin: 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
   
       .mat-icon-button {
         margin-left: -40px;
@@ -353,7 +353,7 @@ canvas{
   }
   
   .threading-container{
-      position:absolute;
+      position: absolute;
   }
   
   .selection {

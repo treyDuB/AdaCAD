@@ -9,13 +9,13 @@ import { BaseOp as Op, BuildableOperation as GenericOp,
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
 import { PlayerOp, playerOpFrom, 
-  OpChain, OpRoulette, OpPairing, 
-  makeOpPairing, makeOpChain, makeOpRoulette,
+  OpChain, OpSequencer, OpPairing, 
+  makeOpPairing, makeOpChain, makeOpSequencer,
   forward, refresh, reverse
 } from './model/op_mappings';
 import { PlayerState, WeavingPick, copyState, initState } from './model/state';
-import { PedalsService, PedalStatus, Pedal } from './services/pedals.service';
-import { MappingsService } from './services/mappings.service';
+import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
+import { MappingsService } from './provider/mappings.service';
 
 
 export interface DraftOperationClassification {
@@ -113,7 +113,7 @@ export class PlayerService {
         console.log("pedals mapping", mappings.index);
       } else if (n == 2) {
         if (mappings.pedalIsMapped(0)) mappings.unmap(0);
-        mappings.makeOpRoulette(0, 1);
+        mappings.makeOpSequencer(0, 1);
         console.log("pedals mapping", mappings.index);
       }
     })
@@ -132,15 +132,19 @@ export class PlayerService {
     return this.state.draft;
   }
 
-  get roulette(): OpRoulette {
-    return this.mappings.roulette;
+  get sequencer() {
+    return this.mappings.sequencer;
+    // if (this.mappings.sequencer) {
+    //   let seq = this.mappings.sequencer;
+    //   return seq.p_conf;
+    // } else { return -1; }
   }
 
-  addToRoulette(o: PlayerOp | OpChain) {
-    if (this.roulette) {
-      this.roulette.addOp(o);
+  addToSequencer(o: PlayerOp | OpChain) {
+    if (this.sequencer) {
+      this.sequencer.addOp(o);
     } else {
-      console.log('no roulette to add to!');
+      console.log('no sequencer to add to!');
     }
   }
 
@@ -179,6 +183,19 @@ export class PlayerService {
       });
     }
   }
+
+  // compound pedal operations
+  // normal pedal -> op
+  // compound pedal -> Op sequence
+  // if (compound pedal change) {
+      // sequence of operations: [Op, Op, Op]
+      // let finaldraft = starting Draft;
+      // for op in sequence:
+      //   finaldraft = finaldraft.perform(op);
+      // }
+      // do something with finaldraft
+  // }
+
 
   currentRow() {
     let {draft, row} = this.state;

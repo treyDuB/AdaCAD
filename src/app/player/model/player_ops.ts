@@ -313,13 +313,16 @@ export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?
   return new OpSequencer(pedals);
 }
 
+<<<<<<<< HEAD:src/app/player/model/op_mappings.ts
 export type MappingType = 'pairing' | 'chain' | 'roulette';
-// export type PedalAction = OpPairing | OpChain | OpSequencer;
+========
+export type PedalAction = OpPairing | OpChain | OpSequencer;
+>>>>>>>> pedals:src/app/player/model/player_ops.ts
 
 export type MappingShapes = {
   'pairing': OpPairing,
   'chain': OpChain,
-  'roulette': OpSequencer
+  'roulette': OpRoulette
 };
 
 export type PedalAction = MappingShapes[keyof MappingShapes];

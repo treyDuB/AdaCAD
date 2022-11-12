@@ -20,6 +20,7 @@ import { providePerformance,getPerformance } from '@angular/fire/performance';
 import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import {provideDatabase,getDatabase} from '@angular/fire/database';
+import { PlayerModule } from './player/player.module';
 
 @NgModule({
   declarations: [
