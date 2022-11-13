@@ -1,133 +1,21 @@
 .player { 
-  display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  display: flex;
+  align-items: flex-start;
   height: inherit; 
-}
-
-.loom-block, .sequencer-block, .draft-block, .op-block {
-  display: inline-block;
-}
-
-.draft-block{
-  flex-wrap: nowrap;
   flex: 1;
 }
 
-.sequencer-block {
-  height: inherit;
-  flex: 8;
-}
-
-.op-menu-block {
-  display: block;
-  max-width: 210px;
+.first-row, .second-row {
+flex-basis: 100%;
 }
 
 .break{
-  flex-basis: 100%
+  flex-basis: 100%;
+  border-width: 5px;
+  color: blue;
 }
 
-.player-field-header {
-  padding: 14px;
-  margin: unset;
-  background: #3f51b5;
-  color: #ffffff;
-}
-
-.pedal-field-header {
-  padding: 10px;
-  margin: unset;
-  //background: #3f51b5;
-  margin-bottom: 5px;
-  color: #0a0000;
-}
-
-
-.loom-field, .pedals-field, .draft-field, .op-field {
-  display: block;
-  margin-top: 10px;
-  margin-bottom: 5px;
-}
-
-.draft-scroll{
-  max-width: 1255px;
-  max-height: 370px;
-  overflow: scroll;
-}
-
-.op-field h3{
-  width: 95%;
-  font-size: 100%;
-  font-weight: bold;
-  padding: 20px 0px 10px 14px;
-}
-
-.op-field  p{
-  width: 95%;
-  font-size: .8em;
-  padding: 0px 0px 10px 14px;
-}
-
-.op-field{
-  display: flex;
-  flex-direction: column;
-  //padding: 10px;
-}
-
-.online {
-  background-color: rgb(58, 255, 19);
-  color: #222222;
-}
-
-.offline {
-  background-color: rgb(150, 0, 0);
-  color: #ffffff;
-}
-
-.pedal-array, .active-draft, .status-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.pedal-array {
-  margin: 10px;
-}
-
-.pedal-box {
-  background-color: #bbc5ff;
-  margin-right: 10px;
-  margin-left: 10px;
-}
-
-.pedal-box, .data-display, #loom-container {
-  padding: 10px;
-}
-
-.pedal-state {
-  font-size: x-small;
-  color: #444444;
-}
-
-#loom-container {
-  padding-right: 20px;
-}
-
-#draft-container {
-  background-color: rgb(214, 214, 214);
-}
-
-#active-draft-canvas {
-  padding: 10px;
-}
-
-.pedal-box-row > .mat-form-field, .mat-option {
-  width: 130px;
-}
-
-.pedal-field, .pedal-field-label {
-  padding: 2px;
-}
 
 .mat-button {
   background-color: #ff4081;

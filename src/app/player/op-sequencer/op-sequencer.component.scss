@@ -1,17 +1,20 @@
-.player { 
-  display: flex;
+
+.second-row { 
   flex-wrap: wrap;
-  justify-content: start;
-  height: inherit; 
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
 }
 
-.loom-block, .sequencer-block, .draft-block, .op-block {
+.sequencer-block, .op-block {
   display: inline-block;
 }
 
-.draft-block{
-  flex-wrap: nowrap;
-  flex: 1;
+.player-field-header {
+  padding: 14px;
+  margin: unset;
+  background: #3f51b5;
+  color: #ffffff;
 }
 
 .sequencer-block {
@@ -22,38 +25,6 @@
 .op-menu-block {
   display: block;
   max-width: 210px;
-}
-
-.break{
-  flex-basis: 100%
-}
-
-.player-field-header {
-  padding: 14px;
-  margin: unset;
-  background: #3f51b5;
-  color: #ffffff;
-}
-
-.pedal-field-header {
-  padding: 10px;
-  margin: unset;
-  //background: #3f51b5;
-  margin-bottom: 5px;
-  color: #0a0000;
-}
-
-
-.loom-field, .pedals-field, .draft-field, .op-field {
-  display: block;
-  margin-top: 10px;
-  margin-bottom: 5px;
-}
-
-.draft-scroll{
-  max-width: 1255px;
-  max-height: 370px;
-  overflow: scroll;
 }
 
 .op-field h3{
@@ -72,62 +43,21 @@
 .op-field{
   display: flex;
   flex-direction: column;
-  //padding: 10px;
 }
 
-.online {
-  background-color: rgb(58, 255, 19);
-  color: #222222;
-}
-
-.offline {
-  background-color: rgb(150, 0, 0);
-  color: #ffffff;
-}
-
-.pedal-array, .active-draft, .status-row {
+.operation-sequence {
+  margin: 10px;
   display: flex;
   flex-direction: row;
 }
 
-.pedal-array {
-  margin: 10px;
-}
-
-.pedal-box {
+.operation-box {
   background-color: #bbc5ff;
   margin-right: 10px;
   margin-left: 10px;
-}
-
-.pedal-box, .data-display, #loom-container {
   padding: 10px;
 }
 
-.pedal-state {
-  font-size: x-small;
-  color: #444444;
-}
-
-#loom-container {
-  padding-right: 20px;
-}
-
-#draft-container {
-  background-color: rgb(214, 214, 214);
-}
-
-#active-draft-canvas {
-  padding: 10px;
-}
-
-.pedal-box-row > .mat-form-field, .mat-option {
-  width: 130px;
-}
-
-.pedal-field, .pedal-field-label {
-  padding: 2px;
-}
 
 .mat-button {
   background-color: #ff4081;
