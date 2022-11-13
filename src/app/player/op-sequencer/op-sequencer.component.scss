@@ -17,6 +17,8 @@
 .sequencer-block {
   height: inherit;
   flex: 8;
+  display: inline-flex;
+  align-items: flex-start;
 }
 
 .op-menu-block {
@@ -135,6 +137,14 @@
   width: inherit;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.square-corners {
+  border-radius: 0pt;
+  border-bottom-left-radius: 0pt;
+  border-bottom-right-radius: 0pt;
+  border-top-left-radius: 0pt;
+  border-top-right-radius: 0pt;
 }
 
 .mat-button.mat-button-disabled {

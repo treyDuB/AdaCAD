@@ -43,8 +43,7 @@ import { PlayerComponent } from '../player/player.component';
         DraftdetailComponent,
         NoteComponent,
         ParameterComponent,
-        InletComponent,
-        PlayerComponent,      
+        InletComponent, 
     ]
 })
 export class MixerModule { }

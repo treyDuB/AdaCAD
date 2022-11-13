@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayerService } from '../player.service';
+import { PedalsService } from '../provider/pedals.service';
 
 @Component({
   selector: 'app-op-sequencer',
@@ -9,7 +10,8 @@ import { PlayerService } from '../player.service';
 export class OpSequencerComponent implements OnInit {
 
   constructor(
-    public pls: PlayerService
+    public pls: PlayerService,
+    public pds: PedalsService,
   ) { }
 
   ngOnInit(): void {

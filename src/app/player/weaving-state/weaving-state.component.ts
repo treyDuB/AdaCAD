@@ -3,6 +3,7 @@ import { PlayerService } from '../player.service';
 import { MaterialsService } from '../../core/provider/materials.service';
 import { Draft } from '../../core/model/datatypes';
 import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
+import { PedalsService } from '../provider/pedals.service';
 
 @Component({
   selector: 'app-weaving-state',
@@ -23,7 +24,7 @@ export class WeavingStateComponent implements OnInit {
 
   constructor(
     public pls: PlayerService,
-    private ms: MaterialsService
+    public pds: PedalsService,
   ) { 
     this.default_cell = 10;
   }

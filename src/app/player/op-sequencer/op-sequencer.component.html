@@ -1,6 +1,6 @@
 <div class = "op-block">
   <mat-expansion-panel id ="operations-menu" class="op-menu-block">
-    <mat-expansion-panel-header id ="operations-header" class="op-header">
+    <mat-expansion-panel-header id ="operations-header square-corners" class="op-header">
       <mat-panel-title>
         Operations
       </mat-panel-title>
@@ -37,7 +37,7 @@
     <h2 class="player-field-header">Operation Sequencer </h2>
     <!-- <p>{{pls.pedals}}</p> -->
     <div class="pedal-array pedals-field">
-      <ng-container *ngFor="let p of pls.pds.pedals">
+      <ng-container *ngFor="let p of pds.pedals">
         <button 
         [name] =p.id
         class="pedal-box">

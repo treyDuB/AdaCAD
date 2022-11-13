@@ -14,7 +14,15 @@
   flex: 1;
 }
 
+.top-aligned {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
 .sequencer-block {
+  align-items: flex-start;
+  display: inline-flex;
   height: inherit;
   flex: 8;
 }
@@ -150,6 +158,14 @@
 
 .mat-expansion-panel-body {
   padding: 0px;
+}
+
+.square-corners {
+  border-radius: 0pt;
+  border-bottom-left-radius: 0pt;
+  border-bottom-right-radius: 0pt;
+  border-top-left-radius: 0pt;
+  border-top-right-radius: 0pt;
 }
 
 .mat-expansion-panel, .mat-accordion, .mat-expansion-panel-header,
