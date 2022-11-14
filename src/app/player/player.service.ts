@@ -1,7 +1,6 @@
 import { Injectable} from '@angular/core';
 import { wefts } from '../core/model/drafts';
 import { Draft } from '../core/model/datatypes';
-import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
 import { BaseOp as Op, BuildableOperation as GenericOp, 
   TreeOperation as TreeOp,
   Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
@@ -9,14 +8,15 @@ import { BaseOp as Op, BuildableOperation as GenericOp,
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
 import { PlayerOp, playerOpFrom, 
-  OpChain, OpSequencer, OpPairing, PedalOpMapping,
-  makeOpPairing, makeOpChain, makeOpSequencer,
+  ChainOp, OpSequencer, PairedOp, PedalOpMapping,
+  makePairedOp, makeChainOp, makeOpSequencer,
   forward, refresh, reverse
 } from './model/player_ops';
 import { PlayerState, WeavingPick, copyState, initState } from './model/player';
-import { OperationService } from '../mixer/provider/operation.service';
 import { EventEmitter } from 'events';
-
+import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
+import { SequencerService } from './provider/sequencer.service';
+// import { OperationService } from '../mixer/provider/operation.service';
 
 export interface DraftOperationClassification {
   category: string,
@@ -84,19 +84,19 @@ class PedalConfig {
     let o = this.ops.findIndex((op) => op.name == opName);
     // let thisOp = this.unpairedOps.splice(o, 1);
     let thisOp = this.ops;
-    this.mapping[pedalId] = makeOpPairing(pedalId, thisOp[o]); 
+    this.mapping[pedalId] = makePairedOp(pedalId, thisOp[o]); 
   }
 
   chain(pedalId: number, opName: string) {
     let o = this.ops[this.ops.findIndex((op) => op.name == opName)];
     if (this.pedalIsChained(pedalId)) {
-      let curr_ops = (<OpChain> this.mapping[pedalId]).ops;
-      this.mapping[pedalId] = makeOpChain(curr_ops.concat([o]), pedalId);
+      let curr_ops = (<ChainOp> this.mapping[pedalId]).ops;
+      this.mapping[pedalId] = makeChainOp(curr_ops.concat([o]), pedalId);
     } else if (this.pedalIsPaired(pedalId)) {
-      let first_op = (<OpPairing> this.mapping[pedalId]).op;
-      this.mapping[pedalId] = makeOpChain([first_op].concat([o]), pedalId);
+      let first_op = (<PairedOp> this.mapping[pedalId]).op;
+      this.mapping[pedalId] = makeChainOp([first_op].concat([o]), pedalId);
     } else {
-      this.mapping[pedalId] = makeOpChain([o], pedalId);
+      this.mapping[pedalId] = makeChainOp([o], pedalId);
     }
   }
 
@@ -104,15 +104,15 @@ class PedalConfig {
     let op_array = ops.map((name) => this.ops[this.ops.findIndex((op) => op.name == name)]);
     if (this.pedalIsChained(pedalId)) { 
       // if pedal already has a chain, add ops to the chain
-      let curr_ops = (<OpChain> this.mapping[pedalId]).ops;
-      this.mapping[pedalId] = makeOpChain(curr_ops.concat(op_array), pedalId);
+      let curr_ops = (<ChainOp> this.mapping[pedalId]).ops;
+      this.mapping[pedalId] = makeChainOp(curr_ops.concat(op_array), pedalId);
     } else if (this.pedalIsPaired(pedalId)) {
       // if pedal is paired, you can turn it into a chain
-      let first_op = (<OpPairing> this.mapping[pedalId]).op;
-      this.mapping[pedalId] = makeOpChain([first_op].concat(op_array), pedalId);
+      let first_op = (<PairedOp> this.mapping[pedalId]).op;
+      this.mapping[pedalId] = makeChainOp([first_op].concat(op_array), pedalId);
     } else {
       // pedal doesn't have anything mapped, just add a new chain
-      this.mapping[pedalId] = makeOpChain(op_array, pedalId);
+      this.mapping[pedalId] = makeChainOp(op_array, pedalId);
     }
   }
 
@@ -149,53 +149,6 @@ class PedalConfig {
   // }
 }
 
-
-/** 
- * @type 
- * a TreeOperation is compatible with the player if it takes one or zero draft inputs 
- * and outputs one draft.
- */
-type PlayableTreeOp = TreeOp & 
-  ( { inlets: [ SingleInlet ] } | 
-    { inlets: [] });
-
-/** @function playerOpFromTree (untested) */
-function playerOpFromTree(op: PlayableTreeOp) {
-  let perform: PlayerOp["perform"];
-  let param_input: OpInput = { op_name: op.name, drafts: [], params: getDefaultParams(op), inlet: -1 }
-  if (op.inlets.length == 0) {
-    perform = function(init: PlayerState) {
-      return op.perform([param_input]).then((output) => {
-        return { 
-          draft: output[0], 
-          row: init.row, 
-          weaving: init.weaving, 
-          pedal: op.name, 
-          numPicks: init.numPicks 
-        };
-      });
-    }
-  } else {
-    perform = function(init: PlayerState) {
-      let draft_input: OpInput = { op_name: 'child', drafts: [init.draft], params: [], inlet: 0}
-      return op.perform([param_input, draft_input]).then((output) => {
-        return { 
-          draft: output[0], 
-          row: init.row, 
-          weaving: init.weaving,
-          pedal: op.name,
-          numPicks: init.numPicks };
-      });
-    }
-  }
-
-  var p: PlayerOp = { 
-    name: op.name,
-    perform: perform
-  }
-  return p;
-}
-
 /**
  * The Draft Player Service is in charge of updating the the global PlayerState and tracking where the weaver is in the draft.
  */
@@ -211,7 +164,8 @@ export class PlayerService {
 
   constructor(
     public pds: PedalsService,
-    private oss: OperationService
+    public seq: SequencerService,
+    // private oss: OperationService
   ) {
     // this.draft = null; 
     console.log("draft player constructor");
@@ -304,6 +258,7 @@ export class PlayerService {
         if (this.pedals.pedalIsMapped(0)) this.pedals.unpairPedal(0);
         this.pedals.mapping[0] = makeOpSequencer(0, 1);
         this.pedals.mapping[1] = this.pedals.mapping[0];
+        this.seq.start(0, 1);
         console.log("pedals mapping", this.pedals.mapping);
       }
     })
@@ -319,24 +274,6 @@ export class PlayerService {
   }
   get draft() {
     return this.state.draft;
-  }
-
-  hasSequencer(): number {
-    let res = this.pedals.mapping.filter((m) => m.name.includes('sequencer'));
-    if (res.length > 0) {
-      let roul = res[0] as OpSequencer;
-      return roul.p_conf;
-    } else { return -1; }
-  }
-
-  addToSequencer(o: PlayerOp | OpChain) {
-    let roulPos = this.hasSequencer();
-    if (roulPos > -1) {
-      const sequencer = this.pedals.mapping[roulPos] as OpSequencer;
-      sequencer.addOp(o);
-    } else {
-      console.log('no sequencer to add to!');
-    }
   }
 
   setDraft(d: Draft) {

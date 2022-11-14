@@ -80,8 +80,6 @@ export class PlayerComponent implements OnInit {
     this.mixerElement.style.height = 'calc(100vh - '+ (2.3*h+t).toString() + 'px)';
   }
 
-  drawDraft() {
-    this.weaving_state.drawDraft();
-  }
+  drawDraft() { this.weaving_state.drawDraft(); }
 }
   

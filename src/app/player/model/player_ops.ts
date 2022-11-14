@@ -5,7 +5,7 @@
 import { Draft, DraftsOptional, getDefaultParams } from "../../core/model/datatypes";
 import { wefts } from "../../core/model/drafts";
 import { BaseOp as Op, BuildableOperation as GenericOp, 
-  Seed, Pipe, AllRequired } from "../../core/model/datatypes";
+  Seed, Pipe, AllRequired, OpInput, SingleInlet, TreeOperation as TreeOp } from "../../core/model/datatypes";
 import { PlayerState, initState, copyState } from "./player";
 
 export interface SingleOp {
@@ -86,6 +86,7 @@ export function playerOpFrom(op: GenericOp) {
 
 /** things that can happen in response to a pedal */
 interface PedalEvent {
+  id?: number,
   pedal?: number,
   name: string
   perform: (init: PlayerState, ...args) => Promise<PlayerState>;
@@ -98,13 +99,13 @@ interface PedalEvent {
  * @param pedal ID number of pedal
  * @param op    ID number of Operation (assigned in Draft Player service)
  */
-export interface OpPairing extends PedalEvent {
+export interface PairedOp extends PedalEvent {
   pedal:  number,
   op:     SingleOp,
 }
 
 // this ...args thing is such a hack
-export function makeOpPairing(p: number, op: SingleOp): OpPairing {
+export function makePairedOp(p: number, op: SingleOp): PairedOp {
   let jankPerform = (init: PlayerState, ...args) => {
     return op.perform(init);
   }
@@ -123,13 +124,13 @@ export function makeOpPairing(p: number, op: SingleOp): OpPairing {
  * @param pedal ID number of pedals
  * @param ops   array of Op ID numbers to execute in order
  */
-export interface OpChain extends PedalEvent{
+export interface ChainOp extends PedalEvent{
   pedal:  number,
   ops:    Array<SingleOp>,
 }
 
-export function makeOpChain(ops: Array<SingleOp>, p?: number): OpChain {
-  let res: OpChain = {
+export function makeChainOp(ops: Array<SingleOp>, p?: number): ChainOp {
+  let res: ChainOp = {
     pedal: -1,
     name: "",
     ops: [],
@@ -169,6 +170,52 @@ export function makeOpChain(ops: Array<SingleOp>, p?: number): OpChain {
   return res;
 }
 
+/** 
+ * @type 
+ * a TreeOperation is compatible with the player if it takes one or zero draft inputs 
+ * and outputs one draft.
+ */
+ type PlayableTreeOp = TreeOp & 
+ ( { inlets: [ SingleInlet ] } | 
+   { inlets: [] });
+
+/** @function playerOpFromTree (untested) */
+function playerOpFromTree(op: PlayableTreeOp) {
+ let perform: PlayerOp["perform"];
+ let param_input: OpInput = { op_name: op.name, drafts: [], params: getDefaultParams(op), inlet: -1 }
+ if (op.inlets.length == 0) {
+   perform = function(init: PlayerState) {
+     return op.perform([param_input]).then((output) => {
+       return { 
+         draft: output[0], 
+         row: init.row, 
+         weaving: init.weaving, 
+         pedal: op.name, 
+         numPicks: init.numPicks 
+       };
+     });
+   }
+ } else {
+   perform = function(init: PlayerState) {
+     let draft_input: OpInput = { op_name: 'child', drafts: [init.draft], params: [], inlet: 0}
+     return op.perform([param_input, draft_input]).then((output) => {
+       return { 
+         draft: output[0], 
+         row: init.row, 
+         weaving: init.weaving,
+         pedal: op.name,
+         numPicks: init.numPicks };
+     });
+   }
+ }
+
+ var p: PlayerOp = { 
+   name: op.name,
+   perform: perform
+ }
+ return p;
+}
+
 /**
  * Sequencer:
  *  - 1 or 2 pedal "select" pedals ->
@@ -182,7 +229,7 @@ export class OpSequencer implements PedalEvent {
   p_select_b?: number;
   p_conf: number;
   pos: number = -1;
-  ops: Array<SingleOp | OpChain> = [];
+  ops: Array<SingleOp | ChainOp> = [];
   selecting: boolean = false;
 
   /** 
@@ -191,7 +238,7 @@ export class OpSequencer implements PedalEvent {
    * pedal. Optionally, provide an array of Ops to load onto the
    * Sequencer.
    */
-  constructor(pedals: Array<number>, ops?: Array<SingleOp | OpChain>) {
+  constructor(pedals: Array<number>, ops?: Array<SingleOp | ChainOp>) {
     this.name = "sequencer";
     this.p_conf = pedals[0];
     this.p_select_a = pedals[1];
@@ -205,7 +252,7 @@ export class OpSequencer implements PedalEvent {
     }
   }
 
-  get current(): SingleOp | OpChain {
+  get current(): SingleOp | ChainOp {
     return this.ops[this.pos];
   }
 
@@ -214,14 +261,32 @@ export class OpSequencer implements PedalEvent {
     else return false;
   }
 
-  addOp(o: SingleOp | OpChain) {
+  addOp(o: SingleOp | ChainOp) {
     this.ops.push(o);
     if (this.pos < 0) this.pos = 0;
+    return this.ops[this.ops.length-1];
+  }
+
+  removeOp() {
+    this.ops.pop();
+    if (this.ops.length == 0) { this.pos = -1; }
+    else { this.pos = this.pos % this.ops.length; }
   }
 
   delOp(x: number) {
     this.ops.splice(x, 1);
-    if (this.ops.length == 0) this.pos = -1;
+    if (this.ops.length == 0) { this.pos = -1; }
+    else { this.pos = this.pos % this.ops.length; }
+  }
+
+  nextOp() {
+    this.pos = (this.pos + 1) % this.ops.length;
+    return this.current;
+  }
+
+  prevOp() {
+    this.pos = (this.pos - 1) % this.ops.length;
+    return this.current;
   }
 
   perform(init: PlayerState, n: number): Promise<PlayerState> {
@@ -240,11 +305,10 @@ export class OpSequencer implements PedalEvent {
       this.selecting = true;
       if (this.ops.length > 0) {
         if (n == this.p_select_a) {
-          this.pos = (this.pos + 1) % this.ops.length;
+          return this.nextOp().perform(res);
         } else if (n == this.p_select_b) {
-          this.pos = (this.pos - 1) % this.ops.length;
+          return this.prevOp().perform(res);
         }
-        return this.current.perform(res);
       } else {
         return Promise.resolve(res); // we really can't do anything without any operations on the sequencer
       }
@@ -252,14 +316,14 @@ export class OpSequencer implements PedalEvent {
   }
 }
 
-export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | OpChain>) {
+export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | ChainOp>) {
   let pedals = [conf, sel_fwd];
   if (sel_back) pedals.push(sel_back);
   if (start_ops) return new OpSequencer(pedals, start_ops);
   return new OpSequencer(pedals);
 }
 
-export type PedalAction = OpPairing | OpChain | OpSequencer;
+export type PedalAction = PairedOp | ChainOp | OpSequencer;
 
 export type PedalOpMapping = Array<PedalAction> & {
   [key: number]: PedalAction,
