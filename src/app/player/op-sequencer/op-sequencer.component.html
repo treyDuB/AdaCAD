@@ -32,7 +32,8 @@
 
                       <ng-container *ngIf="seq.chains != 0">
                         <button mat-stroked-menu-item
-                        [matMenuTriggerFor]="opChains">
+                        [matMenuTriggerFor]="opChains"
+                        (click)="$event.stopPropagation();">
                         Add to Existing Chain
                         </button>
                       </ng-container>
@@ -47,8 +48,6 @@
                       </mat-menu>
 
                   </mat-menu>
-
-                  
 
             </ng-container>
           </div>
