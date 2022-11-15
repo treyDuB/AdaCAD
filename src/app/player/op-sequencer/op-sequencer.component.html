@@ -16,29 +16,40 @@
                     [matTooltip] = op.dx
                     matTooltipClass= "visibleTooltip" 
                     [name] = op.name 
-                    [matMenuTriggerFor]="menu">
+                    [matMenuTriggerFor]="opMenu">
                     {{op.name}}
                   </button> 
-                  <mat-menu #menu="matMenu">
-                    <!-- <ng-container *ngFor="let p of pls.pds.pedals"> -->
+                  <mat-menu #opMenu="matMenu">
                       <button mat-stroked-menu-item
                       (click) ="seq.addSingleOp(op)">
-                        <!-- {{p.id}} -->
                         Add to Sequencer
                       </button>
+
                       <button mat-stroked-menu-item
                       (click) ="seq.addChainOp(op)">
-                        <!-- {{p.id}} -->
                         Add Chain to Sequencer
                       </button>
-                      <ng-container *ngFor="let ch of seq.chains">
+
+                      <ng-container *ngIf="seq.chains != 0">
                         <button mat-stroked-menu-item
-                        (click) = "seq.addToChain(ch, op)">
-                        Add to Chain {{ch.id}}
-                      </button>
+                        [matMenuTriggerFor]="opChains">
+                        Add to Existing Chain
+                        </button>
                       </ng-container>
-                    <!-- </ng-container> -->
+                      
+                      <mat-menu #opChains="matMenu">
+                        <ng-container *ngFor="let ch of seq.chains">
+                          <button mat-stroked-menu-item
+                          (click) ="pls.setPedalOp($event, p)">
+                          Chain {{ch.id}}
+                          </button>
+                        </ng-container>
+                      </mat-menu>
+
                   </mat-menu>
+
+                  
+
             </ng-container>
           </div>
           </ng-container>
@@ -47,7 +58,6 @@
 
     <div id="sequencer-container" class="sequencer-block">
       <h2 class="player-field-header">Operation Sequencer </h2>
-      <!-- <p>{{pls.pedals}}</p> -->
       <div class="operation-sequence">
         <ng-container *ngFor="let o of seq.ops">
           <button 

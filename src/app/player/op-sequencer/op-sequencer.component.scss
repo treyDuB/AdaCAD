@@ -27,6 +27,10 @@
   max-width: 210px;
 }
 
+#opChains {
+  display: flex;
+}
+
 .op-field h3{
   width: 95%;
   font-size: 100%;
@@ -104,3 +108,4 @@
 .mat-expansion-panel-header-title, .mat-expansion-indicator{
   color: white;
 }
+
