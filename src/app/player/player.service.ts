@@ -9,14 +9,15 @@ import { BaseOp as Op, BuildableOperation as GenericOp,
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
 import { PlayerOp, playerOpFrom, 
-  OpChain, OpSequencer, OpPairing, 
+  ChainOp, OpSequencer, OpPairing, 
   makeOpPairing, makeOpChain, makeOpSequencer,
   forward, refresh, reverse
 } from './model/op_mappings';
 import { PlayerState, WeavingPick, copyState, initState } from './model/state';
-import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
 import { MappingsService } from './provider/mappings.service';
-
+import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
+import { SequencerService } from './provider/sequencer.service';
+// import { OperationService } from '../mixer/provider/operation.service';
 
 export interface DraftOperationClassification {
   category: string,
@@ -29,6 +30,125 @@ interface LoomConfig {
   draftTiling: boolean
 }
 
+/**
+ * @class PedalConfig
+ * @desc OLD, UPDATE THIS ---> 
+ * Represents a set of two-way bindings between a set of Pedals
+ * and a set of (Player)Operations. A pedal can only be bound to one
+ * Action (a single Op, a chain of Ops, or to control an OpRoulette)
+ * @todo The second restriction may change, it might make sense for pedals to
+ * get bound to a sequence of operations.
+ */
+class PedalConfig {
+  // numPedals: number;
+  pedals: Array<Pedal>;
+  ops: Array<PlayerOp>;
+  availPedals: Array<number>;
+  mapping: PedalOpMapping;  // pedal ID (number) <-> op (PlayerOp)
+
+  constructor(pedalArray: Array<Pedal>, loadConfig = false) {
+    this.pedals = pedalArray;
+    this.ops = []
+    this.availPedals = pedalArray.map((p) => p.id);
+    this.mapping = [];
+  }
+
+  get numPedals() {
+    return this.pedals.length;
+  }
+
+  get numMappings() {
+    return Object.entries(this.mapping).length;
+  }
+
+  addPedal(p: Pedal) {
+    // this.pedals.push(p);
+    this.availPedals.push(p.id);
+  }
+
+  remPedal() {
+    // this.pedals.pop();
+    this.availPedals.filter((id) => id != this.pedals.length);
+  }
+
+  addOperation(o: PlayerOp, chain?: boolean) {
+    o.id = this.ops.length;
+    this.ops.push(o);
+    if (chain) {
+      o.chain = chain;
+    }
+    // this.unpairedOps.push(o);
+    // console.log(this.ops);
+  }
+
+  pair(pedalId: number, opName: string) {
+    let o = this.ops.findIndex((op) => op.name == opName);
+    // let thisOp = this.unpairedOps.splice(o, 1);
+    let thisOp = this.ops;
+    this.mapping[pedalId] = makePairedOp(pedalId, thisOp[o]); 
+  }
+
+  chain(pedalId: number, opName: string) {
+    let o = this.ops[this.ops.findIndex((op) => op.name == opName)];
+    if (this.pedalIsChained(pedalId)) {
+      let curr_ops = (<ChainOp> this.mapping[pedalId]).ops;
+      this.mapping[pedalId] = makeChainOp(curr_ops.concat([o]), pedalId);
+    } else if (this.pedalIsPaired(pedalId)) {
+      let first_op = (<PairedOp> this.mapping[pedalId]).op;
+      this.mapping[pedalId] = makeChainOp([first_op].concat([o]), pedalId);
+    } else {
+      this.mapping[pedalId] = makeChainOp([o], pedalId);
+    }
+  }
+
+  chainToPedal(pedalId: number, ops: Array<string>) {
+    let op_array = ops.map((name) => this.ops[this.ops.findIndex((op) => op.name == name)]);
+    if (this.pedalIsChained(pedalId)) { 
+      // if pedal already has a chain, add ops to the chain
+      let curr_ops = (<ChainOp> this.mapping[pedalId]).ops;
+      this.mapping[pedalId] = makeChainOp(curr_ops.concat(op_array), pedalId);
+    } else if (this.pedalIsPaired(pedalId)) {
+      // if pedal is paired, you can turn it into a chain
+      let first_op = (<PairedOp> this.mapping[pedalId]).op;
+      this.mapping[pedalId] = makeChainOp([first_op].concat(op_array), pedalId);
+    } else {
+      // pedal doesn't have anything mapped, just add a new chain
+      this.mapping[pedalId] = makeChainOp(op_array, pedalId);
+    }
+  }
+
+  // will return true if an op is mapped to a pedal in any way
+  opIsMapped(opName: string): boolean {
+    if (this.mapping.filter((m) => m.name.includes(opName)).length > 0) {
+      return true;
+    } else return false;
+  }
+
+  pedalIsMapped(id: number) {
+    return (this.mapping[id]);
+  }
+
+  pedalIsChained(id: number) {
+    if (this.pedalIsMapped(id) && this.mapping[id].name.startsWith('ch')) { return true; }
+    else {return false; }
+  }
+
+  pedalIsPaired(id: number) {
+    return (this.pedalIsMapped(id) && !this.pedalIsChained(id));
+  }
+
+  unpairPedal(id: number) {
+    console.log(`unpairing pedal ${id}`);
+    // let op = this.pairs[id];
+    // this.unpairedOps.splice(op.id, 0, op);
+    delete this.mapping[id];
+  }
+
+  // unpairOp(name: string) {
+  //   let pid = this.opIsPaired(name);
+  //   this.unpairPedal(pid);
+  // }
+}
 
 /**
  * The Draft Player Service is in charge of updating the the global PlayerState and tracking where the weaver is in the draft.
@@ -44,7 +164,9 @@ export class PlayerService {
 
   constructor(
     public pedals: PedalsService,
-    public mappings: MappingsService
+    public mappings: MappingsService,
+    public seq: SequencerService,
+    // private oss: OperationService
   ) {
     // this.draft = null; 
     console.log("draft player constructor");
@@ -112,9 +234,11 @@ export class PlayerService {
         mappings.pair(0, 'forward');
         console.log("pedals mapping", mappings.index);
       } else if (n == 2) {
-        if (mappings.pedalIsMapped(0)) mappings.unmap(0);
-        mappings.makeOpSequencer(0, 1);
-        console.log("pedals mapping", mappings.index);
+        if (this.pedals.pedalIsMapped(0)) this.pedals.unpairPedal(0);
+        this.pedals.mapping[0] = makeOpSequencer(0, 1);
+        this.pedals.mapping[1] = this.pedals.mapping[0];
+        this.seq.start(0, 1);
+        console.log("pedals mapping", this.pedals.mapping);
       }
     })
   }
@@ -130,22 +254,6 @@ export class PlayerService {
   }
   get draft() {
     return this.state.draft;
-  }
-
-  get sequencer() {
-    return this.mappings.sequencer;
-    // if (this.mappings.sequencer) {
-    //   let seq = this.mappings.sequencer;
-    //   return seq.p_conf;
-    // } else { return -1; }
-  }
-
-  addToSequencer(o: PlayerOp | OpChain) {
-    if (this.sequencer) {
-      this.sequencer.addOp(o);
-    } else {
-      console.log('no sequencer to add to!');
-    }
   }
 
   setDraft(d: Draft) {

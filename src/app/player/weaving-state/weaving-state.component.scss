@@ -1,27 +1,24 @@
-.player { 
-  display: flex;
+.first-row { 
   flex-wrap: wrap;
-  justify-content: start;
-  height: inherit; 
+  display: flex;
+  align-items: flex-start;
+  flex-basis: 100%;
 }
 
-.loom-block, .sequencer-block, .draft-block, .op-block {
+.loom-block, .draft-block {
   display: inline-block;
 }
 
 .draft-block{
+  height: inherit; 
   flex-wrap: nowrap;
   flex: 1;
 }
 
-.sequencer-block {
-  height: inherit;
-  flex: 8;
-}
-
-.op-menu-block {
-  display: block;
-  max-width: 210px;
+.draft-scroll{
+  max-width: 1255px;
+  max-height: 370px;
+  overflow: scroll;
 }
 
 .break{
@@ -48,31 +45,6 @@
   display: block;
   margin-top: 10px;
   margin-bottom: 5px;
-}
-
-.draft-scroll{
-  max-width: 1255px;
-  max-height: 370px;
-  overflow: scroll;
-}
-
-.op-field h3{
-  width: 95%;
-  font-size: 100%;
-  font-weight: bold;
-  padding: 20px 0px 10px 14px;
-}
-
-.op-field  p{
-  width: 95%;
-  font-size: .8em;
-  padding: 0px 0px 10px 14px;
-}
-
-.op-field{
-  display: flex;
-  flex-direction: column;
-  //padding: 10px;
 }
 
 .online {
