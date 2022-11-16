@@ -16,15 +16,17 @@ import { OpHelpModal } from './modal/ophelp/ophelp.modal';
 import { ImageComponent } from './palette/image/image.component';
 import { DraftdetailComponent } from './modal/draftdetail/draftdetail.component';
 import { NoteComponent } from './palette/note/note.component';
-import { PlayerComponent } from '../player/player.component';
+// import { PlayerComponent } from '../player/component/player.component';
 import { ParameterComponent } from './palette/operation/parameter/parameter.component';
 import { InletComponent } from './palette/operation/inlet/inlet.component';
+import { PlayerComponent } from '../player/player.component';
+
 
 @NgModule({
     imports: [
         CoreModule,
         WeaverModule,
-        PlayerModule
+        PlayerModule,
     ],
     declarations: [
         MixerComponent,
@@ -41,6 +43,7 @@ import { InletComponent } from './palette/operation/inlet/inlet.component';
         DraftdetailComponent,
         NoteComponent,
         ParameterComponent,
-        InletComponent        ]
+        InletComponent, 
+    ]
 })
 export class MixerModule { }

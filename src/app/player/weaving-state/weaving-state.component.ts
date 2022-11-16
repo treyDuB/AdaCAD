@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
-import { Draft } from '../../core/model/datatypes';
+import { Component, Input, Output, OnInit} from '@angular/core';
 import { PlayerService } from '../player.service';
-import { isUp, isSet, warps, wefts } from '../../core/model/drafts';
+import { MaterialsService } from '../../core/provider/materials.service';
+import { Draft } from '../../core/model/datatypes';
+import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
+import { PedalsService } from '../provider/pedals.service';
 
 @Component({
   selector: 'app-weaving-state',
@@ -21,7 +23,8 @@ export class WeavingStateComponent implements OnInit {
   ink = 'neq'; //can be or, and, neq, not, splice
 
   constructor(
-    public pls: PlayerService
+    public pls: PlayerService,
+    public pds: PedalsService,
   ) { 
     this.default_cell = 10;
   }

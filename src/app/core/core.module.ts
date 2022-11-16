@@ -114,7 +114,7 @@ import { AuthService } from './provider/auth.service';
         FileService,
         VaeService,
         PatternfinderService,
-        AuthService
+        AuthService,
     ],
     exports: [
         CommonModule,

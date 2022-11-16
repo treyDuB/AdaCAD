@@ -1,7 +1,8 @@
 import { Injectable} from '@angular/core';
+import { EventEmitter } from 'events';
 import { wefts } from '../core/model/drafts';
 import { Draft } from '../core/model/datatypes';
-import { BaseOp as Op, BuildableOperation as GenericOp, 
+import { BaseOp, BuildableOperation as GenericOp, 
   TreeOperation as TreeOp,
   Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
   SingleInlet, OpInput
@@ -11,9 +12,9 @@ import { PlayerOp, playerOpFrom,
   ChainOp, OpSequencer, PairedOp, PedalOpMapping,
   makePairedOp, makeChainOp, makeOpSequencer,
   forward, refresh, reverse
-} from './model/player_ops';
-import { PlayerState, WeavingPick, copyState, initState } from './model/player';
-import { EventEmitter } from 'events';
+} from './model/op_mappings';
+import { PlayerState, WeavingPick, copyState, initState } from './model/state';
+import { MappingsService } from './provider/mappings.service';
 import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
 import { SequencerService } from './provider/sequencer.service';
 // import { OperationService } from '../mixer/provider/operation.service';
@@ -43,7 +44,7 @@ class PedalConfig {
   pedals: Array<Pedal>;
   ops: Array<PlayerOp>;
   availPedals: Array<number>;
-  mapping: PedalOpMapping;  // pedal ID (number) <-> op (PlayerOp)
+  mapping: PedalOpMapping;
 
   constructor(pedalArray: Array<Pedal>, loadConfig = false) {
     this.pedals = pedalArray;
@@ -158,12 +159,12 @@ class PedalConfig {
 export class PlayerService {
   state: PlayerState;
   loom: LoomConfig;
-  pedals: PedalConfig;
   redraw = new EventEmitter();
   draftClassification: Array<DraftOperationClassification> = [];
 
   constructor(
-    public pds: PedalsService,
+    public pedals: PedalsService,
+    public mappings: MappingsService,
     public seq: SequencerService,
     // private oss: OperationService
   ) {
@@ -181,18 +182,14 @@ export class PlayerService {
 
     this.loom = { warps: 2640, draftTiling: true };
 
-    this.pedals = new PedalConfig(this.pds.pedals);
-
     // load the draft progress ops
-    this.pedals.addOperation(forward);
-    this.pedals.addOperation(refresh);
-    this.pedals.addOperation(reverse);
-
-    const ops = this.pedals;
+    mappings.addOperation(forward);
+    mappings.addOperation(refresh);
+    mappings.addOperation(reverse);
 
     function addOp(op: GenericOp) {
       let p_op = playerOpFrom(op);
-      ops.addOperation(p_op);
+      mappings.addOperation(p_op);
       return p_op;
     }
 
@@ -228,49 +225,32 @@ export class PlayerService {
     // console.log(this.oss.getOp('germanify'));
     // const germanify = this.pedalOps.addOperation(playerOpFromTree(<PlayableTreeOp> this.oss.getOp('germanify')));
     
-    
-    // this.pedalOps.addOperation(rotate) 
-    // this.pedalOps.addOperation(tabby);
-    // this.pedalOps.addOperation(twill);
-    // this.pedalOps.addOperation(random);
-    // this.pedalOps.addOperation(invert); 
-    // this.pedalOps.addOperation(shiftx); 
-    // this.pedalOps.addOperation(flipx);
-    // this.pedalOps.addOperation(slope); 
-    // this.pedalOps.addOperation(stretch);
-
-    // this.pds.pedal_array.on('pedal-added', (num) => {
-    //   // console.log("automatically pairing first pedal", num);
-    //   if (num == 1) {
-    //     console.log(this.pedalOps);
-    //     this.setPedalOp({value: 'forward'}, this.pedals[0]);
-    //   }
-    // });
     console.log('pedal ops added');
 
-    this.pds.on('pedal-step', (id) => this.onPedal(id));
+    pedals.on('pedal-step', (id) => this.onPedal(id));
 
-    this.pds.on('pedal-added', (n) => {
+    pedals.on('pedal-added', (n) => {
       if (n == 1) {
-        this.pedals.pair(0, 'forward');
-        console.log("pedals mapping", this.pedals.mapping);
+        mappings.pair(0, 'forward');
+        console.log("pedals mapping", mappings.index);
       } else if (n == 2) {
-        if (this.pedals.pedalIsMapped(0)) this.pedals.unpairPedal(0);
-        this.pedals.mapping[0] = makeOpSequencer(0, 1);
-        this.pedals.mapping[1] = this.pedals.mapping[0];
-        this.seq.start(0, 1);
-        console.log("pedals mapping", this.pedals.mapping);
+        if (mappings.pedalIsMapped(0)) mappings.unmap(0);
+        mappings[0] = this.seq;
+        mappings[1] = this.seq;
+        this.seq.addPedals(0, 1);
+        console.log("pedals mapping", mappings);
       }
     })
   }
 
   get readyToWeave() {  // need either one pedal forward or one pedal reverse, in order to progress through draft
-    return (this.pds.readyToWeave && 
-      (this.pedals.opIsMapped('forward') || this.pedals.opIsMapped('reverse'))
+    return (this.pedals.readyToWeave && 
+      (this.mappings.opIsMapped('forward') || this.mappings.opIsMapped('reverse') || this.seq.readyToWeave)
     );
   }
+
   get weaving() {
-    return this.pds.active_draft.val;
+    return this.pedals.active_draft.val;
   }
   get draft() {
     return this.state.draft;
@@ -287,29 +267,28 @@ export class PlayerService {
   // e is a string = op.name
   setPedalOp(e: any, p: Pedal) {
     console.log(e, p);
-    if (this.pedals.pedalIsPaired(p.id)) {
-      this.pedals.unpairPedal(p.id);
+    if (this.mappings.pedalIsPaired(p.id)) {
+      this.mappings.unmap(p.id);
     }
-    this.pedals.pair(p.id, e);
-    console.log("pedals dict", this.pedals.mapping);
+    this.mappings.pair(p.id, e);
+    console.log("pedals map", this.mappings);
   }
 
   onPedal(id: number) {
     console.log('pedal ', id);
-    if (this.pedals.mapping[id]) {
+    let mapped = this.mappings.getMap(id);
+    console.log(mapped);
+    console.log(this.seq);
+    if (mapped) {
       console.log('mapping exists for pedal');
-      this.pedals.mapping[id].perform(this.state, id)
+      mapped.perform(this.state, id)
       .then((state: PlayerState) => {
         this.state = state;
         console.log(this.state);
         this.redraw.emit('redraw');
         if (this.state.weaving) {
-          // this.pds.loom_ready.once('change', (state) => {
-          //   if (state) {
-              console.log("draft player: sending row");
-              this.pds.sendDraftRow(this.currentRow());
-            // }
-          // })
+          console.log("draft player: sending row");
+          this.pedals.sendDraftRow(this.currentRow());
         }
       });
     }
@@ -363,9 +342,9 @@ export class PlayerService {
     // don't let user start weaving until AT LEAST:
     // - 1 pedal connected AND
     // - 1 pedal configured with operation "forward" or "reverse"
-    this.pds.toggleWeaving();
-    this.pds.sendDraftRow(this.currentRow());
-    // this.pds.vacuum_on.once('change', (state) => {
+    this.pedals.toggleWeaving();
+    this.pedals.sendDraftRow(this.currentRow());
+    // this.pedals.vacuum_on.once('change', (state) => {
     //   if (state) {
     //   }
     // });

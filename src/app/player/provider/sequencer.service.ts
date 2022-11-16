@@ -1,33 +1,42 @@
 import { Injectable } from '@angular/core';
-import { OpSequencer, SingleOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/player_ops';
+import { OpSequencer, SingleOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/op_mappings';
+
+interface ChainIndex {
+  id: number,
+  pos: number, // position in ops array
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class SequencerService {
-  seq: OpSequencer;
+export class SequencerService extends OpSequencer {
+  // seq_array: OpSequencer;
   selecting: boolean = false;
-  chains: Array<ChainOp> = [];
+  chains: Array<ChainIndex> = []; // a number pointing to index in sequencer ops
 
-  get pos() { return this.seq.pos; }
-  get ops() { return this.seq ? this.seq.ops : []; }
-  get current() { return this.seq.current; }
-  get active() { return (this.seq ? true : false); }
+  // get pos() { return this.seq_array.pos; }
+  // get ops() { return this.seq_array ? this.seq_array.ops : []; }
+  // get current() { return this.seq_array.current; }
+  get active() { return (this.readyToWeave ? true : false); }
 
-  constructor() { 
+  constructor() {
+    super();
+    // this.seq_array = new OpSequencer();
   }
 
-  start(fwd_pedal: number, select_pedal_a: number, select_pedal_b?: number) {
+  addPedals(fwd_pedal: number, select_pedal_a: number, select_pedal_b?: number) {
+    this.mapPedal(fwd_pedal, 'fwd');
+    this.mapPedal(select_pedal_a, 'sel-next');
     if (select_pedal_b) {
-      this.seq = makeOpSequencer(fwd_pedal, select_pedal_a, select_pedal_b);
-    } else { this.seq = makeOpSequencer(fwd_pedal, select_pedal_a); }
+      this.mapPedal(select_pedal_b, 'sel-back');
+    }
   }
 
   addSingleOp(o: SingleOp) {
     if (this.active) {
-      this.seq.addOp(o);
-      console.log(o);
-      console.log(this.seq);
+      this.addOp(o);
+      // console.log(o);
+      // console.log(this.seq);
     } else {
       console.log('no sequencer to add to!');
     }
@@ -36,15 +45,16 @@ export class SequencerService {
   addChainOp(o: SingleOp) { 
     let ch = makeChainOp([o]);
     ch.id = this.chains.length;
-    this.chains.push(<ChainOp> this.seq.addOp(ch));
+    this.chains.push({id: ch.id, pos: this.addOp(ch)});
   }
 
   addToChain(ch_id: number, o: SingleOp) {
-    let ch = this.chains[ch_id];
-    this.chains[ch_id] = makeChainOp(ch.ops.concat([o]));
+    let ch = this.ops[this.chains[ch_id].pos] as ChainOp;
+    this.ops[this.chains[ch_id].pos] = makeChainOp(ch.ops.concat([o]));
+    console.log(this.ops);
   }
 
-  removeOp() { this.seq.removeOp(); }
-  nextOp() { this.seq.nextOp(); }
-  prevOp() { this.seq.prevOp(); }
+  // removeOp() { this.seq_array.removeOp(); }
+  // nextOp() { this.seq_array.nextOp(); }
+  // prevOp() { this.seq_array.prevOp(); }
 }
