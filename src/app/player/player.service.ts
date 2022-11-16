@@ -2,15 +2,15 @@ import { Injectable} from '@angular/core';
 import { EventEmitter } from 'events';
 import { wefts } from '../core/model/drafts';
 import { Draft } from '../core/model/datatypes';
-import { BaseOp as Op, BuildableOperation as GenericOp, 
+import { BaseOp, BuildableOperation as GenericOp, 
   TreeOperation as TreeOp,
   Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
   SingleInlet, OpInput
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
 import { PlayerOp, playerOpFrom, 
-  ChainOp, OpSequencer, OpPairing, 
-  makeOpPairing, makeOpChain, makeOpSequencer,
+  ChainOp, OpSequencer, PairedOp, PedalOpMapping,
+  makePairedOp, makeChainOp, makeOpSequencer,
   forward, refresh, reverse
 } from './model/op_mappings';
 import { PlayerState, WeavingPick, copyState, initState } from './model/state';
@@ -44,7 +44,7 @@ class PedalConfig {
   pedals: Array<Pedal>;
   ops: Array<PlayerOp>;
   availPedals: Array<number>;
-  mapping: PedalOpMapping;  // pedal ID (number) <-> op (PlayerOp)
+  mapping: PedalOpMapping;
 
   constructor(pedalArray: Array<Pedal>, loadConfig = false) {
     this.pedals = pedalArray;
@@ -234,18 +234,18 @@ export class PlayerService {
         mappings.pair(0, 'forward');
         console.log("pedals mapping", mappings.index);
       } else if (n == 2) {
-        if (this.pedals.pedalIsMapped(0)) this.pedals.unpairPedal(0);
-        this.pedals.mapping[0] = makeOpSequencer(0, 1);
-        this.pedals.mapping[1] = this.pedals.mapping[0];
-        this.seq.start(0, 1);
-        console.log("pedals mapping", this.pedals.mapping);
+        if (mappings.pedalIsMapped(0)) mappings.unmap(0);
+        mappings[0] = this.seq;
+        mappings[1] = this.seq;
+        this.seq.addPedals(0, 1);
+        console.log("pedals mapping", mappings);
       }
     })
   }
 
   get readyToWeave() {  // need either one pedal forward or one pedal reverse, in order to progress through draft
     return (this.pedals.readyToWeave && 
-      (this.mappings.opIsMapped('forward') || this.mappings.opIsMapped('reverse'))
+      (this.mappings.opIsMapped('forward') || this.mappings.opIsMapped('reverse') || this.seq.readyToWeave)
     );
   }
 
@@ -271,12 +271,14 @@ export class PlayerService {
       this.mappings.unmap(p.id);
     }
     this.mappings.pair(p.id, e);
-    console.log("pedals map", this.mappings.map);
+    console.log("pedals map", this.mappings);
   }
 
   onPedal(id: number) {
     console.log('pedal ', id);
     let mapped = this.mappings.getMap(id);
+    console.log(mapped);
+    console.log(this.seq);
     if (mapped) {
       console.log('mapping exists for pedal');
       mapped.perform(this.state, id)

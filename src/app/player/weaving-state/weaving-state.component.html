@@ -1,7 +1,7 @@
 <div class="first-row">
   <div id="loom-container" class="loom-block">
     <div id="loom-status" class="loom-field">
-      <ng-container *ngIf="pls.pds.loom_online.val; else loomOffline">
+      <ng-container *ngIf="pds.loom_online.val; else loomOffline">
         <p class="online data-display">Loom: Online</p>
       </ng-container>
       <ng-template #loomOffline>
@@ -32,7 +32,7 @@
     <div id="pedals-list" class="loom-field">
       <h2 class="pedal-field-header">Pedals </h2>
       <div class="pedal-array pedals-field">
-        <ng-container *ngFor="let p of pls.pds.pedals">
+        <ng-container *ngFor="let p of pds.pedals">
           <button 
           [name] = p.id
           class = "pedal-box">

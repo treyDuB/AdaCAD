@@ -30,7 +30,14 @@
                         Add Chain to Sequencer
                       </button>
 
-                      <ng-container *ngIf="seq.chains != 0">
+                      <ng-container *ngFor="let ch of seq.chains">
+                        <button mat-stroked-menu-item
+                          (click) ="seq.addToChain(ch.id, op)">
+                        Add to Chain {{ch.id}}
+                        </button>
+                      </ng-container>
+
+                      <!-- <ng-container *ngIf="seq.chains != 0">
                         <button mat-stroked-menu-item
                         [matMenuTriggerFor]="opChains">
                         Add to Existing Chain
@@ -44,7 +51,7 @@
                           Chain {{ch.id}}
                           </button>
                         </ng-container>
-                      </mat-menu>
+                      </mat-menu> -->
 
                   </mat-menu>
 
