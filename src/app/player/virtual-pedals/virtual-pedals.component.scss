@@ -1,0 +1,23 @@
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.row-item {
+  margin: 0 1em;
+  padding: 1em;
+}
+
+.mat-button {
+  background-color: #ff4081;
+  color: white;
+  width: min-content;
+  height: min-content;
+  min-width: revert;
+  min-height: revert;
+  line-height: normal;
+}
+
+#button-container {
+  padding: 1em 0;
+}

@@ -1,8 +1,12 @@
-import { child, ref, set, get, query, onValue, DatabaseReference, onChildAdded, onChildChanged, onChildRemoved} from "firebase/database";
+import { child, ref, set, get, query, 
+  onValue, onChildAdded, onChildChanged, onChildRemoved,
+  push, remove,
+  DatabaseReference, 
+} from "firebase/database";
 import { Database } from '@angular/fire/database';
 import { EventEmitter } from 'events';
 
-interface NodeParams {
+export interface NodeParams {
   db?: Database,
   name?: string,
   root?: string,
@@ -13,16 +17,24 @@ interface NodeParams {
   id?: number
 }
 
+export type NodeValue = string | boolean | number | { [key: string]: any };
+
+interface NodeMethods {
+  attach(): void,
+  detach(): void,
+}
+
 /**
  * @class DBNode
  * @desc Wrapper for a Firebase database ref and
  * the value stored at that DB node.
  */
-class DBNode extends EventEmitter {
+abstract class DBNode extends EventEmitter implements NodeMethods {
   id: number;
+  key?: string;
   _name: string;
   _dbref: DatabaseReference;
-  _val: any;
+  _val: NodeValue;
   _active: boolean;
 
   /**
@@ -94,7 +106,11 @@ class DBNode extends EventEmitter {
   // methods for a node: 
   // attach() means it is updating with the database and emitting events
   // detach() means it is not updating, no events
+  abstract attach();
+  abstract detach();
 }
+
+type Keyed<Node extends DBNode> = Node & { key: string };
 
 /**
  * @class DBListener
@@ -103,6 +119,7 @@ class DBNode extends EventEmitter {
  */
 export class DBListener extends DBNode {
   id: number;
+  key?: string;
   _name: string;
   _dbref: DatabaseReference;
   _val: any;
@@ -147,6 +164,7 @@ export class DBListener extends DBNode {
  */
 export class DBWriter extends DBNode {
   id: number;
+  key?: string;
   _name: string;
   _ref: DatabaseReference;
   _val: any;
@@ -172,6 +190,116 @@ export class DBWriter extends DBNode {
   }
 }
 
+/** Special DBWriter that expects the node to be cleared by the
+ * other end upon receipt
+ */
+export class DBWriteBuffer extends DBWriter {
+  id: number;
+  _name: string;
+  _ref: DatabaseReference;
+  _val: any;
+  _active: boolean;
+
+  constructor(params: NodeParams) {
+    super(params);
+  }
+
+  setVal(x) {
+    get(query(this.ref))
+      .then((snapshot) => {
+        if(!snapshot.val()) {
+          console.log("overwriting data in buffer");
+        }
+        super.setVal(x);
+      })
+      .catch(result => console.log(result));
+  }
+}
+
+export class DBTwoWay extends DBNode {
+  id: number;
+  key?: string;
+  _name: string;
+  _dbref: DatabaseReference;
+  _val: any;
+  _active: boolean;
+
+  constructor(params: NodeParams) {
+    super(params);
+  }
+  
+  attach() {
+    this.active = true;
+    let unsub = onValue(this.ref, (snapshot) => {
+      this.val = snapshot.val();
+      this.emit('change', this.val);
+    });
+    this.unsubscribers.push(unsub);
+  }
+
+  getNow() {
+    get(query(this.ref))
+      .then((snapshot) => {
+        this.val = snapshot.val();
+      })
+      .catch(result => console.log(result));
+  }
+  
+  detach() {
+    if (this.active) {
+      while (this.unsubscribers.length > 0) {
+        let unsub = this.unsubscribers.pop();
+        unsub();
+      }
+    }
+    this.active = false;
+  }
+  
+  setVal(x) {
+    this.val = x;
+    if (this.active) {
+      set(this.ref, this.val);
+    }
+  }
+}
+
+class DBNodeArray extends EventEmitter {
+  nodes: Array<DBNode>;
+  lengthNode: DBNode;
+  parentNode: DBNode;
+
+  constructor(lengthNode, parentNode, init: any = {}) {
+    super();
+    this.lengthNode = lengthNode;
+    this.parentNode = parentNode;
+    if (init) {
+    } else {
+      this.nodes = [];
+    }
+  }
+
+  get length() { return this.nodes.length; }
+
+  get active() { return (this.lengthNode.active && this.parentNode.active); }
+
+  get ready() { return (this.lengthNode.val > 0 && this.parentNode.val != false); }
+
+  nodeAt(n) {
+    console.log(this.nodes);
+    console.log("node at ", n);
+    console.log(this.nodes[n]);
+    return this.nodes[n];
+  }
+
+  pushNode(n) {
+    this.nodes.push(n);
+  }
+
+  popNode() {
+    return this.nodes.pop();
+  }
+}
+
 /**
  * @class `DBListenerArray`
  * @desc Represents a listener to a list of values in the database 
@@ -181,7 +309,7 @@ export class DBWriter extends DBNode {
  * node of the list. Each item in the list is a child of `parentNode`,
  * which is then stored as a `DBListener` in the array `nodes`.
  */
-export class DBListenerArray extends EventEmitter {
+export class DBListenerArray extends DBNodeArray {
   lengthNode: DBListener;
   parentNode: DBListener;
   nodes: Array<DBListener>;
@@ -193,34 +321,12 @@ export class DBListenerArray extends EventEmitter {
   unsubscribers: Array<Function>;
 
   constructor(lengthNode: DBListener, parentNode: DBListener) {
-    super();
+    super(lengthNode, parentNode);
     this.lengthNode = lengthNode;
     this.parentNode = parentNode;
     this.nodes = [];
     this.unsubscribers = [];
   }
-
-  get length() {
-    // console.log("length is ", this.nodes.length);
-    return this.nodes.length;
-  }
-
-  get active() {
-    return (this.lengthNode.active && this.parentNode.active);
-  }
-
-  get ready() {
-    return (this.lengthNode.val > 0 && this.parentNode.val != false);
-  }
-
-  // checkReady() {
-  //   if (this.ready) {
-  //     this.emit('ready', {
-  //       length: this.lengthNode.val,
-  //       data: this.parentNode.val
-  //     });
-  //   }
-  // }
 
   /**
    * @method attach
@@ -254,8 +360,8 @@ export class DBListenerArray extends EventEmitter {
     this.unsubscribers.push(
       onChildRemoved(this.parentNode.ref, () => {
         // console.log("child removed", snapshot);
-        this.popNode();
-        this.emit('child-removed');
+        let removed = this.popNode();
+        this.emit('child-removed', removed);
     }));
   }
 
@@ -273,14 +379,6 @@ export class DBListenerArray extends EventEmitter {
     // console.log("node at ", n);
     // console.log(this.nodes[n]);
     return this.nodes[n];
-  }
-
-  pushNode(n: DBListener) {
-    this.nodes.push(n);
-  }
-
-  popNode() {
-    return this.nodes.pop();
   }
 
   /**
@@ -351,6 +449,188 @@ export class DBListenerArray extends EventEmitter {
     } 
     str += " ]";
     return str;
+  }
+}
+
+const EMPTY_NODE_ARRAY = false;
+
+export class DBWriterArray extends DBNodeArray {
+  nodes: Array<DBWriter>;
+  lengthNode: DBWriter;
+  parentNode: DBWriter;
+
+  constructor(lengthNode, parentNode, init) {
+    super(lengthNode, parentNode, init);
+    if (!init) {
+      this.lengthNode.setVal(0);
+      this.parentNode.setVal(EMPTY_NODE_ARRAY);
+    }
+
+    // console.log(this);
+  }
+
+  addNode(initVal) {
+    const childRef = push(this.parentNode.ref, initVal);
+    const childNode = new DBWriter({ ref: childRef, initVal });
+    childNode.attach();
+    this.pushNode(childNode);
+    this.lengthNode.setVal(this.length);
+  }
+
+  remNode() {
+    const node = this.popNode();
+    remove(node.ref);
+    this.lengthNode.setVal(this.length);
+  }
+
+  updateArray(num, newStates) {
+    if (num > this.length) {
+      while (this.length < num) {
+        this.addNode(newStates[this.length]);
+      }
+    } else if (num < this.length) {
+      while (this.length > num) {
+        this.remNode();
+      }
+    }
+  }
+
+  setNode(i, x) {
+    this.nodes[i].setVal(x);
+  }
+
+}
+
+/**
+ * Array of two-way DBNodes where both ends are listening for
+ * changes AND may write to the DB
+ */
+export class DBTwoWayArray extends DBNodeArray {
+  nodes: Array<DBTwoWay> = [];
+  lengthNode: DBTwoWay;
+  parentNode: DBTwoWay;
+
+  /**
+  * holds the Unsubscribe functions that are returned by
+  * DB event functions like onValue(...)
+  */
+  unsubscribers: Array<Function>;
+
+  constructor(lengthNode: DBTwoWay, parentNode: DBTwoWay, init?: Array<DBTwoWay>) {
+    super(lengthNode, parentNode, init);
+    this.unsubscribers = [];
+    if (!init) {
+      this.lengthNode.setVal(0);
+      this.parentNode.setVal(EMPTY_NODE_ARRAY);
+    }
+  }
+
+  addNode(initVal: any) {
+    push(this.parentNode.ref, initVal);
+    // const childNode = new DBTwoWay({ ref: childRef, initVal });
+    // childNode.attach();
+    // this.pushNode(childNode);
+    // this.lengthNode.setVal(this.length);
+    // console.log('child key', key);
+  }
+
+  onNodeAdded(key: string) {
+     const childRef = child(this.parentNode.ref, key);
+     const childNode = new DBTwoWay({ ref: childRef, key: key, id: this.length });
+     this.attachChildNode(childNode);
+     this.pushNode(childNode);
+     this.lengthNode.setVal(this.length);
+     this.emit('child-added', childNode);
+  }
+
+  remNode() {
+    const lastNode = this.nodeAt(this.length-1);
+    remove(lastNode.ref);
+    // this.lengthNode.setVal(this.length);
+  }
+
+  onNodeRemoved() {
+    let removed = this.popNode();
+    this.lengthNode.setVal(this.length);
+    return removed;
+  }
+
+  updateArray(num: number, newStates: Array<any>) {
+    if (num > this.length) {
+      while (this.length < num) {
+        this.addNode(newStates[this.length]);
+      }
+    } else if (num < this.length) {
+      while (this.length > num) {
+        this.remNode();
+      }
+    }
+  }
+
+  setNode(i: number, x: any) {
+    this.nodes[i].setVal(x);
+  }
+
+  /**
+  * @method attach
+  */
+  attach() {
+    this.lengthNode.attach();
+    this.lengthNode.on('change', (val) => {
+        this.emit('ready', this.ready);
+    });
+
+    this.parentNode.attach();
+    this.parentNode.once('change', (val) => {
+      this.emit('ready', this.ready);
+    });
+
+    for (var node of this.nodes) {
+      this.attachChildNode(node);
+    }
+
+    this.unsubscribers.push(
+      onChildAdded(this.parentNode.ref, (snapshot) => {
+        // console.log("child added", snapshot);
+        this.onNodeAdded(snapshot.key);
+    }));
+
+    this.unsubscribers.push(
+      onChildChanged(this.parentNode.ref, (snapshot) => {
+        console.log("child changed", snapshot);
+    }));
+
+    this.unsubscribers.push(
+      onChildRemoved(this.parentNode.ref, () => {
+        // console.log("child removed", snapshot);
+        let removed = this.onNodeRemoved();
+        this.emit('child-removed', removed);
+    }));
+  }
+ 
+  detach() {
+    if (this.active) {
+      while (this.unsubscribers.length > 0) {
+        let unsub = this.unsubscribers.pop();
+        unsub();
+      }
+    }
+  }
+
+  /**
+  * Attaching a child node that was created elsewhere.
+  * Invokes child's `attach()` method and adds event listener
+  * that will emit a `child-change` event.
+  * @param node 
+  */
+  attachChildNode(node: DBListener) {
+    node.attach();
+    node.on('change', (val) => {
+      this.emit('child-change', {
+        id: node.id,
+        val: val
+      });
+    });
   }
 }
 

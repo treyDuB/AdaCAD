@@ -99,7 +99,7 @@
 
 .mat-expansion-panel, .mat-accordion, .mat-expansion-panel-header,
 .mat-accordion .mat-expansion-panel:last-of-type, 
-.mat-accordion .mat-expansion-panel:first-of-type  {
+.mat-accordion .mat-expansion-panel:first-of-type, #operations-menu {
   border: #ffffff 1px;
   border-radius: 0pt;
   border-bottom-left-radius: 0pt;
@@ -116,6 +116,6 @@
   background: #566be2;
 }
 
-.mat-expansion-panel-header-title, .mat-expansion-indicator{
+.mat-expansion-panel-header-title, .mat-expansion-indicator, .mat-expansion-indicator::after, .mat-expansion-indicator.ng-tns-c130-8.ng-trigger.ng-trigger-indicatorRotate.ng-star-inserted::after, #op-header.mat-expansion-indicator::after {
   color: white;
 }

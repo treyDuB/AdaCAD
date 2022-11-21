@@ -18,6 +18,7 @@ export class SequencerService extends OpSequencer {
   // get ops() { return this.seq_array ? this.seq_array.ops : []; }
   // get current() { return this.seq_array.current; }
   get active() { return (this.readyToWeave ? true : false); }
+  get pos() { return this._pos; }
 
   constructor() {
     super();

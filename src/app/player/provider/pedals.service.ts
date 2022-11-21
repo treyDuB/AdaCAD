@@ -1,9 +1,11 @@
-import { Injectable, Query } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { WeavingPick } from '../model/player';
 import { EventEmitter } from 'events';
 import { getDatabase } from "firebase/database";
 import { Database } from '@angular/fire/database';
-import { DBListener, OnlineStatus, DBWriter, DBListenerArray } from '../model/dbnodes';
+import { NodeParams,
+  DBListener, OnlineStatus, DBWriter, 
+  DBListenerArray, DBTwoWayArray, DBTwoWay } from '../model/dbnodes';
 
 /**
  * The Pedals service is in charge of updating the database 
@@ -17,8 +19,8 @@ export interface Pedal {
   id: number,
   name: string,
   u_name?: string,
-  auto_name?: string,
-  dbnode: DBListener,
+  key: string,
+  dbnode: DBListener | DBTwoWay,
   state: any,
   // op?: Operation
 }
@@ -27,14 +29,19 @@ export class PedalStatus extends EventEmitter {
   pi_online: OnlineStatus;     // is the pi online?
   loom_online: DBListener;   // is the loom online?
   vacuum_on: DBListener;     // is the loom running? (vacuum pump running)
-  active_draft: DBWriter;
-  num_pedals: DBListener;
-  pedal_states: DBListener;
   loom_ready: DBListener;
+
+  active_draft: DBWriter;
   num_picks: DBWriter;
   pick_data: DBWriter;
 
+  num_pedals: DBListener;
+  pedal_states: DBListener;
   pedal_array: DBListenerArray;
+
+  num_v_pedals: DBTwoWay;
+  v_pedal_states: DBTwoWay;
+  v_pedal_array: DBTwoWayArray;
 
   constructor(db: Database) {
     super();
@@ -57,18 +64,22 @@ export class PedalStatus extends EventEmitter {
       pick_data: 'pick-data'
     }
 
-    this.pi_online = new OnlineStatus({ db: db, root: 'pedals/', path: 'pi-online'});
+    function params(path: string): NodeParams { 
+      return { db: db, root: 'pedals/', path: path };
+    };
+
+    this.pi_online = new OnlineStatus(params('pi-online'));
     // this.pi_online.attach();
     // this.loom_online = new DBListener(this.db, 'loom-online');
 
     for (var l in listeners) {
-      const newL = new DBListener({db: db, root: 'pedals/', path: listeners[l]});
+      const newL = new DBListener(params(listeners[l]));
       Object.defineProperty(this, l, { value: newL });
       // this[l].attach();
     }
 
     for (var w in writers) {
-      const newW = new DBWriter({db: db, root: 'pedals/', path: writers[w], initVal: defaults[w]});
+      const newW = new DBWriter({...params(writers[w]), initVal: defaults[w]});
       // console.log('writer created');
       Object.defineProperty(this, w, { value: newW });
       // console.log('writer added to status');
@@ -77,7 +88,14 @@ export class PedalStatus extends EventEmitter {
       this[w].setVal(defaults[w]);
     }
 
+    // set up array of pedal listeners with the length and parent nodes
     this.pedal_array = new DBListenerArray(this.num_pedals, this.pedal_states);
+
+    // set up virtual pedal nodes, which have their own length
+    // and parent nodes
+    this.num_v_pedals = new DBTwoWay(params('num-v-pedals'));
+    this.v_pedal_states = new DBTwoWay(params('v-pedal-states'));
+    this.v_pedal_array = new DBTwoWayArray(this.num_v_pedals, this.v_pedal_states);
   }
 
   toString() {
@@ -118,6 +136,7 @@ export class PedalsService extends EventEmitter {
   //     loom_ready: false     // is the loom requesting a draft row?
   // };
   pedals: Array<Pedal> = [];
+  v_pedals: Array<Pedal> = [];
 
   constructor() { 
     super();
@@ -130,6 +149,7 @@ export class PedalsService extends EventEmitter {
     // if pi_online = "true" at start-up, just make sure
     console.log("are you alive?");
     this.pi_online.checkAlive();
+    this.virtualPedals(true);
     this.loomPedals(false);
 
     // listens for changes in pi online status
@@ -141,21 +161,22 @@ export class PedalsService extends EventEmitter {
     this.loom_online.on('change', (state) => 
       this.loomListeners(state));
 
+    /** pedal array listeners */
     this.pedal_array.on('ready', (state) => 
-      this.weavingWriters(state));
+      this.weavingWriters(state)
+    );
 
     this.pedal_array.on('child-added', (newNode) => {
       console.log('pedals service: pedal added');
       this.pedals.push(this.nodeToPedal(newNode));
       this.emit('pedal-added', this.pedals.length);
-    })
+    });
 
     this.pedal_array.on('child-removed', () => {
       this.pedals.pop();
       this.emit('pedal-removed', this.pedals.length);
-    })
+    });
 
-    /** @todo */
     this.pedal_array.on('child-change', (e) => {
       this.pedals[e.id].state = e.val;
       this.emit('pedal-step', e.id);
@@ -171,18 +192,48 @@ export class PedalsService extends EventEmitter {
         // update num_picks and pick_data accordingly
       }
     });
+    
+    /** virtual pedal listeners */
+    this.v_pedal_array.on('ready', (state) => 
+      this.weavingWriters(state));
+
+    this.v_pedal_array.on('child-added', (newNode) => {
+      console.log('pedals service: virtual pedal added');
+      this.v_pedals.push(this.nodeToPedal(newNode));
+      this.emit('pedal-added', this.v_pedals.length);
+    })
+
+    this.v_pedal_array.on('child-removed', () => {
+      this.v_pedals.pop();
+      this.emit('pedal-removed', this.v_pedals.length);
+    })
+
+    this.v_pedal_array.on('child-change', (e) => {
+      this.v_pedals[e.id].state = e.val;
+      this.emit('pedal-step', e.id);
+      // e = {id: which pedal's id, val: pedal state}
+      // call pedal.execute or whatever it ends up being
+      // this.player.onPedal(e.id, e.val);
+    });
   }
+
+  
 
   get pi_online() { return this.status.pi_online; }
   get loom_online() { return this.status.loom_online; }
   get vacuum_on() { return this.status.vacuum_on; }
   get active_draft() { return this.status.active_draft; }
-  get num_pedals() { return this.status.num_pedals; }
-  get pedal_states() { return this.status.pedal_states; }
   get loom_ready() { return this.status.loom_ready; }
   get num_picks() { return this.status.num_picks; }
   get pick_data() { return this.status.pick_data; }
+
+  get num_pedals() { return this.status.num_pedals; }
+  get pedal_states() { return this.status.pedal_states; }
   get pedal_array() { return this.status.pedal_array; }
+
+  get num_v_pedals() { return this.status.num_v_pedals; }
+  get v_pedal_states() { return this.status.v_pedal_states; }
+  get v_pedal_array() { return this.status.v_pedal_array; }
   
   get readyToWeave() { return (this.loom_online.val && this.pedal_array.ready); }
 
@@ -195,6 +246,32 @@ export class PedalsService extends EventEmitter {
       this.loom_online.detach();
       this.pedal_array.detach();
     }
+  }
+
+  virtualPedals(state: boolean) {
+    state? this.v_pedal_array.attach() : this.v_pedal_array.detach();
+  }
+
+  addVPedal() {
+    this.v_pedal_array.addNode(false);
+  }
+
+  togglePedalByID(id: number) {
+    console.log("toggling virtual pedal ", id);
+    if (id >= 0 && id < this.v_pedals.length) {
+      let val = this.v_pedal_array.nodes[id].val;
+      this.v_pedal_array.setNode(id, !val);      
+    }
+  }
+
+  togglePedal(p: Pedal) {
+    console.log(this.v_pedal_array);
+    console.log(this.v_pedals);
+    this.togglePedalByID(p.id);
+  }
+
+  remVPedal() {
+    this.v_pedal_array.remNode();
   }
 
   loomListeners(state: boolean) {
@@ -234,9 +311,9 @@ export class PedalsService extends EventEmitter {
     this.pick_data.setVal(r.rowData);
   }
 
-  nodeToPedal(node) {
+  nodeToPedal(node: DBListener | DBTwoWay) {
     console.log(node);
-    let p: Pedal = { id: node.id, name: node.name, dbnode: node, state: node.val };
+    let p: Pedal = { id: node.id, key: node.key, name: node.name, dbnode: node, state: node.val };
     return p;
   }
 }

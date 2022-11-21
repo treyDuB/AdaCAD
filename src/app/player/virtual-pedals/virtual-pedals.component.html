@@ -1,0 +1,32 @@
+Virtual Pedals: {{ pds.num_v_pedals.val }}
+
+<div id="v-pedals-container" class="row">
+  <div id="button-container" class="row">
+    <button mat-button id="add-v-pedal" 
+      (click)="pds.addVPedal()" 
+      [disabled]="!pds.v_pedal_array.active"
+      class="row-item">
+      +
+    </button>
+    <button mat-button id="add-v-pedal" 
+      (click)="pds.remVPedal()" 
+      [disabled]="!pds.v_pedal_array.active || pds.v_pedals.length == 0"
+      class="row-item">
+      -
+    </button>
+  </div>
+
+  <div id="v-pedals-list" class="row-item">
+    <!-- <h2 class="pedal-field-header">Pedals </h2> -->
+    <div class="pedal-array pedals-field">
+      <ng-container *ngFor="let p of pds.v_pedals">
+        <button 
+        [name] = p.id
+        (click)="pds.togglePedal(p)"
+        class = "row-item">
+        {{p.id}}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</div>

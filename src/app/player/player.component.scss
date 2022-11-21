@@ -54,6 +54,10 @@
   background: #121f6b;
 }
 
+.mat-expansion-indicator::after {
+  color:#ffffff;
+}
+
 .mat-expansion-panel-body {
   padding: 0px;
 }

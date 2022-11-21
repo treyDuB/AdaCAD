@@ -275,9 +275,9 @@ export class PlayerService {
   }
 
   onPedal(id: number) {
-    console.log('pedal ', id);
+    console.log('player service: pedal ', id);
     let mapped = this.mappings.getMap(id);
-    console.log(mapped);
+    console.log(this.mappings);
     console.log(this.seq);
     if (mapped) {
       console.log('mapping exists for pedal');

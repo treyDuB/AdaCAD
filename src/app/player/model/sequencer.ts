@@ -13,7 +13,7 @@ import { PlayerState, copyState } from "./player";
   p_select_a: number = -1;
   p_select_b?: number = -1;
   p_prog: number = -1;
-  pos: number = -1;
+  _pos: number = -1;
   ops: Array<SingleOp | ChainOp> = [];
   selecting: boolean = false;
 
@@ -35,7 +35,7 @@ import { PlayerState, copyState } from "./player";
 
     if (ops) {
       this.ops = ops;
-      this.pos = 0;
+      this._pos = 0;
     }
   }
 
@@ -48,7 +48,7 @@ import { PlayerState, copyState } from "./player";
   }
 
   get current(): SingleOp | ChainOp {
-    return this.ops[this.pos];
+    return this.ops[this._pos];
   }
 
   mapPedal(id: number, role: 'fwd' | 'sel-next' | 'sel-back') {
@@ -71,32 +71,32 @@ import { PlayerState, copyState } from "./player";
 
   nextOp() {
     if (this.ops.length > 0) {
-      this.pos = (this.pos + 1) % this.ops.length;
+      this._pos = (this._pos + 1) % this.ops.length;
       return this.current;
     }
   }
 
   prevOp() {
     if (this.ops.length > 0) {
-      this.pos = (this.pos - 1) % this.ops.length;
+      this._pos = (this._pos - 1) % this.ops.length;
       return this.current;
     }
   }
 
   addOp(o: SingleOp | ChainOp) {
     this.ops.push(o);
-    if (this.pos < 0) this.pos = 0;
+    if (this._pos < 0) this._pos = 0;
     return this.ops.length-1;
   }
 
   removeOp() {
     this.ops.pop();
-    if (this.ops.length == 0) this.pos = -1;
+    if (this.ops.length == 0) this._pos = -1;
   }
 
   delOpAt(x: number) {
     this.ops.splice(x, 1);
-    if (this.ops.length == 0) this.pos = -1;
+    if (this.ops.length == 0) this._pos = -1;
   }
 
   perform(init: PlayerState, n: number): Promise<PlayerState> {
@@ -117,9 +117,9 @@ import { PlayerState, copyState } from "./player";
       // this.selecting = true;
       if (this.ops.length > 0) {
         if (n == this.p_select_a) {
-          this.pos = (this.pos + 1) % this.ops.length;
+          this._pos = (this._pos + 1) % this.ops.length;
         } else if (n == this.p_select_b) {
-          this.pos = (this.pos - 1) % this.ops.length;
+          this._pos = (this._pos - 1) % this.ops.length;
         }
         return this.current.perform(res);
       } else {
