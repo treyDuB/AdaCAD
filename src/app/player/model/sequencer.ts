@@ -5,8 +5,8 @@ import { PlayerState, copyState } from "./player";
  * Sequencer:
  *  - 1 or 2 pedal "select" pedals ->
  *    multiple operations in a circular queue
- *  - 1 "confirm" pedal (forward)
- *  - if pedal, go to next operation in Sequencer
+ *  - 1 "progress" pedal (forward)
+ *  - if select pedal, go to next/previous operation in Sequencer
  */
  export class OpSequencer implements PedalEvent {
   name: string;
@@ -39,10 +39,12 @@ import { PlayerState, copyState } from "./player";
     }
   }
 
+  /** @method isMapped whether any pedals are mapped to the sequencer */
   get isMapped() {
-    return !(this.p_prog >= 0 && this.p_select_a >= 0 && this.p_select_b == 0);
+    return !(this.p_prog >= 0 && this.p_select_a >= 0 && this.p_select_b >= 0);
   }
 
+  /** @method readyToWeave progress pedal and at least one select pedal mapped */
   get readyToWeave() {
     return (this.p_prog >= 0 && this.p_select_a >= 0);
   }
@@ -100,10 +102,10 @@ import { PlayerState, copyState } from "./player";
   }
 
   perform(init: PlayerState, n: number): Promise<PlayerState> {
-    console.log('sequencer perform');
+    // console.log('sequencer perform');
     let res = copyState(init);
     if (n == this.p_prog) {
-      console.log("forward in sequencer draft");
+      // console.log("forward in sequencer draft");
       // if prev step was one of the selects, this row gets sent
       res.weaving = true;
       // if (this.ops.length > 0) {

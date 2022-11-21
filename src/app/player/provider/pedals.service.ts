@@ -25,6 +25,10 @@ export interface Pedal {
   // op?: Operation
 }
 
+/** 
+ * Just a wrapper for how the database arranges the pedals + 
+ * loom information into nodes
+ */
 export class PedalStatus extends EventEmitter {
   pi_online: OnlineStatus;     // is the pi online?
   loom_online: DBListener;   // is the loom online?
@@ -110,7 +114,7 @@ export class PedalStatus extends EventEmitter {
 }
 
 /**
- * Definition of pedal provider
+ * Definition of pedal service
  * @class
  * @event `pedal-added` data: how many pedals
  * @event `pedal-removed` data: how many pedals
@@ -217,20 +221,23 @@ export class PedalsService extends EventEmitter {
     });
   }
 
-  
-
+  /** online status */
   get pi_online() { return this.status.pi_online; }
   get loom_online() { return this.status.loom_online; }
+
+  /** weaving statuses */
   get vacuum_on() { return this.status.vacuum_on; }
   get active_draft() { return this.status.active_draft; }
   get loom_ready() { return this.status.loom_ready; }
   get num_picks() { return this.status.num_picks; }
   get pick_data() { return this.status.pick_data; }
 
+  /** physical pedals DB nodes */
   get num_pedals() { return this.status.num_pedals; }
   get pedal_states() { return this.status.pedal_states; }
   get pedal_array() { return this.status.pedal_array; }
 
+  /** virtual pedals DB nodes */
   get num_v_pedals() { return this.status.num_v_pedals; }
   get v_pedal_states() { return this.status.v_pedal_states; }
   get v_pedal_array() { return this.status.v_pedal_array; }
@@ -247,6 +254,8 @@ export class PedalsService extends EventEmitter {
       this.pedal_array.detach();
     }
   }
+
+  /** functions to interact with virtual pedals */
 
   virtualPedals(state: boolean) {
     state? this.v_pedal_array.attach() : this.v_pedal_array.detach();
@@ -274,6 +283,7 @@ export class PedalsService extends EventEmitter {
     this.v_pedal_array.remNode();
   }
 
+  /** handling weaving state DB nodes */
   loomListeners(state: boolean) {
     if (state) {
       this.vacuum_on.attach();
@@ -297,6 +307,7 @@ export class PedalsService extends EventEmitter {
     }
   }
 
+  /** lets the Pi know to start weaving */
   toggleWeaving() {
     // this.active_draft.attach();
     // console.log("toggle weaving");
@@ -305,14 +316,15 @@ export class PedalsService extends EventEmitter {
     this.active_draft.setVal(vac);
   }
 
-  /** @todo */
+  /** loads pick data into DB */
   sendDraftRow(r: WeavingPick) {
     this.num_picks.setVal(r.pickNum);
     this.pick_data.setVal(r.rowData);
   }
 
+  /** utility function for formatting a DBNode into a Pedal */
   nodeToPedal(node: DBListener | DBTwoWay) {
-    console.log(node);
+    // console.log(node);
     let p: Pedal = { id: node.id, key: node.key, name: node.name, dbnode: node, state: node.val };
     return p;
   }

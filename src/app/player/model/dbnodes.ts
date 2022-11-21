@@ -503,7 +503,8 @@ export class DBWriterArray extends DBNodeArray {
 
 /**
  * Array of two-way DBNodes where both ends are listening for
- * changes AND may write to the DB
+ * changes AND may write to the DB -- such as the virtual pedals
+ * where both AdaCAD and the Pi/PC can add virtual pedals
  */
 export class DBTwoWayArray extends DBNodeArray {
   nodes: Array<DBTwoWay> = [];
@@ -636,6 +637,13 @@ export class DBTwoWayArray extends DBNodeArray {
 
 /** special types of DBNodes */
 
+/** @class
+ * OnlineStatus representing whether or not the
+ * "host" device is online. The host device is responsible
+ * for keeping the node set to "true", while any listener
+ * devices check occasionally for the host's status by 
+ * attempting to set the node to "false".
+ */
 export class OnlineStatus extends DBListener {
   _name: string;
   _ref: DatabaseReference;

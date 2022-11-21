@@ -1,11 +1,22 @@
 import { Injectable } from '@angular/core';
 import { OpSequencer, SingleOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/op_mappings';
 
+/** 
+ * each chain op in the sequencer has an ID and 
+ * its position in the sequencer 
+ */
 interface ChainIndex {
   id: number,
   pos: number, // position in ops array
 }
 
+/** 
+ * I separated the sequencer into a generic object class
+ * AND an Angular service that extends the class. Hopefully
+ * that isn't clunky, but it does let me separate methods
+ * that are useful to call in the HTML, from the methods
+ * that are less often called in HTML
+ */
 @Injectable({
   providedIn: 'root'
 })
