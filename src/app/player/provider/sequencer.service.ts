@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OpSequencer, PlayerOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/op_mappings';
+import { PlayerService } from '../player.service';
+import { PedalsService } from './pedals.service';
 
 /** 
  * each chain op in the sequencer has an ID and 
@@ -31,7 +33,9 @@ export class SequencerService extends OpSequencer {
   get active() { return (this.readyToWeave ? true : false); }
   get pos() { return this._pos; }
 
-  constructor() {
+  constructor(
+    public pedals: PedalsService,
+  ) {
     super();
     // this.seq_array = new OpSequencer();
   }
@@ -44,9 +48,14 @@ export class SequencerService extends OpSequencer {
     }
   }
 
+  /** Add a single operation to the sequencer. */
   addSingleOp(o: PlayerOp) {
     if (this.active) {
       this.addOp(o);
+      /** if this is the first op loaded into the player, run the op so that updates the starting draft */
+      if (this.ops.length == 1) {
+        this.pedals.emit('pedal-step', this.p_select_a);
+      }
       // console.log(o);
       // console.log(this.seq);
     } else {
@@ -54,12 +63,14 @@ export class SequencerService extends OpSequencer {
     }
   }
 
+  /** Add a new chain operation to the sequencer. */
   addChainOp(o: PlayerOp) { 
     let ch = makeChainOp([o]);
     ch.id = this.chains.length;
     this.chains.push({id: ch.id, pos: this.addOp(ch)});
   }
 
+  /** Add a single operation onto an existing chain op in the sequencer. */
   addToChain(ch_id: number, o: PlayerOp) {
     let ch = this.ops[this.chains[ch_id].pos] as ChainOp;
     this.ops[this.chains[ch_id].pos] = makeChainOp(ch.ops.concat([o]));

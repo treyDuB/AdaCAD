@@ -48,4 +48,7 @@ source="mixer"
 
 </mat-drawer-container>
 
-<app-player #player id="player"></app-player>
+<app-player #player 
+  id="player"
+  (playerOpen)="togglePlayer($event)"
+></app-player>

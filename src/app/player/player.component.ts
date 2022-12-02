@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild, EventEmitter} from '@angular/core';
 import { PlayerService } from './player.service';
 
 import { OpSequencerComponent } from './op-sequencer/op-sequencer.component';
@@ -18,6 +18,8 @@ export class PlayerComponent implements OnInit {
 
   @Input()  default_cell: number;
   @Input('draft') active_draft: Draft;
+
+  @Output('player-open') playerOpen = new EventEmitter<boolean>();
   // @Input() 
   // get draft_set(): boolean {
   //   return (this.pls.draft !== null);
@@ -29,9 +31,9 @@ export class PlayerComponent implements OnInit {
   // }
   // private _active_draft: Draft = null;
 
-  playOpen: boolean = true;
-  ownElement: HTMLElement;
-  mixerElement: HTMLElement;
+  open: boolean = true;
+  ownContainer: HTMLElement;
+  mixerContainer: HTMLElement;
   
   constructor(
     public pls: PlayerService
@@ -40,7 +42,7 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("ng on init, pedals: ", this.pls.pedals);
+    // console.log("ng on init, pedals: ", this.pls.pedals);
     /** FOR TESTING ONLY: generate random draft and set it at start-up */
   }
 
@@ -51,9 +53,9 @@ export class PlayerComponent implements OnInit {
     //   this.pls.setDraft(result[0]);
     //   this.drawDraft();
     // });
-    this.ownElement = document.getElementById('player-container');
-    this.mixerElement = document.querySelector('.mat-drawer-container');
-    console.log("init w/ element refs ", this.ownElement, this.mixerElement);
+    this.ownContainer = document.querySelector("#player-container > .mat-expansion-panel");
+    this.mixerContainer = document.querySelector('app-mixer > mat-drawer-container');
+    console.log("init w/ element refs ", this.ownContainer, this.mixerContainer);
     // this.draftCanvas = <HTMLCanvasElement> document.getElementById('active-draft-canvas');
     // this.cx = this.draftCanvas.getContext("2d");
     // this.drawDraft(); //force call here because it likely didn't render previously. 
@@ -61,25 +63,39 @@ export class PlayerComponent implements OnInit {
     // let expansionPanel = document.querySelector('mat-expansion-panel');
     // expansionPanel.close();
 
-    this.playOpen = false;
-    this.resizeContainer();
-    // this.drawDraft();
+    this.open = false;
+    // this.resizeContainer();
+    this.drawDraft();
 
     this.pls.redraw.on('redraw', () => {
       console.log("redrawing ", this.pls.state);
       // this.drawDraft();
-      this.resizeContainer();
+      // this.resizeContainer();
     });
 
   }
 
   resizeContainer() {
-    let h = this.ownElement.getBoundingClientRect().height;
+    console.log("resizing");
     let t = document.querySelector("app-topbar").getBoundingClientRect().height;
-    // console.log("player height is " + h.toString());
-    this.mixerElement.style.height = 'calc(100vh - '+ (2.3*h+t).toString() + 'px)';
+    if (this.open) {
+      this.mixerContainer.style.height = '0px';
+      this.ownContainer.style.height = 'calc(100vh - ' + t.toString() + 'px)';
+      this.ownContainer.style.overflow = "scroll";
+    } else {
+      let h = document.querySelector("mat-expansion-panel-header").getBoundingClientRect().height;
+      this.mixerContainer.style.height = 'calc(100vh - '+ (h+t).toString() + 'px)';
+      this.ownContainer.style.overflow = "unset";
+    }
   }
 
   drawDraft() { this.weaving_state.drawDraft(); }
+
+  toggleOpen(state: boolean) {
+    console.log("toggling");
+    this.open = state;
+    // this.resizeContainer();
+    this.playerOpen.emit(this.open);
+  }
 }
   

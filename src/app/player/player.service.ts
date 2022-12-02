@@ -241,7 +241,7 @@ export class PlayerService {
     this.draftClassification.push(
       {category: 'transformation',
       dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
-      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile]}
+      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile, bindwarp, bindweft]}
     );
 
     // //test this
@@ -257,11 +257,11 @@ export class PlayerService {
         mappings.pair(0, 'forward');
         console.log("pedals mapping", mappings);
       } else if (n == 2) {
-      //   if (mappings.pedalIsMapped(0)) mappings.unmap(0);
-      //   mappings[0] = this.seq;
-      //   mappings[1] = this.seq;
-      //   this.seq.addPedals(0, 1);
-      //   console.log("pedals mapping", mappings);
+        if (mappings.pedalIsMapped(0)) mappings.unmap(0);
+        mappings[0] = this.seq;
+        mappings[1] = this.seq;
+        this.seq.addPedals(0, 1);
+        console.log("pedals mapping", mappings);
       }
     })
   }
@@ -351,19 +351,6 @@ export class PlayerService {
       });
     }
   }
-
-  // compound pedal operations
-  // normal pedal -> op
-  // compound pedal -> Op sequence
-  // if (compound pedal change) {
-      // sequence of operations: [Op, Op, Op]
-      // let finaldraft = starting Draft;
-      // for op in sequence:
-      //   finaldraft = finaldraft.perform(op);
-      // }
-      // do something with finaldraft
-  // }
-
 
   currentRow() {
     let {draft, row} = this.state;

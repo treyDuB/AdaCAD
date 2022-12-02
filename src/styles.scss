@@ -7,7 +7,10 @@
 body {
   margin: 0;
   overscroll-behavior-x: none;
+  height: 100vh;
 }
+
+app-root { height: 100vh; }
 
 svg {
   overflow: visible;

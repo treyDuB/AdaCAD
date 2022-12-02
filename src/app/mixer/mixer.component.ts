@@ -907,8 +907,24 @@ export class MixerComponent implements OnInit {
   }
 
 
-  public toggleCollapsed(){
-    this.collapsed = !this.collapsed;
+  public togglePlayer(open: boolean){
+    console.log("mixer component toggling player");
+    console.log(open);
+    let player = document.getElementById('player-container');
+    let palette = document.querySelector('app-mixer > mat-drawer-container') as HTMLElement;
+    let topbar = document.querySelector('app-topbar');
+
+    let player_h = player.getBoundingClientRect().height;
+    let topbar_h = topbar.getBoundingClientRect().height;
+    let palette_h = palette.getBoundingClientRect().height;
+    // console.log("player height is " + h.toString());
+    if (open) {
+      palette.style.height = '0px';
+      player.style.height = 'calc(100vh - ' + topbar_h.toString() + 'px)';
+    } else {
+      palette.style.height = 'calc(100vh - ' + topbar_h.toString() + 'px)';
+      player.style.height = '0px'; 
+    }
   }
 
   public createNote(){
