@@ -1,0 +1,1447 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>adacad-weaver documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">adacad-weaver documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li >DBNode</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/player/model/dbnodes.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>the value stored at that DB node.</p>
+
+            </p>
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+            </p>
+
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../interfaces/NodeMethods.html" target="_self" >NodeMethods</a></code>
+            </p>
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#_active" >_active</a>
+                            </li>
+                            <li>
+                                <a href="#_dbref" >_dbref</a>
+                            </li>
+                            <li>
+                                <a href="#_name" >_name</a>
+                            </li>
+                            <li>
+                                <a href="#_val" >_val</a>
+                            </li>
+                            <li>
+                                <a href="#id" >id</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#key" >key</a>
+                            </li>
+                            <li>
+                                <a href="#unsubscribers" >unsubscribers</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Abstract</span>
+                                <a href="#attach" >attach</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Abstract</span>
+                                <a href="#detach" >detach</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#ref" >ref</a>
+                                </li>
+                                <li>
+                                    <a href="#name" >name</a>
+                                </li>
+                                <li>
+                                    <a href="#val" >val</a>
+                                </li>
+                                <li>
+                                    <a href="#active" >active</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(params: <a href="../interfaces/NodeParams.html" target="_self">NodeParams</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/player/model/dbnodes.ts:44</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                                    <td>Description</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>params</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/NodeParams.html" target="_self" >NodeParams</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>{ db: Database, path: string, initVal: any }</p>
+
+                                                        </td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_active"></a>
+                    <span class="name">
+                        <span ><b>_active</b></span>
+                        <a href="#_active"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/player/model/dbnodes.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_dbref"></a>
+                    <span class="name">
+                        <span ><b>_dbref</b></span>
+                        <a href="#_dbref"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>DatabaseReference</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/player/model/dbnodes.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_name"></a>
+                    <span class="name">
+                        <span ><b>_name</b></span>
+                        <a href="#_name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/player/model/dbnodes.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_val"></a>
+                    <span class="name">
+                        <span ><b>_val</b></span>
+                        <a href="#_val"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#NodeValue" target="_self" >NodeValue</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/player/model/dbnodes.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="id"></a>
+                    <span class="name">
+                        <span ><b>id</b></span>
+                        <a href="#id"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/player/model/dbnodes.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="key"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>key</b></span>
+                        <a href="#key"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/player/model/dbnodes.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="unsubscribers"></a>
+                    <span class="name">
+                        <span ><b>unsubscribers</b></span>
+                        <a href="#unsubscribers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Array&lt;Function&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/player/model/dbnodes.ts:44</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>holds the Unsubscribe functions that are returned by
+DB event functions like onValue(...)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attach"></a>
+                    <span class="name">
+                        <span class="modifier">Abstract</span>
+                        <span ><b>attach</b></span>
+                        <a href="#attach"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>attach()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="109"
+                            class="link-to-prism">src/app/player/model/dbnodes.ts:109</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="detach"></a>
+                    <span class="name">
+                        <span class="modifier">Abstract</span>
+                        <span ><b>detach</b></span>
+                        <a href="#detach"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>detach()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">src/app/player/model/dbnodes.ts:110</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+            <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ref"></a>
+                        <span class="name"><b>ref</b><a href="#ref"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>ref()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/player/model/dbnodes.ts:72</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="name"></a>
+                        <span class="name"><b>name</b><a href="#name"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>name()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/player/model/dbnodes.ts:76</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="val"></a>
+                        <span class="name"><b>val</b><a href="#val"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>val()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/app/player/model/dbnodes.ts:80</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>val(x)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/app/player/model/dbnodes.ts:94</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>x</td>
+                                                    
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="active"></a>
+                        <span class="name"><b>active</b><a href="#active"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>active()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/app/player/model/dbnodes.ts:98</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>active(tf: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/app/player/model/dbnodes.ts:102</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>tf</td>
+                                                    
+                                                            <td>
+                                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { child, ref, set, get, query, 
+  onValue, onChildAdded, onChildChanged, onChildRemoved,
+  push, remove,
+  DatabaseReference, 
+} from &quot;firebase/database&quot;;
+import { Database } from &#x27;@angular/fire/database&#x27;;
+import { EventEmitter } from &#x27;events&#x27;;
+
+export interface NodeParams {
+  db?: Database,
+  name?: string,
+  root?: string,
+  path?: string,
+  key?: string,
+  initVal?: any,
+  ref?: DatabaseReference,
+  id?: number
+}
+
+export type NodeValue &#x3D; string | boolean | number | { [key: string]: any };
+
+interface NodeMethods {
+  attach(): void,
+  detach(): void,
+}
+
+/**
+ * @class DBNode
+ * @desc Wrapper for a Firebase database ref and
+ * the value stored at that DB node.
+ */
+abstract class DBNode extends EventEmitter implements NodeMethods {
+  id: number;
+  key?: string;
+  _name: string;
+  _dbref: DatabaseReference;
+  _val: NodeValue;
+  _active: boolean;
+
+  /**
+   * holds the Unsubscribe functions that are returned by
+   * DB event functions like onValue(...)
+   */
+  unsubscribers: Array&lt;Function&gt;;
+
+  /**
+   * 
+   * @param {*} params \{ db: Database, path: string, initVal: any }
+   * @param {*} params \{ ref: DatabaseReference, key: string, initVal: any }
+   */
+
+  constructor(params: NodeParams) {
+    super();
+    this.active &#x3D; false;
+    this.unsubscribers &#x3D; [];
+    if (params.db) {
+      this._name &#x3D; params.path;
+      this._dbref &#x3D; ref(params.db, params.root + params.path);
+      this._val &#x3D; params.initVal;
+      // console.log(this);
+    } else if (params.ref) {
+      this._name &#x3D; params.key;
+      this._dbref &#x3D; params.ref;
+    }
+
+    if(params.id &gt; -1) {
+      this.id &#x3D; params.id;
+    }
+    console.log(this.name);
+  }
+
+  get ref() {
+    return this._dbref;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get val() {
+    if (!this.active) {
+      return false;
+    }
+
+    if (typeof(this._val) &#x3D;&#x3D; &#x27;number&#x27; || typeof(this._val &#x3D;&#x3D; &#x27;boolean&#x27;)) {
+      return this._val;
+    } 
+    
+    if (this._val !&#x3D; undefined) {
+      return Object.keys(this._val);
+    }
+  }
+
+  set val(x) {
+    this._val &#x3D; x;
+  }
+
+  get active() {
+    return this._active;
+  }
+
+  set active(tf: boolean) {
+    this._active &#x3D; tf;
+  }
+
+  // methods for a node: 
+  // attach() means it is updating with the database and emitting events
+  // detach() means it is not updating, no events
+  abstract attach();
+  abstract detach();
+}
+
+type Keyed&lt;Node extends DBNode&gt; &#x3D; Node &amp; { key: string };
+
+/**
+ * @class DBListener
+ * @desc A DBNode that only reads from the database.
+ * When &#x60;active &#x3D; true&#x60;, will emit events on the value changing.
+ */
+export class DBListener extends DBNode {
+  id: number;
+  key?: string;
+  _name: string;
+  _dbref: DatabaseReference;
+  _val: any;
+  _active: boolean;
+
+  constructor(params: NodeParams) {
+    super(params);
+  }
+
+  attach() {
+    this.active &#x3D; true;
+    let unsub &#x3D; onValue(this.ref, (snapshot) &#x3D;&gt; {
+      this.val &#x3D; snapshot.val();
+      this.emit(&#x27;change&#x27;, this.val);
+    });
+    this.unsubscribers.push(unsub);
+  }
+
+  getNow() {
+    get(query(this.ref))
+      .then((snapshot) &#x3D;&gt; {
+        this.val &#x3D; snapshot.val();
+      })
+      .catch(result &#x3D;&gt; console.log(result));
+  }
+
+  detach() {
+    if (this.active) {
+      while (this.unsubscribers.length &gt; 0) {
+        let unsub &#x3D; this.unsubscribers.pop();
+        unsub();
+      }
+    }
+    this.active &#x3D; false;
+  }
+}
+
+/**
+ * @class DBWriter
+ * @desc A DBNode that only writes to the database. 
+ * When &#x60;active &#x3D; true&#x60;, will pass &#x60;val&#x60; to the database.
+ */
+export class DBWriter extends DBNode {
+  id: number;
+  key?: string;
+  _name: string;
+  _ref: DatabaseReference;
+  _val: any;
+  _active: boolean;
+
+  constructor(params: NodeParams) {
+    super(params);
+  }
+
+  attach() {
+    this.active &#x3D; true;
+  }
+
+  setVal(x) {
+    this.val &#x3D; x;
+    if (this.active) {
+      set(this.ref, this.val);
+    }
+  }
+
+  detach() {
+    this.active &#x3D; false;
+  }
+}
+
+/** Special DBWriter that expects the node to be cleared by the
+ * other end upon receipt
+ */
+export class DBWriteBuffer extends DBWriter {
+  id: number;
+  _name: string;
+  _ref: DatabaseReference;
+  _val: any;
+  _active: boolean;
+
+  constructor(params: NodeParams) {
+    super(params);
+  }
+
+  setVal(x) {
+    get(query(this.ref))
+      .then((snapshot) &#x3D;&gt; {
+        if(!snapshot.val()) {
+          console.log(&quot;overwriting data in buffer&quot;);
+        }
+        super.setVal(x);
+      })
+      .catch(result &#x3D;&gt; console.log(result));
+  }
+}
+
+export class DBTwoWay extends DBNode {
+  id: number;
+  key?: string;
+  _name: string;
+  _dbref: DatabaseReference;
+  _val: any;
+  _active: boolean;
+
+  constructor(params: NodeParams) {
+    super(params);
+  }
+  
+  attach() {
+    this.active &#x3D; true;
+    let unsub &#x3D; onValue(this.ref, (snapshot) &#x3D;&gt; {
+      this.val &#x3D; snapshot.val();
+      this.emit(&#x27;change&#x27;, this.val);
+    });
+    this.unsubscribers.push(unsub);
+  }
+
+  getNow() {
+    get(query(this.ref))
+      .then((snapshot) &#x3D;&gt; {
+        this.val &#x3D; snapshot.val();
+      })
+      .catch(result &#x3D;&gt; console.log(result));
+  }
+  
+  detach() {
+    if (this.active) {
+      while (this.unsubscribers.length &gt; 0) {
+        let unsub &#x3D; this.unsubscribers.pop();
+        unsub();
+      }
+    }
+    this.active &#x3D; false;
+  }
+  
+  setVal(x) {
+    this.val &#x3D; x;
+    if (this.active) {
+      set(this.ref, this.val);
+    }
+  }
+}
+
+class DBNodeArray extends EventEmitter {
+  nodes: Array&lt;DBNode&gt;;
+  lengthNode: DBNode;
+  parentNode: DBNode;
+
+  constructor(lengthNode, parentNode, init: any &#x3D; {}) {
+    super();
+    this.lengthNode &#x3D; lengthNode;
+    this.parentNode &#x3D; parentNode;
+    if (init) {
+    } else {
+      this.nodes &#x3D; [];
+    }
+  }
+
+  get length() { return this.nodes.length; }
+
+  get active() { return (this.lengthNode.active &amp;&amp; this.parentNode.active); }
+
+  get ready() { return (this.lengthNode.val &gt; 0 &amp;&amp; this.parentNode.val !&#x3D; false); }
+
+  nodeAt(n) {
+    console.log(this.nodes);
+    console.log(&quot;node at &quot;, n);
+    console.log(this.nodes[n]);
+    return this.nodes[n];
+  }
+
+  pushNode(n) {
+    this.nodes.push(n);
+  }
+
+  popNode() {
+    return this.nodes.pop();
+  }
+}
+
+/**
+ * @class &#x60;DBListenerArray&#x60;
+ * @desc Represents a listener to a list of values in the database 
+ * (generalizes to &#x60;DBNodeArray&#x60;). Assumes that the data list is
+ * structured such that &#x60;lengthNode&#x60; is a &#x60;DBListener&#x60; that stores the 
+ * length of the list, while &#x60;parentNode&#x60; is a &#x60;DBListener&#x60; to the parent
+ * node of the list. Each item in the list is a child of &#x60;parentNode&#x60;,
+ * which is then stored as a &#x60;DBListener&#x60; in the array &#x60;nodes&#x60;.
+ */
+export class DBListenerArray extends DBNodeArray {
+  lengthNode: DBListener;
+  parentNode: DBListener;
+  nodes: Array&lt;DBListener&gt;;
+
+  /**
+  * holds the Unsubscribe functions that are returned by
+  * DB event functions like onValue(...)
+  */
+  unsubscribers: Array&lt;Function&gt;;
+
+  constructor(lengthNode: DBListener, parentNode: DBListener) {
+    super(lengthNode, parentNode);
+    this.lengthNode &#x3D; lengthNode;
+    this.parentNode &#x3D; parentNode;
+    this.nodes &#x3D; [];
+    this.unsubscribers &#x3D; [];
+  }
+
+  /**
+   * @method attach
+   */
+  attach() {
+    this.lengthNode.attach();
+    this.lengthNode.on(&#x27;change&#x27;, (val) &#x3D;&gt; {
+        this.emit(&#x27;ready&#x27;, this.ready);
+    });
+
+    this.parentNode.attach();
+    this.parentNode.once(&#x27;change&#x27;, (val) &#x3D;&gt; {
+      this.emit(&#x27;ready&#x27;, this.ready);
+    });
+
+    for (var node of this.nodes) {
+      this.attachChildNode(node);
+    }
+
+    this.unsubscribers.push(
+      onChildAdded(this.parentNode.ref, (snapshot) &#x3D;&gt; {
+        // console.log(&quot;child added&quot;, snapshot);
+        this.addNode(snapshot.key);
+    }));
+
+    this.unsubscribers.push(
+      onChildChanged(this.parentNode.ref, (snapshot) &#x3D;&gt; {
+        console.log(&quot;child changed&quot;, snapshot);
+    }));
+
+    this.unsubscribers.push(
+      onChildRemoved(this.parentNode.ref, () &#x3D;&gt; {
+        // console.log(&quot;child removed&quot;, snapshot);
+        let removed &#x3D; this.popNode();
+        this.emit(&#x27;child-removed&#x27;, removed);
+    }));
+  }
+
+  detach() {
+    if (this.active) {
+      while (this.unsubscribers.length &gt; 0) {
+        let unsub &#x3D; this.unsubscribers.pop();
+        unsub();
+      }
+    }
+  }
+
+  nodeAt(n: number) {
+    // console.log(this.nodes);
+    // console.log(&quot;node at &quot;, n);
+    // console.log(this.nodes[n]);
+    return this.nodes[n];
+  }
+
+  /**
+   * Creating a new child node.
+   * @param key 
+   */
+  addNode(key: string) {
+    console.log(&#x27;child key&#x27;, key);
+    const childRef &#x3D; child(this.parentNode.ref, key);
+    const childNode &#x3D; new DBListener({ ref: childRef, key: key, id: this.length });
+    this.attachChildNode(childNode);
+    this.pushNode(childNode);
+    this.emit(&#x27;child-added&#x27;, childNode);
+    // this.lengthNode.setVal(this.length);
+  }
+
+  /**
+   * Attaching a child node that was created elsewhere.
+   * Invokes child&#x27;s &#x60;attach()&#x60; method and adds event listener
+   * that will emit a &#x60;child-change&#x60; event.
+   * @param node 
+   */
+  attachChildNode(node: DBListener) {
+    node.attach();
+    node.on(&#x27;change&#x27;, (val) &#x3D;&gt; {
+      this.emit(&#x27;child-change&#x27;, {
+        id: node.id,
+        val: val
+      });
+    });
+  }
+
+  // remNode() {
+  //   const node &#x3D; this.popNode();
+  //   // remove(node.ref);
+  //   // this.lengthNode.setVal(this.length);
+  // }
+
+  // updateArray(num: number) {
+  //   // this.parentNode.getNow();
+  //   if (num &gt; this.length) {
+  //     let parentKeys &#x3D; this.parentNode.val;
+  //     // console.log(this.parentNode);
+  //     console.log(parentKeys);
+  //     let childKeys &#x3D; Object.keys(parentKeys);
+  //     while (this.length &lt; num) {
+  //       this.addNode(childKeys[this.length]);
+  //     }
+  //   } else if (num &lt; this.length) {
+  //     while (this.length &gt; num) {
+  //       this.popNode();
+  //     }
+  //   }
+  //   console.log(this);
+  // }
+
+  toString() {
+    var str &#x3D; &quot;&quot;;
+    // str +&#x3D; &quot;length: &quot; + this.length + &quot;, &quot;;
+    str +&#x3D; &quot;[ \n&quot;;
+    for (var i&#x3D;0; i &lt; this.nodes.length; i++) {    
+      // str +&#x3D; &quot;\t&quot; + this.nodes[i].name + &quot;: &quot;; 
+      str +&#x3D; this.nodes[i].val;
+      if (i &lt; this.nodes.length-1) {
+        str +&#x3D; &quot;,&quot;;
+      }
+      str +&#x3D; &quot; \n&quot;;
+    } 
+    str +&#x3D; &quot; ]&quot;;
+    return str;
+  }
+}
+
+const EMPTY_NODE_ARRAY &#x3D; false;
+
+export class DBWriterArray extends DBNodeArray {
+  nodes: Array&lt;DBWriter&gt;;
+  lengthNode: DBWriter;
+  parentNode: DBWriter;
+
+  constructor(lengthNode, parentNode, init) {
+    super(lengthNode, parentNode, init);
+    if (!init) {
+      this.lengthNode.setVal(0);
+      this.parentNode.setVal(EMPTY_NODE_ARRAY);
+    }
+
+    // console.log(this);
+  }
+
+  addNode(initVal) {
+    const childRef &#x3D; push(this.parentNode.ref, initVal);
+    const childNode &#x3D; new DBWriter({ ref: childRef, initVal });
+    childNode.attach();
+    this.pushNode(childNode);
+    this.lengthNode.setVal(this.length);
+  }
+
+  remNode() {
+    const node &#x3D; this.popNode();
+    remove(node.ref);
+    this.lengthNode.setVal(this.length);
+  }
+
+  updateArray(num, newStates) {
+    if (num &gt; this.length) {
+      while (this.length &lt; num) {
+        this.addNode(newStates[this.length]);
+      }
+    } else if (num &lt; this.length) {
+      while (this.length &gt; num) {
+        this.remNode();
+      }
+    }
+  }
+
+  setNode(i, x) {
+    this.nodes[i].setVal(x);
+  }
+
+}
+
+/**
+ * Array of two-way DBNodes where both ends are listening for
+ * changes AND may write to the DB -- such as the virtual pedals
+ * where both AdaCAD and the Pi/PC can add virtual pedals
+ */
+export class DBTwoWayArray extends DBNodeArray {
+  nodes: Array&lt;DBTwoWay&gt; &#x3D; [];
+  lengthNode: DBTwoWay;
+  parentNode: DBTwoWay;
+
+  /**
+  * holds the Unsubscribe functions that are returned by
+  * DB event functions like onValue(...)
+  */
+  unsubscribers: Array&lt;Function&gt;;
+
+  constructor(lengthNode: DBTwoWay, parentNode: DBTwoWay, init?: Array&lt;DBTwoWay&gt;) {
+    super(lengthNode, parentNode, init);
+    this.unsubscribers &#x3D; [];
+    if (!init) {
+      this.lengthNode.setVal(0);
+      this.parentNode.setVal(EMPTY_NODE_ARRAY);
+    }
+  }
+
+  addNode(initVal: any) {
+    push(this.parentNode.ref, initVal);
+    // const childNode &#x3D; new DBTwoWay({ ref: childRef, initVal });
+    // childNode.attach();
+    // this.pushNode(childNode);
+    // this.lengthNode.setVal(this.length);
+    // console.log(&#x27;child key&#x27;, key);
+  }
+
+  onNodeAdded(key: string) {
+     const childRef &#x3D; child(this.parentNode.ref, key);
+     const childNode &#x3D; new DBTwoWay({ ref: childRef, key: key, id: this.length });
+     this.attachChildNode(childNode);
+     this.pushNode(childNode);
+     this.lengthNode.setVal(this.length);
+     this.emit(&#x27;child-added&#x27;, childNode);
+  }
+
+  remNode() {
+    const lastNode &#x3D; this.nodeAt(this.length-1);
+    remove(lastNode.ref);
+    // this.lengthNode.setVal(this.length);
+  }
+
+  onNodeRemoved() {
+    let removed &#x3D; this.popNode();
+    this.lengthNode.setVal(this.length);
+    return removed;
+  }
+
+  updateArray(num: number, newStates: Array&lt;any&gt;) {
+    if (num &gt; this.length) {
+      while (this.length &lt; num) {
+        this.addNode(newStates[this.length]);
+      }
+    } else if (num &lt; this.length) {
+      while (this.length &gt; num) {
+        this.remNode();
+      }
+    }
+  }
+
+  setNode(i: number, x: any) {
+    this.nodes[i].setVal(x);
+  }
+
+  /**
+  * @method attach
+  */
+  attach() {
+    this.lengthNode.attach();
+    this.lengthNode.on(&#x27;change&#x27;, (val) &#x3D;&gt; {
+        this.emit(&#x27;ready&#x27;, this.ready);
+    });
+
+    this.parentNode.attach();
+    this.parentNode.once(&#x27;change&#x27;, (val) &#x3D;&gt; {
+      this.emit(&#x27;ready&#x27;, this.ready);
+    });
+
+    for (var node of this.nodes) {
+      this.attachChildNode(node);
+    }
+
+    this.unsubscribers.push(
+      onChildAdded(this.parentNode.ref, (snapshot) &#x3D;&gt; {
+        // console.log(&quot;child added&quot;, snapshot);
+        this.onNodeAdded(snapshot.key);
+    }));
+
+    this.unsubscribers.push(
+      onChildChanged(this.parentNode.ref, (snapshot) &#x3D;&gt; {
+        console.log(&quot;child changed&quot;, snapshot);
+    }));
+
+    this.unsubscribers.push(
+      onChildRemoved(this.parentNode.ref, () &#x3D;&gt; {
+        // console.log(&quot;child removed&quot;, snapshot);
+        let removed &#x3D; this.onNodeRemoved();
+        this.emit(&#x27;child-removed&#x27;, removed);
+    }));
+  }
+ 
+  detach() {
+    if (this.active) {
+      while (this.unsubscribers.length &gt; 0) {
+        let unsub &#x3D; this.unsubscribers.pop();
+        unsub();
+      }
+    }
+  }
+
+  /**
+  * Attaching a child node that was created elsewhere.
+  * Invokes child&#x27;s &#x60;attach()&#x60; method and adds event listener
+  * that will emit a &#x60;child-change&#x60; event.
+  * @param node 
+  */
+  attachChildNode(node: DBListener) {
+    node.attach();
+    node.on(&#x27;change&#x27;, (val) &#x3D;&gt; {
+      this.emit(&#x27;child-change&#x27;, {
+        id: node.id,
+        val: val
+      });
+    });
+  }
+}
+
+/** special types of DBNodes */
+
+/** @class
+ * OnlineStatus representing whether or not the
+ * &quot;host&quot; device is online. The host device is responsible
+ * for keeping the node set to &quot;true&quot;, while any listener
+ * devices check occasionally for the host&#x27;s status by 
+ * attempting to set the node to &quot;false&quot;.
+ */
+export class OnlineStatus extends DBListener {
+  _name: string;
+  _ref: DatabaseReference;
+  _val: boolean;
+  _active: boolean;
+
+  constructor(params) {
+    super(params);
+    this.attach();
+    get(query(this.ref))
+      .then((snapshot) &#x3D;&gt; {
+        this.val &#x3D; snapshot.val();
+      })
+      .catch(result &#x3D;&gt; console.log(result));
+  }
+
+  checkAlive() {
+    set(this.ref, false)
+      .then(() &#x3D;&gt; { this.emit(&#x27;set&#x27;, true); })
+      .catch(() &#x3D;&gt; { this.emit(&#x27;set&#x27;, false); });
+  }
+}
+
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'DBNode.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

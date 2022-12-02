@@ -1,3 +1,10 @@
 {
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/app/player/**/*.ts",
+    "src/app/core/model/**/*.ts",
+    "src/app/mixer/**/*.ts"
+  ],
+  "exclude": [
+    "src/app/weaver/**/*.ts",
+  ]
 }

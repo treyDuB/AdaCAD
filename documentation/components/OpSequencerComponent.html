@@ -1,0 +1,740 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>adacad-weaver documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">adacad-weaver documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  OpSequencerComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/player/op-sequencer/op-sequencer.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-op-sequencer</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./op-sequencer.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./op-sequencer.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#pds" >pds</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#pls" >pls</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#seq" >seq</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(pls: <a href="../injectables/PlayerService.html" target="_self">PlayerService</a>, pds: <a href="../injectables/PedalsService.html" target="_self">PedalsService</a>, seq: <a href="../injectables/SequencerService.html" target="_self">SequencerService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/app/player/op-sequencer/op-sequencer.component.ts:11</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>pls</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PlayerService.html" target="_self" >PlayerService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>pds</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PedalsService.html" target="_self" >PedalsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>seq</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SequencerService.html" target="_self" >SequencerService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">src/app/player/op-sequencer/op-sequencer.component.ts:19</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pds"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>pds</b></span>
+                        <a href="#pds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/PedalsService.html" target="_self" >PedalsService</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/app/player/op-sequencer/op-sequencer.component.ts:15</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pls"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>pls</b></span>
+                        <a href="#pls"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/PlayerService.html" target="_self" >PlayerService</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/player/op-sequencer/op-sequencer.component.ts:14</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="seq"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>seq</b></span>
+                        <a href="#seq"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/SequencerService.html" target="_self" >SequencerService</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/player/op-sequencer/op-sequencer.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { PlayerService } from &#x27;../player.service&#x27;;
+import { PedalsService } from &#x27;../provider/pedals.service&#x27;;
+import { SequencerService } from &#x27;../provider/sequencer.service&#x27;;
+
+@Component({
+  selector: &#x27;app-op-sequencer&#x27;,
+  templateUrl: &#x27;./op-sequencer.component.html&#x27;,
+  styleUrls: [&#x27;./op-sequencer.component.scss&#x27;]
+})
+export class OpSequencerComponent implements OnInit {
+
+  constructor(
+    public pls: PlayerService,
+    public pds: PedalsService,
+    public seq: SequencerService
+  ) { }
+
+  ngOnInit(): void {
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;second-row&quot;&gt;
+    &lt;div class &#x3D; &quot;op-block&quot;&gt;
+      &lt;mat-expansion-panel id &#x3D;&quot;operations-menu&quot; class&#x3D;&quot;op-menu-block&quot;&gt;
+        &lt;mat-expansion-panel-header id &#x3D;&quot;operations-header&quot; class&#x3D;&quot;op-header&quot;&gt;
+          &lt;mat-panel-title&gt;
+            Operations
+          &lt;/mat-panel-title&gt;
+        &lt;/mat-expansion-panel-header&gt;
+          
+        &lt;ng-container *ngFor&#x3D;&quot;let class of pls.draftClassification&quot;&gt;
+          &lt;ng-container *ngIf&#x3D;&quot;class.ops.length &gt; 0&quot;&gt;
+            &lt;div id&#x3D;&quot;op-container&quot; class&#x3D;&quot;op-field&quot;&gt;
+              &lt;h3&gt;{{class.category}}&lt;/h3&gt;
+              &lt;p&gt; {{class.dx}}&lt;/p&gt;
+              &lt;ng-container *ngFor&#x3D;&quot;let op of class.ops&quot;&gt;
+                &lt;button mat-stroked-button
+                  [matTooltip] &#x3D; op.dx
+                  matTooltipClass&#x3D; &quot;visibleTooltip&quot; 
+                  [name] &#x3D; op.name 
+                  [matMenuTriggerFor]&#x3D;&quot;opMenu&quot;&gt;
+                  {{op.name}}
+                &lt;/button&gt; 
+                &lt;mat-menu #opMenu&#x3D;&quot;matMenu&quot;&gt;
+                  &lt;button mat-stroked-menu-item
+                  (click) &#x3D;&quot;seq.addSingleOp(op)&quot;&gt;
+                    Add to Sequencer
+                  &lt;/button&gt;
+
+                  &lt;button mat-stroked-menu-item
+                  (click) &#x3D;&quot;seq.addChainOp(op)&quot;&gt;
+                    Add Chain to Sequencer
+                  &lt;/button&gt;
+
+                  &lt;ng-container *ngIf&#x3D;&quot;seq.chains !&#x3D; 0&quot;&gt;
+                    &lt;button mat-stroked-menu-item
+                    [matMenuTriggerFor]&#x3D;&quot;opChains&quot;
+                    (click)&#x3D;&quot;$event.stopPropagation();&quot;&gt;
+                    Add to Existing Chain
+                    &lt;/button&gt;
+                  &lt;/ng-container&gt;
+                        
+                  &lt;mat-menu #opChains&#x3D;&quot;matMenu&quot;&gt;
+                    &lt;ng-container *ngFor&#x3D;&quot;let ch of seq.chains&quot;&gt;
+                      &lt;button mat-stroked-menu-item
+                      (click) &#x3D;&quot;seq.addToChain(ch.id, op)&quot;&gt;
+                      Chain {{ch.id}}
+                      &lt;/button&gt;
+                    &lt;/ng-container&gt;
+                  &lt;/mat-menu&gt;
+                &lt;/mat-menu&gt;
+            &lt;/ng-container&gt;
+          &lt;/div&gt;
+        &lt;/ng-container&gt;
+        
+      &lt;/ng-container&gt;
+    &lt;/mat-expansion-panel&gt;
+  &lt;/div&gt;
+
+    &lt;div id&#x3D;&quot;sequencer-container&quot; class&#x3D;&quot;sequencer-block&quot;&gt;
+      &lt;h2 class&#x3D;&quot;player-field-header&quot;&gt;Operation Sequencer &lt;/h2&gt;
+      &lt;div class&#x3D;&quot;operation-sequence&quot;&gt;
+        &lt;ng-container *ngFor&#x3D;&quot;let o of seq.ops; index as i&quot;&gt;
+          
+          &lt;div *ngIf&#x3D;&quot;seq.pos &#x3D;&#x3D; i; else notSelected&quot;&gt;
+            &lt;button 
+            [name] &#x3D; o.name
+            class&#x3D;&quot;selected-operation-box&quot;&gt;
+            {{o.name}}
+            &lt;/button&gt;
+          &lt;/div&gt;
+          
+          &lt;ng-template #notSelected&gt;
+            &lt;button 
+            [name] &#x3D; o.name
+            class&#x3D;&quot;operation-box&quot;&gt;
+            {{o.name}}
+            &lt;/button&gt;
+          &lt;/ng-template&gt;
+
+            
+        &lt;/ng-container&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./op-sequencer.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">
+.second-row { 
+  flex-wrap: wrap;
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.sequencer-block, .op-block {
+  display: inline-block;
+}
+
+.player-field-header {
+  padding: 14px;
+  margin: unset;
+  background: #3f51b5;
+  color: #ffffff;
+}
+
+.sequencer-block {
+  height: inherit;
+  flex: 1;
+}
+
+.op-menu-block {
+  display: block;
+  max-width: 210px;
+}
+
+#opChains {
+  display: flex;
+}
+
+.op-field h3{
+  width: 95%;
+  font-size: 100%;
+  font-weight: bold;
+  padding: 20px 0px 10px 14px;
+}
+
+.op-field  p{
+  width: 95%;
+  font-size: .8em;
+  padding: 0px 0px 10px 14px;
+}
+
+.op-field{
+  display: flex;
+  flex-direction: column;
+}
+
+.operation-sequence {
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  padding: 10px;
+}
+
+.operation-box {
+  background-color: #bbc5ff;
+  margin-right: 10px;
+  margin-left: 10px;
+  padding: 10px;
+}
+
+.selected-operation-box {
+  background-color: #f6ff00;
+  margin-right: 10px;
+  margin-left: 10px;
+  padding: 10px;
+}
+
+
+.mat-button {
+  background-color: #ff4081;
+  color: white;
+  width: inherit;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.square-corners {
+  border-radius: 0pt;
+  border-bottom-left-radius: 0pt;
+  border-bottom-right-radius: 0pt;
+  border-top-left-radius: 0pt;
+  border-top-right-radius: 0pt;
+}
+
+.mat-button.mat-button-disabled {
+  background-color: #fd6d9d;
+  color: rgba(255, 255, 255, 0.50);
+  
+}
+
+.mat-expansion-panel-header, 
+.mat-expansion-panel-header.mat-expanded:focus {
+  background: #121f6b;
+}
+
+.mat-expansion-panel-body {
+  padding: 0px;
+}
+
+.mat-expansion-panel, .mat-accordion, .mat-expansion-panel-header,
+.mat-accordion .mat-expansion-panel:last-of-type, 
+.mat-accordion .mat-expansion-panel:first-of-type, #operations-menu {
+  border: #ffffff 1px;
+  border-radius: 0pt;
+  border-bottom-left-radius: 0pt;
+  border-bottom-right-radius: 0pt;
+  border-top-left-radius: 0pt;
+  border-top-right-radius: 0pt;
+  border-bottom: 0pt;
+}
+
+.mat-expansion-panel-header:hover, 
+.mat-expansion-panel-header.mat-expanded:hover,
+.mat-expansion-panel:not(.mat-expanded), 
+.mat-expansion-panel-header:hover:not([aria-disabled&#x3D;true])   {
+  background: #566be2;
+}
+
+.mat-expansion-panel-header-title, .mat-expansion-indicator, .mat-expansion-indicator::after, .mat-expansion-indicator.ng-tns-c130-8.ng-trigger.ng-trigger-indicatorRotate.ng-star-inserted::after, #op-header.mat-expansion-indicator::after {
+  color: white;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="second-row">    <div class = "op-block">      <mat-expansion-panel id ="operations-menu" class="op-menu-block">        <mat-expansion-panel-header id ="operations-header" class="op-header">          <mat-panel-title>            Operations          </mat-panel-title>        </mat-expansion-panel-header>                  <ng-container *ngFor="let class of pls.draftClassification">          <ng-container *ngIf="class.ops.length > 0">            <div id="op-container" class="op-field">              <h3>{{class.category}}</h3>              <p> {{class.dx}}</p>              <ng-container *ngFor="let op of class.ops">                <button mat-stroked-button                  [matTooltip] = op.dx                  matTooltipClass= "visibleTooltip"                   [name] = op.name                   [matMenuTriggerFor]="opMenu">                  {{op.name}}                </button>                 <mat-menu #opMenu="matMenu">                  <button mat-stroked-menu-item                  (click) ="seq.addSingleOp(op)">                    Add to Sequencer                  </button>                  <button mat-stroked-menu-item                  (click) ="seq.addChainOp(op)">                    Add Chain to Sequencer                  </button>                  <ng-container *ngIf="seq.chains != 0">                    <button mat-stroked-menu-item                    [matMenuTriggerFor]="opChains"                    (click)="$event.stopPropagation();">                    Add to Existing Chain                    </button>                  </ng-container>                                          <mat-menu #opChains="matMenu">                    <ng-container *ngFor="let ch of seq.chains">                      <button mat-stroked-menu-item                      (click) ="seq.addToChain(ch.id, op)">                      Chain {{ch.id}}                      </button>                    </ng-container>                  </mat-menu>                </mat-menu>            </ng-container>          </div>        </ng-container>              </ng-container>    </mat-expansion-panel>  </div>    <div id="sequencer-container" class="sequencer-block">      <h2 class="player-field-header">Operation Sequencer </h2>      <div class="operation-sequence">        <ng-container *ngFor="let o of seq.ops; index as i">                    <div *ngIf="seq.pos == i; else notSelected">            <button             [name] = o.name            class="selected-operation-box">            {{o.name}}            </button>          </div>                    <ng-template #notSelected>            <button             [name] = o.name            class="operation-box">            {{o.name}}            </button>          </ng-template>                    </ng-container>      </div>    </div></div></div>'
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
+    var ACTUAL_COMPONENT = {'name': 'OpSequencerComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'OpSequencerComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

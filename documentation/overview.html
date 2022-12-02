@@ -8,923 +8,405 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-	    <link rel="stylesheet" href="./styles/style.css">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css">
     </head>
     <body>
 
         <div class="navbar navbar-default navbar-fixed-top visible-xs">
             <a href="./" class="navbar-brand">adacad-weaver documentation</a>
-            <button type="button" class="btn btn-default btn-menu fa fa-bars" id="btn-menu"></button>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-            <div id="book-search-input" role="search">
-                <input type="text" placeholder="Type to search">
-            </div>
-            <nav>
-            
-                <ul class="list">
-            
-                    <li class="title">
-                        <a href="./">adacad-weaver documentation</a>
-                    </li>
-            
-                    <li class="divider"></li>
-            
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./"><span class="fa fa-home"></span>Getting started</a>
-                        <ul class="links">
-                                <li class="link">
-                                    <a href="./" ><span class="fa fa-file-text-o"></span>README</a>
-                                </li>
-                                <li class="link">
-                                    <a 
-                                         href="./overview.html" 
-                                        
-                                         href="./overview.html" 
-                                         class="active" >
-                                        <span class="fa fa-th"></span>Overview
-                                    </a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./modules.html" >
-                            <span class="fa fa-archive"></span>
-                            <span>Modules</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-modules-links"
-                            ></span>
-                        </a>
-                        <ul class="links collapse in"
-                                id="xs-modules-links"
-                            >
-                                <li class="link">
-                                    <a href="modules/AppModule.html" >AppModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="modules/AppRoutingModule.html" >AppRoutingModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="modules/CoreModule.html" >CoreModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="modules/MixerModule.html" >MixerModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="modules/WeaverModule.html" >WeaverModule</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-cogs"></span>
-                            <span>Components</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-components-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-components-links"
-                            >
-                                <li class="link">
-                                    <a href="components/AboutModal.html" >AboutModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/AppComponent.html" >AppComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/ConnectionComponent.html" >ConnectionComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/ConnectionModal.html" >ConnectionModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/FlowComponent.html" >FlowComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/InitModal.html" >InitModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/LabelModal.html" >LabelModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/LoomComponent.html" >LoomComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/MasksComponent.html" >MasksComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/MaterialModal.html" >MaterialModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/MaterialsComponent.html" >MaterialsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/MixerComponent.html" >MixerComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/MixerDesignComponent.html" >MixerDesignComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/MixerPatternsComponent.html" >MixerPatternsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/MixerViewComponent.html" >MixerViewComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/NotesComponent.html" >NotesComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/OperationComponent.html" >OperationComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/PaletteComponent.html" >PaletteComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/PatternModal.html" >PatternModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/PatternsComponent.html" >PatternsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/SchematicComponent.html" >SchematicComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/ShuttlesModal.html" >ShuttlesModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/SnackbarComponent.html" >SnackbarComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/SubdraftComponent.html" >SubdraftComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/SystemsComponent.html" >SystemsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/TopbarComponent.html" >TopbarComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/TreeComponent.html" >TreeComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/UploadFormComponent.html" >UploadFormComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/WeaverComponent.html" >WeaverComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/WeaverDesignComponent.html" >WeaverDesignComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/WeaverPatternsComponent.html" >WeaverPatternsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="components/WeaverViewComponent.html" >WeaverViewComponent</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-code"></span>
-                            <span>Directives</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-directives-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-directives-links"
-                            >
-                                <li class="link">
-                                    <a href="directives/SelectionComponent.html" >SelectionComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="directives/WeaveDirective.html" >WeaveDirective</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-file-code-o"></span>
-                            <span>Classes</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-classes-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-classes-links"
-                            >
-                                <li class="link">
-                                    <a href="classes/AdaCADWeaverPage.html" >AdaCADWeaverPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Cell.html" >Cell</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Connection.html" >Connection</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Draft.html" >Draft</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Loom.html" >Loom</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Pattern.html" >Pattern</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Point.html" >Point</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Render.html" >Render</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Selection.html" >Selection</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Shape.html" >Shape</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Shuttle.html" >Shuttle</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/System.html" >System</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Timeline.html" >Timeline</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Upload.html" >Upload</a>
-                                </li>
-                                <li class="link">
-                                    <a href="classes/Util.html" >Util</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./routes.html" ><span class="fa fa-code-fork"></span>Routes</a>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-long-arrow-down"></span>
-                            <span>Injectables</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-injectables-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-injectables-links"
-                            >
-                                <li class="link">
-                                    <a href="injectables/DesignmodesService.html" >DesignmodesService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="injectables/InkService.html" >InkService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="injectables/LayersService.html" >LayersService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="injectables/OperationService.html" >OperationService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="injectables/PatternService.html" >PatternService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="injectables/TreeService.html" >TreeService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="injectables/UploadService.html" >UploadService</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-info"></span>
-                            <span>Interfaces</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-interfaces-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-interfaces-links"
-                            >
-                                <li class="link">
-                                    <a href="interfaces/Bounds.html" >Bounds</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/DensityUnits.html" >DensityUnits</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/DesignActions.html" >DesignActions</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/DesignActions.html" >DesignActions</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/DesignMode.html" >DesignMode</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/DesignModes.html" >DesignModes</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/DraftInterface.html" >DraftInterface</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/DraftMap.html" >DraftMap</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/HistoryState.html" >HistoryState</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/Ink.html" >Ink</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/Interlacement.html" >Interlacement</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/InterlacementVal.html" >InterlacementVal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/LoomCoords.html" >LoomCoords</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/LoomTypes.html" >LoomTypes</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/LoomUpdate.html" >LoomUpdate</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/MaterialTypes.html" >MaterialTypes</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/Node.html" >Node</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/Operation.html" >Operation</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/OperationParams.html" >OperationParams</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/Point.html" >Point</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/StartOptions.html" >StartOptions</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/TreeNode.html" >TreeNode</a>
-                                </li>
-                                <li class="link">
-                                    <a href="interfaces/ViewModes.html" >ViewModes</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-plus"></span>
-                            <span>Pipes</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-pipes-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-pipes-links"
-                            >
-                                <li class="link">
-                                    <a href="pipes/FilterPipe.html" >FilterPipe</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./miscellaneous.html" ><span class="fa fa-cubes"></span>Miscellaneous</a>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                    </li>
-            
-                    <li class="divider"></li>
-                    <li class="copyright">
-                            Documentation generated using <a href="https://compodoc.github.io/compodoc/" target="_blank">
-                                        <img src=".//images/compodoc-vectorise.svg" class="img-responsive">
-                            </a>
-                    </li>
-            
-                </ul>
-            
-            </nav>
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
            <div class="row main">
                <div class="hidden-xs menu">
-                   <nav>
-                   
-                       <ul class="list">
-                   
-                           <li class="title">
-                               <a href="./">adacad-weaver documentation</a>
-                           </li>
-                   
-                           <li class="divider"></li>
-                   
-                               <div id="book-search-input" role="search">
-                                   <input type="text" placeholder="Type to search">
-                               </div>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./"><span class="fa fa-home"></span>Getting started</a>
-                               <ul class="links">
-                                       <li class="link">
-                                           <a href="./" ><span class="fa fa-file-text-o"></span>README</a>
-                                       </li>
-                                       <li class="link">
-                                           <a 
-                                                href="./overview.html" 
-                                               
-                                                href="./overview.html" 
-                                                class="active" >
-                                               <span class="fa fa-th"></span>Overview
-                                           </a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./modules.html" >
-                                   <span class="fa fa-archive"></span>
-                                   <span>Modules</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#modules-links"
-                                   ></span>
-                               </a>
-                               <ul class="links collapse in"
-                                       id="modules-links"
-                   >
-                                       <li class="link">
-                                           <a href="modules/AppModule.html" >AppModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="modules/AppRoutingModule.html" >AppRoutingModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="modules/CoreModule.html" >CoreModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="modules/MixerModule.html" >MixerModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="modules/WeaverModule.html" >WeaverModule</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-cogs"></span>
-                                   <span>Components</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#components-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="components-links"
-                   >
-                                       <li class="link">
-                                           <a href="components/AboutModal.html" >AboutModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/AppComponent.html" >AppComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/ConnectionComponent.html" >ConnectionComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/ConnectionModal.html" >ConnectionModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/FlowComponent.html" >FlowComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/InitModal.html" >InitModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/LabelModal.html" >LabelModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/LoomComponent.html" >LoomComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/MasksComponent.html" >MasksComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/MaterialModal.html" >MaterialModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/MaterialsComponent.html" >MaterialsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/MixerComponent.html" >MixerComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/MixerDesignComponent.html" >MixerDesignComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/MixerPatternsComponent.html" >MixerPatternsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/MixerViewComponent.html" >MixerViewComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/NotesComponent.html" >NotesComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/OperationComponent.html" >OperationComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/PaletteComponent.html" >PaletteComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/PatternModal.html" >PatternModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/PatternsComponent.html" >PatternsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/SchematicComponent.html" >SchematicComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/ShuttlesModal.html" >ShuttlesModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/SnackbarComponent.html" >SnackbarComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/SubdraftComponent.html" >SubdraftComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/SystemsComponent.html" >SystemsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/TopbarComponent.html" >TopbarComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/TreeComponent.html" >TreeComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/UploadFormComponent.html" >UploadFormComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/WeaverComponent.html" >WeaverComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/WeaverDesignComponent.html" >WeaverDesignComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/WeaverPatternsComponent.html" >WeaverPatternsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="components/WeaverViewComponent.html" >WeaverViewComponent</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-code"></span>
-                                   <span>Directives</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#directives-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="directives-links"
-                   >
-                                       <li class="link">
-                                           <a href="directives/SelectionComponent.html" >SelectionComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="directives/WeaveDirective.html" >WeaveDirective</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-file-code-o"></span>
-                                   <span>Classes</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#classes-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="classes-links"
-                   >
-                                       <li class="link">
-                                           <a href="classes/AdaCADWeaverPage.html" >AdaCADWeaverPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Cell.html" >Cell</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Connection.html" >Connection</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Draft.html" >Draft</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Loom.html" >Loom</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Pattern.html" >Pattern</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Point.html" >Point</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Render.html" >Render</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Selection.html" >Selection</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Shape.html" >Shape</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Shuttle.html" >Shuttle</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/System.html" >System</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Timeline.html" >Timeline</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Upload.html" >Upload</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="classes/Util.html" >Util</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./routes.html" ><span class="fa fa-code-fork"></span>Routes</a>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-long-arrow-down"></span>
-                                   <span>Injectables</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#injectables-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="injectables-links"
-                   >
-                                       <li class="link">
-                                           <a href="injectables/DesignmodesService.html" >DesignmodesService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="injectables/InkService.html" >InkService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="injectables/LayersService.html" >LayersService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="injectables/OperationService.html" >OperationService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="injectables/PatternService.html" >PatternService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="injectables/TreeService.html" >TreeService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="injectables/UploadService.html" >UploadService</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-info"></span>
-                                   <span>Interfaces</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#interfaces-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="interfaces-links"
-                   >
-                                       <li class="link">
-                                           <a href="interfaces/Bounds.html" >Bounds</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/DensityUnits.html" >DensityUnits</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/DesignActions.html" >DesignActions</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/DesignActions.html" >DesignActions</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/DesignMode.html" >DesignMode</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/DesignModes.html" >DesignModes</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/DraftInterface.html" >DraftInterface</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/DraftMap.html" >DraftMap</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/HistoryState.html" >HistoryState</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/Ink.html" >Ink</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/Interlacement.html" >Interlacement</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/InterlacementVal.html" >InterlacementVal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/LoomCoords.html" >LoomCoords</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/LoomTypes.html" >LoomTypes</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/LoomUpdate.html" >LoomUpdate</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/MaterialTypes.html" >MaterialTypes</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/Node.html" >Node</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/Operation.html" >Operation</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/OperationParams.html" >OperationParams</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/Point.html" >Point</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/StartOptions.html" >StartOptions</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/TreeNode.html" >TreeNode</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="interfaces/ViewModes.html" >ViewModes</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-plus"></span>
-                                   <span>Pipes</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#pipes-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="pipes-links"
-                   >
-                                       <li class="link">
-                                           <a href="pipes/FilterPipe.html" >FilterPipe</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./miscellaneous.html" ><span class="fa fa-cubes"></span>Miscellaneous</a>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                           </li>
-                   
-                           <li class="divider"></li>
-                           <li class="copyright">
-                                   Documentation generated using <a href="https://compodoc.github.io/compodoc/" target="_blank">
-                                               <img src=".//images/compodoc-vectorise.svg" class="img-responsive">
-                                   </a>
-                           </li>
-                   
-                       </ul>
-                   
-                   </nav>
+                   <compodoc-menu mode="normal"></compodoc-menu>
                </div>
+               <!-- START CONTENT -->
                <div class="content overview">
                    <div class="content-data">
-<h3>Overview</h3>
-<div class="text-center">
-    <object id="demo-svg" type="image/svg+xml" data="graph/dependencies.svg" style="width: 100%; height: 250px;">
-            Your browser does not support SVG
-    </object>
-    <div class="btn-group">
+
+
+<ol class="breadcrumb">
+    <li>Overview</li>
+</ol>
+  
+<div class="text-center module-graph-container">
+    <div id="module-graph-svg">
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 5.0.0 (20220707.1540)
+ -->
+<!-- Title: dependencies Pages: 1 -->
+<svg width="2653pt" height="250pt"
+ viewBox="0.00 0.00 2653.00 249.80" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 245.8)">
+<title>dependencies</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-245.8 2649,-245.8 2649,4 -4,4"/>
+<text text-anchor="middle" x="1322.5" y="-8.2" font-family="sans-serif" font-size="14.00">dependencies</text>
+<g id="clust1" class="cluster">
+<title>cluster_MixerModule</title>
+<polygon fill="none" stroke="black" stroke-dasharray="1,5" points="361,-108.8 361,-233.8 2637,-233.8 2637,-108.8 361,-108.8"/>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_MixerModule_declarations</title>
+<polygon fill="none" stroke="black" points="489,-116.8 489,-168.8 2629,-168.8 2629,-116.8 489,-116.8"/>
+</g>
+<g id="clust18" class="cluster">
+<title>cluster_MixerModule_imports</title>
+<polygon fill="none" stroke="black" points="369,-116.8 369,-168.8 481,-168.8 481,-116.8 369,-116.8"/>
+</g>
+<g id="clust22" class="cluster">
+<title>cluster_PlayerModule</title>
+<polygon fill="none" stroke="black" stroke-dasharray="1,5" points="8,-32.8 8,-100.8 829,-100.8 829,-32.8 8,-32.8"/>
+</g>
+<g id="clust23" class="cluster">
+<title>cluster_PlayerModule_declarations</title>
+<polygon fill="none" stroke="black" points="160,-40.8 160,-92.8 821,-92.8 821,-40.8 160,-40.8"/>
+</g>
+<g id="clust29" class="cluster">
+<title>cluster_PlayerModule_exports</title>
+<polygon fill="none" stroke="black" points="16,-40.8 16,-92.8 152,-92.8 152,-40.8 16,-40.8"/>
+</g>
+<!-- ConnectionComponent -->
+<g id="node1" class="node">
+<title>ConnectionComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="2620.88,-160.8 2475.12,-160.8 2475.12,-124.8 2620.88,-124.8 2620.88,-160.8"/>
+<text text-anchor="middle" x="2548" y="-138.6" font-family="Times,serif" font-size="14.00">ConnectionComponent</text>
+</g>
+<!-- MixerModule -->
+<g id="node16" class="node">
+<title>MixerModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="1522.77,-225.8 1519.77,-229.8 1498.77,-229.8 1495.77,-225.8 1429.23,-225.8 1429.23,-189.8 1522.77,-189.8 1522.77,-225.8"/>
+<text text-anchor="middle" x="1476" y="-203.6" font-family="Times,serif" font-size="14.00">MixerModule</text>
+</g>
+<!-- ConnectionComponent&#45;&gt;MixerModule -->
+<g id="edge1" class="edge">
+<title>ConnectionComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M2548,-161.12C2548,-184.46 2548,-221.8 2548,-221.8 2548,-221.8 1533.1,-221.8 1533.1,-221.8"/>
+<polygon fill="black" stroke="black" points="1533.1,-218.3 1523.1,-221.8 1533.1,-225.3 1533.1,-218.3"/>
+</g>
+<!-- DraftdetailComponent -->
+<g id="node2" class="node">
+<title>DraftdetailComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="2456.97,-160.8 2315.03,-160.8 2315.03,-124.8 2456.97,-124.8 2456.97,-160.8"/>
+<text text-anchor="middle" x="2386" y="-138.6" font-family="Times,serif" font-size="14.00">DraftdetailComponent</text>
+</g>
+<!-- DraftdetailComponent&#45;&gt;MixerModule -->
+<g id="edge2" class="edge">
+<title>DraftdetailComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M2386,-161.09C2386,-183.01 2386,-216.8 2386,-216.8 2386,-216.8 1533.01,-216.8 1533.01,-216.8"/>
+<polygon fill="black" stroke="black" points="1533.01,-213.3 1523.01,-216.8 1533.01,-220.3 1533.01,-213.3"/>
+</g>
+<!-- ImageComponent -->
+<g id="node3" class="node">
+<title>ImageComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="2297.31,-160.8 2180.69,-160.8 2180.69,-124.8 2297.31,-124.8 2297.31,-160.8"/>
+<text text-anchor="middle" x="2239" y="-138.6" font-family="Times,serif" font-size="14.00">ImageComponent</text>
+</g>
+<!-- ImageComponent&#45;&gt;MixerModule -->
+<g id="edge3" class="edge">
+<title>ImageComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M2239,-160.83C2239,-181.57 2239,-212.8 2239,-212.8 2239,-212.8 1532.87,-212.8 1532.87,-212.8"/>
+<polygon fill="black" stroke="black" points="1532.87,-209.3 1522.87,-212.8 1532.87,-216.3 1532.87,-209.3"/>
+</g>
+<!-- InletComponent -->
+<g id="node4" class="node">
+<title>InletComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="2162.49,-160.8 2055.51,-160.8 2055.51,-124.8 2162.49,-124.8 2162.49,-160.8"/>
+<text text-anchor="middle" x="2109" y="-138.6" font-family="Times,serif" font-size="14.00">InletComponent</text>
+</g>
+<!-- InletComponent&#45;&gt;MixerModule -->
+<g id="edge4" class="edge">
+<title>InletComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M2109,-160.91C2109,-180.14 2109,-207.8 2109,-207.8 2109,-207.8 1532.8,-207.8 1532.8,-207.8"/>
+<polygon fill="black" stroke="black" points="1532.8,-204.3 1522.8,-207.8 1532.8,-211.3 1532.8,-204.3"/>
+</g>
+<!-- MarqueeComponent -->
+<g id="node5" class="node">
+<title>MarqueeComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="2037.58,-160.8 1906.42,-160.8 1906.42,-124.8 2037.58,-124.8 2037.58,-160.8"/>
+<text text-anchor="middle" x="1972" y="-138.6" font-family="Times,serif" font-size="14.00">MarqueeComponent</text>
+</g>
+<!-- MarqueeComponent&#45;&gt;MixerModule -->
+<g id="edge5" class="edge">
+<title>MarqueeComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1972,-161.1C1972,-179.07 1972,-203.8 1972,-203.8 1972,-203.8 1533.11,-203.8 1533.11,-203.8"/>
+<polygon fill="black" stroke="black" points="1533.11,-200.3 1523.11,-203.8 1533.11,-207.3 1533.11,-200.3"/>
+</g>
+<!-- MixerComponent -->
+<g id="node6" class="node">
+<title>MixerComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="1888.55,-160.8 1773.45,-160.8 1773.45,-124.8 1888.55,-124.8 1888.55,-160.8"/>
+<text text-anchor="middle" x="1831" y="-138.6" font-family="Times,serif" font-size="14.00">MixerComponent</text>
+</g>
+<!-- MixerComponent&#45;&gt;MixerModule -->
+<g id="edge6" class="edge">
+<title>MixerComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1831,-160.83C1831,-177.2 1831,-198.8 1831,-198.8 1831,-198.8 1532.78,-198.8 1532.78,-198.8"/>
+<polygon fill="black" stroke="black" points="1532.78,-195.3 1522.78,-198.8 1532.78,-202.3 1532.78,-195.3"/>
+</g>
+<!-- MixerViewComponent -->
+<g id="node7" class="node">
+<title>MixerViewComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="1754.87,-160.8 1609.13,-160.8 1609.13,-124.8 1754.87,-124.8 1754.87,-160.8"/>
+<text text-anchor="middle" x="1682" y="-138.6" font-family="Times,serif" font-size="14.00">MixerViewComponent</text>
+</g>
+<!-- MixerViewComponent&#45;&gt;MixerModule -->
+<g id="edge7" class="edge">
+<title>MixerViewComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1682,-160.99C1682,-175.98 1682,-194.8 1682,-194.8 1682,-194.8 1533,-194.8 1533,-194.8"/>
+<polygon fill="black" stroke="black" points="1533,-191.3 1523,-194.8 1533,-198.3 1533,-191.3"/>
+</g>
+<!-- NoteComponent -->
+<g id="node8" class="node">
+<title>NoteComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="1591.05,-160.8 1482.95,-160.8 1482.95,-124.8 1591.05,-124.8 1591.05,-160.8"/>
+<text text-anchor="middle" x="1537" y="-138.6" font-family="Times,serif" font-size="14.00">NoteComponent</text>
+</g>
+<!-- NoteComponent&#45;&gt;MixerModule -->
+<g id="edge8" class="edge">
+<title>NoteComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1502.81,-160.91C1502.81,-160.91 1502.81,-179.79 1502.81,-179.79"/>
+<polygon fill="black" stroke="black" points="1499.31,-179.79 1502.81,-189.79 1506.31,-179.79 1499.31,-179.79"/>
+</g>
+<!-- OpHelpModal -->
+<g id="node9" class="node">
+<title>OpHelpModal</title>
+<polygon fill="#ffffb3" stroke="black" points="1464.38,-160.8 1367.62,-160.8 1367.62,-124.8 1464.38,-124.8 1464.38,-160.8"/>
+<text text-anchor="middle" x="1416" y="-138.6" font-family="Times,serif" font-size="14.00">OpHelpModal</text>
+</g>
+<!-- OpHelpModal&#45;&gt;MixerModule -->
+<g id="edge9" class="edge">
+<title>OpHelpModal&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1446.78,-160.91C1446.78,-160.91 1446.78,-179.79 1446.78,-179.79"/>
+<polygon fill="black" stroke="black" points="1443.28,-179.79 1446.78,-189.79 1450.28,-179.79 1443.28,-179.79"/>
+</g>
+<!-- OperationComponent -->
+<g id="node10" class="node">
+<title>OperationComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="1349.81,-160.8 1212.19,-160.8 1212.19,-124.8 1349.81,-124.8 1349.81,-160.8"/>
+<text text-anchor="middle" x="1281" y="-138.6" font-family="Times,serif" font-size="14.00">OperationComponent</text>
+</g>
+<!-- OperationComponent&#45;&gt;MixerModule -->
+<g id="edge10" class="edge">
+<title>OperationComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1281,-160.99C1281,-175.98 1281,-194.8 1281,-194.8 1281,-194.8 1418.8,-194.8 1418.8,-194.8"/>
+<polygon fill="black" stroke="black" points="1418.8,-198.3 1428.8,-194.8 1418.8,-191.3 1418.8,-198.3"/>
+</g>
+<!-- OpsComponent -->
+<g id="node11" class="node">
+<title>OpsComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="1193.89,-160.8 1090.11,-160.8 1090.11,-124.8 1193.89,-124.8 1193.89,-160.8"/>
+<text text-anchor="middle" x="1142" y="-138.6" font-family="Times,serif" font-size="14.00">OpsComponent</text>
+</g>
+<!-- OpsComponent&#45;&gt;MixerModule -->
+<g id="edge11" class="edge">
+<title>OpsComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1142,-160.83C1142,-177.2 1142,-198.8 1142,-198.8 1142,-198.8 1419.21,-198.8 1419.21,-198.8"/>
+<polygon fill="black" stroke="black" points="1419.21,-202.3 1429.21,-198.8 1419.21,-195.3 1419.21,-202.3"/>
+</g>
+<!-- PaletteComponent -->
+<g id="node12" class="node">
+<title>PaletteComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="1071.93,-160.8 952.07,-160.8 952.07,-124.8 1071.93,-124.8 1071.93,-160.8"/>
+<text text-anchor="middle" x="1012" y="-138.6" font-family="Times,serif" font-size="14.00">PaletteComponent</text>
+</g>
+<!-- PaletteComponent&#45;&gt;MixerModule -->
+<g id="edge12" class="edge">
+<title>PaletteComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M1012,-161.1C1012,-179.07 1012,-203.8 1012,-203.8 1012,-203.8 1418.96,-203.8 1418.96,-203.8"/>
+<polygon fill="black" stroke="black" points="1418.96,-207.3 1428.96,-203.8 1418.96,-200.3 1418.96,-207.3"/>
+</g>
+<!-- ParameterComponent -->
+<g id="node13" class="node">
+<title>ParameterComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="934.08,-160.8 795.92,-160.8 795.92,-124.8 934.08,-124.8 934.08,-160.8"/>
+<text text-anchor="middle" x="865" y="-138.6" font-family="Times,serif" font-size="14.00">ParameterComponent</text>
+</g>
+<!-- ParameterComponent&#45;&gt;MixerModule -->
+<g id="edge13" class="edge">
+<title>ParameterComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M865,-160.91C865,-180.14 865,-207.8 865,-207.8 865,-207.8 1419.07,-207.8 1419.07,-207.8"/>
+<polygon fill="black" stroke="black" points="1419.07,-211.3 1429.07,-207.8 1419.07,-204.3 1419.07,-211.3"/>
+</g>
+<!-- SnackbarComponent -->
+<g id="node14" class="node">
+<title>SnackbarComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="777.92,-160.8 644.08,-160.8 644.08,-124.8 777.92,-124.8 777.92,-160.8"/>
+<text text-anchor="middle" x="711" y="-138.6" font-family="Times,serif" font-size="14.00">SnackbarComponent</text>
+</g>
+<!-- SnackbarComponent&#45;&gt;MixerModule -->
+<g id="edge14" class="edge">
+<title>SnackbarComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M711,-160.83C711,-181.57 711,-212.8 711,-212.8 711,-212.8 1419.01,-212.8 1419.01,-212.8"/>
+<polygon fill="black" stroke="black" points="1419.01,-216.3 1429.01,-212.8 1419.01,-209.3 1419.01,-216.3"/>
+</g>
+<!-- SubdraftComponent -->
+<g id="node15" class="node">
+<title>SubdraftComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="626.55,-160.8 497.45,-160.8 497.45,-124.8 626.55,-124.8 626.55,-160.8"/>
+<text text-anchor="middle" x="562" y="-138.6" font-family="Times,serif" font-size="14.00">SubdraftComponent</text>
+</g>
+<!-- SubdraftComponent&#45;&gt;MixerModule -->
+<g id="edge15" class="edge">
+<title>SubdraftComponent&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M562,-161.09C562,-183.01 562,-216.8 562,-216.8 562,-216.8 1419.1,-216.8 1419.1,-216.8"/>
+<polygon fill="black" stroke="black" points="1419.1,-220.3 1429.1,-216.8 1419.1,-213.3 1419.1,-220.3"/>
+</g>
+<!-- PlayerModule -->
+<g id="node17" class="node">
+<title>PlayerModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="472.82,-160.8 469.82,-164.8 448.82,-164.8 445.82,-160.8 377.18,-160.8 377.18,-124.8 472.82,-124.8 472.82,-160.8"/>
+<text text-anchor="middle" x="425" y="-138.6" font-family="Times,serif" font-size="14.00">PlayerModule</text>
+</g>
+<!-- PlayerModule&#45;&gt;MixerModule -->
+<g id="edge16" class="edge">
+<title>PlayerModule&#45;&gt;MixerModule</title>
+<path fill="none" stroke="black" d="M425,-161.12C425,-184.46 425,-221.8 425,-221.8 425,-221.8 1419.14,-221.8 1419.14,-221.8"/>
+<polygon fill="black" stroke="black" points="1419.14,-225.3 1429.14,-221.8 1419.14,-218.3 1419.14,-225.3"/>
+</g>
+<!-- PlayerComponent  -->
+<g id="node22" class="node">
+<title>PlayerComponent </title>
+<polygon fill="#fb8072" stroke="black" points="144.1,-84.8 23.9,-84.8 23.9,-48.8 144.1,-48.8 144.1,-84.8"/>
+<text text-anchor="middle" x="84" y="-62.6" font-family="Times,serif" font-size="14.00">PlayerComponent </text>
+</g>
+<!-- PlayerModule&#45;&gt;PlayerComponent  -->
+<g id="edge21" class="edge">
+<title>PlayerModule&#45;&gt;PlayerComponent </title>
+<path fill="none" stroke="black" stroke-dasharray="5,2" d="M377.23,-148.8C283.38,-148.8 84,-148.8 84,-148.8 84,-148.8 84,-95 84,-95"/>
+<polygon fill="black" stroke="black" points="87.5,-95 84,-85 80.5,-95 87.5,-95"/>
+</g>
+<!-- OpSequencerComponent -->
+<g id="node18" class="node">
+<title>OpSequencerComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="813.25,-84.8 656.75,-84.8 656.75,-48.8 813.25,-48.8 813.25,-84.8"/>
+<text text-anchor="middle" x="735" y="-62.6" font-family="Times,serif" font-size="14.00">OpSequencerComponent</text>
+</g>
+<!-- OpSequencerComponent&#45;&gt;PlayerModule -->
+<g id="edge17" class="edge">
+<title>OpSequencerComponent&#45;&gt;PlayerModule</title>
+<path fill="none" stroke="black" d="M717.17,-84.84C717.17,-97.36 717.17,-111.8 717.17,-111.8 717.17,-111.8 448.83,-111.8 448.83,-111.8 448.83,-111.8 448.83,-114.77 448.83,-114.77"/>
+<polygon fill="black" stroke="black" points="445.33,-114.77 448.83,-124.77 452.33,-114.77 445.33,-114.77"/>
+</g>
+<!-- PlayerComponent -->
+<g id="node19" class="node">
+<title>PlayerComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="638.6,-84.8 521.4,-84.8 521.4,-48.8 638.6,-48.8 638.6,-84.8"/>
+<text text-anchor="middle" x="580" y="-62.6" font-family="Times,serif" font-size="14.00">PlayerComponent</text>
+</g>
+<!-- PlayerComponent&#45;&gt;PlayerModule -->
+<g id="edge18" class="edge">
+<title>PlayerComponent&#45;&gt;PlayerModule</title>
+<path fill="none" stroke="black" d="M574.11,-85.04C574.11,-92.23 574.11,-98.8 574.11,-98.8 574.11,-98.8 425,-98.8 425,-98.8 425,-98.8 425,-114.65 425,-114.65"/>
+<polygon fill="black" stroke="black" points="421.5,-114.65 425,-124.65 428.5,-114.65 421.5,-114.65"/>
+</g>
+<!-- VirtualPedalsComponent -->
+<g id="node20" class="node">
+<title>VirtualPedalsComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="503.54,-84.8 346.46,-84.8 346.46,-48.8 503.54,-48.8 503.54,-84.8"/>
+<text text-anchor="middle" x="425" y="-62.6" font-family="Times,serif" font-size="14.00">VirtualPedalsComponent</text>
+</g>
+<!-- VirtualPedalsComponent&#45;&gt;PlayerModule -->
+<g id="edge19" class="edge">
+<title>VirtualPedalsComponent&#45;&gt;PlayerModule</title>
+<path fill="none" stroke="black" d="M401.17,-84.81C401.17,-84.81 401.17,-114.65 401.17,-114.65"/>
+<polygon fill="black" stroke="black" points="397.67,-114.65 401.17,-124.65 404.67,-114.65 397.67,-114.65"/>
+</g>
+<!-- WeavingStateComponent -->
+<g id="node21" class="node">
+<title>WeavingStateComponent</title>
+<polygon fill="#ffffb3" stroke="black" points="327.86,-84.8 168.14,-84.8 168.14,-48.8 327.86,-48.8 327.86,-84.8"/>
+<text text-anchor="middle" x="248" y="-62.6" font-family="Times,serif" font-size="14.00">WeavingStateComponent</text>
+</g>
+<!-- WeavingStateComponent&#45;&gt;PlayerModule -->
+<g id="edge20" class="edge">
+<title>WeavingStateComponent&#45;&gt;PlayerModule</title>
+<path fill="none" stroke="black" d="M248,-84.83C248,-105.57 248,-136.8 248,-136.8 248,-136.8 367.1,-136.8 367.1,-136.8"/>
+<polygon fill="black" stroke="black" points="367.1,-140.3 377.1,-136.8 367.1,-133.3 367.1,-140.3"/>
+</g>
+</g>
+</svg>
+
+    </div>
+    <i id="fullscreen" class="icon ion-ios-resize module-graph-fullscreen-btn" aria-hidden="true"></i>
+    <div class="btn-group size-buttons">
         <button id="zoom-in" class="btn btn-default btn-sm">Zoom in</button>
         <button id="reset" class="btn btn-default btn-sm">Reset</button>
         <button id="zoom-out" class="btn btn-default btn-sm">Zoom out</button>
     </div>
 </div>
-<div class="container-fluid overview">
+  
+<div class="tab-content overview">
     <div class="row">
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-archive"></span></h4>
-                        <p class="card-text">
-                            <a href="./modules.html">5 modules</a>
-                        </p>
-                    </div>
+        <div class="col-sm-3">
+            <div class="card text-center">
+                <div class="card-block">
+                    <h4 class="card-title"><span class="icon ion-ios-archive"></span></h4>
+                    <p class="card-text">
+                        <a href="./modules.html">2 Modules</a>
+                    </p>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-cogs"></span></h4>
-                        <p class="card-text">32 components</p>
-                    </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card text-center">
+                <div class="card-block">
+                    <h4 class="card-title"><span class="icon ion-md-cog"></span></h4>
+                    <p class="card-text">18 Components</p>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-code"></span></h4>
-                        <p class="card-text">2 directives</p>
-                    </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card text-center">
+                <div class="card-block">
+                    <h4 class="card-title"><span class="icon ion-md-code-working"></span></h4>
+                    <p class="card-text">2 Directives</p>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-code-fork"></span></h4>
-                        <p class="card-text">7 injectables</p>
-                    </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card text-center">
+                <div class="card-block">
+                    <h4 class="card-title"><span class="icon ion-md-arrow-round-down"></span></h4>
+                    <p class="card-text">9 Injectables</p>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-plus"></span></h4>
-                        <p class="card-text">1 pipe</p>
-                    </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card text-center">
+                <div class="card-block">
+                    <h4 class="card-title"><span class="icon ion-ios-paper"></span></h4>
+                    <p class="card-text">30 Classes</p>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-file-code-o"></span></h4>
-                        <p class="card-text">15 classes</p>
-                    </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="card text-center">
+                <div class="card-block">
+                    <h4 class="card-title"><span class="icon ion-md-information-circle-outline"></span></h4>
+                    <p class="card-text">51 Interfaces</p>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-info"></span></h4>
-                        <p class="card-text">23 interfaces</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><span class="fa fa-code-fork"></span></h4>
-                        <p class="card-text">
-                            <a href="./routes.html">2 routes</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+        </div>
     </div>
 </div>
 <script src="js/libs/svg-pan-zoom.min.js"></script>
-<script src="js/svg-pan-zoom.controls.js"></script>
+<script src="js/svg-pan-zoom.controls.js"></script> 
+
+
+
+
+
+
+
 
 
 
@@ -946,8 +428,31 @@
     </div>
 </div>
 </div>
+               <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'overview';
+            var COMPODOC_CURRENT_PAGE_URL = 'overview.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+
+       <script src="./js/menu-wc.js" defer></script>
+       <script nomodule src="./js/menu-wc_es5.js" defer></script>
 
        <script src="./js/libs/bootstrap-native.js"></script>
 
@@ -958,20 +463,17 @@
 
        <script src="./js/compodoc.js"></script>
 
-       <script src="./js/search/search.js"></script>
-       <script src="./js/search/lunr.min.js"></script>
-       <script src="./js/search/search-lunr.js"></script>
-
+       <script src="./js/tabs.js"></script>
        <script src="./js/menu.js"></script>
-       <script src="./js/libs/highlight.pack.js"></script>
-       <script src="./js/libs/highlightjs-line-numbers.min.js"></script>
-       <script src="./js/search/search_index.js"></script>
-       <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                hljs.initHighlightingOnLoad();
-                hljs.initLineNumbersOnLoad();
-            });
-       </script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
 
     </body>
 </html>

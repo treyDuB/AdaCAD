@@ -1,0 +1,662 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>adacad-weaver documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">adacad-weaver documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li
+  >
+  LoomConfig</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/player/player.service.ts</code>
+        </p>
+
+
+
+
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#draftTiling" 
+>
+                                            draftTiling
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#warps" 
+>
+                                            warps
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="draftTiling"></a>
+                                        <span class="name "><b>draftTiling</b>
+                                            <a href="#draftTiling">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>draftTiling:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="warps"></a>
+                                        <span class="name "><b>warps</b>
+                                            <a href="#warps">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>warps:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable} from &#x27;@angular/core&#x27;;
+import { EventEmitter } from &#x27;events&#x27;;
+import { wefts } from &#x27;../core/model/drafts&#x27;;
+import { Draft } from &#x27;../core/model/datatypes&#x27;;
+import { BaseOp, BuildableOperation as GenericOp, 
+  TreeOperation as TreeOp,
+  Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
+  SingleInlet, OpInput
+} from &#x27;../mixer/model/operation&#x27;;
+import * as defs from &#x27;../mixer/model/op_definitions&#x27;;
+import { PlayerOp, playerOpFrom, 
+  ChainOp, OpSequencer, PairedOp, PedalOpMapping,
+  makePairedOp, makeChainOp, makeOpSequencer,
+  forward, refresh, reverse
+} from &#x27;./model/op_mappings&#x27;;
+import { PlayerState, WeavingPick, copyState, initState } from &#x27;./model/state&#x27;;
+import { MappingsService } from &#x27;./provider/mappings.service&#x27;;
+import { PedalsService, PedalStatus, Pedal } from &#x27;./provider/pedals.service&#x27;;
+import { SequencerService } from &#x27;./provider/sequencer.service&#x27;;
+// import { OperationService } from &#x27;../mixer/provider/operation.service&#x27;;
+
+export interface DraftOperationClassification {
+  category: string,
+  dx: string,
+  ops: Array&lt;PlayerOp&gt; 
+ }
+
+interface LoomConfig {
+  warps: number,
+  draftTiling: boolean
+}
+
+/**
+ * @class PedalConfig
+ * @desc OLD, UPDATE THIS ---&gt; 
+ * Represents a set of two-way bindings between a set of Pedals
+ * and a set of (Player)Operations. A pedal can only be bound to one
+ * Action (a single Op, a chain of Ops, or to control an OpRoulette)
+ * @todo The second restriction may change, it might make sense for pedals to
+ * get bound to a sequence of operations.
+ */
+class PedalConfig {
+  // numPedals: number;
+  pedals: Array&lt;Pedal&gt;;
+  ops: Array&lt;PlayerOp&gt;;
+  availPedals: Array&lt;number&gt;;
+  mapping: PedalOpMapping;
+
+  constructor(pedalArray: Array&lt;Pedal&gt;, loadConfig &#x3D; false) {
+    this.pedals &#x3D; pedalArray;
+    this.ops &#x3D; []
+    this.availPedals &#x3D; pedalArray.map((p) &#x3D;&gt; p.id);
+    this.mapping &#x3D; [];
+  }
+
+  get numPedals() {
+    return this.pedals.length;
+  }
+
+  get numMappings() {
+    return Object.entries(this.mapping).length;
+  }
+
+  addPedal(p: Pedal) {
+    // this.pedals.push(p);
+    this.availPedals.push(p.id);
+  }
+
+  remPedal() {
+    // this.pedals.pop();
+    this.availPedals.filter((id) &#x3D;&gt; id !&#x3D; this.pedals.length);
+  }
+
+  addOperation(o: PlayerOp, chain?: boolean) {
+    o.id &#x3D; this.ops.length;
+    this.ops.push(o);
+    if (chain) {
+      o.chain &#x3D; chain;
+    }
+    // this.unpairedOps.push(o);
+    // console.log(this.ops);
+  }
+
+  pair(pedalId: number, opName: string) {
+    let o &#x3D; this.ops.findIndex((op) &#x3D;&gt; op.name &#x3D;&#x3D; opName);
+    // let thisOp &#x3D; this.unpairedOps.splice(o, 1);
+    let thisOp &#x3D; this.ops;
+    this.mapping[pedalId] &#x3D; makePairedOp(pedalId, thisOp[o]); 
+  }
+
+  chain(pedalId: number, opName: string) {
+    let o &#x3D; this.ops[this.ops.findIndex((op) &#x3D;&gt; op.name &#x3D;&#x3D; opName)];
+    if (this.pedalIsChained(pedalId)) {
+      let curr_ops &#x3D; (&lt;ChainOp&gt; this.mapping[pedalId]).ops;
+      this.mapping[pedalId] &#x3D; makeChainOp(curr_ops.concat([o]), pedalId);
+    } else if (this.pedalIsPaired(pedalId)) {
+      let first_op &#x3D; (&lt;PairedOp&gt; this.mapping[pedalId]).op;
+      this.mapping[pedalId] &#x3D; makeChainOp([first_op].concat([o]), pedalId);
+    } else {
+      this.mapping[pedalId] &#x3D; makeChainOp([o], pedalId);
+    }
+  }
+
+  chainToPedal(pedalId: number, ops: Array&lt;string&gt;) {
+    let op_array &#x3D; ops.map((name) &#x3D;&gt; this.ops[this.ops.findIndex((op) &#x3D;&gt; op.name &#x3D;&#x3D; name)]);
+    if (this.pedalIsChained(pedalId)) { 
+      // if pedal already has a chain, add ops to the chain
+      let curr_ops &#x3D; (&lt;ChainOp&gt; this.mapping[pedalId]).ops;
+      this.mapping[pedalId] &#x3D; makeChainOp(curr_ops.concat(op_array), pedalId);
+    } else if (this.pedalIsPaired(pedalId)) {
+      // if pedal is paired, you can turn it into a chain
+      let first_op &#x3D; (&lt;PairedOp&gt; this.mapping[pedalId]).op;
+      this.mapping[pedalId] &#x3D; makeChainOp([first_op].concat(op_array), pedalId);
+    } else {
+      // pedal doesn&#x27;t have anything mapped, just add a new chain
+      this.mapping[pedalId] &#x3D; makeChainOp(op_array, pedalId);
+    }
+  }
+
+  // will return true if an op is mapped to a pedal in any way
+  opIsMapped(opName: string): boolean {
+    if (this.mapping.filter((m) &#x3D;&gt; m.name.includes(opName)).length &gt; 0) {
+      return true;
+    } else return false;
+  }
+
+  pedalIsMapped(id: number) {
+    return (this.mapping[id]);
+  }
+
+  pedalIsChained(id: number) {
+    if (this.pedalIsMapped(id) &amp;&amp; this.mapping[id].name.startsWith(&#x27;ch&#x27;)) { return true; }
+    else {return false; }
+  }
+
+  pedalIsPaired(id: number) {
+    return (this.pedalIsMapped(id) &amp;&amp; !this.pedalIsChained(id));
+  }
+
+  unpairPedal(id: number) {
+    console.log(&#x60;unpairing pedal ${id}&#x60;);
+    // let op &#x3D; this.pairs[id];
+    // this.unpairedOps.splice(op.id, 0, op);
+    delete this.mapping[id];
+  }
+
+  // unpairOp(name: string) {
+  //   let pid &#x3D; this.opIsPaired(name);
+  //   this.unpairPedal(pid);
+  // }
+}
+
+/**
+ * The Draft Player Service is in charge of updating the the global PlayerState and tracking where the weaver is in the draft.
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class PlayerService {
+  state: PlayerState;
+  loom: LoomConfig;
+  redraw &#x3D; new EventEmitter();
+  draftClassification: Array&lt;DraftOperationClassification&gt; &#x3D; [];
+
+  constructor(
+    public pedals: PedalsService,
+    public mappings: MappingsService,
+    public seq: SequencerService,
+    // private oss: OperationService
+  ) {
+    // this.draft &#x3D; null; 
+    console.log(&quot;draft player constructor&quot;);
+    // const startPattern &#x3D; playerOpFrom(defs.tabby);
+    // console.log(startPattern);
+    // startPattern.perform(nullOpInput).then((result) &#x3D;&gt; {
+    //   console.log(result);
+    //   this.setDraft(result[0]);
+    // });
+
+    this.state &#x3D; initState();
+    this.state.draft &#x3D; defs.tabby.perform([1]);
+
+    this.loom &#x3D; { warps: 2640, draftTiling: true };
+
+    // load the draft progress ops
+    mappings.addOperation(forward);
+    mappings.addOperation(refresh);
+    mappings.addOperation(reverse);
+
+    function addOp(op: GenericOp, params?: Array&lt;number | string&gt;) {
+      let p_op &#x3D; params ? playerOpFrom(op, params) : playerOpFrom(op);
+      mappings.addOperation(p_op);
+      return p_op;
+    }
+
+    // load ops from the main mixer
+    const tabby &#x3D; addOp(defs.tabby);
+    const twill &#x3D; addOp(defs.twill);
+    const satin &#x3D; addOp(defs.satin);
+    const waffle &#x3D; addOp(defs.waffle);
+    const basket &#x3D; addOp(defs.basket);
+    const rib &#x3D; addOp(defs.rib);
+    const random &#x3D; addOp(defs.random);
+    const rotate &#x3D; addOp(defs.rotate);
+    const invert &#x3D; addOp(defs.invert);
+    const shiftx &#x3D; addOp(defs.shiftx);
+    const shifty &#x3D; addOp(defs.shifty);
+    const slope &#x3D; addOp(defs.slope);
+    const flipx &#x3D; addOp(defs.flipx);
+    const flipy &#x3D; addOp(defs.flipy);
+    const symm &#x3D; addOp(defs.makesymmetric);
+    const stretch &#x3D; addOp(defs.stretch);
+    const bindweft &#x3D; addOp(defs.bindweftfloats);
+    const bindwarp &#x3D; addOp(defs.bindwarpfloats);
+
+    const tile: PlayerOp &#x3D; {
+      name: defs.tile.name,
+      perform: (init: PlayerState) &#x3D;&gt; {
+        let res &#x3D; copyState(init);
+        res.draft &#x3D; defs.tile.perform([init.draft], [2, 2]);
+        res.row &#x3D; init.row % wefts(res.draft.drawdown);
+        res.pedal &#x3D; defs.tile.name;
+        return Promise.resolve(res);
+      }
+    }
+    mappings.addOperation(tile);
+
+    this.draftClassification.push(
+      {category: &#x27;structure&#x27;,
+      dx: &quot;0-1 input, 1 output, algorithmically generates weave structures based on parameters&quot;,
+      ops: [tabby, twill, satin, waffle, random]}
+    );
+
+    this.draftClassification.push(
+      { category: &#x27;custom structure&#x27;,
+        dx: &quot;custom structures loaded from the Mixer&quot;,
+        ops: []
+      }
+    );
+
+    this.draftClassification.push(
+      {category: &#x27;transformation&#x27;,
+      dx: &quot;1 input, 1 output, applies an operation to the input that transforms it in some way&quot;,
+      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile]}
+    );
+
+    // //test this
+    // console.log(this.oss.getOp(&#x27;germanify&#x27;));
+    // const germanify &#x3D; this.pedalOps.addOperation(playerOpFromTree(&lt;PlayableTreeOp&gt; this.oss.getOp(&#x27;germanify&#x27;)));
+    
+    console.log(&#x27;pedal ops added&#x27;);
+
+    pedals.on(&#x27;pedal-step&#x27;, (id) &#x3D;&gt; this.onPedal(id));
+
+    pedals.on(&#x27;pedal-added&#x27;, (n) &#x3D;&gt; {
+      if (n &#x3D;&#x3D; 1) {
+        mappings.pair(0, &#x27;forward&#x27;);
+        console.log(&quot;pedals mapping&quot;, mappings);
+      } else if (n &#x3D;&#x3D; 2) {
+      //   if (mappings.pedalIsMapped(0)) mappings.unmap(0);
+      //   mappings[0] &#x3D; this.seq;
+      //   mappings[1] &#x3D; this.seq;
+      //   this.seq.addPedals(0, 1);
+      //   console.log(&quot;pedals mapping&quot;, mappings);
+      }
+    })
+  }
+
+  get readyToWeave() {  // need either one pedal forward or one pedal reverse, in order to progress through draft
+    return (this.pedals.readyToWeave &amp;&amp; 
+      (this.mappings.opIsMapped(&#x27;forward&#x27;) || this.mappings.opIsMapped(&#x27;reverse&#x27;) || this.seq.readyToWeave)
+    );
+  }
+
+  get weaving() {
+    return this.pedals.active_draft.val;
+  }
+  get draft() {
+    return this.state.draft;
+  }
+
+  hasCustomStructure(d: Draft): boolean {
+    let ops &#x3D; this.draftClassification.filter((c) &#x3D;&gt; c.category &#x3D;&#x3D; &quot;custom structure&quot;)[0].ops;
+    console.log(ops);
+    if (ops.length &#x3D;&#x3D; 0) return false;
+    return ops
+      .map((el) &#x3D;&gt; { return el.struct_id &#x3D;&#x3D; d.id})
+      .reduce((a, b) &#x3D;&gt; { return a || b; });
+  }
+
+  setDraft(d: Draft) {
+    if (!this.hasCustomStructure(d)) {
+      console.log(&quot;a new structure!&quot;);
+      let structOps &#x3D; this.draftClassification.filter((c) &#x3D;&gt; c.category &#x3D;&#x3D; &quot;custom structure&quot;)[0].ops;
+      let op &#x3D; this.structureOpFromDraft(d);
+      structOps.push(op);
+      this.mappings.addOperation(op);
+    }
+    this.state.draft &#x3D; d;
+    this.state.row &#x3D; 0;
+    // console.log(&quot;player has active draft&quot;);
+    // console.log(&quot;draft is &quot;, this.draft);
+    console.log(&quot;draft set &quot;, this.state);
+  }
+
+  /**
+   * 
+   * @param d the Draft to turn into a custom structure Operation
+   */
+  structureOpFromDraft(d: Draft) {
+    let structOp: PlayerOp &#x3D; {
+      name: d.gen_name,
+      struct_id: d.id,
+      perform: (init: PlayerState) &#x3D;&gt; {
+        let res &#x3D; copyState(init);
+        res.draft &#x3D; d;
+        res.row &#x3D; init.row % wefts(d.drawdown);
+        return Promise.resolve(res);
+      }
+    };
+    return structOp;
+  }
+
+  // e is a string &#x3D; op.name
+  setPedalOp(e: any, p: Pedal) {
+    console.log(e, p);
+    if (this.mappings.pedalIsPaired(p.id)) {
+      this.mappings.unmap(p.id);
+    }
+    this.mappings.pair(p.id, e);
+    console.log(&quot;pedals map&quot;, this.mappings);
+  }
+
+  onPedal(id: number) {
+    console.log(&#x27;player service: pedal &#x27;, id);
+    let mapped &#x3D; this.mappings.getMap(id);
+    // console.log(this.mappings);
+    // console.log(this.seq);
+    if (mapped) {
+      console.log(&#x27;mapping exists for pedal&#x27;);
+      mapped.perform(this.state, id)
+      .then((state: PlayerState) &#x3D;&gt; {
+        this.state &#x3D; copyState(state);
+        console.log(this.state);
+        this.redraw.emit(&#x27;redraw&#x27;);
+        if (this.state.weaving) {
+          console.log(&quot;draft player: sending row&quot;);
+          this.pedals.sendDraftRow(this.currentRow());
+        }
+      });
+    }
+  }
+
+  // compound pedal operations
+  // normal pedal -&gt; op
+  // compound pedal -&gt; Op sequence
+  // if (compound pedal change) {
+      // sequence of operations: [Op, Op, Op]
+      // let finaldraft &#x3D; starting Draft;
+      // for op in sequence:
+      //   finaldraft &#x3D; finaldraft.perform(op);
+      // }
+      // do something with finaldraft
+  // }
+
+
+  currentRow() {
+    let {draft, row} &#x3D; this.state;
+    let draftRow &#x3D; draft.drawdown[row % wefts(draft.drawdown)];
+    let data &#x3D; &quot;&quot;;
+
+    let targetLength &#x3D; (this.loom.draftTiling ? this.loom.warps : draftRow.length);
+    while (data.length &lt; targetLength) {
+      for (var i in draftRow) {
+        if (draftRow[i].is_up) {
+          data +&#x3D; &#x27;1&#x27;;
+        } else {
+          data +&#x3D; &#x27;0&#x27;;
+        }
+      }
+    }
+    let pick: WeavingPick &#x3D; { pickNum: row, rowData: data };
+    return pick;
+  }
+
+  toggleDraftTiling(e) {
+    // console.log(&quot;toggle &quot;, e);
+    this.loom.draftTiling &#x3D; e.checked;
+    // console.log(&quot;draft tiling &quot;, this.loom.draftTiling);
+  }
+
+  changeLoomWidth(e) {
+    // console.log(e.target.value);
+    this.loom.warps &#x3D; e.target.value;
+    // console.log(&quot;warps&quot;, this.loom.warps);
+  }
+
+  toggleWeaving() {
+    // don&#x27;t let user start weaving until AT LEAST:
+    // - 1 pedal connected AND
+    // - 1 pedal configured with operation &quot;forward&quot; or &quot;reverse&quot;
+    this.state.weaving &#x3D; !this.state.weaving;
+    this.pedals.toggleWeaving();
+    if (this.state.weaving) {
+      // send the first row right away
+      this.pedals.sendDraftRow(this.currentRow());
+    }
+    // this.pedals.vacuum_on.once(&#x27;change&#x27;, (state) &#x3D;&gt; {
+    //   if (state) {
+    //   }
+    // });
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'LoomConfig.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

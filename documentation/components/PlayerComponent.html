@@ -1,0 +1,975 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>adacad-weaver documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">adacad-weaver documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  PlayerComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/player/player.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-player</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./player.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./player.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#mixerElement" >mixerElement</a>
+                            </li>
+                            <li>
+                                <a href="#op_sequencer" >op_sequencer</a>
+                            </li>
+                            <li>
+                                <a href="#ownElement" >ownElement</a>
+                            </li>
+                            <li>
+                                <a href="#playOpen" >playOpen</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#pls" >pls</a>
+                            </li>
+                            <li>
+                                <a href="#weaving_state" >weaving_state</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#drawDraft" >drawDraft</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#resizeContainer" >resizeContainer</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#default_cell" >default_cell</a>
+                            </li>
+                            <li>
+                                <a href="#draft" >draft</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(pls: <a href="../injectables/PlayerService.html" target="_self">PlayerService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/player/player.component.ts:34</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>pls</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PlayerService.html" target="_self" >PlayerService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="default_cell"></a>
+                        <b>default_cell</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/player/player.component.ts:19</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="draft"></a>
+                        <b>draft</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Draft.html" target="_self" >Draft</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/player/player.component.ts:20</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="drawDraft"></a>
+                    <span class="name">
+                        <span ><b>drawDraft</b></span>
+                        <a href="#drawDraft"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>drawDraft()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">src/app/player/player.component.ts:83</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="47"
+                            class="link-to-prism">src/app/player/player.component.ts:47</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="42"
+                            class="link-to-prism">src/app/player/player.component.ts:42</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resizeContainer"></a>
+                    <span class="name">
+                        <span ><b>resizeContainer</b></span>
+                        <a href="#resizeContainer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resizeContainer()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">src/app/player/player.component.ts:76</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mixerElement"></a>
+                    <span class="name">
+                        <span ><b>mixerElement</b></span>
+                        <a href="#mixerElement"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>HTMLElement</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/player/player.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="op_sequencer"></a>
+                    <span class="name">
+                        <span ><b>op_sequencer</b></span>
+                        <a href="#op_sequencer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(OpSequencerComponent)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/player/player.component.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ownElement"></a>
+                    <span class="name">
+                        <span ><b>ownElement</b></span>
+                        <a href="#ownElement"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>HTMLElement</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/player/player.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="playOpen"></a>
+                    <span class="name">
+                        <span ><b>playOpen</b></span>
+                        <a href="#playOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/player/player.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pls"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>pls</b></span>
+                        <a href="#pls"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/PlayerService.html" target="_self" >PlayerService</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/player/player.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="weaving_state"></a>
+                    <span class="name">
+                        <span ><b>weaving_state</b></span>
+                        <a href="#weaving_state"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(WeavingStateComponent)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/player/player.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, Output, OnInit, ViewChild} from &#x27;@angular/core&#x27;;
+import { PlayerService } from &#x27;./player.service&#x27;;
+
+import { OpSequencerComponent } from &#x27;./op-sequencer/op-sequencer.component&#x27;;
+import { WeavingStateComponent } from &#x27;./weaving-state/weaving-state.component&#x27;;
+
+import { Draft } from &#x27;../core/model/datatypes&#x27;;
+import { wefts, warps, isUp, isSet } from &#x27;../core/model/drafts&#x27;;
+
+@Component({
+  selector: &#x27;app-player&#x27;,
+  templateUrl: &#x27;./player.component.html&#x27;,
+  styleUrls: [&#x27;./player.component.scss&#x27;]
+})
+export class PlayerComponent implements OnInit {
+  @ViewChild(WeavingStateComponent) weaving_state;
+  @ViewChild(OpSequencerComponent) op_sequencer;
+
+  @Input()  default_cell: number;
+  @Input(&#x27;draft&#x27;) active_draft: Draft;
+  // @Input() 
+  // get draft_set(): boolean {
+  //   return (this.pls.draft !&#x3D;&#x3D; null);
+  // };
+
+  // get pls.draft(): Draft { return this._active_draft; }
+  // set pls.draft(value: Draft) {
+  //   this._active_draft &#x3D; value;
+  // }
+  // private _active_draft: Draft &#x3D; null;
+
+  playOpen: boolean &#x3D; true;
+  ownElement: HTMLElement;
+  mixerElement: HTMLElement;
+  
+  constructor(
+    public pls: PlayerService
+  ) { 
+
+  }
+
+  ngOnInit(): void {
+    console.log(&quot;ng on init, pedals: &quot;, this.pls.pedals);
+    /** FOR TESTING ONLY: generate random draft and set it at start-up */
+  }
+
+  ngAfterViewInit() {
+    console.log(&quot;ng after view init, pedals: &quot;, this.pls.pedals);
+    // const startPattern &#x3D; this.oss.getOp(&#x27;tabby&#x27;);
+    // startPattern.perform([]).then((result) &#x3D;&gt; {
+    //   this.pls.setDraft(result[0]);
+    //   this.drawDraft();
+    // });
+    this.ownElement &#x3D; document.getElementById(&#x27;player-container&#x27;);
+    this.mixerElement &#x3D; document.querySelector(&#x27;.mat-drawer-container&#x27;);
+    console.log(&quot;init w/ element refs &quot;, this.ownElement, this.mixerElement);
+    // this.draftCanvas &#x3D; &lt;HTMLCanvasElement&gt; document.getElementById(&#x27;active-draft-canvas&#x27;);
+    // this.cx &#x3D; this.draftCanvas.getContext(&quot;2d&quot;);
+    // this.drawDraft(); //force call here because it likely didn&#x27;t render previously. 
+
+    // let expansionPanel &#x3D; document.querySelector(&#x27;mat-expansion-panel&#x27;);
+    // expansionPanel.close();
+
+    this.playOpen &#x3D; false;
+    this.resizeContainer();
+    // this.drawDraft();
+
+    this.pls.redraw.on(&#x27;redraw&#x27;, () &#x3D;&gt; {
+      console.log(&quot;redrawing &quot;, this.pls.state);
+      // this.drawDraft();
+      this.resizeContainer();
+    });
+
+  }
+
+  resizeContainer() {
+    let h &#x3D; this.ownElement.getBoundingClientRect().height;
+    let t &#x3D; document.querySelector(&quot;app-topbar&quot;).getBoundingClientRect().height;
+    // console.log(&quot;player height is &quot; + h.toString());
+    this.mixerElement.style.height &#x3D; &#x27;calc(100vh - &#x27;+ (2.3*h+t).toString() + &#x27;px)&#x27;;
+  }
+
+  drawDraft() { this.weaving_state.drawDraft(); }
+}
+  
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;mat-accordion id&#x3D;&quot;player-container&quot;&gt;
+  &lt;mat-expansion-panel
+    [expanded] &#x3D; &quot;playOpen&quot;
+    (opened) &#x3D; &quot;playOpen &#x3D; true&quot;
+    (closed) &#x3D; &quot;playOpen &#x3D; false&quot;
+    (afterCollapse)&#x3D;&quot;resizeContainer()&quot;
+    (afterExpand)&#x3D;&quot;resizeContainer()&quot;&gt;
+    &lt;mat-expansion-panel-header&gt;
+      &lt;mat-panel-title&gt;
+        {{ playOpen? &#x27;Close&#x27; : &#x27;Open&#x27;}} Player
+      &lt;/mat-panel-title&gt;
+    &lt;/mat-expansion-panel-header&gt;
+
+    &lt;div id&#x3D;&quot;player-content&quot; class&#x3D;&quot;player&quot;&gt;
+
+      &lt;div class&#x3D;&quot;first-row&quot;&gt;
+        &lt;app-weaving-state&gt;&lt;/app-weaving-state&gt;
+      &lt;/div&gt;
+      
+      &lt;div class&#x3D;&quot;break&quot;&gt;&lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;second-row&quot;&gt;
+        
+      
+       &lt;!-- [matTooltip]&#x3D;&quot;&#x60;Loom must be online AND one pedal must be set to &#x27;forward&#x27;&#x60;&quot;&gt; --&gt;
+        
+        &lt;!-- &lt;div id&#x3D;&quot;draft-container&quot; class&#x3D;&quot;player-field&quot;&gt;
+          &lt;h2 class&#x3D;&quot;player-field-header&quot;&gt;Draft&lt;/h2&gt;
+          &lt;canvas class&#x3D;&quot;draft-field&quot; id&#x3D;&quot;active-draft-canvas&quot;&gt;&lt;/canvas&gt;
+        &lt;/div&gt; --&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;app-virtual-pedals&gt;&lt;/app-virtual-pedals&gt;
+    
+  &lt;/mat-expansion-panel&gt;
+
+&lt;/mat-accordion&gt;
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./player.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.player { 
+  flex-wrap: wrap;
+  display: flex;
+  align-items: flex-start;
+  height: inherit; 
+  flex: 1;
+}
+
+.top-aligned {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.sequencer-block {
+  align-items: flex-start;
+  display: inline-flex;
+  height: inherit;
+  flex: 8;
+}
+
+.op-menu-block {
+  display: block;
+  max-width: 210px;
+}
+
+.first-row, .second-row {
+  flex-basis: 100%;
+}
+
+.break{
+  flex-basis: 100%;
+  border-width: 5px;
+  color: blue;
+}
+
+
+.mat-button {
+  background-color: #ff4081;
+  color: white;
+  width: inherit;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.mat-button.mat-button-disabled {
+  background-color: #fd6d9d;
+  color: rgba(255, 255, 255, 0.50);
+  
+}
+
+.mat-expansion-panel-header, 
+.mat-expansion-panel-header.mat-expanded:focus {
+  background: #121f6b;
+}
+
+.mat-expansion-indicator::after {
+  color:#ffffff;
+}
+
+.mat-expansion-panel-body {
+  padding: 0px;
+}
+
+.square-corners {
+  border-radius: 0pt;
+  border-bottom-left-radius: 0pt;
+  border-bottom-right-radius: 0pt;
+  border-top-left-radius: 0pt;
+  border-top-right-radius: 0pt;
+}
+
+.mat-expansion-panel, .mat-accordion, .mat-expansion-panel-header,
+.mat-accordion .mat-expansion-panel:last-of-type, 
+.mat-accordion .mat-expansion-panel:first-of-type  {
+  border: #ffffff 1px;
+  border-radius: 0pt;
+  border-bottom-left-radius: 0pt;
+  border-bottom-right-radius: 0pt;
+  border-top-left-radius: 0pt;
+  border-top-right-radius: 0pt;
+  border-bottom: 0pt;
+}
+
+.mat-expansion-panel-header:hover, 
+.mat-expansion-panel-header.mat-expanded:hover,
+.mat-expansion-panel:not(.mat-expanded), 
+.mat-expansion-panel-header:hover:not([aria-disabled&#x3D;true])   {
+  background: #566be2;
+}
+
+.mat-expansion-panel-header-title, .mat-expansion-indicator{
+  color: white;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><mat-accordion id="player-container">  <mat-expansion-panel    [expanded] = "playOpen"    (opened) = "playOpen = true"    (closed) = "playOpen = false"    (afterCollapse)="resizeContainer()"    (afterExpand)="resizeContainer()">    <mat-expansion-panel-header>      <mat-panel-title>        {{ playOpen? \'Close\' : \'Open\'}} Player      </mat-panel-title>    </mat-expansion-panel-header>    <div id="player-content" class="player">      <div class="first-row">        <app-weaving-state></app-weaving-state>      </div>            <div class="break"></div>      <div class="second-row">                     <!-- [matTooltip]="`Loom must be online AND one pedal must be set to \'forward\'`"> -->                <!-- <div id="draft-container" class="player-field">          <h2 class="player-field-header">Draft</h2>          <canvas class="draft-field" id="active-draft-canvas"></canvas>        </div> -->      </div>    </div>    <app-virtual-pedals></app-virtual-pedals>      </mat-expansion-panel></mat-accordion></div>'
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
+    var ACTUAL_COMPONENT = {'name': 'PlayerComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'PlayerComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

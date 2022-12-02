@@ -8,836 +8,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	    <link rel="stylesheet" href="../styles/style.css">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
         <div class="navbar navbar-default navbar-fixed-top visible-xs">
             <a href="../" class="navbar-brand">adacad-weaver documentation</a>
-            <button type="button" class="btn btn-default btn-menu fa fa-bars" id="btn-menu"></button>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-            <div id="book-search-input" role="search">
-                <input type="text" placeholder="Type to search">
-            </div>
-            <nav>
-            
-                <ul class="list">
-            
-                    <li class="title">
-                        <a href="../">adacad-weaver documentation</a>
-                    </li>
-            
-                    <li class="divider"></li>
-            
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="../"><span class="fa fa-home"></span>Getting started</a>
-                        <ul class="links">
-                                <li class="link">
-                                    <a href="../" ><span class="fa fa-file-text-o"></span>README</a>
-                                </li>
-                                <li class="link">
-                                    <a 
-                                        
-                                         href="../overview.html" 
-                                         href="../overview.html" 
-                                        >
-                                        <span class="fa fa-th"></span>Overview
-                                    </a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="./modules.html" >
-                            <span class="fa fa-archive"></span>
-                            <span>Modules</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-modules-links"
-                            ></span>
-                        </a>
-                        <ul class="links collapse in"
-                                id="xs-modules-links"
-                            >
-                                <li class="link">
-                                    <a href="../modules/AppModule.html" >AppModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/AppRoutingModule.html" >AppRoutingModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/CoreModule.html" >CoreModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/MixerModule.html" >MixerModule</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../modules/WeaverModule.html" >WeaverModule</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-cogs"></span>
-                            <span>Components</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-components-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-components-links"
-                            >
-                                <li class="link">
-                                    <a href="../components/AboutModal.html" >AboutModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/AppComponent.html" >AppComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/ConnectionComponent.html" >ConnectionComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/ConnectionModal.html" >ConnectionModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/FlowComponent.html" >FlowComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/InitModal.html" >InitModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/LabelModal.html" >LabelModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/LoomComponent.html" >LoomComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MasksComponent.html" >MasksComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MaterialModal.html" >MaterialModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MaterialsComponent.html" >MaterialsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MixerComponent.html" >MixerComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MixerDesignComponent.html" >MixerDesignComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MixerPatternsComponent.html" >MixerPatternsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/MixerViewComponent.html" >MixerViewComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/NotesComponent.html" >NotesComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/OperationComponent.html" >OperationComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/PaletteComponent.html" >PaletteComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/PatternModal.html" >PatternModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/PatternsComponent.html" >PatternsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/SchematicComponent.html" >SchematicComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/ShuttlesModal.html" >ShuttlesModal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/SnackbarComponent.html" >SnackbarComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/SubdraftComponent.html" >SubdraftComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/SystemsComponent.html" >SystemsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/TopbarComponent.html" >TopbarComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/TreeComponent.html" >TreeComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/UploadFormComponent.html" >UploadFormComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/WeaverComponent.html" >WeaverComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/WeaverDesignComponent.html" >WeaverDesignComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/WeaverPatternsComponent.html" >WeaverPatternsComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../components/WeaverViewComponent.html" >WeaverViewComponent</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-code"></span>
-                            <span>Directives</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-directives-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-directives-links"
-                            >
-                                <li class="link">
-                                    <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../directives/WeaveDirective.html" >WeaveDirective</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-file-code-o"></span>
-                            <span>Classes</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-classes-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-classes-links"
-                            >
-                                <li class="link">
-                                    <a href="../classes/AdaCADWeaverPage.html" >AdaCADWeaverPage</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Cell.html" >Cell</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Connection.html" >Connection</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Draft.html" >Draft</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Loom.html" >Loom</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Pattern.html" >Pattern</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Point.html" >Point</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Render.html" >Render</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Selection.html" >Selection</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Shape.html" >Shape</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Shuttle.html" >Shuttle</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/System.html" >System</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Timeline.html" >Timeline</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Upload.html" >Upload</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../classes/Util.html" >Util</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="../routes.html" ><span class="fa fa-code-fork"></span>Routes</a>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-long-arrow-down"></span>
-                            <span>Injectables</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-injectables-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-injectables-links"
-                            >
-                                <li class="link">
-                                    <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/InkService.html" >InkService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/LayersService.html" >LayersService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/OperationService.html" >OperationService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/PatternService.html" >PatternService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/TreeService.html" >TreeService</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../injectables/UploadService.html" >UploadService</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-info"></span>
-                            <span>Interfaces</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-interfaces-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-interfaces-links"
-                            >
-                                <li class="link">
-                                    <a href="../interfaces/Bounds.html" >Bounds</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/DensityUnits.html" >DensityUnits</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/DesignActions.html"  class="active" >DesignActions</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/DesignActions.html"  class="active" >DesignActions</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/DesignMode.html" >DesignMode</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/DesignModes.html" >DesignModes</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/DraftInterface.html" >DraftInterface</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/DraftMap.html" >DraftMap</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/HistoryState.html" >HistoryState</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/Ink.html" >Ink</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/Interlacement.html" >Interlacement</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/InterlacementVal.html" >InterlacementVal</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/LoomCoords.html" >LoomCoords</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/LoomTypes.html" >LoomTypes</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/LoomUpdate.html" >LoomUpdate</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/Node.html" >Node</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/Operation.html" >Operation</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/OperationParams.html" >OperationParams</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/Point.html" >Point</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/StartOptions.html" >StartOptions</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/TreeNode.html" >TreeNode</a>
-                                </li>
-                                <li class="link">
-                                    <a href="../interfaces/ViewModes.html" >ViewModes</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <div class="simple">
-                            <span class="fa fa-plus"></span>
-                            <span>Pipes</span>
-                            <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                    data-target="#xs-pipes-links"
-                                ></span>
-                        </div>
-                        <ul class="links collapse in"
-                                id="xs-pipes-links"
-                            >
-                                <li class="link">
-                                    <a href="../pipes/FilterPipe.html" >FilterPipe</a>
-                                </li>
-                        </ul>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="../miscellaneous.html" ><span class="fa fa-cubes"></span>Miscellaneous</a>
-                    </li>
-            
-                    <li class="chapter">
-                        <a data-type="chapter-link" href="../coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                    </li>
-            
-                    <li class="divider"></li>
-                    <li class="copyright">
-                            Documentation generated using <a href="https://compodoc.github.io/compodoc/" target="_blank">
-                                        <img src="..//images/compodoc-vectorise.svg" class="img-responsive">
-                            </a>
-                    </li>
-            
-                </ul>
-            
-            </nav>
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
            <div class="row main">
                <div class="hidden-xs menu">
-                   <nav>
-                   
-                       <ul class="list">
-                   
-                           <li class="title">
-                               <a href="../">adacad-weaver documentation</a>
-                           </li>
-                   
-                           <li class="divider"></li>
-                   
-                               <div id="book-search-input" role="search">
-                                   <input type="text" placeholder="Type to search">
-                               </div>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="../"><span class="fa fa-home"></span>Getting started</a>
-                               <ul class="links">
-                                       <li class="link">
-                                           <a href="../" ><span class="fa fa-file-text-o"></span>README</a>
-                                       </li>
-                                       <li class="link">
-                                           <a 
-                                               
-                                                href="../overview.html" 
-                                                href="../overview.html" 
-                                               >
-                                               <span class="fa fa-th"></span>Overview
-                                           </a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="./modules.html" >
-                                   <span class="fa fa-archive"></span>
-                                   <span>Modules</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#modules-links"
-                                   ></span>
-                               </a>
-                               <ul class="links collapse in"
-                                       id="modules-links"
-                   >
-                                       <li class="link">
-                                           <a href="../modules/AppModule.html" >AppModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/AppRoutingModule.html" >AppRoutingModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/CoreModule.html" >CoreModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/MixerModule.html" >MixerModule</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../modules/WeaverModule.html" >WeaverModule</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-cogs"></span>
-                                   <span>Components</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#components-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="components-links"
-                   >
-                                       <li class="link">
-                                           <a href="../components/AboutModal.html" >AboutModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/AppComponent.html" >AppComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/ConnectionComponent.html" >ConnectionComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/ConnectionModal.html" >ConnectionModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/FlowComponent.html" >FlowComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/InitModal.html" >InitModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/LabelModal.html" >LabelModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/LoomComponent.html" >LoomComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MasksComponent.html" >MasksComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MaterialModal.html" >MaterialModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MaterialsComponent.html" >MaterialsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MixerComponent.html" >MixerComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MixerDesignComponent.html" >MixerDesignComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MixerPatternsComponent.html" >MixerPatternsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/MixerViewComponent.html" >MixerViewComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/NotesComponent.html" >NotesComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/OperationComponent.html" >OperationComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/PaletteComponent.html" >PaletteComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/PatternModal.html" >PatternModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/PatternsComponent.html" >PatternsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/SchematicComponent.html" >SchematicComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/ShuttlesModal.html" >ShuttlesModal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/SnackbarComponent.html" >SnackbarComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/SubdraftComponent.html" >SubdraftComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/SystemsComponent.html" >SystemsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/TopbarComponent.html" >TopbarComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/TreeComponent.html" >TreeComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/UploadFormComponent.html" >UploadFormComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/WeaverComponent.html" >WeaverComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/WeaverDesignComponent.html" >WeaverDesignComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/WeaverPatternsComponent.html" >WeaverPatternsComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../components/WeaverViewComponent.html" >WeaverViewComponent</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-code"></span>
-                                   <span>Directives</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#directives-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="directives-links"
-                   >
-                                       <li class="link">
-                                           <a href="../directives/SelectionComponent.html" >SelectionComponent</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../directives/WeaveDirective.html" >WeaveDirective</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-file-code-o"></span>
-                                   <span>Classes</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#classes-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="classes-links"
-                   >
-                                       <li class="link">
-                                           <a href="../classes/AdaCADWeaverPage.html" >AdaCADWeaverPage</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Cell.html" >Cell</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Connection.html" >Connection</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Draft.html" >Draft</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Loom.html" >Loom</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Pattern.html" >Pattern</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Point.html" >Point</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Render.html" >Render</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Selection.html" >Selection</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Shape.html" >Shape</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Shuttle.html" >Shuttle</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/System.html" >System</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Timeline.html" >Timeline</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Upload.html" >Upload</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../classes/Util.html" >Util</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="../routes.html" ><span class="fa fa-code-fork"></span>Routes</a>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-long-arrow-down"></span>
-                                   <span>Injectables</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#injectables-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="injectables-links"
-                   >
-                                       <li class="link">
-                                           <a href="../injectables/DesignmodesService.html" >DesignmodesService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/InkService.html" >InkService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/LayersService.html" >LayersService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/OperationService.html" >OperationService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/PatternService.html" >PatternService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/TreeService.html" >TreeService</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../injectables/UploadService.html" >UploadService</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-info"></span>
-                                   <span>Interfaces</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#interfaces-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="interfaces-links"
-                   >
-                                       <li class="link">
-                                           <a href="../interfaces/Bounds.html" >Bounds</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/DensityUnits.html" >DensityUnits</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/DesignActions.html"  class="active" >DesignActions</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/DesignActions.html"  class="active" >DesignActions</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/DesignMode.html" >DesignMode</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/DesignModes.html" >DesignModes</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/DraftInterface.html" >DraftInterface</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/DraftMap.html" >DraftMap</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/HistoryState.html" >HistoryState</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/Ink.html" >Ink</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/Interlacement.html" >Interlacement</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/InterlacementVal.html" >InterlacementVal</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/LoomCoords.html" >LoomCoords</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/LoomTypes.html" >LoomTypes</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/LoomUpdate.html" >LoomUpdate</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/MaterialTypes.html" >MaterialTypes</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/Node.html" >Node</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/Operation.html" >Operation</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/OperationParams.html" >OperationParams</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/Point.html" >Point</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/StartOptions.html" >StartOptions</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/TreeNode.html" >TreeNode</a>
-                                       </li>
-                                       <li class="link">
-                                           <a href="../interfaces/ViewModes.html" >ViewModes</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <div class="simple">
-                                   <span class="fa fa-plus"></span>
-                                   <span>Pipes</span>
-                                   <span class="menu-toggler fa fa-angle-up" data-toggle="collapse"
-                                           data-target="#pipes-links"
-                   ></span>
-                               </div>
-                               <ul class="links collapse in"
-                                       id="pipes-links"
-                   >
-                                       <li class="link">
-                                           <a href="../pipes/FilterPipe.html" >FilterPipe</a>
-                                       </li>
-                               </ul>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="../miscellaneous.html" ><span class="fa fa-cubes"></span>Miscellaneous</a>
-                           </li>
-                   
-                           <li class="chapter">
-                               <a data-type="chapter-link" href="../coverage.html" ><span class="fa fa-tasks"></span>Documentation coverage</a>
-                           </li>
-                   
-                           <li class="divider"></li>
-                           <li class="copyright">
-                                   Documentation generated using <a href="https://compodoc.github.io/compodoc/" target="_blank">
-                                               <img src="..//images/compodoc-vectorise.svg" class="img-responsive">
-                                   </a>
-                           </li>
-                   
-                       </ul>
-                   
-                   </nav>
+                   <compodoc-menu mode="normal"></compodoc-menu>
                </div>
+               <!-- START CONTENT -->
                <div class="content interface">
                    <div class="content-data">
 
@@ -847,37 +37,76 @@
 
 
 
+
+
+
+
+
+
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li>DesignActions</li>
+  <li
+  >
+  DesignActions</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
-    <li class="active">
-        <a href="#infos" id="infos-tab" role="tab" data-toggle="tab">Infos</a>
-    </li>
-    <li>
-        <a href="#source" role="tab" id="source-tab" data-toggle="tab">Source</a>
-    </li>
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade active in" id="infos">
+    <div class="tab-pane fade active in" id="c-info">
         <p class="comment">
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/app/weaver/weaver.component.ts</code>
+            <code>src/app/mixer/palette/subdraft/subdraft.component.ts</code>
         </p>
 
-            <p class="comment">
-                <h3>Description</h3>
-            </p>
-            <p class="comment">
-                <p>Controller of the Weaver component.</p>
 
-            </p>
 
+
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#icon" 
+>
+                                            icon
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#value" 
+>
+                                            value
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#viewValue" 
+>
+                                            viewValue
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
 
 
@@ -887,23 +116,30 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <b>icon</b>
+                                        <a name="icon"></a>
+                                        <span class="name "><b>icon</b>
+                                            <a href="#icon">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>icon:     <code>string</code>
-</bcode>
+                                        <code>icon:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
                                     </td>
                                 </tr>
 
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>string</code>
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -913,23 +149,30 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <b>value</b>
+                                        <a name="value"></a>
+                                        <span class="name "><b>value</b>
+                                            <a href="#value">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>value:     <code>string</code>
-</bcode>
+                                        <code>value:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
                                     </td>
                                 </tr>
 
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>string</code>
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -939,23 +182,30 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <b>viewValue</b>
+                                        <a name="viewValue"></a>
+                                        <span class="name "><b>viewValue</b>
+                                            <a href="#viewValue">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>viewValue:     <code>string</code>
-</bcode>
+                                        <code>viewValue:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
                                     </td>
                                 </tr>
 
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>string</code>
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -963,36 +213,27 @@
                     </table>
             </section>
     </div>
-    <div class="tab-pane fade tab-source-code" id="source">
-        <pre><code class="hljs javascript">import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, ChangeDetectionStrategy } from &#x27;@angular/core&#x27;;
-import {enableProdMode} from &#x27;@angular/core&#x27;;
-
-import { PatternService } from &#x27;../core/provider/pattern.service&#x27;;
-import { WeaveDirective } from &#x27;./directives/weave.directive&#x27;;
-import { ScrollDispatcher } from &#x27;@angular/cdk/overlay&#x27;;
-import { Timeline } from &#x27;../core/model/timeline&#x27;;
-import { LoomTypes, MaterialTypes, ViewModes, DensityUnits } from &#x27;../core/model/datatypes&#x27;;
-import { Draft } from &#x27;../core/model/draft&#x27;;
-import { Render } from &#x27;../weaver/model/render&#x27;;
-import { Pattern } from &#x27;../core/model/pattern&#x27;;
-import { MatDialog, MatDialogConfig } from &quot;@angular/material/dialog&quot;;
-import { ConnectionModal } from &#x27;./modal/connection/connection.modal&#x27;;
-import { InitModal } from &#x27;../core/modal/init/init.modal&#x27;;
-import { LabelModal } from &#x27;./modal/label/label.modal&#x27;;
-import {Subject} from &#x27;rxjs&#x27;;
-import {takeUntil} from &#x27;rxjs/operators&#x27;;
-import {cloneDeep, now} from &#x27;lodash&#x27;;
-import { Cell } from &#x27;../core/model/cell&#x27;;
 
 
-//disables some angular checking mechanisms
-enableProdMode();
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, HostListener, OnChanges, ChangeDetectionStrategy, SimpleChanges} from &#x27;@angular/core&#x27;;
+import { Point, Interlacement, Bounds, DraftMap, Draft, LoomSettings } from &#x27;../../../core/model/datatypes&#x27;;
+import { InkService } from &#x27;../../provider/ink.service&#x27;;
+import { LayersService } from &#x27;../../provider/layers.service&#x27;;
+import utilInstance from &#x27;../../../core/model/util&#x27;;
+import { OperationService } from &#x27;../../provider/operation.service&#x27;;
+import { TreeService } from &#x27;../../provider/tree.service&#x27;;
+import { FileService } from &#x27;../../../core/provider/file.service&#x27;;
+import { ViewportService } from &#x27;../../provider/viewport.service&#x27;;
+import { MatDialog, MatDialogRef } from &#x27;@angular/material/dialog&#x27;;
+import { DraftdetailComponent } from &#x27;../../modal/draftdetail/draftdetail.component&#x27;;
+import { Cell } from &#x27;../../../core/model/cell&#x27;;
+import { OperationComponent } from &#x27;../operation/operation.component&#x27;;
+import { WorkspaceService } from &#x27;../../../core/provider/workspace.service&#x27;;
+import { MaterialsService } from &#x27;../../../core/provider/materials.service&#x27;;
+import { createDraft, getDraftName, initDraftWithParams, isSet, isUp, warps, wefts } from &#x27;../../../core/model/drafts&#x27;;
 
 
-/**
- * Controller of the Weaver component.
- * @class
- */
 
 
 interface DesignActions{
@@ -1001,1042 +242,799 @@ interface DesignActions{
   icon: string;
 }
 
-interface DesignModes{
-  value: string;
-  viewValue: string;
-  icon: string;
-}
-
-
 @Component({
-  selector: &#x27;app-weaver&#x27;,
-  templateUrl: &#x27;./weaver.component.html&#x27;,
-  styleUrls: [&#x27;./weaver.component.scss&#x27;]
+  selector: &#x27;app-subdraft&#x27;,
+  templateUrl: &#x27;./subdraft.component.html&#x27;,
+  styleUrls: [&#x27;./subdraft.component.scss&#x27;]
 })
-export class WeaverComponent implements OnInit {
+
+
+
+export class SubdraftComponent implements OnInit {
+
+  @Input()  id: number; //generated by the tree service
+  @Input()  default_cell: number;
+
+
+  @Input()
+  get scale(): number { return this._scale; }
+  set scale(value: number) {
+    this._scale &#x3D; value;
+    this.rescale();
+  }
+  private _scale:number &#x3D; 5;
+
+  @Input()
+  get draft(): Draft { return this._draft; }
+  set draft(value: Draft) {
+    this._draft &#x3D; value;
+    this.drawDraft(value);
+  }
+
+  private _draft:Draft &#x3D; null;
+
+  @Input()
+  get bounds(): Bounds { return this._bounds; }
+  set bounds(value: Bounds) {
+    this.updateViewport(value);
+    this._bounds &#x3D; value;
+    ;
+  }
+
+  private _bounds:Bounds &#x3D; {
+    topleft: {x: 0, y: 0},
+    width: 0, 
+    height: 0
+  };
+
+  
+
+  @Output() onSubdraftMove &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onSubdraftDrop &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onSubdraftStart &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onDeleteCalled &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onDuplicateCalled &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onConnectionMade &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onConnectionRemoved &#x3D; new EventEmitter &lt;any&gt;(); 
+  @Output() onDesignAction &#x3D; new  EventEmitter &lt;any&gt;();
+  @Output() onConnectionStarted:any &#x3D; new EventEmitter&lt;any&gt;();
+  @Output() onSubdraftViewChange:any &#x3D; new EventEmitter&lt;any&gt;();
+  @Output() onNameChange:any &#x3D; new EventEmitter&lt;any&gt;();
+  @Output() onDraftToPlayer &#x3D; new EventEmitter&lt;any&gt;();
+
+  @ViewChild(&#x27;bitmapImage&#x27;) bitmap: any;
+
+
+
+  canvas: HTMLCanvasElement;
+  cx: any;
+
+  parent_id: number &#x3D; -1;
+
+  /**
+  * flag to tell if this is in a mode where it is looking foor a connectino
+  */
+  selecting_connection: boolean &#x3D; false;
+
+
+  /**
+   * hold the top left point as an interlacement, independent of scale
+   */
+  interlacement: Interlacement;
+
+  // private _scale: number; 
+
+  ink &#x3D; &#x27;neq&#x27;; //can be or, and, neq, not, splice
+
+  counter:number  &#x3D;  0; // keeps track of how frequently to call the move functions
  
-  /**
-   * The reference to the weave directive.
-   * @property {WeaveDirective}
-   */
-  @ViewChild(WeaveDirective, {static: false}) weaveRef;
-  @ViewChild(&#x27;bitmapImage&#x27;, {static: false}) bitmap;
+  counter_limit: number &#x3D; 50;  //this sets the threshold for move calls, lower number &#x3D;&#x3D; more calls
+ 
+  last_ndx:Interlacement &#x3D; {i: -1, j:-1, si: -1}; //used to check if we should recalculate a move operation
 
+  moving: boolean  &#x3D; false;
+ 
+  disable_drag: boolean &#x3D; false;
 
+  is_preview: boolean &#x3D; false;
+ 
+  zndx &#x3D; 0;
 
-  design_modes: DesignModes[]&#x3D;[
-    {value: &#x27;toggle&#x27;, viewValue: &#x27;Toggle Heddle&#x27;, icon: &quot;fas fa-adjust&quot;},
-    {value: &#x27;up&#x27;, viewValue: &#x27;Set Heddle Up&#x27;, icon: &quot;fas fa-square&quot;},
-    {value: &#x27;down&#x27;, viewValue: &#x27;Set Heddle Down&#x27;, icon: &quot;far fa-square&quot;}
-  ];
+  has_active_connection: boolean &#x3D; false;
 
-  
-  //operations you can perform on a selection 
-  design_actions: DesignActions[] &#x3D; [
-    {value: &#x27;toggle&#x27;, viewValue: &#x27;Invert Region&#x27;, icon: &quot;fas fa-adjust&quot;},
-    {value: &#x27;up&#x27;, viewValue: &#x27;Set Region Heddles Up&#x27;, icon: &quot;fas fa-square&quot;},
-    {value: &#x27;down&#x27;, viewValue: &#x27;Set Region Heddles Down&#x27;, icon: &quot;far fa-square&quot;},
-    {value: &#x27;flip_x&#x27;, viewValue: &#x27;Vertical Flip&#x27;, icon: &quot;fas fa-arrows-alt-v&quot;},
-    {value: &#x27;flip_y&#x27;, viewValue: &#x27;Horizontal Flip&#x27;, icon: &quot;fas fa-arrows-alt-h&quot;},
-    {value: &#x27;shift_left&#x27;, viewValue: &#x27;Shift 1 Warp Left&#x27;, icon: &quot;fas fa-arrow-left&quot;},
-    {value: &#x27;shift_up&#x27;, viewValue: &#x27;Shift 1 Pic Up&#x27;, icon: &quot;fas fa-arrow-up&quot;},
-    {value: &#x27;copy&#x27;, viewValue: &#x27;Copy Selected Region&#x27;, icon: &quot;fa fa-clone&quot;},
-    {value: &#x27;paste&#x27;, viewValue: &#x27;Paste Copyed Pattern to Selected Region&#x27;, icon: &quot;fa fa-paste&quot;}
-  ];
+  set_connectable:boolean &#x3D; false;
 
-  /**
-   * The name of the current selected brush.
-   * @property {string}
-   */
-  design_mode &#x3D; {
-    name:&#x27;toggle&#x27;,
-    id: -1
-  }
+  modal: MatDialogRef&lt;DraftdetailComponent, any&gt;;
 
-  /**
-   * The weave Draft object.
-   * @property {Draft}
-   */
-  draft: Draft;
+  draft_visible: boolean &#x3D; true;
 
- /**
-   * The weave Render object.
-   * @property {Render}
-   */
-  render: Render &#x3D; new Render(false);
+  loom_settings: LoomSettings;
 
- /**
-   * The weave Timeline object.
-   * @property {Timeline}
-   */
-  timeline: Timeline &#x3D; new Timeline();
+  constructor(private inks: InkService, 
+    private layer: LayersService, 
+    private ms: MaterialsService, 
+    public tree: TreeService,
+    private fs: FileService,
+    private viewport: ViewportService,
+    private dialog: MatDialog,
+    private ws: WorkspaceService) { 
 
-
-  /**
-  The current selection, as boolean array 
-  **/
-  copy: Array&lt;Array&lt;boolean&gt;&gt;;
-
-
- /**
-   * The types of looms this version will support.
-   * @property {LoomType}
-   */
-  loomtypes: LoomTypes[] &#x3D; [
-    {value: &#x27;frame&#x27;, viewValue: &#x27;Shaft&#x27;},
-    {value: &#x27;jacquard&#x27;, viewValue: &#x27;Jacquard&#x27;}
-  ];
-
-
-  material_types: MaterialTypes[] &#x3D; [
-    {value: 0, viewValue: &#x27;Non-Conductive&#x27;},
-    {value: 1, viewValue: &#x27;Conductive&#x27;},
-    {value: 2, viewValue: &#x27;Resistive&#x27;}
-  ];
-
-  density_units: DensityUnits[] &#x3D; [
-    {value: &#x27;in&#x27;, viewValue: &#x27;Ends per Inch&#x27;},
-    {value: &#x27;cm&#x27;, viewValue: &#x27;Ends per 10cm &#x27;}
-  ];
-
-  view_modes: ViewModes[] &#x3D; [
-      {value: &#x27;visual&#x27;, viewValue: &#x27;Visual&#x27;},
-      {value: &#x27;pattern&#x27;, viewValue: &#x27;Draft&#x27;},
-      {value: &#x27;yarn&#x27;, viewValue: &#x27;Circuit&#x27;}
-     // {value: &#x27;mask&#x27;, viewValue: &#x27;Masks&#x27;}
-
-    ];
-
-
-
-
-
-  /**
-   * The list of all patterns saved. Provided by pattern service.
-   * @property {Array&lt;Pattern&gt;}
-   */
-  //patterns;
-
-
-  selected;
-
-  private unsubscribe$ &#x3D; new Subject();
-
-  default_patterns:any;
-  collapsed:boolean &#x3D; false;
-  dims:any;
-
-  draftelement:any;
-  scrollingSubscription: any;
-
-  /// ANGULAR FUNCTIONS
-  /**
-   * @constructor
-   * ps - pattern service (variable name is initials). Subscribes to the patterns and used
-   * to get and update stitches.
-   * dialog - Anglar Material dialog module. Used to control the popup modals.
-   */
-  constructor(private ps: PatternService, private dialog: MatDialog, public scroll: ScrollDispatcher) {
-
-
-    this.scrollingSubscription &#x3D; this.scroll
-          .scrolled()
-          .subscribe((data: any) &#x3D;&gt; {
-            this.onWindowScroll(data);
-    });
-
-
-    //initialize with a draft so that we can load some things faster. 
-    //let d &#x3D;  this.getDraftFromLocalStore();
-    
-    this.copy &#x3D; [[false,true],[false,true]];
-
-
-
-    //if(d !&#x3D;&#x3D; undefined) this.draft &#x3D; new Draft(JSON.parse(d));
-    this.draft &#x3D; new Draft({wefts: 80, warps: 100});
-    this.draft.name &#x3D; this.draft.name;
-    this.timeline.addHistoryState(this.draft);
-    
-    this.default_patterns &#x3D; [];
-
-
-    this.ps.getPatterns().subscribe((res) &#x3D;&gt; {
-       for(var i in res.body){
-          this.default_patterns.push(new Pattern(res.body[i]));
-       }
-    }); 
-
-    this.render.view_frames &#x3D; (this.draft.loom.type &#x3D;&#x3D;&#x3D; &#x27;frame&#x27;) ? true : false;     
-    if (this.draft.patterns &#x3D;&#x3D;&#x3D; undefined) this.draft.patterns &#x3D; this.default_patterns;
+      this.zndx &#x3D; layer.createLayer();
 
   }
 
-  private onWindowScroll(data: any) {
-    this.weaveRef.rescale();
-  }
-
-
-
-  reInit(result){
-    console.log(&quot;reinit&quot;);
-
-    this.draft.reload(result);
-    this.timeline.addHistoryState(this.draft);
-
-    this.render.view_frames &#x3D; (this.draft.loom.type &#x3D;&#x3D;&#x3D; &#x27;frame&#x27;) ? true : false;     
-
-    if (this.draft.patterns &#x3D;&#x3D;&#x3D; undefined) this.draft.patterns &#x3D; this.default_patterns;
-    
-
-    this.weaveRef.onNewDraftLoaded();
-
-
-    this.weaveRef.redraw({
-      drawdown: true, 
-      loom:true, 
-      warp_systems: true, 
-      weft_systems: true, 
-      warp_materials: true,
-      weft_materials:true
-    });
-
-    this.weaveRef.rescale();
-
-  }
-  
   ngOnInit(){
-    
+
+    if(!this.is_preview) this.parent_id &#x3D; this.tree.getSubdraftParent(this.id);
+    const tl: Point &#x3D; this.viewport.getTopLeft();
+    const tl_offset &#x3D; {x: tl.x + 60, y: tl.y};
+
+
+    if(this.bounds.topleft.x &#x3D;&#x3D;&#x3D; 0 &amp;&amp; this.bounds.topleft.y &#x3D;&#x3D;&#x3D; 0) this.setPosition(tl_offset);
+    this.interlacement &#x3D; utilInstance.resolvePointToAbsoluteNdx(this.bounds.topleft, this.scale);
+
+    if(!this.is_preview) this.viewport.addObj(this.id, this.interlacement);
+
+    const draft &#x3D; this.tree.getDraft(this.id);
+    this.loom_settings &#x3D; this.tree.getLoomSettings(this.id);
+
+    if(draft !&#x3D;&#x3D; undefined){
+      this.bounds.width &#x3D; warps(draft.drawdown) * this.scale;
+      this.bounds.height &#x3D; wefts(draft.drawdown) * this.scale;
+    }else{
+      this.bounds.width &#x3D; warps(draft.drawdown) * this.scale;
+      this.bounds.height &#x3D; wefts(draft.drawdown) * this.scale;
+    }
+
   }
+
 
   ngAfterViewInit() {
 
-  
-    const dialogRef &#x3D; this.dialog.open(InitModal, {
-      data: {loomtypes: this.loomtypes, density_units: this.density_units}
-    });
+
+    this.canvas &#x3D; &lt;HTMLCanvasElement&gt; document.getElementById(this.id.toString());
+    this.cx &#x3D; this.canvas.getContext(&quot;2d&quot;);
+    this.drawDraft(this.draft); //force call here because it likely didn&#x27;t render previously. 
+
+    this.rescale();
+    this.updateViewport(this.bounds);
+
+  }
+
+  sendDraftToPlayer() {
+    this.onDraftToPlayer.emit(this._draft);
+  }
+
+  nameFocusOut(){
+    this.onNameChange.emit(this.id);
+  }
 
 
-    dialogRef.afterClosed().subscribe(result &#x3D;&gt; {
-      if(result !&#x3D;&#x3D; undefined) this.reInit(result);
-   });
+  /**
+   * Called when main palette is rescaled and triggers call to rescale this element, and update its position 
+   * so it remains at the same coords. 
+   * @param scale - the zoom scale of the iterface (e.g. the number of pixels to render each cell)
+   */
+  rescale(){
 
-
-    this.weaveRef.onNewDraftLoaded();
-
-    this.weaveRef.redraw({
-      drawdown: true, 
-      loom:true, 
-      warp_systems: true, 
-      weft_systems: true, 
-      warp_materials: true,
-      weft_materials:true
-    });
-
-    this.weaveRef.rescale();
-  
     
+
+    if(this.draft &#x3D;&#x3D;&#x3D; null){
+      return;
+    } 
+
+    const zoom_factor:number &#x3D; this.scale/this.default_cell;
+
+    //redraw at scale
+    const container: HTMLElement &#x3D; document.getElementById(&#x27;scale-&#x27;+this.id.toString());
+   
+    if(container &#x3D;&#x3D;&#x3D; null) return;
+
+
+    container.style.transformOrigin &#x3D; &#x27;top left&#x27;;
+    container.style.transform &#x3D; &#x27;scale(&#x27; + zoom_factor + &#x27;)&#x27;;
+
+   
+    this.bounds.topleft &#x3D; {
+      x: this.interlacement.j * this.scale,
+      y: this.interlacement.i * this.scale
+    };
+
+    this.bounds.width &#x3D; warps(this.draft.drawdown) * this.scale;
+    this.bounds.height &#x3D; wefts(this.draft.drawdown) * this.scale;
+
+  }
+
+  /**called when bounds change, updates the global view port */
+  updateViewport(bounds: Bounds){
+    this.interlacement &#x3D; utilInstance.resolvePointToAbsoluteNdx(bounds.topleft, this.scale);
+    this.viewport.updatePoint(this.id, this.interlacement);
+
+  }
+
+  /**
+   * updates this components position based on the input component&#x27;s position
+   * */
+  updatePositionFromParent(parent: OperationComponent){
+
+    if(this.parent_id !&#x3D;&#x3D; parent.id){
+      console.error(&quot;attempitng to update subdraft position from non-parent operation&quot;, this.parent_id, parent.id);
+      return;
+    }
+
+    const container &#x3D; &lt;HTMLElement&gt; document.getElementById(&quot;scale-&quot;+this.parent_id);
+    this.setPosition({x: parent.bounds.topleft.x, y: parent.bounds.topleft.y + (container.offsetHeight * this.scale/this.default_cell) });
+
+
   }
 
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+
+  updateSize(parent: OperationComponent){
+
+    const draft &#x3D; this.tree.getDraft(this.id);
+
+    this.bounds.width &#x3D; warps(draft.drawdown) * this.scale;
+    this.bounds.height &#x3D; wefts(draft.drawdown) * this.scale;
+
+    if(this.parent_id !&#x3D;&#x3D; parent.id){
+      console.error(&quot;attempitng to update subdraft position from non-parent operation&quot;, this.parent_id, parent.id);
+      console.log(&quot;attempitng to update subdraft position from non-parent operation&quot;, this.parent_id, parent.id);
+      return;
+    }
+
+    this.bounds.width &#x3D; Math.max(parent.bounds.width, this.bounds.width);
+    this.bounds.height &#x3D; Math.max(parent.bounds.height, this.bounds.height);
+
+  }
+  
+
+
+
+  /**
+   * Called when main palette is rescaled and triggers call to rescale this element, and update its position 
+   * so it remains at the same coords. 
+   * @param scale - the zoom scale of the iterface (e.g. the number of pixels to render each cell)
+   */
+   rescaleForBitmap(){
+
+    
+    if(this.canvas &#x3D;&#x3D;&#x3D; undefined) return;
+    const draft &#x3D; this.tree.getDraft(this.id);
+
+
+    this.canvas.width &#x3D; warps(draft.drawdown) * this.default_cell;
+    this.canvas.height &#x3D; wefts(draft.drawdown) * this.default_cell;
+
+    for (let i &#x3D; 0; i &lt; wefts(draft.drawdown); i++) {
+      for (let j &#x3D; 0; j &lt; warps(draft.drawdown); j++) {
+        this.drawCell(draft, 1, i, j, false);
+      }
+    }
   }
 
-  undo() {
-    let d: Draft &#x3D; this.timeline.restorePreviousHistoryState();
-    console.log(&quot;Prevous State is &quot;, d);
-    if(d &#x3D;&#x3D;&#x3D; undefined || d &#x3D;&#x3D;&#x3D; null) return;
+  connectionEnded(){
+    this.selecting_connection &#x3D; false;
+    this.enableDrag();
+  }
 
-    this.draft.reload(d);    
-    this.weaveRef.onNewDraftLoaded();
-    this.weaveRef.redraw({
-      drawdown: true, 
-      loom:true, 
-      warp_systems: true, 
-      weft_systems: true, 
-      warp_materials: true,
-      weft_materials:true
+  connectionStarted(event: any){
+    this.selecting_connection &#x3D; true;
+    
+    this.disableDrag();
+
+    this.onConnectionStarted.emit({
+      event: event,
+      id: this.id
     });
 
-    this.weaveRef.rescale(); 
   }
 
-  redo() {
-    let d: Draft &#x3D; this.timeline.restoreNextHistoryState();
-    console.log(&quot;Next State is &quot;, d);
 
-    if(d &#x3D;&#x3D;&#x3D; undefined || d &#x3D;&#x3D;&#x3D; null) return;
 
-    console.log(d);
-
-    this.draft.reload(d);    
-    this.weaveRef.onNewDraftLoaded();
-    this.weaveRef.redraw({
-      drawdown: true, 
-      loom:true, 
-      warp_systems: true, 
-      weft_systems: true, 
-      warp_materials: true,
-      weft_materials:true
-    });
-
-    this.weaveRef.rescale(); 
+  /**
+   * called on create to position the element on screen
+   * @param pos 
+   */
+  setPosition(pos: Point){
+    this.enableDrag();
+    this.bounds.topleft &#x3D; pos;
+    this.updateViewport(this.bounds);
   }
 
-  /// EVENTS
 
+
+  public inkActionChange(name: any){
+    this.ink &#x3D; name;
+    this.inks.select(name);
+    //this.drawDraft();
+  }
+
+  /**
+   * gets the next z-ndx to place this in front
+   */
+  public setAsPreview(){
+    this.is_preview &#x3D; true;
+     this.zndx &#x3D; this.layer.createLayer();
+  }
+
+ 
+
+  /**
+   * does this subdraft exist at this point?
+   * @param p the absolute position of the coordinate (based on the screen)
+   * @returns true/false for yes or no
+   */
+  public hasPoint(p:Point) : boolean{
+
+      const endPosition &#x3D; {
+        x: this.bounds.topleft.x + this.bounds.width,
+        y: this.bounds.topleft.y + this.bounds.height,
+      };
+
+      if(p.x &lt; this.bounds.topleft.x || p.x &gt; endPosition.x) return false;
+      if(p.y &lt; this.bounds.topleft.y || p.y &gt; endPosition.y) return false;
+
+    
+    return true;
+
+  }
+
+
+/**
+ * Takes row/column position in this subdraft and translates it to an absolution position  
+ * @param ndx the index
+ * @returns the absolute position as nxy
+ */
+ public resolveNdxToPoint(ndx:Interlacement) : Point{
+  
+  let y &#x3D; this.bounds.topleft.y + ndx.i * this.scale;
+  let x &#x3D; this.bounds.topleft.x + ndx.j * this.scale;
+  return {x: x, y:y};
+
+}
+
+/**
+ * Takes an absolute coordinate and translates it to the row/column position Relative to this subdraft
+ * @param p the screen coordinate
+ * @returns the row and column within the draft (i &#x3D; row, j&#x3D;col), returns -1 if out of bounds
+ */
+  public resolvePointToNdx(p:Point) : Interlacement{
+    const draft &#x3D; this.tree.getDraft(this.id);
+
+    let i &#x3D; Math.floor((p.y -this.bounds.topleft.y) / this.scale);
+    let j &#x3D; Math.floor((p.x - this.bounds.topleft.x) / this.scale);
+
+    if(i &lt; 0 || i &gt;&#x3D; wefts(draft.drawdown)) i &#x3D; -1;
+    if(j &lt; 0 || j &gt;&#x3D; warps(draft.drawdown)) j &#x3D; -1;
+
+    return {i: i, j:j, si: i};
+
+  }
 
 
 
 /**
-   * Call zoom in on Shift+p.
-   * @extends WeaveComponent
-   * @param {Event} shift+p
-   * @returns {void}
-   */
-  @HostListener(&#x27;window:keydown.Shift.p&#x27;, [&#x27;$event&#x27;])
-  private keyEventZoomIn(e) {
-    console.log(&quot;zoom in&quot;);
-    this.render.zoomIn();
-    this.weaveRef.rescale();
+ * takes an absolute reference and returns the value at that cell boolean or null if its unset
+ * @param p a point of the absolute poistion of coordinate in question
+ * @returns true/false/or null representing the eddle value at this point
+ */
+  public resolveToValue(p:Point) : boolean{
 
+    const coords &#x3D; this.resolvePointToNdx(p);
 
-  }
-/**
-   * Call zoom out on Shift+o.
-   * @extends WeaveComponent
-   * @param {Event} shift+o
-   * @returns {void}
-   */
-  @HostListener(&#x27;window:keydown.Shift.o&#x27;, [&#x27;$event&#x27;])
-  private keyEventZoomOut(e) {
-    console.log(&quot;zoom out&quot;);
-    this.render.zoomOut();
-    this.weaveRef.rescale();
+    if(coords.i &lt; 0 || coords.j &lt; 0) return null; //this out of range
+    
+    const draft &#x3D; this.tree.getDraft(this.id);
+
+    if(!draft.drawdown[coords.i][coords.j].isSet()) return null;
+    
+    return isUp(draft.drawdown, coords.i, coords.j);
+  
   }
 
 
-  /**
-   * Sets selected area to clear
-   * @extends WeaveComponent
-   * @param {Event} delete key pressed
-   * @returns {void}
-   */
+  // /**
+  //  * sets a new draft
+  //  * @param temp the draft to set this component to
+  //  */
+  // setNewDraft(temp: Draft) {
 
-  @HostListener(&#x27;window:keydown.e&#x27;, [&#x27;$event&#x27;])
-  private keyEventErase(e) {
-    this.design_mode &#x3D; {
-      name: &#x27;down&#x27;,
-      id: -1
-    };
-    this.weaveRef.unsetSelection();
+  //   this.bounds.width &#x3D; temp.warps * this.scale;
+  //   this.bounds.height &#x3D; temp.wefts * this.scale;
+  //   this.draft.reload(temp);
+  //   this.drawDraft();
 
-  }
-
-  /**
-   * Sets brush to point on key control + d.
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + d
-   * @returns {void}
-   */
-  @HostListener(&#x27;window:keydown.d&#x27;, [&#x27;$event&#x27;])
-  private keyEventPoint(e) {
-    this.design_mode &#x3D; {
-      name: &#x27;up&#x27;,
-      id: -1};
-    this.weaveRef.unsetSelection();
-
-  }
-
-  /**
-   * Sets brush to select on key control + s
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + s
-   * @returns {void}
-   */
-  @HostListener(&#x27;window:keydown.s&#x27;, [&#x27;$event&#x27;])
-  private keyEventSelect(e) {
-    this.design_mode &#x3D; {
-      name: &#x27;select&#x27;,
-      id: -1};
-    this.weaveRef.unsetSelection();
-
-  }
-
-  /**
-   * Sets key control to invert on control + x
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + x
-   * @returns {void}
-   */
-  @HostListener(&#x27;window:keydown.x&#x27;, [&#x27;$event&#x27;])
-  private keyEventInvert(e) {
-    this.design_mode &#x3D; {
-      name: &#x27;toggle&#x27;,
-      id: -1
-    };
-    this.weaveRef.unsetSelection();
-
-  }
-
-  /**
-   * Sets key to copy 
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + x
-   * @returns {void}
-   */
-  // @HostListener(&#x27;window:keydown.c&#x27;, [&#x27;$event&#x27;])
-  // private keyEventCopy(e) {
-  //   this.onCopy();  
   // }
 
-    /**
-   * Sets key to copy 
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + x
-   * @returns {void}
+  // setComponentPosition(point: Point){
+  //   this.bounds.topleft &#x3D; point;
+  // }
+
+
+  setComponentBounds(bounds: Bounds){
+    this.setPosition(bounds.topleft);
+    this.bounds &#x3D; bounds;
+  }
+  /**
+   * manually sets the component size. While such an operation should be handled on init but there is a bug where this value is checked before the 
+   * component runds its init sequence. Manually adding the data makes it possible for check for intersections on selection and drawing end.
+   * @param width 
+   * @param height 
    */
-  @HostListener(&#x27;window:keydown.p&#x27;, [&#x27;$event&#x27;])
-  private keyEventPaste(e) {
-    this.onPaste({});
+  setComponentSize(width: number, height: number){
+    this.bounds.width &#x3D; width;
+    this.bounds.height &#x3D; height;
   }
 
-  /**
-   * Updates the canvas based on the weave view.
-   * @extends WeaveComponent
-   * @param {Event} e - view change event from design component.
-   * @returns {void}
-   */
-  public viewChange(value: any) {
-    
-    this.render.setCurrentView(value);
+  async drawCell(draft, cell_size, i, j, usecolor){
+    let is_up &#x3D; isUp(draft.drawdown, i,j);
+    let is_set &#x3D; isSet(draft.drawdown, i, j);
+    let color &#x3D; &quot;#ffffff&quot;
+    if(is_set){
+      if(this.ink &#x3D;&#x3D;&#x3D; &#x27;unset&#x27; &amp;&amp; is_up){
+        this.cx.fillStyle &#x3D; &quot;#999999&quot;; 
+      }else{
+        if(is_up){
+          color &#x3D; usecolor ? this.ms.getColor(draft.colShuttleMapping[j]) : &#x27;#000000&#x27;;
+        }else{
+          color &#x3D; usecolor ? this.ms.getColor(draft.rowShuttleMapping[i]) : &#x27;#ffffff&#x27;;
+        }
+        this.cx.fillStyle &#x3D; color;
+      }
+    } else{
+      this.cx.fillStyle &#x3D;  &#x27;#0000000d&#x27;;
+    // this.cx.fillStyle &#x3D;  &#x27;#ff0000&#x27;;
 
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
-
-    this.weaveRef.redraw({
-      drawdown: true
-    });
-  }
-
-  /**
-   * Change the name of the brush to reflect selected brush.
-   * @extends WeaveComponent
-   * @param {Event} e - brush change event from design component.
-   * @returns {void}
-   */
-  public onDesignModeChange(e:any) {
-
-    this.design_mode &#x3D; {
-      name: e.name,
-      id: e.id
     }
+    this.cx.fillRect(j*cell_size, i*cell_size, cell_size, cell_size);
+  }
 
-    console.log(&quot;design mode&quot;, this.design_mode.name, this.design_mode.id);
-    this.weaveRef.unsetSelection();
-
+  redrawExistingDraft(){
+    this.drawDraft(this.draft);
   }
 
   /**
-   * Tell the weave directive to fill selection with pattern.
-   * @extends WeaveComponent
-   * @param {Event} e - fill event from design component.
-   * @returns {void}
+   * draw whetever is stored in the draft object to the screen
+   * @returns 
    */
-  public onFill(e) {
-    
-    let p:Pattern &#x3D; this.draft.patterns[e.id];
-    
-    this.draft.fillArea(this.weaveRef.selection, p, &#x27;original&#x27;);
+  async drawDraft(draft: Draft) : Promise&lt;any&gt; {
 
-    if(this.render.showingFrames()) this.draft.recomputeLoom();
+    draft &#x3D; this.tree.getDraft(this.id);
 
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
-    
-    this.weaveRef.copyArea();
+    if(this.canvas &#x3D;&#x3D;&#x3D; undefined) return;
+    this.cx &#x3D; this.canvas.getContext(&quot;2d&quot;);
+   
+    if(draft &#x3D;&#x3D;&#x3D; null){
+      this.canvas.width &#x3D; 0;
+      this.canvas.height &#x3D; 0;
 
-    this.weaveRef.redraw({drawdown:true, loom:true});
+    }else{
+      this.canvas.width &#x3D; warps(draft.drawdown) * this.default_cell;
+      this.canvas.height &#x3D; wefts(draft.drawdown) * this.default_cell;
 
-    this.timeline.addHistoryState(this.draft);
-    
-  }
-
-  /**
-   * Tell weave reference to clear selection.
-   * @extends WeaveComponent
-   * @param {Event} Delte - clear event from design component.
-   * @returns {void}
-   */
-  public onClear(b:boolean) {
-    
-    const c: Cell &#x3D; new Cell(b);
-    const p: Pattern &#x3D; new Pattern({width: 1, height: 1, pattern: [[c]]});
-
-    this.draft.fillArea(this.weaveRef.selection, p, &#x27;original&#x27;)
-
-    if(this.render.showingFrames()) this.draft.recomputeLoom();
-
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
-
-    this.weaveRef.copyArea();
-
-    this.weaveRef.redraw({drawdown:true, loom:true});
-
-    this.timeline.addHistoryState(this.draft);
-
-  }
-
-  public onScroll(){
-    console.log(&quot;I has scroll&quot;);
-  }
-
-  /**
-   * Weave reference masks pattern over selected area.
-   * @extends WeaveComponent
-   * @param {Event} e - mask event from design component.
-   * @returns {void}
-   */
-  public onMask(e) {
-    // console.log(e);
-    // var p &#x3D; this.draft.patterns[e.id].pattern;
-    // this.weaveRef.maskArea(p);
-    // this.redraw();
-  }
-
-  /**
-   * Tells weave reference to paste copied pattern.
-   * @extends WeaveComponent
-   * @param {Event} e - paste event from design component.
-   * @returns {void}
-   */
-  public onPaste(e) {
-
-    var p &#x3D; this.weaveRef.copy;
-    console.log(&quot;on paste&quot;, e, p);
-
-
-    var type;
-
-    if(e.type &#x3D;&#x3D;&#x3D; undefined) type &#x3D; &quot;original&quot;;
-    else type &#x3D;  e.type;
-
-    this.draft.fillArea(this.weaveRef.selection, p, type);
-
-    switch(this.weaveRef.selection.target.id){    
-      case &#x27;drawdown&#x27;:
-        //if you do this when updates come from loom, it will erase those updates
-        if(this.render.showingFrames()) this.draft.recomputeLoom();
-       break;
-      
+      for (let i &#x3D; 0; i &lt;  wefts(draft.drawdown); i++) {
+        for (let j &#x3D; 0; j &lt; warps(draft.drawdown); j++) {
+          this.drawCell(draft, this.default_cell, i, j, true);
+        }
+      }
     }
+    this.tree.setDraftClean(this.id);
+    return &quot;complete&quot;;
+  }
 
-    
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
 
-    this.timeline.addHistoryState(this.draft);
+  /**
+   * draw onto the supplied canvas, to be used when printing
+   * @returns 
+   */
+   drawForPrint(canvas, cx, scale: number) {
 
-    this.weaveRef.copyArea();
+    // if(canvas &#x3D;&#x3D;&#x3D; undefined) return;
+    // const draft &#x3D; this.tree.getDraft(this.id);
 
-    this.weaveRef.redraw({drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+    // for (let i &#x3D; 0; i &lt; draft.wefts; i++) {
+    //   for (let j &#x3D; 0; j &lt; draft.warps; j++) {
+    //     let is_up &#x3D; draft.isUp(i,j);
+    //     let is_set &#x3D; draft.isSet(i, j);
+    //     if(is_set){
+    //       if(this.ink &#x3D;&#x3D;&#x3D; &#x27;unset&#x27; &amp;&amp; is_up){
+    //         cx.fillStyle &#x3D; &quot;#999999&quot;; 
+    //       }else{
+    //         cx.fillStyle &#x3D; (is_up) ?  &#x27;#000000&#x27; :  &#x27;#ffffff&#x27;;
+    //       }
+    //     } else{
+    //       cx.fillStyle &#x3D;  &#x27;#0000000d&#x27;;
+    //     }
+    //     cx.fillRect(j*scale+this.bounds.topleft.x, i*scale+this.bounds.topleft.y, scale, scale);
+    //   }
+    // }
+
+    // //draw the supplemental info like size
+    // cx.fillStyle &#x3D; &quot;#666666&quot;;
+    // cx.font &#x3D; &quot;20px Verdana&quot;;
+
+    // let datastring: string &#x3D;  draft.warps + &quot; x &quot; + draft.wefts;
+    // cx.fillText(datastring,this.bounds.topleft.x + 5, this.bounds.topleft.y+this.bounds.height + 20 );
+
+  }
+
+
+
+
+
+  /**
+   * gets the position of this elment on the canvas. Dyanic top left might be bigger due to scolling intersection
+   * previews. Use static for all calculating of intersections, etc. 
+   * @returns 
+   */
+  getTopleft(): Point{
+    return this.bounds.topleft;
+  }
+
+
+
+  
+  isSameBoundsAs(bounds: Bounds) : boolean {   
+    if(bounds.topleft.x !&#x3D; this.bounds.topleft.x) return false;
+    if(bounds.topleft.y !&#x3D; this.bounds.topleft.y) return false;
+    if(bounds.width !&#x3D; this.bounds.width) return false;
+    if(bounds.height !&#x3D; this.bounds.height) return false;
+    return true;
+  }
+  
+
+  dragEnd($event: any) {
+    this.moving &#x3D; false;
+    this.counter &#x3D; 0;  
+    this.last_ndx &#x3D; {i: -1, j:-1, si: -1};
+    this.onSubdraftDrop.emit({id: this.id});
+  }
+
+  dragStart($event: any) {
+    this.moving &#x3D; true;
+    this.counter &#x3D; 0;  
+    this.onSubdraftStart.emit({id: this.id});
  
 
   }
 
-  /**
-   * Creates the copied pattern within the weave reference
-   * @extends WeaveComponent
-   * @param {Event} e - copy event from design component.
-   * @returns {void}
-   */
-  public onCopy() {
+  dragMove($event: any) {
+    //position of pointer of the page
+    const pointer:Point &#x3D; $event.pointerPosition;
 
-    console.log(&quot;on copy&quot;, this.copy);
+    const relative:Point &#x3D; utilInstance.getAdjustedPointerPosition(pointer, this.viewport.getBounds());
+    const adj:Point &#x3D; utilInstance.snapToGrid(relative, this.scale);
 
-    this.design_mode &#x3D; {
-      name: &#x27;copy&#x27;,
-      id: -1
-    };
-  }
 
-  /**
-   *
-   *
-   */
-  public onSave(e: any) {
-
-    e.bitmap &#x3D; this.bitmap;
-    console.log(e);
-
-    if (e.type &#x3D;&#x3D;&#x3D; &quot;bmp&quot;) this.weaveRef.saveBMP(e.name, e);
-    else if (e.type &#x3D;&#x3D;&#x3D; &quot;ada&quot;) this.weaveRef.saveADA(e.name, e);
-    else if (e.type &#x3D;&#x3D;&#x3D; &quot;wif&quot;) this.weaveRef.saveWIF(e.name, e);
-    else if (e.type &#x3D;&#x3D;&#x3D; &quot;jpg&quot;) this.weaveRef.savePrintableDraft(e.name, e);
-    
-  }
-
-  /**
-   * Open the connection modal.
-   * @extends WeaveComponent
-   * @returns {void}
-   */
-  public openConnectionDialog() {
-
-    const dialogRef &#x3D; this.dialog.open(ConnectionModal, {data: {shuttles: this.draft.shuttles}});
-
-    dialogRef.afterClosed().subscribe(result &#x3D;&gt; {
-      if (result) {
-        this.draft.connections.push(result);
-      }
+    this.bounds &#x3D; ({
+      topleft: adj, 
+      width: this.bounds.width,
+      height: this.bounds.height
     });
-  }
 
+    // this.bounds.topleft &#x3D; adj;
 
-  /**
-   * Open the label modal.
-   * @extends WeaveComponent
-   * @returns {void}
-   */
-  public openLabelDialog() {
-
-    const dialogRef &#x3D; this.dialog.open(LabelModal);
-
-    dialogRef.afterClosed().subscribe(result &#x3D;&gt; {
-      if (result) {
-        console.log(result);
-      }
-    });
-  }
-
-
-
-  /// PUBLIC FUNCTIONS
-  /**
-   * 
-   * @extends WeaveComponent
-   * @returns {void}
-   */
-  public print(e) {
-    console.log(e);
-  }
-
-  /**
-   * Inserts an empty row on system, system
-   */
-  public shuttleColorChange() {
-    this.weaveRef.redraw({drawdown: true, warp_materials:true,  weft_materials:true});
-    this.timeline.addHistoryState(this.draft);
-  }
-
-  /**
-   * inserts an empty row just below the clicked row
-   * @param i the absolute (not screen) index of the row we&#x27;ll insert
-   * @param shuttle the shuttle id this will be assigned to
-   * @param system the system id to which this row will be assigned
-   */
-  public insertRow(i:number, shuttle:number, system:number) {
-
-    console.log(i);
-    this.draft.insertRow(i, shuttle, system);
-    //this.draft.updateConnections(i, 1);
+     const ndx &#x3D; utilInstance.resolvePointToAbsoluteNdx(adj, this.scale);
+    this.interlacement &#x3D; ndx;
     
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-    
-    this.timeline.addHistoryState(this.draft);
+    if(this.counter%this.counter_limit &#x3D;&#x3D;&#x3D; 0 || !utilInstance.isSameNdx(this.last_ndx, ndx)){
+      this.onSubdraftMove.emit({id: this.id, point: adj});
+      this.counter &#x3D; 0;
+    } 
+
+    this.counter++;
+    this.last_ndx &#x3D; ndx;
 
   }
 
-  public cloneRow(i, c, shuttle, system) {
-    this.draft.cloneRow(i, c, shuttle, system);
-   // this.draft.updateConnections(i, 1);
-
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-    this.timeline.addHistoryState(this.draft);
-
+  disableDrag(){
+    this.disable_drag &#x3D; true;
   }
 
-  public deleteRow(i) {
-    this.draft.deleteRow(i);
-   // this.draft.updateConnections(i, -1);
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-    this.timeline.addHistoryState(this.draft);
-
-    //this.onAddRow.emit();
+  enableDrag(){
+    this.disable_drag &#x3D; false;
   }
 
-    /**
-   * In
-   * @extends WeaveComponent
-   * @returns {void}
-   */
-  public insertCol(i, shuttle,system) {
-    this.draft.insertCol(i, shuttle,system);
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-    this.draft.computeYarnPaths();
-    this.timeline.addHistoryState(this.draft);
-
+  showhide(){
+    this.draft_visible &#x3D; !this.draft_visible;
+    this.onSubdraftViewChange.emit(this.id);
   }
 
-  public cloneCol(i, shuttle,system) {
-    this.draft.cloneCol(i, shuttle,system);
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-    this.draft.computeYarnPaths();
-    this.timeline.addHistoryState(this.draft);
-
-  }
-
-
-  public deleteCol(i) {
-    this.draft.deleteCol(i);
-    //this.draft.updateConnections(i, -1);
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-    this.draft.computeYarnPaths();
-    this.timeline.addHistoryState(this.draft);
+  connectionClicked(id:number){
+    this.has_active_connection  &#x3D; true;
+    // if(this.active_connection_order &#x3D;&#x3D;&#x3D; 0){
+    //   this.onConnectionMade.emit(id);
+    // }else{
+    //   this.onConnectionRemoved.emit(id);
+    // }
 
 
   }
 
-  public updatePatterns(e: any) {
-    // this.patterns &#x3D; e.patterns;
-    // this.draft.patterns &#x3D; this.patterns;
-    this.draft.patterns &#x3D; e.patterns;
-
-  }
-
-  public updateWarpSystems(pattern: Array&lt;number&gt;) {
-    console.log(&quot;update warp sys&quot;, pattern);
-    this.draft.updateWarpSystemsFromPattern(pattern);
-    this.weaveRef.redraw({drawdown: true, warp_systems: true});
-
-  }
-
-  public updateWeftSystems(pattern: Array&lt;number&gt;) {
-    console.log(&quot;update weft sys&quot;, pattern);
-
-    this.draft.updateWeftSystemsFromPattern(pattern);
-    this.weaveRef.redraw({drawdown: true, weft_systems: true});
-
-  }
-
-  public updateWarpShuttles(pattern: Array&lt;number&gt;) {
-    console.log(&quot;update warp shut&quot;, pattern);
-
-    this.draft.updateWarpShuttlesFromPattern(pattern);
-    this.weaveRef.redraw({drawdown: true, warp_materials: true});
-
-  }
-
-  public updateWeftShuttles(pattern: Array&lt;number&gt;) {
-    console.log(&quot;update weft shutf&quot;, pattern);
-
-    this.draft.updateWeftShuttlesFromPattern(pattern);
-    this.draft.computeYarnPaths();
-    this.weaveRef.redraw({drawdown: true, weft_materials: true});
-
-  }
-
-  // public createMaterial(e: any) {
-  //   this.draft.addMaterial(e.material); 
-  //   this.weaveRef.redraw();
-  // }
-
-  public createShuttle(e: any) {
-    this.draft.addShuttle(e.shuttle); 
-  }
-
-  public createWarpSystem(e: any) {
-    this.draft.addWarpSystem(e.system);
-  }
-
-  public createWeftSystem(e: any) {
-    this.draft.addWarpSystem(e.system);
-  }
-
-  public hideWarpSystem(e:any) {
-    
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-  }
-
-  public showWarpSystem(e:any) {
-
-    this.weaveRef.redraw({drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-  }  
-
-  public hideWeftSystem(e:any) {
-   
-    this.draft.updateVisible();
-    
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-  }
-
-  public showWeftSystem(e:any) {
-
-    this.draft.updateVisible();
-
-    this.weaveRef.redraw({drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+  resetConnections(){
+    this.has_active_connection &#x3D; false;
   }
 
 
-  public notesChanged(e:any) {
 
-    console.log(e);
-   this.draft.notes &#x3D; e;
-  }
+  async designActionChange(e){
+    const draft &#x3D; this.tree.getDraft(this.id);
 
-  // public hideShuttle(e:any) {
-  //   this.draft.updateVisible();
-  //   this.weaveRef.redraw();
-  //   this.weaveRef.redrawLoom();
-  // }
+    switch(e){
+      case &#x27;duplicate&#x27;:   
+      this.onDuplicateCalled.emit({id: this.id});
+      break;
 
-  // public showShuttle(e:any) {
-  //   this.draft.updateVisible();
-  //   this.weaveRef.redraw();
-  //   this.weaveRef.redrawLoom();
-  // }
+      case &#x27;delete&#x27;: 
+        this.onDeleteCalled.emit({id: this.id});
+      break;
 
-  public epiChange(e:any){
-    this.draft.epi &#x3D; e.epi;
-    this.draft.recomputeWidth();
-  }
+      default: 
+        this.onDesignAction.emit({id: this.id});
+      break;
 
-  public unitChange(e:any){
-    this.draft.units &#x3D; e.units;
-    this.draft.recomputeWidth();    
-
-  }
-
-  public thicknessChange(e:any){
-
-    if(this.render.isYarnBasedView()) this.weaveRef.redraw({drawdown: true});
-  }
-
-
-  public loomChange(e:any){
-    
-    this.draft.loom.type &#x3D; e.loomtype;
-
-    if(this.draft.loom.type &#x3D;&#x3D; &#x27;jacquard&#x27;){
-      this.render.view_frames &#x3D; false;
-    }else{
-      this.render.view_frames &#x3D; true;
-      this.weaveRef.recomputeLoom();
     }
+  }
+
+
+  /**
+   * Draws to hidden bitmap canvas a file in which each draft cell is represented as a single pixel. 
+   * @returns 
+   */
+  async saveAsBmp() : Promise&lt;any&gt; {
+
+    this.rescaleForBitmap();
+
+    let b &#x3D; this.bitmap.nativeElement;
+    let context &#x3D; b.getContext(&#x27;2d&#x27;);
+    const draft &#x3D; this.tree.getDraft(this.id);
+
+    b.width &#x3D; (warps(draft.drawdown));
+    b.height &#x3D; (wefts(draft.drawdown));
     
-    this.weaveRef.redraw({loom: true});
+    context.fillStyle &#x3D; &quot;white&quot;;
+    context.fillRect(0,0,b.width,b.height);
+    context.drawImage(this.canvas, 0, 0);
 
-  }
+    const a &#x3D; document.createElement(&#x27;a&#x27;)
+    return this.fs.saver.bmp(b)
+    .then(href &#x3D;&gt; {
+      a.href &#x3D;  href;
+      a.download &#x3D; getDraftName(draft) + &quot;_bitmap.jpg&quot;;
+      a.click();
+      this.drawDraft(draft);
 
-  public frameChange(e:any){
-    this.draft.loom.setMinFrames(e.value);
-    this.weaveRef.redraw({loom: true});
-  }
-
-  public treadleChange(e:any){
-    this.draft.loom.setMinTreadles(e.value);
-    this.weaveRef.redraw({loom: true});
-  }
+    });
+    
 
 
-  public warpNumChange(e:any) {
-    if(e.warps &#x3D;&#x3D; &quot;&quot;) return;
-
-    if(e.warps &gt; this.draft.warps){
-      var diff &#x3D; e.warps - this.draft.warps;
       
-      for(var i &#x3D; 0; i &lt; diff; i++){  
-         this.draft.insertCol(i, 0,0);
-      }
-    }else{
-      var diff &#x3D; this.draft.warps - e.warps;
-      for(var i &#x3D; 0; i &lt; diff; i++){  
-        this.draft.deleteCol(this.draft.warps-1);
-      }
-
-    }
-
-    this.draft.recomputeWidth();
-
-    this.timeline.addHistoryState(this.draft);
-
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
-
-    this.weaveRef.redraw({drawdown: true, loom: true, warp_systems: true, warp_materials:true});
-
   }
-
-  public weftNumChange(e:any) {
   
-    if(e.wefts &#x3D;&#x3D;&#x3D; &quot;&quot; || e.wefts &#x3D;&#x3D;&quot;null&quot;) return;
+    async saveAsAda() : Promise&lt;any&gt;{
+      const draft &#x3D; this.tree.getDraft(this.id);
 
-    if(e.wefts &gt; this.draft.wefts){
-      var diff &#x3D; e.wefts - this.draft.wefts;
+      const a &#x3D; document.createElement(&#x27;a&#x27;);
+      return this.fs.saver.ada(&#x27;draft&#x27;, false, this.scale).then(out &#x3D;&gt; {
+        a.href &#x3D; &quot;data:application/json;charset&#x3D;UTF-8,&quot; + encodeURIComponent(out.json);
+        a.download &#x3D; getDraftName(draft) + &quot;.ada&quot;;
+        a.click();
+      }); 
+    }
+  
+    async saveAsWif() {
+
+      // const draft &#x3D; this.tree.getDraft(this.id);
+      // const loom &#x3D; this.tree.getLoom(this.id);
+
       
-      for(var i &#x3D; 0; i &lt; diff; i++){  
-        this.draft.insertRow(e.wefts+i, 0, 0);
-        console.log(&quot;inserting row&quot;);
-      }
-    }else{
-      var diff &#x3D; this.draft.wefts - e.wefts;
-      for(var i &#x3D; 0; i &lt; diff; i++){  
-        this.draft.deleteRow(this.draft.wefts-1);
-      }
+      
 
+      // const a &#x3D; document.createElement(&#x27;a&#x27;);
+      // return this.fs.saver.wif(draft, loom)
+      // .then(href &#x3D;&gt; {
+      //   a.href &#x3D; href;
+      //   a.download  &#x3D; getDraftName(draft) +&quot;.wif&quot;;
+      //   a.click();
+      // });
+    
     }
-
-    this.timeline.addHistoryState(this.draft);
-
-    if(this.render.isYarnBasedView()) this.draft.computeYarnPaths();
-
-    this.weaveRef.redraw({drawdown: true, loom: true, weft_systems: true, weft_materials:true});
-
-
-  }
-
-  public createPattern(e: any) {
-    // e.pattern.id &#x3D; this.patterns.length;
-    // this.patterns.push(e.pattern);
-    // this.draft.patterns &#x3D; this.patterns;
-    e.pattern.id &#x3D; this.draft.patterns.length;
-    this.draft.patterns.push(e.pattern);
-  }
-
-
-//should this just hide the pattern or fully remove it, could create problems with undo/redo
-   public removePattern(e: any) {
-    this.draft.patterns &#x3D; this.draft.patterns.filter(pattern &#x3D;&gt; pattern !&#x3D;&#x3D; e.pattern);
-  }
-
-
-  public updateSelection(e:any){
-    this.copy &#x3D; e;
-  }
-
-
-  public toggleViewFrames(){
-
-    this.render.toggleViewFrames();
-
-    if(this.render.view_frames &amp;&amp; this.draft.loom.type &#x3D;&#x3D; &quot;frame&quot;){
-      this.weaveRef.recomputeLoom();
-    }
-
-    this.weaveRef.redraw({loom:true});
-   
-  }
-
-  public renderChange(e: any){
+  
+    async saveAsPrint() {
      
-     if(e.source &#x3D;&#x3D;&#x3D; &quot;slider&quot;){
-        this.render.setZoom(e.value);
-        this.weaveRef.rescale();
+      let dims &#x3D; this.scale;
+      let b &#x3D; this.bitmap.nativeElement;
+      let context &#x3D; b.getContext(&#x27;2d&#x27;);
 
-     } 
-
-     if(e.source &#x3D;&#x3D;&#x3D; &quot;in&quot;){
-        this.render.zoomIn();
-        this.weaveRef.rescale();
-
-     } 
-
-     if(e.source &#x3D;&#x3D;&#x3D; &quot;out&quot;){
-        this.render.zoomOut();
-        this.weaveRef.rescale();
-
-     } 
-     if(e.source &#x3D;&#x3D;&#x3D; &quot;front&quot;){
-        this.render.setFront(e.checked);
-        this.weaveRef.redraw({drawdown:true});
-     }      
-  }
-
-  public toggleCollapsed(){
-    this.collapsed &#x3D; !this.collapsed;
-  }
+      const draft &#x3D; this.tree.getDraft(this.id);
 
 
+      b.width &#x3D; warps(draft.drawdown) * dims;
+      b.height &#x3D; wefts(draft.drawdown) * dims;
+      
+      context.fillStyle &#x3D; &quot;white&quot;;
+      context.fillRect(0,0,b.width,b.height);
+      
+
+      context.drawImage(this.canvas, 0, 0);
+
+      const a &#x3D; document.createElement(&#x27;a&#x27;)
+      return this.fs.saver.jpg(b)
+        .then(href &#x3D;&gt; {
+          a.href &#x3D;  href;
+          a.download &#x3D; getDraftName(draft) + &quot;.jpg&quot;;
+          a.click();
+      
+        });
+    }
+
+    warps(){
+      return warps(this.draft.drawdown);
+    }
+
+    wefts(){
+      return wefts(this.draft.drawdown);
+    }
+
+    finetune(){
+
+      //if this is already open, don&#x27;t reopen it
+      if(this.modal !&#x3D; undefined &amp;&amp; this.modal.componentInstance !&#x3D; null) return;
+      const draft &#x3D; this.tree.getDraft(this.id);
+      const loom &#x3D; this.tree.getLoom(this.id);
+      const loom_settings &#x3D; this.tree.getLoomSettings(this.id);
+
+      this.modal &#x3D; this.dialog.open(DraftdetailComponent,
+        {disableClose: true,
+          hasBackdrop: false,
+          data: {
+            id: this.id,
+            ink: this.inks.getInk(this.ink).viewValue
+          }
+        });
 
 
 
+        this.modal.afterClosed().subscribe(result &#x3D;&gt; {
+          if(result !&#x3D; null){
+            if(this.parent_id &#x3D;&#x3D; -1){
 
-//careful! calling this from console will clear all data in local storage
-public clearLocalStorage(){
+              console.log(&quot;RESULT&quot;, result);
+              //create a new draft here and make sure its assigned
+              //this should be happening directly in the tree, and not here
+              // this.draft &#x3D; initDraftWithParams({
+              //   id: result.id,
+              //   gen_name: result.gen_name,
+              //   ud_name: result.ud_name,
+              //   drawdown: result.drawdown,
+              //   rowShuttleMapping: result.rowShuttleMapping,
+              //   rowSystemMapping: result.rowSystemMapping,
+              //   colSystemMapping: result.colSystemMapping,
+              //   colShuttleMapping: result.colShuttleMapping
+              // });
 
-  var total &#x3D; 0;
-  for(var x in localStorage) {
-    localStorage.removeItem(x);
-  }
-  console.log( &quot;LOCAL STORAGE CLEARED&quot;);
-  console.log(&quot;local storage size now &quot;+localStorage.length);
-}
+              
+              // this.tree.setDraft(this.id, this.draft, this.loom_settings);
+              this.draft &#x3D; this.tree.getDraft(this.id);
 
+              this.onDesignAction.emit({id: this.id});
+            }
+          }
+        })   
+       }
 
-//call this from console when you want to write a file of the data
-public downloadLocalStorage(){
-  // let d_log &#x3D; loadRawLog();
-
-  // let oldest_stamp &#x3D; d_log[0].timestamp;
-  //   let newest_stamp &#x3D;   d_log[0].timestamp
-
-
-  // for(var d in d_log){
-  //   if(d_log[d].timestamp &gt; newest_stamp) newest_stamp &#x3D; d_log[d].timestamp;
-  //   if(d_log[d].timestamp &lt; oldest_stamp) oldest_stamp &#x3D; d_log[d].timestamp;
-  // }
-
-  //   console.log(oldest_stamp, newest_stamp);
-  // let writer &#x3D; createWriter(oldest_stamp+&quot;_&quot;+newest_stamp+&quot;.csv&quot;);
-  // writer.write([&quot;timestamp&quot;, &quot;region&quot;, &quot;value&quot;]);
-  // writer.write(&#x27;\n&#x27;);
-
-  // for(var d in d_log){
-  //   writer.write([d_log[d].timestamp, d_log[d].region, d_log[d].value]);
-  //   writer.write(&#x27;\n&#x27;);
-  // }
-  // writer.close();
-
-
-}
-
-
-public getDraftFromLocalStore() : string{
-  var aValue &#x3D; localStorage.getItem(&quot;draft&quot;);
-  return aValue;
-}
-
-//load raw log into memory so we can process it for the visualization
-//this will be called once everytime we switch into vis mode, though log entries may be
-//accumulated in the backgroudn that won&#x27;t affect this
-public loadRawLog(){
-  //clear the log so we can load it fresh
-  // console.log(Date.now());
-
-   var d_log &#x3D; [];
-  // //console.log(localStorage.length);
-
-  // for(var x in localStorage) {
-  //   if(typeof(localStorage[x]) &#x3D;&#x3D; &quot;string&quot;){
-  //     time_region &#x3D; split(x, &quot;:&quot;)
-  //     value &#x3D; localStorage[x];
-
-  //     d_log.push({
-  //     timestamp: time_region[0],
-  //     region: time_region[1],
-  //     value: value}
-  //   );
-  //   }
-  // }
-
-  return d_log;
-
-}
-
+ 
 
 
 }
 </code></pre>
     </div>
 </div>
+
+
+
+
 
 
 
@@ -2051,8 +1049,31 @@ public loadRawLog(){
     </div>
 </div>
 </div>
+               <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'DesignActions.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 
@@ -2063,20 +1084,17 @@ public loadRawLog(){
 
        <script src="../js/compodoc.js"></script>
 
-       <script src="../js/search/search.js"></script>
-       <script src="../js/search/lunr.min.js"></script>
-       <script src="../js/search/search-lunr.js"></script>
-
+       <script src="../js/tabs.js"></script>
        <script src="../js/menu.js"></script>
-       <script src="../js/libs/highlight.pack.js"></script>
-       <script src="../js/libs/highlightjs-line-numbers.min.js"></script>
-       <script src="../js/search/search_index.js"></script>
-       <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                hljs.initHighlightingOnLoad();
-                hljs.initLineNumbersOnLoad();
-            });
-       </script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
 
     </body>
 </html>

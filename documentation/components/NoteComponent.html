@@ -1,0 +1,1454 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>adacad-weaver documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">adacad-weaver documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  NoteComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/mixer/palette/note/note.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-note</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./note.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./note.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_scale" >_scale</a>
+                            </li>
+                            <li>
+                                <a href="#bounds" >bounds</a>
+                            </li>
+                            <li>
+                                <a href="#canvas" >canvas</a>
+                            </li>
+                            <li>
+                                <a href="#cx" >cx</a>
+                            </li>
+                            <li>
+                                <a href="#note" >note</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#delete" >delete</a>
+                            </li>
+                            <li>
+                                <a href="#dragMove" >dragMove</a>
+                            </li>
+                            <li>
+                                <a href="#drawForPrint" >drawForPrint</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#rescale" >rescale</a>
+                            </li>
+                            <li>
+                                <a href="#save" >save</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#default_cell" >default_cell</a>
+                            </li>
+                            <li>
+                                <a href="#id" >id</a>
+                            </li>
+                            <li>
+                                <a href="#scale" >scale</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#deleteNote" >deleteNote</a>
+                            </li>
+                            <li>
+                                <a href="#saveNoteText" >saveNoteText</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#scale" >scale</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(notes: NotesService, viewport: <a href="../injectables/ViewportService.html" target="_self">ViewportService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:38</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>notes</td>
+                                                  
+                                                        <td>
+                                                                    <code>NotesService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>viewport</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ViewportService.html" target="_self" >ViewportService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="default_cell"></a>
+                        <b>default_cell</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:16</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="id"></a>
+                        <b>id</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:15</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="scale"></a>
+                        <b>scale</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:19</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="deleteNote"></a>
+                        <b>deleteNote</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:26</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="saveNoteText"></a>
+                        <b>saveNoteText</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:27</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="delete"></a>
+                    <span class="name">
+                        <span ><b>delete</b></span>
+                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>delete(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">src/app/mixer/palette/note/note.component.ts:66</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dragMove"></a>
+                    <span class="name">
+                        <span ><b>dragMove</b></span>
+                        <a href="#dragMove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>dragMove($event: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="71"
+                            class="link-to-prism">src/app/mixer/palette/note/note.component.ts:71</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>$event</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="drawForPrint"></a>
+                    <span class="name">
+                        <span ><b>drawForPrint</b></span>
+                        <a href="#drawForPrint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>drawForPrint(canvas, cx, scale: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">src/app/mixer/palette/note/note.component.ts:118</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>draw onto the supplied canvas, to be used when printing</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>canvas</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>cx</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>scale</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">src/app/mixer/palette/note/note.component.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="44"
+                            class="link-to-prism">src/app/mixer/palette/note/note.component.ts:44</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rescale"></a>
+                    <span class="name">
+                        <span ><b>rescale</b></span>
+                        <a href="#rescale"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>rescale()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">src/app/mixer/palette/note/note.component.ts:85</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Called when main palette is rescaled and triggers call to rescale this element, and update its position
+so it remains at the same coords.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="save"></a>
+                    <span class="name">
+                        <span ><b>save</b></span>
+                        <a href="#save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>save()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="109"
+                            class="link-to-prism">src/app/mixer/palette/note/note.component.ts:109</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_scale"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_scale</b></span>
+                        <a href="#_scale"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>5</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bounds"></a>
+                    <span class="name">
+                        <span ><b>bounds</b></span>
+                        <a href="#bounds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Bounds.html" target="_self" >Bounds</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    topleft: {x:0, y:0},
+    width: 200, 
+    height: 200
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canvas"></a>
+                    <span class="name">
+                        <span ><b>canvas</b></span>
+                        <a href="#canvas"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>HTMLCanvasElement</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cx"></a>
+                    <span class="name">
+                        <span ><b>cx</b></span>
+                        <a href="#cx"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="note"></a>
+                    <span class="name">
+                        <span ><b>note</b></span>
+                        <a href="#note"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Note</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="scale"></a>
+                        <span class="name"><b>scale</b><a href="#scale"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>scale()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:19</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>scale(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/mixer/palette/note/note.component.ts:20</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>value</td>
+                                                    
+                                                            <td>
+                                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from &#x27;@angular/core&#x27;;
+import utilInstance from &#x27;../../../core/model/util&#x27;;
+import { Bounds, Interlacement, Point } from &#x27;../../../core/model/datatypes&#x27;;
+import { Note, NotesService } from &#x27;../../../core/provider/notes.service&#x27;;
+import { ViewportService } from &#x27;../../provider/viewport.service&#x27;;
+
+@Component({
+  selector: &#x27;app-note&#x27;,
+  templateUrl: &#x27;./note.component.html&#x27;,
+  styleUrls: [&#x27;./note.component.scss&#x27;]
+})
+export class NoteComponent implements OnInit {
+
+  //generated by the note service
+  @Input()  id: number;
+  @Input()  default_cell: number;
+
+  @Input()
+  get scale(): number { return this._scale; }
+  set scale(value: number) {
+    this._scale &#x3D; value;
+    this.rescale();
+  }
+  private _scale:number &#x3D; 5;
+
+  @Output() deleteNote: any &#x3D; new EventEmitter();  
+  @Output() saveNoteText: any &#x3D; new EventEmitter();  
+
+  note: Note;
+  bounds: Bounds &#x3D; {
+    topleft: {x:0, y:0},
+    width: 200, 
+    height: 200
+  };
+
+
+  canvas: HTMLCanvasElement;
+  cx: any;
+
+  constructor(private notes: NotesService,private viewport:ViewportService) { 
+
+  }
+
+  ngOnInit() {
+    this.note &#x3D; this.notes.get(this.id);
+    if(this.note &#x3D;&#x3D; undefined){
+      this.bounds.topleft &#x3D; {x: 0, y: 0};
+      console.error(&quot;cound not find note on init &quot;, this.id, this.notes.notes);
+    }else{
+      this.bounds.topleft &#x3D; {
+        x: this.note.interlacement.j * this.scale,
+        y: this.note.interlacement.i * this.scale
+      }
+    }
+
+   
+  }
+
+  ngAfterViewInit(){
+    this.canvas &#x3D; &lt;HTMLCanvasElement&gt; document.getElementById(&quot;notecanvas-&quot;+this.note.id.toString());
+    this.cx &#x3D; this.canvas.getContext(&quot;2d&quot;);
+    this.rescale();
+    
+  }
+
+  delete(id: number){
+    this.deleteNote.emit(id);
+  }
+    
+
+  dragMove($event: any) {
+    const pointer:Point &#x3D; $event.pointerPosition;
+    const relative:Point &#x3D; utilInstance.getAdjustedPointerPosition(pointer, this.viewport.getBounds());
+    const adj:Point &#x3D; utilInstance.snapToGrid(relative, this.scale);
+    this.bounds.topleft &#x3D; adj;
+    this.note.interlacement &#x3D; utilInstance.resolvePointToAbsoluteNdx(adj, this.scale);
+  }
+
+
+  /**
+   * Called when main palette is rescaled and triggers call to rescale this element, and update its position 
+   * so it remains at the same coords. 
+   * @param scale - the zoom scale of the iterface (e.g. the number of pixels to render each cell)
+   */
+   rescale(){
+
+    if(this.note &#x3D;&#x3D;&#x3D; undefined){
+      console.error(&quot;note is undefined on rescale&quot;);
+      return;
+    }
+
+    const zoom_factor:number &#x3D; this.scale/this.default_cell;
+
+
+    //redraw at scale
+    const container: HTMLElement &#x3D; document.getElementById(&#x27;scalenote-&#x27;+this.note.id);
+    container.style.transformOrigin &#x3D; &#x27;top left&#x27;;
+    container.style.transform &#x3D; &#x27;scale(&#x27; + zoom_factor + &#x27;)&#x27;;
+   
+
+    this.bounds.topleft &#x3D; {
+      x: this.note.interlacement.j * this.scale,
+      y: this.note.interlacement.i * this.scale
+    };
+
+  
+  }
+
+  save(){
+    this.saveNoteText.emit();
+  }
+
+
+  /**
+   * draw onto the supplied canvas, to be used when printing
+   * @returns 
+   */
+   drawForPrint(canvas, cx, scale: number) {
+
+    if(canvas &#x3D;&#x3D;&#x3D; undefined) return;
+   
+   
+
+    //draw the supplemental info like size
+    cx.fillStyle &#x3D; &quot;#666666&quot;;
+    cx.font &#x3D; scale*2+&quot;px Verdana&quot;;
+    cx.fillText(this.note.text,this.bounds.topleft.x, this.bounds.topleft.y+this.bounds.height + 20 );
+
+  }
+
+
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">
+&lt;!--TODO add z index support here--&gt;
+&lt;div class&#x3D;&quot;note-container&quot; 
+cdkDrag
+[cdkDragFreeDragPosition]&#x3D;&quot;bounds.topleft&quot;
+(cdkDragMoved)&#x3D;&quot;dragMove($event)&quot;&gt;
+
+
+&lt;div id&#x3D;&quot;scalenote-{{note.id}}&quot; class&#x3D;&quot;subdraft-container&quot;&gt;
+
+
+  &lt;div class&#x3D;&quot;subdraft-contents&quot;&gt;
+
+    &lt;div class&#x3D;&quot;subdraft-details&quot;&gt; 
+
+        &lt;button cdkDragHandle class&#x3D;&quot;button is-small is-primary fas fa-arrows-alt&quot;&gt;
+        &lt;/button&gt;
+  
+  
+      &lt;button 
+      matTooltip&#x3D; &quot;Delete&quot;
+      class&#x3D;&quot;button is-small is-primary fas fa-times&quot;
+      [name]&#x3D;&quot;delete&quot;
+      (click)&#x3D;&quot;delete(note.id)&quot;&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;text-entry&quot;&gt;
+    
+    &lt;form class&#x3D;&quot;example-form&quot;&gt;
+ 
+        &lt;mat-form-field class&#x3D;&quot;example-full-width&quot; appearance&#x3D;&quot;fill&quot;&gt;
+          &lt;mat-label&gt;Comment #{{note.id}}&lt;/mat-label&gt;
+          &lt;textarea cdkTextareaAutosize matInput placeholder&#x3D;&quot;something descriptive about your file...&quot; [(ngModel)]&#x3D;&quot;note.text&quot; name&#x3D;&quot;text&quot; (focusout)&#x3D;&quot;save()&quot;&gt;&lt;/textarea&gt;
+        &lt;/mat-form-field&gt;
+    &lt;/form&gt;
+
+    &lt;/div&gt;
+ 
+ &lt;/div&gt;
+
+
+&lt;/div&gt;
+&lt;canvas id&#x3D;&quot;notecanvas-{{note.id}}&quot; hidden&gt;&lt;/canvas&gt;
+
+
+&lt;/div&gt;
+
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./note.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.subdraft-container{
+
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: flex;
+	flex-direction: row;
+	justify-content:flex-end;
+}
+
+.text-entry{
+	display: flex;
+	flex-direction: column;
+}
+
+.scale-container{
+
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	color: grey;
+	display: flex;
+	flex-direction: row;
+	justify-content:flex-end;
+}
+
+h3{
+	font-weight: 800;
+}
+
+
+
+.is_preview{
+	z-index: 10;
+}
+
+.subdraft-container{
+
+	display: flex;
+	flex-direction: row;
+
+	.subdraft-details{
+		display:flex;
+		width: 30px;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+	button{
+		display: none;
+	}
+
+	svg{
+		display: none;
+		color: grey;
+	}
+	
+}
+
+.subdraft-container:hover,
+.subdraft-container:active{
+
+
+	.subdraft-details{
+		display: flex;
+		flex-direction: column;
+	}
+	
+	svg{
+		display: block;
+	}
+
+	button{
+		display: flex;
+	}
+
+
+
+}
+
+
+.mat-icon{
+	height: auto;
+}
+
+
+.align-top{
+	display: flex;
+	flex-direction: column;
+}
+
+.subdraft-contents{
+	display: flex;
+	flex-direction: row;
+}
+
+
+#bitmapImage{
+	display: none;
+	pointer-events: none;
+}
+
+
+div.cdk-drag-dragging .maindraft{
+	border: thin solid #ff4081;
+}
+
+.hide{
+	display:none;
+}
+
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!--TODO add z index support here--><div class="note-container" cdkDrag[cdkDragFreeDragPosition]="bounds.topleft"(cdkDragMoved)="dragMove($event)"><div id="scalenote-{{note.id}}" class="subdraft-container">  <div class="subdraft-contents">    <div class="subdraft-details">         <button cdkDragHandle class="button is-small is-primary fas fa-arrows-alt">        </button>          <button       matTooltip= "Delete"      class="button is-small is-primary fas fa-times"      [name]="delete"      (click)="delete(note.id)">      </button>    </div>    <div class="text-entry">        <form class="example-form">         <mat-form-field class="example-full-width" appearance="fill">          <mat-label>Comment #{{note.id}}</mat-label>          <textarea cdkTextareaAutosize matInput placeholder="something descriptive about your file..." [(ngModel)]="note.text" name="text" (focusout)="save()"></textarea>        </mat-form-field>    </form>    </div>  </div></div><canvas id="notecanvas-{{note.id}}" hidden></canvas></div></div>'
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
+    var ACTUAL_COMPONENT = {'name': 'NoteComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'NoteComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

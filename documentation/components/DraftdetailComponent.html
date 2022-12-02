@@ -1,0 +1,1864 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>adacad-weaver documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">adacad-weaver documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  DraftdetailComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/mixer/modal/draftdetail/draftdetail.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>this component initatites the draft viewer with custom options.
+a copy of the draft is passed to the window and passed back to the parent on close (or null if changes not saved)</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-draftdetail</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./draftdetail.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./draftdetail.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dm" >dm</a>
+                            </li>
+                            <li>
+                                <a href="#draft" >draft</a>
+                            </li>
+                            <li>
+                                <a href="#id" >id</a>
+                            </li>
+                            <li>
+                                <a href="#ink" >ink</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#inks" >inks</a>
+                            </li>
+                            <li>
+                                <a href="#loom" >loom</a>
+                            </li>
+                            <li>
+                                <a href="#loom_settings" >loom_settings</a>
+                            </li>
+                            <li>
+                                <a href="#scrollingSubscription" >scrollingSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#viewonly" >viewonly</a>
+                            </li>
+                            <li>
+                                <a href="#weaver" >weaver</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ws" >ws</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#inkActionChange" >inkActionChange</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#numFrames" >numFrames</a>
+                            </li>
+                            <li>
+                                <a href="#numTreadles" >numTreadles</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#onCancel" >onCancel</a>
+                            </li>
+                            <li>
+                                <a href="#onNoClick" >onNoClick</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#onSave" >onSave</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#onWindowScroll" >onWindowScroll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#redraw" >redraw</a>
+                            </li>
+                            <li>
+                                <a href="#swapEditingStyle" >swapEditingStyle</a>
+                            </li>
+                            <li>
+                                <a href="#updateSelection" >updateSelection</a>
+                            </li>
+                            <li>
+                                <a href="#warps" >warps</a>
+                            </li>
+                            <li>
+                                <a href="#wefts" >wefts</a>
+                            </li>
+                            <li>
+                                <a href="#width" >width</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(dialogRef: <a href="../interfaces/Draft.html" target="_self">MatDialogRef&lt;DraftdetailComponent&gt;</a>, data: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, scroll: ScrollDispatcher, inks: <a href="../injectables/InkService.html" target="_self">InkService</a>, dm: DesignmodesService, ops: <a href="../injectables/OperationService.html" target="_self">OperationService</a>, ms: MaterialsService, ws: WorkspaceService, tree: <a href="../injectables/TreeService.html" target="_self">TreeService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:55</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>dialogRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/Draft.html" target="_self" >MatDialogRef&lt;DraftdetailComponent&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>data</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>scroll</td>
+                                                  
+                                                        <td>
+                                                                    <code>ScrollDispatcher</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>inks</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/InkService.html" target="_self" >InkService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dm</td>
+                                                  
+                                                        <td>
+                                                                    <code>DesignmodesService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>ops</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/OperationService.html" target="_self" >OperationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>ms</td>
+                                                  
+                                                        <td>
+                                                                    <code>MaterialsService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>ws</td>
+                                                  
+                                                        <td>
+                                                                    <code>WorkspaceService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>tree</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/TreeService.html" target="_self" >TreeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inkActionChange"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>inkActionChange</b></span>
+                        <a href="#inkActionChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>inkActionChange(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="139"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:139</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="127"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:127</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="119"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:119</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>this handles the case where someone clicks outside of the modal window</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="numFrames"></a>
+                    <span class="name">
+                        <span ><b>numFrames</b></span>
+                        <a href="#numFrames"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>numFrames()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:185</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="numTreadles"></a>
+                    <span class="name">
+                        <span ><b>numTreadles</b></span>
+                        <a href="#numTreadles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>numTreadles()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="190"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:190</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCancel"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>onCancel</b></span>
+                        <a href="#onCancel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onCancel()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="159"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:159</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onNoClick"></a>
+                    <span class="name">
+                        <span ><b>onNoClick</b></span>
+                        <a href="#onNoClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onNoClick()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="135"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:135</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSave"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>onSave</b></span>
+                        <a href="#onSave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onSave()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="165"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:165</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onWindowScroll"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>onWindowScroll</b></span>
+                        <a href="#onWindowScroll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onWindowScroll(data: CdkScrollable)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="96"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:96</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                            <code>CdkScrollable</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="redraw"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>redraw</b></span>
+                        <a href="#redraw"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>redraw()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:155</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="swapEditingStyle"></a>
+                    <span class="name">
+                        <span ><b>swapEditingStyle</b></span>
+                        <a href="#swapEditingStyle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>swapEditingStyle()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="195"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:195</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateSelection"></a>
+                    <span class="name">
+                        <span ><b>updateSelection</b></span>
+                        <a href="#updateSelection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateSelection(event: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:93</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="warps"></a>
+                    <span class="name">
+                        <span ><b>warps</b></span>
+                        <a href="#warps"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>warps()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="172"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:172</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="wefts"></a>
+                    <span class="name">
+                        <span ><b>wefts</b></span>
+                        <a href="#wefts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>wefts()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="176"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:176</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="width"></a>
+                    <span class="name">
+                        <span ><b>width</b></span>
+                        <a href="#width"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>width()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="180"
+                            class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:180</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dm"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>dm</b></span>
+                        <a href="#dm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>DesignmodesService</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="draft"></a>
+                    <span class="name">
+                        <span ><b>draft</b></span>
+                        <a href="#draft"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Draft.html" target="_self" >Draft</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>a reference to the draft that we&#39;re modifying</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="id"></a>
+                    <span class="name">
+                        <span ><b>id</b></span>
+                        <a href="#id"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ink"></a>
+                    <span class="name">
+                        <span ><b>ink</b></span>
+                        <a href="#ink"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank" >String</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inks"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>inks</b></span>
+                        <a href="#inks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/InkService.html" target="_self" >InkService</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loom"></a>
+                    <span class="name">
+                        <span ><b>loom</b></span>
+                        <a href="#loom"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Loom" target="_self" >Loom</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>The weave Loom object.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loom_settings"></a>
+                    <span class="name">
+                        <span ><b>loom_settings</b></span>
+                        <a href="#loom_settings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#LoomSettings" target="_self" >LoomSettings</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scrollingSubscription"></a>
+                    <span class="name">
+                        <span ><b>scrollingSubscription</b></span>
+                        <a href="#scrollingSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="viewonly"></a>
+                    <span class="name">
+                        <span ><b>viewonly</b></span>
+                        <a href="#viewonly"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="weaver"></a>
+                    <span class="name">
+                        <span ><b>weaver</b></span>
+                        <a href="#weaver"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>WeaverComponent</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;weaver&#x27;, {read: WeaverComponent, static: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ws"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>ws</b></span>
+                        <a href="#ws"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>WorkspaceService</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/mixer/modal/draftdetail/draftdetail.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, HostListener, Inject, OnInit, ViewChild } from &#x27;@angular/core&#x27;;
+import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material/dialog&#x27;;
+import { Draft, Loom, LoomSettings } from &#x27;../../../core/model/datatypes&#x27;;
+import { numFrames, numTreadles } from &#x27;../../../core/model/looms&#x27;;
+import {wefts, warps} from &#x27;../../../core/model/drafts&#x27;
+import { CdkScrollable, ScrollDispatcher } from &#x27;@angular/cdk/scrolling&#x27;;
+import { InkService } from &#x27;../../provider/ink.service&#x27;;
+import { OperationService } from &#x27;../../provider/operation.service&#x27;;
+import { DesignmodesService } from &#x27;../../../core/provider/designmodes.service&#x27;;
+import { WeaverComponent } from &#x27;../../../weaver/weaver.component&#x27;;
+import { MaterialsService } from &#x27;../../../core/provider/materials.service&#x27;;
+import { WorkspaceService } from &#x27;../../../core/provider/workspace.service&#x27;;
+import { from } from &#x27;rxjs&#x27;;
+import { TreeService } from &#x27;../../provider/tree.service&#x27;;
+
+
+/**
+ * this component initatites the draft viewer with custom options. 
+ * a copy of the draft is passed to the window and passed back to the parent on close (or null if changes not saved) 
+ */
+@Component({
+  selector: &#x27;app-draftdetail&#x27;,
+  templateUrl: &#x27;./draftdetail.component.html&#x27;,
+  styleUrls: [&#x27;./draftdetail.component.scss&#x27;]
+})
+export class DraftdetailComponent implements OnInit {
+
+ 
+  //the draft view shared by this and weaver
+  @ViewChild(&#x27;weaver&#x27;, {read: WeaverComponent, static: true}) weaver: WeaverComponent;
+
+
+  id: number;
+
+
+  ink: String; //the name of the selected ink.
+
+  /**
+   * a reference to the draft that we&#x27;re modifying
+   */
+  draft:Draft;
+
+
+  /**
+   * The weave Loom object.
+   * @property {Loom}
+   */
+   loom: Loom;
+
+   loom_settings: LoomSettings;
+
+
+  scrollingSubscription: any;
+
+  viewonly: boolean &#x3D; false;
+
+
+  constructor(private dialogRef: MatDialogRef&lt;DraftdetailComponent&gt;,
+             @Inject(MAT_DIALOG_DATA) private data: any, 
+             private scroll: ScrollDispatcher,
+             public inks: InkService,
+             public dm: DesignmodesService,
+             private ops: OperationService,
+             private ms: MaterialsService,
+             public ws: WorkspaceService,
+             private tree: TreeService) { 
+
+              this.scrollingSubscription &#x3D; this.scroll
+              .scrolled()
+              .subscribe((data: any) &#x3D;&gt; {
+                 this.onWindowScroll(data);
+               });
+
+               this.id &#x3D; data.id;
+               this.draft &#x3D; this.tree.getDraft(this.id);
+               this.loom &#x3D; this.tree.getLoom(this.id);
+               this.loom_settings &#x3D; this.tree.getLoomSettings(this.id);
+               this.ink &#x3D; data.ink;
+               this.viewonly &#x3D; this.tree.hasParent(this.id);
+
+               if(this.loom_settings.type &#x3D;&#x3D; &#x27;jacquard&#x27;){
+                this.dm.selectDesignMode(&#x27;drawdown&#x27;, &#x27;drawdown_editing_style&#x27;)
+              }else{
+                this.dm.selectDesignMode(&#x27;loom&#x27;, &#x27;drawdown_editing_style&#x27;)
+
+               }
+                            
+
+              // this.modal_height &#x3D; (this.draft.wefts+20) * this.render.getCellDims(&#x27;base&#x27;).h;
+
+  }
+
+  updateSelection(event: any){
+  }
+
+  private onWindowScroll(data: CdkScrollable) {
+    const scrollTop &#x3D; data.measureScrollOffset(&quot;top&quot;);
+    const scrollLeft &#x3D; data.measureScrollOffset(&quot;left&quot;);
+
+    // this.dv.reposition(scrollTop, scrollLeft);
+  }
+
+  /**
+   * this handles the case where someone clicks outside of the modal window 
+   * @param $event 
+   */
+  // @HostListener(&#x27;document:click&#x27;, [&#x27;$event&#x27;]) click($event){
+  //   // here you can hide your menu
+  //   const target: HTMLElement &#x3D; $event.target;
+  //   const name: string &#x3D; target.className;
+  //   if(name.includes(&quot;cdk-overlay-backdrop&quot;)){
+  //       this.onSave();
+  //   }
+  //   console.log(&quot;anywhere click&quot;, target.className);
+  // }
+
+
+
+  ngOnInit() {
+
+
+  }
+
+  
+
+
+  ngAfterViewInit(){
+
+
+   
+  }
+
+
+  
+  onNoClick(){
+    this.onSave();
+  }
+
+  public inkActionChange(name: string){
+    this.ink &#x3D; name;
+  }
+
+  // designActionChange(e){
+
+  // const drafts: Array&lt;Draft&gt; &#x3D; this.ops.getOp(e).perform([this.draft], []);
+  //       drafts.forEach(draft &#x3D;&gt; {
+  //         this.draft.reload(draft);
+  //         this.dv.redraw({drawdown:true});  
+  //       }); 
+  //   this.dv.redraw({
+  //     drawdown: true
+  //   });   
+  // }
+
+  public redraw(){
+    this.weaver.materialChange();
+  }
+
+  public onCancel(){
+    this.scrollingSubscription.unsubscribe();
+    this.weaver.closeAllModals();
+    this.dialogRef.close(null);
+  }
+
+  public onSave(){
+    this.scrollingSubscription.unsubscribe();
+    this.weaver.closeAllModals();
+    this.dialogRef.close(this.draft);
+  }
+
+  //HELPER FUNCTIONS TO AID VARIABLES CALLED FROM HTML
+ warps(){
+    return warps(this.draft.drawdown);
+  }
+
+ wefts(){
+    return wefts(this.draft.drawdown);
+  }
+
+ width(){
+    if(this.loom_settings.units &#x3D;&#x3D; &#x27;cm&#x27;) return warps(this.draft.drawdown) / this.loom_settings.epi * 10;
+    else return warps(this.draft.drawdown) / this.loom_settings.epi;
+  }
+
+  numFrames(){
+    const loom &#x3D; this.tree.getLoom(this.id);
+    return numFrames(loom);
+  }
+  
+  numTreadles(){
+    const loom &#x3D; this.tree.getLoom(this.id);
+    return numTreadles(loom);
+  }
+
+  swapEditingStyle(){
+    if(this.dm.getSelectedDesignMode(&#x27;drawdown_editing_style&#x27;).value &#x3D;&#x3D;&#x3D; &#x27;drawdown&#x27;){
+      this.dm.selectDesignMode(&#x27;loom&#x27;, &#x27;drawdown_editing_style&#x27;)
+    }else{
+      this.dm.selectDesignMode(&#x27;drawdown&#x27;, &#x27;drawdown_editing_style&#x27;)
+    }
+
+  }
+  
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class &#x3D;&quot;draft-detail-modal&quot;&gt;
+
+
+  &lt;div class&#x3D;&quot;toprow&quot;&gt;
+    &lt;button mat-icon-button (click)&#x3D;&quot;onSave()&quot;&gt;&lt;i class&#x3D;&quot;fas fa-times&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+    
+    &lt;div class&#x3D;&quot;titledata&quot;&gt;
+    &lt;p mat-dialog-title
+      cdkDrag
+       cdkDragRootElement&#x3D;&quot;.cdk-overlay-pane&quot; 
+       cdkDragHandle&gt;Fine Tune this Draft&lt;/p&gt;
+
+      &lt;p *ngIf&#x3D;&quot;viewonly&quot; class&#x3D;&quot;viewonly&quot;&gt;You are in &lt;b&gt;View Only Mode&lt;/b&gt; because this draft has been generated by an operation. In viewonly mode, you may only adjust colors and warp systems and visualize yarn paths. If you want to modify the draft, you must go back to the mixer and duplicate it to remove it from the parent operation&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+  
+
+  &lt;app-weaver #weaver
+  [id]&#x3D;&quot;id&quot;
+  &gt;&lt;/app-weaver&gt;
+
+
+  &lt;div class&#x3D;&quot;draft-detail-footer&quot;&gt;
+
+    &lt;div class&#x3D;&quot;weave_stats&quot;&gt;
+      &lt;span&gt; loom type: {{loom_settings.type}}&lt;/span&gt;
+      &lt;span&gt; size: {{warps()}} ends, {{wefts()}} pics&lt;/span&gt;
+      &lt;span&gt; width: {{width()}} {{loom_settings.units}}&lt;/span&gt;
+      &lt;span *ngIf&#x3D;&quot;loom_settings.units &#x3D;&#x3D; &#x27;in&#x27;&quot;&gt; epi: {{loom_settings.epi}}&lt;/span&gt;
+      &lt;span *ngIf&#x3D;&quot;loom_settings.units &#x3D;&#x3D; &#x27;cm&#x27;&quot;&gt; ep10cm: {{loom_settings.epi}}&lt;/span&gt;
+      &lt;span *ngIf&#x3D;&quot;loom_settings.type !&#x3D;&#x3D; &#x27;jacquard&#x27;&quot;&gt;requires {{numFrames()}} frames, {{numTreadles()}} treadles&lt;/span&gt;
+      &lt;!-- &lt;span class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;ws.type !&#x3D;&#x3D; &#x27;jacquard&#x27; &amp;&amp; (numFrames(loom) &lt; loom_settings.frames || numTreadles(loom) &lt; loom_settings.treadles) &quot;&gt;
+        &lt;i class&#x3D;&quot;fas fa-exclamation-circle&quot;&gt;&lt;/i&gt; This draft requires more than the {{ws.min_frames}} frames or {{ws.min_treadles}} treadles than you have specified for your loom&lt;/span&gt; --&gt;
+    &lt;/div&gt; 
+
+
+    &lt;div class&#x3D;&quot;ink-block&quot;&gt;
+      &lt;mat-label&gt;Using Ink&lt;/mat-label&gt;
+      &lt;mat-select [(value)]&#x3D;&quot;ink&quot;&gt;
+        &lt;mat-option 
+        *ngFor&#x3D;&quot;let i of inks.getInks()&quot; 
+        [value]&#x3D;&quot;i.viewValue&quot;
+      &gt;
+          {{i.viewValue}}
+        &lt;/mat-option&gt;
+      &lt;/mat-select&gt; 
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;mat-label&gt;Editing Mode: &lt;/mat-label&gt;
+      &lt;mat-slide-toggle
+      [disabled]&#x3D;&quot;loom_settings.type &#x3D;&#x3D;&#x3D; &#x27;jacquard&#x27;&quot;
+      (click)&#x3D;&quot;swapEditingStyle()&quot;&gt;
+      &lt;/mat-slide-toggle&gt;
+      &lt;div&gt;&lt;mat-label&gt;{{dm.getSelectedDesignMode(&#x27;drawdown_editing_style&#x27;).viewValue}}&lt;/mat-label&gt;&lt;/div&gt;
+
+      &lt;/div&gt;
+&lt;!-- 
+      &lt;mat-slide-toggle
+           [checked]&#x3D;&quot;!render.view_front&quot;
+          (change)&#x3D;&quot;front &#x3D; !front; viewFront($event, front, &#x27;front&#x27;)&quot; 
+          
+      &lt;/mat-slide-toggle&gt; --&gt;
+
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./draftdetail.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.draft-detail-modal{
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbars{
+  display: flex;
+  flex: row;
+}
+
+.draft-drawer{
+  background: #3d3d3d;
+}
+
+.draft-detail-body{
+  display: flex;
+  flex-direction: row;
+}
+
+.draft-viewer{
+  overflow: scroll;
+}
+
+.options{
+  margin-left: 18px;
+  width: 200px;
+}
+
+.toggle-row{
+  font-size: .8em;
+}
+
+.titledata{
+  display: flex;
+  flex-direction: column;
+}
+
+.toprow{
+  display: flex;
+  flex-direction: row;
+  line-height: 1em;
+  margin-bottom: 20px;
+}
+
+.ink-block{
+  display: flex;
+  flex-direction: column;
+  width: 42%;
+}
+
+.mat-dialog-title {
+  margin: 0px;
+  display: block;
+}
+
+.error{
+  color: #ff3860;
+}
+
+.viewonly{
+  font-size: .8em;
+}
+
+.weave_stats{
+  display: flex;
+  flex-direction: column;
+}
+
+.draft-detail-footer{
+  width: 80%;
+  font-size: .8em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class ="draft-detail-modal">  <div class="toprow">    <button mat-icon-button (click)="onSave()"><i class="fas fa-times"></i></button>        <div class="titledata">    <p mat-dialog-title      cdkDrag       cdkDragRootElement=".cdk-overlay-pane"        cdkDragHandle>Fine Tune this Draft</p>      <p *ngIf="viewonly" class="viewonly">You are in <b>View Only Mode</b> because this draft has been generated by an operation. In viewonly mode, you may only adjust colors and warp systems and visualize yarn paths. If you want to modify the draft, you must go back to the mixer and duplicate it to remove it from the parent operation</p>    </div>    </div>    <app-weaver #weaver  [id]="id"  ></app-weaver>  <div class="draft-detail-footer">    <div class="weave_stats">      <span> loom type: {{loom_settings.type}}</span>      <span> size: {{warps()}} ends, {{wefts()}} pics</span>      <span> width: {{width()}} {{loom_settings.units}}</span>      <span *ngIf="loom_settings.units == \'in\'"> epi: {{loom_settings.epi}}</span>      <span *ngIf="loom_settings.units == \'cm\'"> ep10cm: {{loom_settings.epi}}</span>      <span *ngIf="loom_settings.type !== \'jacquard\'">requires {{numFrames()}} frames, {{numTreadles()}} treadles</span>      <!-- <span class="error" *ngIf="ws.type !== \'jacquard\' && (numFrames(loom) < loom_settings.frames || numTreadles(loom) < loom_settings.treadles) ">        <i class="fas fa-exclamation-circle"></i> This draft requires more than the {{ws.min_frames}} frames or {{ws.min_treadles}} treadles than you have specified for your loom</span> -->    </div>     <div class="ink-block">      <mat-label>Using Ink</mat-label>      <mat-select [(value)]="ink">        <mat-option         *ngFor="let i of inks.getInks()"         [value]="i.viewValue"      >          {{i.viewValue}}        </mat-option>      </mat-select>     </div>    <div>      <mat-label>Editing Mode: </mat-label>      <mat-slide-toggle      [disabled]="loom_settings.type === \'jacquard\'"      (click)="swapEditingStyle()">      </mat-slide-toggle>      <div><mat-label>{{dm.getSelectedDesignMode(\'drawdown_editing_style\').viewValue}}</mat-label></div>      </div><!--       <mat-slide-toggle           [checked]="!render.view_front"          (change)="front = !front; viewFront($event, front, \'front\')"                 </mat-slide-toggle> --></div></div>'
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
+    var ACTUAL_COMPONENT = {'name': 'DraftdetailComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'DraftdetailComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

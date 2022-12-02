@@ -1,0 +1,1880 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>adacad-weaver documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">adacad-weaver documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >PedalsService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/player/provider/pedals.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Definition of pedal service</p>
+
+            </p>
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
+            </p>
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#db" >db</a>
+                            </li>
+                            <li>
+                                <a href="#dbNodes" >dbNodes</a>
+                            </li>
+                            <li>
+                                <a href="#p_pedals" >p_pedals</a>
+                            </li>
+                            <li>
+                                <a href="#status" >status</a>
+                            </li>
+                            <li>
+                                <a href="#v_pedals" >v_pedals</a>
+                            </li>
+                            <li>
+                                <a href="#virtual" >virtual</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#addVPedal" >addVPedal</a>
+                            </li>
+                            <li>
+                                <a href="#loomListeners" >loomListeners</a>
+                            </li>
+                            <li>
+                                <a href="#loomPedals" >loomPedals</a>
+                            </li>
+                            <li>
+                                <a href="#nodeToPedal" >nodeToPedal</a>
+                            </li>
+                            <li>
+                                <a href="#remVPedal" >remVPedal</a>
+                            </li>
+                            <li>
+                                <a href="#sendDraftRow" >sendDraftRow</a>
+                            </li>
+                            <li>
+                                <a href="#togglePedal" >togglePedal</a>
+                            </li>
+                            <li>
+                                <a href="#togglePedalByID" >togglePedalByID</a>
+                            </li>
+                            <li>
+                                <a href="#toggleWeaving" >toggleWeaving</a>
+                            </li>
+                            <li>
+                                <a href="#virtualPedals" >virtualPedals</a>
+                            </li>
+                            <li>
+                                <a href="#weavingWriters" >weavingWriters</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#pedals" >pedals</a>
+                                </li>
+                                <li>
+                                    <a href="#pi_online" >pi_online</a>
+                                </li>
+                                <li>
+                                    <a href="#loom_online" >loom_online</a>
+                                </li>
+                                <li>
+                                    <a href="#vacuum_on" >vacuum_on</a>
+                                </li>
+                                <li>
+                                    <a href="#active_draft" >active_draft</a>
+                                </li>
+                                <li>
+                                    <a href="#loom_ready" >loom_ready</a>
+                                </li>
+                                <li>
+                                    <a href="#num_picks" >num_picks</a>
+                                </li>
+                                <li>
+                                    <a href="#pick_data" >pick_data</a>
+                                </li>
+                                <li>
+                                    <a href="#num_pedals" >num_pedals</a>
+                                </li>
+                                <li>
+                                    <a href="#pedal_states" >pedal_states</a>
+                                </li>
+                                <li>
+                                    <a href="#p_pedal_array" >p_pedal_array</a>
+                                </li>
+                                <li>
+                                    <a href="#num_v_pedals" >num_v_pedals</a>
+                                </li>
+                                <li>
+                                    <a href="#v_pedal_states" >v_pedal_states</a>
+                                </li>
+                                <li>
+                                    <a href="#v_pedal_array" >v_pedal_array</a>
+                                </li>
+                                <li>
+                                    <a href="#readyToWeave" >readyToWeave</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="147" class="link-to-prism">src/app/player/provider/pedals.service.ts:147</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addVPedal"></a>
+                    <span class="name">
+                        <span ><b>addVPedal</b></span>
+                        <a href="#addVPedal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>addVPedal()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="270"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:270</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loomListeners"></a>
+                    <span class="name">
+                        <span ><b>loomListeners</b></span>
+                        <a href="#loomListeners"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loomListeners(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="293"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:293</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>handling weaving state DB nodes</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loomPedals"></a>
+                    <span class="name">
+                        <span ><b>loomPedals</b></span>
+                        <a href="#loomPedals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loomPedals(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="260"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:260</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nodeToPedal"></a>
+                    <span class="name">
+                        <span ><b>nodeToPedal</b></span>
+                        <a href="#nodeToPedal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>nodeToPedal(node: DBListener | DBTwoWay)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="333"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:333</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>utility function for formatting a DBNode into a Pedal</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>node</td>
+                                    <td>
+                                            <code>DBListener | DBTwoWay</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/Pedal.html" target="_self" >Pedal</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="remVPedal"></a>
+                    <span class="name">
+                        <span ><b>remVPedal</b></span>
+                        <a href="#remVPedal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>remVPedal()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="288"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:288</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendDraftRow"></a>
+                    <span class="name">
+                        <span ><b>sendDraftRow</b></span>
+                        <a href="#sendDraftRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>sendDraftRow(r: <a href="../interfaces/WeavingPick.html" target="_self">WeavingPick</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="327"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:327</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>loads pick data into DB</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>r</td>
+                                    <td>
+                                                <code><a href="../interfaces/WeavingPick.html" target="_self" >WeavingPick</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="togglePedal"></a>
+                    <span class="name">
+                        <span ><b>togglePedal</b></span>
+                        <a href="#togglePedal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>togglePedal(p: <a href="../interfaces/Pedal.html" target="_self">Pedal</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="282"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:282</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>p</td>
+                                    <td>
+                                                <code><a href="../interfaces/Pedal.html" target="_self" >Pedal</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="togglePedalByID"></a>
+                    <span class="name">
+                        <span ><b>togglePedalByID</b></span>
+                        <a href="#togglePedalByID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>togglePedalByID(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="274"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:274</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleWeaving"></a>
+                    <span class="name">
+                        <span ><b>toggleWeaving</b></span>
+                        <a href="#toggleWeaving"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleWeaving()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="317"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:317</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>lets the Pi know to start weaving</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="virtualPedals"></a>
+                    <span class="name">
+                        <span ><b>virtualPedals</b></span>
+                        <a href="#virtualPedals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>virtualPedals(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="266"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:266</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>functions to interact with virtual pedals</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="weavingWriters"></a>
+                    <span class="name">
+                        <span ><b>weavingWriters</b></span>
+                        <a href="#weavingWriters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>weavingWriters(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="304"
+                            class="link-to-prism">src/app/player/provider/pedals.service.ts:304</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="db"></a>
+                    <span class="name">
+                        <span ><b>db</b></span>
+                        <a href="#db"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Database</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/app/player/provider/pedals.service.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dbNodes"></a>
+                    <span class="name">
+                        <span ><b>dbNodes</b></span>
+                        <a href="#dbNodes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Array&lt;any&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="129" class="link-to-prism">src/app/player/provider/pedals.service.ts:129</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="p_pedals"></a>
+                    <span class="name">
+                        <span ><b>p_pedals</b></span>
+                        <a href="#p_pedals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Pedal.html" target="_self" >Array&lt;Pedal&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="142" class="link-to-prism">src/app/player/provider/pedals.service.ts:142</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="status"></a>
+                    <span class="name">
+                        <span ><b>status</b></span>
+                        <a href="#status"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Pedal.html" target="_self" >PedalStatus</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/app/player/provider/pedals.service.ts:132</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="v_pedals"></a>
+                    <span class="name">
+                        <span ><b>v_pedals</b></span>
+                        <a href="#v_pedals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Pedal.html" target="_self" >Array&lt;Pedal&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="143" class="link-to-prism">src/app/player/provider/pedals.service.ts:143</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="virtual"></a>
+                    <span class="name">
+                        <span ><b>virtual</b></span>
+                        <a href="#virtual"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="145" class="link-to-prism">src/app/player/provider/pedals.service.ts:145</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="pedals"></a>
+                        <span class="name"><b>pedals</b><a href="#pedals"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>pedals()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="147" class="link-to-prism">src/app/player/provider/pedals.service.ts:147</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="pi_online"></a>
+                        <span class="name"><b>pi_online</b><a href="#pi_online"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>pi_online()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="237" class="link-to-prism">src/app/player/provider/pedals.service.ts:237</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>online status</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="loom_online"></a>
+                        <span class="name"><b>loom_online</b><a href="#loom_online"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>loom_online()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="238" class="link-to-prism">src/app/player/provider/pedals.service.ts:238</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="vacuum_on"></a>
+                        <span class="name"><b>vacuum_on</b><a href="#vacuum_on"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>vacuum_on()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="241" class="link-to-prism">src/app/player/provider/pedals.service.ts:241</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>weaving statuses</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="active_draft"></a>
+                        <span class="name"><b>active_draft</b><a href="#active_draft"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>active_draft()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="242" class="link-to-prism">src/app/player/provider/pedals.service.ts:242</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="loom_ready"></a>
+                        <span class="name"><b>loom_ready</b><a href="#loom_ready"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>loom_ready()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="243" class="link-to-prism">src/app/player/provider/pedals.service.ts:243</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="num_picks"></a>
+                        <span class="name"><b>num_picks</b><a href="#num_picks"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>num_picks()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="244" class="link-to-prism">src/app/player/provider/pedals.service.ts:244</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="pick_data"></a>
+                        <span class="name"><b>pick_data</b><a href="#pick_data"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>pick_data()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="245" class="link-to-prism">src/app/player/provider/pedals.service.ts:245</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="num_pedals"></a>
+                        <span class="name"><b>num_pedals</b><a href="#num_pedals"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>num_pedals()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="248" class="link-to-prism">src/app/player/provider/pedals.service.ts:248</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>physical pedals DB nodes</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="pedal_states"></a>
+                        <span class="name"><b>pedal_states</b><a href="#pedal_states"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>pedal_states()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="249" class="link-to-prism">src/app/player/provider/pedals.service.ts:249</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="p_pedal_array"></a>
+                        <span class="name"><b>p_pedal_array</b><a href="#p_pedal_array"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>p_pedal_array()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="250" class="link-to-prism">src/app/player/provider/pedals.service.ts:250</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="num_v_pedals"></a>
+                        <span class="name"><b>num_v_pedals</b><a href="#num_v_pedals"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>num_v_pedals()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="253" class="link-to-prism">src/app/player/provider/pedals.service.ts:253</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>virtual pedals DB nodes</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="v_pedal_states"></a>
+                        <span class="name"><b>v_pedal_states</b><a href="#v_pedal_states"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>v_pedal_states()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="254" class="link-to-prism">src/app/player/provider/pedals.service.ts:254</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="v_pedal_array"></a>
+                        <span class="name"><b>v_pedal_array</b><a href="#v_pedal_array"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>v_pedal_array()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="255" class="link-to-prism">src/app/player/provider/pedals.service.ts:255</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="readyToWeave"></a>
+                        <span class="name"><b>readyToWeave</b><a href="#readyToWeave"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>readyToWeave()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="257" class="link-to-prism">src/app/player/provider/pedals.service.ts:257</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { WeavingPick } from &#x27;../model/player&#x27;;
+import { EventEmitter } from &#x27;events&#x27;;
+import { getDatabase } from &quot;firebase/database&quot;;
+import { Database } from &#x27;@angular/fire/database&#x27;;
+import { NodeParams,
+  DBListener, OnlineStatus, DBWriter, 
+  DBListenerArray, DBTwoWayArray, DBTwoWay } from &#x27;../model/dbnodes&#x27;;
+
+/**
+ * The Pedals service is in charge of updating the database 
+ * connections to communicate with the loom hardware. In AdaCAD, 
+ * its main responsibility is to keep an up-to-date list of the pedals
+ * and when they get stepped on; as well as any other hardware 
+ * statuses.
+ */
+
+export interface Pedal {
+  id: number,
+  name: string,
+  u_name?: string,
+  key: string,
+  dbnode: DBListener | DBTwoWay,
+  state: any,
+  // op?: Operation
+}
+
+/** 
+ * Just a wrapper for how the database arranges the pedals + 
+ * loom information into nodes
+ */
+export class PedalStatus extends EventEmitter {
+  pi_online: OnlineStatus;     // is the pi online?
+  loom_online: DBListener;   // is the loom online?
+  vacuum_on: DBListener;     // is the loom running? (vacuum pump running)
+  loom_ready: DBListener;
+
+  active_draft: DBWriter;
+  num_picks: DBWriter;
+  pick_data: DBWriter;
+
+  num_pedals: DBListener;
+  pedal_states: DBListener;
+  pedal_array: DBListenerArray;
+
+  num_v_pedals: DBTwoWay;
+  v_pedal_states: DBTwoWay;
+  v_pedal_array: DBTwoWayArray;
+
+  constructor(db: Database) {
+    super();
+    const defaults &#x3D; {
+      active_draft: false,
+      num_picks: 0,
+      pick_data: false
+    }
+    const listeners &#x3D; {
+      // pi_online: &#x27;pi-online&#x27;,
+      loom_online: &#x27;loom-online&#x27;,
+      vacuum_on: &#x27;vacuum-on&#x27;,
+      num_pedals: &#x27;num-pedals&#x27;,
+      pedal_states: &#x27;pedal-states&#x27;,
+      loom_ready: &#x27;loom-ready&#x27;
+    }
+    const writers &#x3D; {
+      active_draft: &#x27;active-draft&#x27;,
+      num_picks: &#x27;num-picks&#x27;,
+      pick_data: &#x27;pick-data&#x27;
+    }
+
+    function params(path: string): NodeParams { 
+      return { db: db, root: &#x27;pedals/&#x27;, path: path };
+    };
+
+    this.pi_online &#x3D; new OnlineStatus(params(&#x27;pi-online&#x27;));
+    // this.pi_online.attach();
+    // this.loom_online &#x3D; new DBListener(this.db, &#x27;loom-online&#x27;);
+
+    for (var l in listeners) {
+      const newL &#x3D; new DBListener(params(listeners[l]));
+      Object.defineProperty(this, l, { value: newL });
+      // this[l].attach();
+    }
+
+    for (var w in writers) {
+      const newW &#x3D; new DBWriter({...params(writers[w]), initVal: defaults[w]});
+      // console.log(&#x27;writer created&#x27;);
+      Object.defineProperty(this, w, { value: newW });
+      // console.log(&#x27;writer added to status&#x27;);
+      this[w].attach();
+      // console.log(&#x27;writer attached&#x27;);
+      this[w].setVal(defaults[w]);
+    }
+
+    // set up array of pedal listeners with the length and parent nodes
+    this.pedal_array &#x3D; new DBListenerArray(this.num_pedals, this.pedal_states);
+
+    // set up virtual pedal nodes, which have their own length
+    // and parent nodes
+    this.num_v_pedals &#x3D; new DBTwoWay(params(&#x27;num-v-pedals&#x27;));
+    this.v_pedal_states &#x3D; new DBTwoWay(params(&#x27;v-pedal-states&#x27;));
+    this.v_pedal_array &#x3D; new DBTwoWayArray(this.num_v_pedals, this.v_pedal_states);
+  }
+
+  toString() {
+    var str &#x3D; &quot;&quot;;
+    str +&#x3D; &quot;&#x27;pi-online&#x27;: &quot; + this.pi_online.val + &quot;\n&quot;;
+    str +&#x3D; &quot;&#x27;loom-online&#x27;: &quot; + this.loom_online.val + &quot;\n\n&quot;;
+    str +&#x3D; &quot;&#x27;vacuum-on&#x27;: &quot; + this.vacuum_on.val + &quot;\n&quot;;
+    str +&#x3D; &quot;&#x27;active-draft&#x27;: &quot; + this.active_draft.val + &quot;\n&quot;;
+    str +&#x3D; &quot;&#x27;num-pedals&#x27;: &quot; + this.num_pedals.val + &quot;\n&quot;;
+    return str;
+  }
+}
+
+/**
+ * Definition of pedal service
+ * @class
+ * @event &#x60;pedal-added&#x60; data: how many pedals
+ * @event &#x60;pedal-removed&#x60; data: how many pedals
+ * @event &#x60;pedal-step&#x60; data: which pedal
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class PedalsService extends EventEmitter {
+
+  db: Database;
+  dbNodes: Array&lt;any&gt;;
+
+  // status data
+  status: PedalStatus;
+  //  default &#x3D; {
+  //     pi_online: false,     // is the pi online?
+  //     loom_online: false,   // is the loom online?
+  //     vacuum_on: false,     // is the loom running? (vacuum pump running)
+  //     active_draft: false,
+  //     num_pedals: 0,
+  //     pedal_states: {},
+  //     loom_ready: false     // is the loom requesting a draft row?
+  // };
+  p_pedals: Array&lt;Pedal&gt; &#x3D; [];
+  v_pedals: Array&lt;Pedal&gt; &#x3D; [];
+  
+  virtual: boolean &#x3D; true;  // whether to mix virtual pedals in with the regular pedals array;
+
+  get pedals() { return this.p_pedals.concat(this.v_pedals); }
+
+  constructor() { 
+    super();
+    // init: start listening to changes in Firebase DB from the Pi
+    console.log(&quot;pedals service constructor&quot;);
+    this.db &#x3D; getDatabase();
+    this.status &#x3D; new PedalStatus(this.db);
+    // console.log(this.status);
+    
+    // if pi_online &#x3D; &quot;true&quot; at start-up, just make sure
+    console.log(&quot;are you alive?&quot;);
+    this.pi_online.checkAlive();
+    this.loom_online.attach();
+
+    this.virtualPedals(true);
+    this.loomPedals(false);
+
+    // listens for changes in pi online status
+    // if online, enable everything
+    this.pi_online.on(&#x27;change&#x27;, (state) &#x3D;&gt;
+      this.loomPedals(state));
+
+    // other listeners
+    this.loom_online.on(&#x27;change&#x27;, (state) &#x3D;&gt; 
+      this.loomListeners(state));
+
+    /** pedal array listeners */
+    this.p_pedal_array.on(&#x27;ready&#x27;, (state) &#x3D;&gt; 
+      this.weavingWriters(state)
+    );
+
+    this.p_pedal_array.on(&#x27;child-added&#x27;, (newNode) &#x3D;&gt; {
+      console.log(&#x27;pedals service: pedal added&#x27;);
+      this.p_pedals.push(this.nodeToPedal(newNode));
+      this.v_pedals.map((el) &#x3D;&gt; { el.id +&#x3D; 1; });
+      this.emit(&#x27;pedal-added&#x27;, this.p_pedals.length);
+    });
+
+    this.p_pedal_array.on(&#x27;child-removed&#x27;, () &#x3D;&gt; {
+      this.p_pedals.pop();
+      this.v_pedals.map((el) &#x3D;&gt; { el.id -&#x3D; 1; });
+      this.emit(&#x27;pedal-removed&#x27;, this.p_pedals.length);
+    });
+
+    this.p_pedal_array.on(&#x27;child-change&#x27;, (e) &#x3D;&gt; {
+      this.p_pedals[e.id].state &#x3D; e.val;
+      this.emit(&#x27;pedal-step&#x27;, e.id);
+      // e &#x3D; {id: which pedal&#x27;s id, val: pedal state}
+      // call pedal.execute or whatever it ends up being
+      // this.player.onPedal(e.id, e.val);
+    });
+
+    /** @todo */
+    this.loom_ready.on(&#x27;change&#x27;, (state) &#x3D;&gt; {
+      if (state) {
+        // send the next weaving row to DB
+        // update num_picks and pick_data accordingly
+      }
+    });
+    
+    /** virtual pedal listeners */
+    this.v_pedal_array.on(&#x27;ready&#x27;, (state) &#x3D;&gt; {
+      console.log(&quot;weaving writers &quot;, state);
+      this.weavingWriters(state);
+    });
+
+    this.v_pedal_array.on(&#x27;child-added&#x27;, (newNode) &#x3D;&gt; {
+      console.log(&#x27;pedals service: virtual pedal added&#x27;);
+      let v &#x3D; this.nodeToPedal(newNode);
+      v.id +&#x3D; this.p_pedals.length - (this.p_pedals.length ? 1 : 0);
+      this.v_pedals.push(v);
+      this.emit(&#x27;pedal-added&#x27;, this.v_pedals.length);
+    })
+
+    this.v_pedal_array.on(&#x27;child-removed&#x27;, () &#x3D;&gt; {
+      this.v_pedals.pop();
+      this.emit(&#x27;pedal-removed&#x27;, this.v_pedals.length);
+    })
+
+    this.v_pedal_array.on(&#x27;child-change&#x27;, (e) &#x3D;&gt; {
+      this.v_pedals[e.id].state &#x3D; e.val;
+      this.emit(&#x27;pedal-step&#x27;, e.id);
+      // e &#x3D; {id: which pedal&#x27;s id, val: pedal state}
+      // call pedal.execute or whatever it ends up being
+      // this.player.onPedal(e.id, e.val);
+    });
+  }
+
+  /** online status */
+  get pi_online() { return this.status.pi_online; }
+  get loom_online() { return this.status.loom_online; }
+
+  /** weaving statuses */
+  get vacuum_on() { return this.status.vacuum_on; }
+  get active_draft() { return this.status.active_draft; }
+  get loom_ready() { return this.status.loom_ready; }
+  get num_picks() { return this.status.num_picks; }
+  get pick_data() { return this.status.pick_data; }
+
+  /** physical pedals DB nodes */
+  get num_pedals() { return this.status.num_pedals; }
+  get pedal_states() { return this.status.pedal_states; }
+  get p_pedal_array() { return this.status.pedal_array; }
+
+  /** virtual pedals DB nodes */
+  get num_v_pedals() { return this.status.num_v_pedals; }
+  get v_pedal_states() { return this.status.v_pedal_states; }
+  get v_pedal_array() { return this.status.v_pedal_array; }
+  
+  get readyToWeave() { return (this.loom_online.val &amp;&amp; (this.p_pedal_array.ready || this.v_pedal_array.ready)); }
+
+  // attach all listeners to other values in DB
+  loomPedals(state: boolean) {
+    state ? this.p_pedal_array.attach() : this.p_pedal_array.detach();
+  }
+
+  /** functions to interact with virtual pedals */
+
+  virtualPedals(state: boolean) {
+    state? this.v_pedal_array.attach() : this.v_pedal_array.detach();
+  }
+
+  addVPedal() {
+    this.v_pedal_array.addNode(false);
+  }
+
+  togglePedalByID(id: number) {
+    console.log(&quot;toggling virtual pedal &quot;, id);
+    if (id &gt;&#x3D; 0 &amp;&amp; id &lt; this.v_pedals.length) {
+      let val &#x3D; this.v_pedal_array.nodes[id].val;
+      this.v_pedal_array.setNode(id, !val);      
+    }
+  }
+
+  togglePedal(p: Pedal) {
+    console.log(this.v_pedal_array);
+    console.log(this.v_pedals);
+    this.togglePedalByID(p.id);
+  }
+
+  remVPedal() {
+    this.v_pedal_array.remNode();
+  }
+
+  /** handling weaving state DB nodes */
+  loomListeners(state: boolean) {
+    if (state) {
+      this.vacuum_on.attach();
+      this.loom_ready.attach();
+    } else {
+      this.vacuum_on.detach();
+      this.loom_ready.detach();
+    }
+    this.weavingWriters(this.readyToWeave);
+  }
+
+  weavingWriters(state: boolean) {
+    if (state) {
+      this.active_draft.attach();
+      this.num_picks.attach();
+      this.pick_data.attach();
+    } else {
+      this.active_draft.detach();
+      this.num_picks.detach();
+      this.pick_data.detach();
+    }
+  }
+
+  /** lets the Pi know to start weaving */
+  toggleWeaving() {
+    // this.active_draft.attach();
+    // console.log(&quot;toggle weaving&quot;);
+    let vac &#x3D; !this.vacuum_on.val;
+    console.log(&quot;vacuum is turning &quot;, vac);
+    console.log(this.active_draft);
+    this.active_draft.setVal(vac);
+  }
+
+  /** loads pick data into DB */
+  sendDraftRow(r: WeavingPick) {
+    this.num_picks.setVal(r.pickNum);
+    this.pick_data.setVal(r.rowData);
+  }
+
+  /** utility function for formatting a DBNode into a Pedal */
+  nodeToPedal(node: DBListener | DBTwoWay) {
+    // console.log(node);
+    let p: Pedal &#x3D; { id: node.id, key: node.key, name: node.name, dbnode: node, state: node.val };
+    return p;
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'PedalsService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
