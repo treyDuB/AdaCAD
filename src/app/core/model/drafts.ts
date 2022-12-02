@@ -18,6 +18,7 @@ export const initDraft = () : Draft => {
     colSystemMapping: []
 
   };
+  console.log("initiated draft id: ", d.id);
   return d;
 }
 
@@ -38,6 +39,8 @@ export const initDraftWithParams = (params: any) : Draft => {
     colSystemMapping: []
 
   };
+
+  console.log("generated draft id: ", d.id);
 
 
   if(params.id !== undefined ) d.id = params.id;
@@ -104,6 +107,7 @@ export const initDraftWithParams = (params: any) : Draft => {
     }
   }
 
+  console.log("finished draft id: ", d.id);
 
   return d;
 }
@@ -687,14 +691,17 @@ export const createDraft = (
 * @param draft 
 */ 
 export const flipDraft = (d: Draft, horiz: boolean, vert: boolean) : Promise<Draft> => {
-
+  console.log("flip draft call input: ", d);
   const draft = initDraftWithParams(
     {id: d.id, 
+    gen_name: d.gen_name,
     wefts: wefts(d.drawdown),
     warps: warps(d.drawdown),
     colShuttleMapping: d.colShuttleMapping,
     colSystemMapping: d.colSystemMapping});
     draft.drawdown = createBlankDrawdown(wefts(d.drawdown), warps(d.drawdown));
+
+  console.log("starting ", draft);
 
   for(let i = 0; i < wefts(d.drawdown); i++){
     let flipped_i = i;
@@ -719,7 +726,7 @@ export const flipDraft = (d: Draft, horiz: boolean, vert: boolean) : Promise<Dra
   }
 
 
-
+  console.log("flipped draft id: ", draft.id);
   return Promise.resolve(draft);
 }
 

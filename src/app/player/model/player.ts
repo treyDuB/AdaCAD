@@ -32,5 +32,11 @@ export function initState(): PlayerState {
 
 export interface WeavingPick {
   pickNum: number,
-  rowData: string
+  rowData: string,
+}
+
+export interface WeavingLog {
+  draft: Draft,
+  shortDraft: Draft,
+  states: Array<PlayerState>,
 }

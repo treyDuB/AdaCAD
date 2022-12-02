@@ -187,8 +187,8 @@ export class PlayerService {
     mappings.addOperation(refresh);
     mappings.addOperation(reverse);
 
-    function addOp(op: GenericOp) {
-      let p_op = playerOpFrom(op);
+    function addOp(op: GenericOp, params?: Array<number | string>) {
+      let p_op = params ? playerOpFrom(op, params) : playerOpFrom(op);
       mappings.addOperation(p_op);
       return p_op;
     }
@@ -198,6 +198,8 @@ export class PlayerService {
     const twill = addOp(defs.twill);
     const satin = addOp(defs.satin);
     const waffle = addOp(defs.waffle);
+    const basket = addOp(defs.basket);
+    const rib = addOp(defs.rib);
     const random = addOp(defs.random);
     const rotate = addOp(defs.rotate);
     const invert = addOp(defs.invert);
@@ -208,6 +210,20 @@ export class PlayerService {
     const flipy = addOp(defs.flipy);
     const symm = addOp(defs.makesymmetric);
     const stretch = addOp(defs.stretch);
+    const bindweft = addOp(defs.bindweftfloats);
+    const bindwarp = addOp(defs.bindwarpfloats);
+
+    const tile: PlayerOp = {
+      name: defs.tile.name,
+      perform: (init: PlayerState) => {
+        let res = copyState(init);
+        res.draft = defs.tile.perform([init.draft], [2, 2]);
+        res.row = init.row % wefts(res.draft.drawdown);
+        res.pedal = defs.tile.name;
+        return Promise.resolve(res);
+      }
+    }
+    mappings.addOperation(tile);
 
     this.draftClassification.push(
       {category: 'structure',
@@ -216,9 +232,16 @@ export class PlayerService {
     );
 
     this.draftClassification.push(
+      { category: 'custom structure',
+        dx: "custom structures loaded from the Mixer",
+        ops: []
+      }
+    );
+
+    this.draftClassification.push(
       {category: 'transformation',
       dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
-      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm]}
+      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile]}
     );
 
     // //test this
@@ -232,13 +255,13 @@ export class PlayerService {
     pedals.on('pedal-added', (n) => {
       if (n == 1) {
         mappings.pair(0, 'forward');
-        console.log("pedals mapping", mappings.index);
-      } else if (n == 2) {
-        if (mappings.pedalIsMapped(0)) mappings.unmap(0);
-        mappings[0] = this.seq;
-        mappings[1] = this.seq;
-        this.seq.addPedals(0, 1);
         console.log("pedals mapping", mappings);
+      } else if (n == 2) {
+      //   if (mappings.pedalIsMapped(0)) mappings.unmap(0);
+      //   mappings[0] = this.seq;
+      //   mappings[1] = this.seq;
+      //   this.seq.addPedals(0, 1);
+      //   console.log("pedals mapping", mappings);
       }
     })
   }
@@ -249,6 +272,7 @@ export class PlayerService {
     );
   }
 
+  /** get whether or not the loom is weaving */
   get weaving() {
     return this.pedals.active_draft.val;
   }
@@ -256,12 +280,46 @@ export class PlayerService {
     return this.state.draft;
   }
 
+  hasCustomStructure(d: Draft): boolean {
+    let ops = this.draftClassification.filter((c) => c.category == "custom structure")[0].ops;
+    console.log(ops);
+    if (ops.length == 0) return false;
+    return ops
+      .map((el) => { return el.struct_id == d.id})
+      .reduce((a, b) => { return a || b; });
+  }
+
   setDraft(d: Draft) {
+    if (!this.hasCustomStructure(d)) {
+      console.log("a new structure!");
+      let structOps = this.draftClassification.filter((c) => c.category == "custom structure")[0].ops;
+      let op = this.structureOpFromDraft(d);
+      structOps.push(op);
+      this.mappings.addOperation(op);
+    }
     this.state.draft = d;
     this.state.row = 0;
     // console.log("player has active draft");
     // console.log("draft is ", this.draft);
-    console.log("state is ", this.state);
+    console.log("draft set ", this.state);
+  }
+
+  /**
+   * 
+   * @param d the Draft to turn into a custom structure Operation
+   */
+  structureOpFromDraft(d: Draft) {
+    let structOp: PlayerOp = {
+      name: d.gen_name,
+      struct_id: d.id,
+      perform: (init: PlayerState) => {
+        let res = copyState(init);
+        res.draft = d;
+        res.row = init.row % wefts(d.drawdown);
+        return Promise.resolve(res);
+      }
+    };
+    return structOp;
   }
 
   // e is a string = op.name
@@ -277,13 +335,13 @@ export class PlayerService {
   onPedal(id: number) {
     console.log('player service: pedal ', id);
     let mapped = this.mappings.getMap(id);
-    console.log(this.mappings);
-    console.log(this.seq);
+    // console.log(this.mappings);
+    // console.log(this.seq);
     if (mapped) {
       console.log('mapping exists for pedal');
       mapped.perform(this.state, id)
       .then((state: PlayerState) => {
-        this.state = state;
+        this.state = copyState(state);
         console.log(this.state);
         this.redraw.emit('redraw');
         if (this.state.weaving) {
@@ -342,8 +400,12 @@ export class PlayerService {
     // don't let user start weaving until AT LEAST:
     // - 1 pedal connected AND
     // - 1 pedal configured with operation "forward" or "reverse"
+    this.state.weaving = !this.state.weaving;
     this.pedals.toggleWeaving();
-    this.pedals.sendDraftRow(this.currentRow());
+    if (this.state.weaving) {
+      // send the first row right away
+      this.pedals.sendDraftRow(this.currentRow());
+    }
     // this.pedals.vacuum_on.once('change', (state) => {
     //   if (state) {
     //   }

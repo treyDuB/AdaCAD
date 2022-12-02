@@ -17,6 +17,20 @@ import * as format from './operation/formatting';
 // helpers for formatting Operation definitions when coding
 const { Seed, Pipe, Merge, Branch, Bus } = OpFactories;
 
+function formatName(drafts: Array<Draft>, op_name: string) : string {
+  let combined: string = "";
+  if (drafts.length == 0) {
+    combined = op_name;
+  } else {
+    combined = drafts.reduce((acc, el) => {
+      return acc + "+" + getDraftName(el);
+    }, "");
+
+    combined = op_name + "(" + combined.substring(1) + ")";
+  }
+  return combined;
+}
+
 /************** BASIC OPERATIONS **********************/
 /** 
  * The operations that have been refactored into this file 
@@ -68,13 +82,13 @@ export const tabby = Seed.DraftsOptional({
 
     if (!input) {
       const d: Draft = initDraftWithParams({warps: width, wefts: height, pattern: pattern});
-      d.gen_name = format.formatName([], "tabby");
+      d.gen_name = formatName([], "tabby");
       return d;
     } else {
       const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
       // format.transferSystemsAndShuttles(d, [input], params, 'first');
-      d.gen_name = format.formatName([input], "tabby")
+      d.gen_name = formatName([input], "tabby")
       return d;
     }
   }
@@ -199,7 +213,7 @@ export const rib = Seed.DraftsOptional({
     const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = applyMask(input.drawdown, pattern);         
     // format.transferSystemsAndShuttles(d, [input], params, 'second');
-    d.gen_name = format.formatName([input], "rib");
+    d.gen_name = formatName([input], "rib");
     return d;
   }
 });
@@ -264,12 +278,12 @@ export const twill = Seed.DraftsOptional({
     let d: Draft;
     if (!input) {
       d = initDraftWithParams({warps: sum, wefts: sum, pattern: pattern});
-      d.gen_name = format.formatName([], "twill");
+      d.gen_name = formatName([], "twill");
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
       // format.transferSystemsAndShuttles(d, [input], params, 'first');
-      d.gen_name = format.formatName([input], "twill");
+      d.gen_name = formatName([input], "twill");
     }
 
     if (params[2] === 1) {
@@ -340,12 +354,12 @@ export const complextwill = Seed.DraftsOptional({
     let d: Draft;
     if(!input){
       d = initDraftWithParams({warps: sum, wefts: sum, pattern: pattern});
-      d.gen_name = format.formatName([], "complex twill");
+      d.gen_name = formatName([], "complex twill");
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
       // format.transferSystemsAndShuttles(d, [input], params, 'first');
-      d.gen_name = format.formatName([input], "complex twill");
+      d.gen_name = formatName([input], "complex twill");
     }
 
     return d; 
@@ -400,12 +414,12 @@ export const basket = Seed.DraftsOptional({
     let d: Draft;
     if (input == undefined) {
       d = initDraftWithParams({warps: sum, wefts: sum, pattern: pattern});
-      d.gen_name = format.formatName([], "basket");
+      d.gen_name = formatName([], "basket");
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
       // format.transferSystemsAndShuttles(d, [input], params, 'first');
-      d.gen_name = format.formatName([input], "basket")
+      d.gen_name = formatName([input], "basket")
     }
 
     return d;
@@ -500,12 +514,12 @@ export const waffle = Seed.DraftsOptional({
     let d: Draft;
     if(input == undefined){
       d = initDraftWithParams({warps: width, wefts: height, pattern: pattern});
-      d.gen_name = format.formatName([], "waffle");
+      d.gen_name = formatName([], "waffle");
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
       // format.transferSystemsAndShuttles(d, [input], params, 'first');
-      d.gen_name = format.formatName([input], "waffle");
+      d.gen_name = formatName([input], "waffle");
     }
     console.log(d);
     return d;
@@ -560,12 +574,12 @@ export const satin = Seed.DraftsOptional({
     let d: Draft;
     if(input === undefined){
       d = initDraftWithParams({warps:params[0], wefts:params[0], pattern: pattern});
-      d.gen_name = format.formatName([], "satin");
+      d.gen_name = formatName([], "satin");
     } else {
       d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
       d.drawdown = applyMask(input.drawdown, pattern);         
       // format.transferSystemsAndShuttles(d,[input],params, 'first');
-      d.gen_name = format.formatName([input], "satin");
+      d.gen_name = formatName([input], "satin");
     }
     return d;
   }        
@@ -635,7 +649,7 @@ export const shaded_satin = Seed.NoDrafts({
       }
     }
     
-    d.gen_name = format.formatName([], "satin");
+    d.gen_name = formatName([], "satin");
     return d;
   }        
 });
@@ -688,12 +702,12 @@ export const random = Seed.DraftsOptional({
       let d: Draft;
       if (input === undefined) {
         d = initDraftWithParams({warps:params[0], wefts:params[1], pattern: pattern});
-        d.gen_name = format.formatName([], "random");
+        d.gen_name = formatName([], "random");
       } else {
         d = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
         d.drawdown = applyMask(input.drawdown, pattern);         
         // format.transferSystemsAndShuttles(d,[input],params, 'first');
-        d.gen_name = format.formatName([input], "random");
+        d.gen_name = formatName([input], "random");
       }
       return d;
     }        
@@ -785,7 +799,7 @@ export const rect = Seed.DraftsOptional({
       colSystemMapping: draft.colSystemMapping
     });
   
-    d.gen_name = format.formatName([input], "rect");      
+    d.gen_name = formatName([input], "rect");      
     return d;
   },
 });
@@ -805,7 +819,7 @@ export const clear = Pipe.NoParams({
     perform: (input: Draft): Draft => {
       const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), drawdown: [[new Cell(false)]]});
       // format.transferSystemsAndShuttles(d, [input], {}, 'first');
-      d.gen_name = format.formatName([input], "clear");
+      d.gen_name = formatName([input], "clear");
       return d;
   }
 });
@@ -842,7 +856,7 @@ export const set = Pipe.AllRequired({
       });
     });
     // format.transferSystemsAndShuttles(d, [input], params, 'first');
-    d.gen_name = format.formatName([input], "unset->down");
+    d.gen_name = formatName([input], "unset->down");
     return d;
   }
 });
@@ -878,7 +892,7 @@ export const unset = Pipe.AllRequired({
     });
     
     // format.transferSystemsAndShuttles(d, [input], params, 'first');
-    d.gen_name = format.formatName([input], "unset");
+    d.gen_name = formatName([input], "unset");
     return d;
   }
 });
@@ -989,7 +1003,7 @@ export const rotate = Pipe.AllRequired({
         d.colSystemMapping[j] = input.colSystemMapping[j];
       }
     }
-    d.gen_name = format.formatName([input], "rot");
+    d.gen_name = formatName([input], "rot");
     return d;
   }
 });
@@ -1036,7 +1050,7 @@ export const interlace = Merge.AllRequired({
     const d: Draft = utilInstance.interlace(all_drafts, factor_in_repeats, warp_system_draft);
   
     // format.transferSystemsAndShuttles(d, all_drafts,params, 'interlace');
-    // d.gen_name = format.formatName(all_drafts, "ilace")
+    // d.gen_name = formatName(all_drafts, "ilace")
     return d;
   }     
 });
@@ -1116,7 +1130,7 @@ export const selvedge = Merge.AllRequired({
       }
     }
     // format.transferSystemsAndShuttles(d, inputs, params, 'first');
-    d.gen_name = format.formatName(inputs, "sel");
+    d.gen_name = formatName(inputs, "sel");
     return d;
   }
 });
@@ -1290,7 +1304,7 @@ export const mask = Merge.AllRequired({
 
     }, init_draft);
     // format.transferSystemsAndShuttles(d, inputs, params, 'first');
-    d.gen_name = format.formatName(inputs, "mask")
+    d.gen_name = formatName(inputs, "mask")
     return d;
   }        
 });
@@ -1369,7 +1383,7 @@ export const atop = Merge.AllRequired({
 
     }, init_draft);
     // format.transferSystemsAndShuttles(d, inputs, params, 'first');
-    d.gen_name = format.formatName(inputs, "atop")
+    d.gen_name = formatName(inputs, "atop")
     return d;
   }        
 });
@@ -1446,7 +1460,7 @@ export const knockout = Merge.AllRequired({
 
     }, init_draft);
     // format.transferSystemsAndShuttles(d,inputs,params, 'first');
-    d.gen_name = format.formatName(inputs, "ko");
+    d.gen_name = formatName(inputs, "ko");
     return d;
   }        
 });
@@ -1558,7 +1572,7 @@ export const stretch = Pipe.AllRequired({
       }
     });
     // format.transferSystemsAndShuttles(d,[input], params, 'stretch');
-    d.gen_name = format.formatName([input], "stretch")
+    d.gen_name = formatName([input], "stretch")
     return d; 
   }
 });
@@ -1604,7 +1618,7 @@ export const resize = Pipe.AllRequired({
       });
     });
     // format.transferSystemsAndShuttles(d,[input],params, 'stretch');
-    d.gen_name = format.formatName([input], "resize")
+    d.gen_name = formatName([input], "resize")
     return d;
   }
 });
@@ -1686,7 +1700,7 @@ export const margin = Merge.AllRequired({
         });
         
     });
-    d.gen_name = format.formatName(inputs, "margin");
+    d.gen_name = formatName(inputs, "margin");
     return d;
   }
 });
@@ -1749,7 +1763,7 @@ export const crop = Pipe.AllRequired({
       });
     });
     // format.transferSystemsAndShuttles(d,[input],params, 'first');
-    d.gen_name = format.formatName([input], "crop");
+    d.gen_name = formatName([input], "crop");
     return d;
   } 
 });
@@ -1817,7 +1831,7 @@ export const trim = Pipe.AllRequired({
       });
     });
     // format.transferSystemsAndShuttles(d,[input],params, 'first');
-    d.gen_name = format.formatName([input], "trim");
+    d.gen_name = formatName([input], "trim");
     return d;
   }     
 });
@@ -1863,7 +1877,7 @@ export const apply_mats = Merge.NoParams({
         d.drawdown[i][j] = new Cell(cell.getHeddle());
       });
     });
-    d.gen_name = format.formatName(inputs, 'materials')
+    d.gen_name = formatName(inputs, 'materials')
     return d;
   }        
 });
@@ -1956,7 +1970,7 @@ export const makesymmetric = Pipe.AllRequired({
     }
   
     const draft: Draft = initDraftWithParams({warps: usepattern[0].length, wefts: usepattern.length, pattern: usepattern});
-    draft.gen_name = format.formatName([input], "4-way");
+    draft.gen_name = formatName([input], "4-way");
     return draft;
 
   }        
@@ -1981,7 +1995,7 @@ export const invert = Pipe.NoParams({
       pattern: input.drawdown});
     d.drawdown = invertDrawdown(d.drawdown);
     // format.transferSystemsAndShuttles(d, [input], {}, 'first');
-    d.gen_name = format.formatName([input], "invert");
+    d.gen_name = formatName([input], "invert");
     return d;
   }
 });
@@ -2002,7 +2016,7 @@ export const flipx = Pipe.NoParams({
     let d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = flipDrawdown(d.drawdown, true);
     // format.transferSystemsAndShuttles(d,[input], {}, 'first');
-    d.gen_name = format.formatName([input], "fhoriz");
+    d.gen_name = formatName([input], "fhoriz");
     return d;
   }
 });
@@ -2027,7 +2041,7 @@ export const flipy = Pipe.NoParams({
     });
     d.drawdown = flipDrawdown(d.drawdown, false);
     // format.transferSystemsAndShuttles(d,[input], {}, 'first');
-    d.gen_name = format.formatName([input], "fvert");
+    d.gen_name = formatName([input], "fvert");
     return d;
   }
 });
@@ -2057,7 +2071,7 @@ export const shiftx = Pipe.AllRequired({
     const d: Draft = initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = shiftDrawdown(d.drawdown, false, params[0]);
     // format.transferSystemsAndShuttles(d, [input], params, 'first');
-    d.gen_name = format.formatName([input], "shiftx");
+    d.gen_name = formatName([input], "shiftx");
   
     return d;
   }
@@ -2088,7 +2102,7 @@ export const shifty = Pipe.AllRequired({
     const d: Draft =initDraftWithParams({warps: warps(input.drawdown), wefts: wefts(input.drawdown), pattern: input.drawdown});
     d.drawdown = shiftDrawdown(d.drawdown, true, params[0]);
     // format.transferSystemsAndShuttles(d,[input],params, 'first');
-    d.gen_name = format.formatName([input], "shifty");
+    d.gen_name = formatName([input], "shifty");
   
     return d;
   }
@@ -2104,7 +2118,7 @@ export const slope = Pipe.AllRequired({
     type: 'number',
     min: -100,
     max: 100,
-    value: 2,
+    value: 1,
     dx: 'the amount to shift rows by'
     },
     {
@@ -2135,7 +2149,7 @@ export const slope = Pipe.AllRequired({
       }
     }
     // format.transferSystemsAndShuttles(d,[input],params, 'first');
-    d.gen_name = format.formatName([input], "slope");
+    d.gen_name = formatName([input], "slope");
     return d;
   }
 });
@@ -2172,7 +2186,7 @@ export const replicate = Branch.AllRequired({
           colShuttleMapping: input.colShuttleMapping,
           colSystemMapping: input.colSystemMapping
       });
-      d.gen_name = format.formatName([input], "mirror");
+      d.gen_name = formatName([input], "mirror");
       outputs.push(d);
     }
     return outputs;
@@ -2252,7 +2266,7 @@ export const bindweftfloats = Pipe.AllRequired({
     });
   
     // format.transferSystemsAndShuttles(d, [input], params, 'first');
-    d.gen_name = format.formatName([input], "bindweft");
+    d.gen_name = formatName([input], "bindweft");
     return d;
   }
 });
@@ -2344,7 +2358,7 @@ export const layer = Merge.NoParams({
     }
   
     // format.transferSystemsAndShuttles(d, inputs, {}, 'layer');
-    d.gen_name = format.formatName(inputs, "layer");
+    d.gen_name = formatName(inputs, "layer");
     return d;
   }     
 });
@@ -2420,7 +2434,7 @@ export const tile = Merge.AllRequired({
     });
     
     // format.transferSystemsAndShuttles(output, all_drafts, params, 'first');
-    output.gen_name = format.formatName(all_drafts, "tile");
+    output.gen_name = formatName(all_drafts, "tile");
   
     return output;
   }   
@@ -2507,7 +2521,7 @@ export const chaos = Merge.AllRequired({
       
 
       // format.transferSystemsAndShuttles(output, all_drafts, params, 'first');
-      output.gen_name = format.formatName(all_drafts, "chaos");
+      output.gen_name = formatName(all_drafts, "chaos");
     
       return output;  
     }
@@ -2628,7 +2642,7 @@ export const jointop = Merge.AllRequired({
       });
     });
     // format.transferSystemsAndShuttles(d, all_drafts, params, 'jointop');
-    d.gen_name = format.formatName(all_drafts, "top");
+    d.gen_name = formatName(all_drafts, "top");
     return d;
   }
 });
@@ -2716,7 +2730,7 @@ export const joinleft = Merge.AllRequired({
           
 
     // format.transferSystemsAndShuttles(d, all_drafts, params, 'joinleft');
-    d.gen_name = format.formatName(all_drafts, "left");
+    d.gen_name = formatName(all_drafts, "left");
     
     return d;
   }
@@ -2844,7 +2858,7 @@ export const joinleft = Merge.AllRequired({
 
 //     }
 //     // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-//     d.gen_name = format.formatName(all_drafts, "splice")
+//     d.gen_name = formatName(all_drafts, "splice")
 //     return d;
 //   }     
 // });
@@ -2973,7 +2987,7 @@ export const joinleft = Merge.AllRequired({
 
 //   }
 //   // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-//   d.gen_name = format.formatName(all_drafts, "splice")
+//   d.gen_name = formatName(all_drafts, "splice")
 //   return d;
 // }     
 // });
@@ -3035,7 +3049,7 @@ export const joinleft = Merge.AllRequired({
 //       });
 //     });
 
-//     d.gen_name = format.formatName([input], "cut+"+i)
+//     d.gen_name = formatName([input], "cut+"+i)
 //     outputs.push(d);
 //   }
 //   return outputs;
@@ -3207,7 +3221,7 @@ export const joinleft = Merge.AllRequired({
 //                     }
 
 //                     format.transferSystemsAndShuttles(draft,[input],params, 'first');
-//                     draft.gen_name = format.formatName([input], "germanify");
+//                     draft.gen_name = formatName([input], "germanify");
 //                   return draft
                 
 //                 })
@@ -3274,7 +3288,7 @@ export const joinleft = Merge.AllRequired({
 //               }
 //             }
 //             // format.transferSystemsAndShuttles(draft,[input],params, 'first');
-//             // draft.gen_name = format.formatName([input], "crackleify");
+//             // draft.gen_name = formatName([input], "crackleify");
 //           return draft
 //       }));
 //     }           
@@ -3650,7 +3664,7 @@ export const joinleft = Merge.AllRequired({
 //                     }
 //                   })
 //                 });
-//                 d.gen_name = format.formatName([draft], "");
+//                 d.gen_name = formatName([draft], "");
 //                 outputs.push(d);
 //           });
 //         }
@@ -3685,7 +3699,7 @@ export const joinleft = Merge.AllRequired({
 //     })
    
       
-//     interlaced.gen_name = format.formatName(outputs, "layer");
+//     interlaced.gen_name = formatName(outputs, "layer");
 //     return Promise.resolve([interlaced]);
 //     }      
 // }};
@@ -3869,7 +3883,7 @@ export const joinleft = Merge.AllRequired({
 //     });
     
 //     // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-//     d.gen_name = format.formatName([input], "assign wefts")
+//     d.gen_name = formatName([input], "assign wefts")
 //     const sys_char = String.fromCharCode(97 +params[1]);
 //     d.gen_name = '-'+sys_char+':'+ d.gen_name;
 //     return d;
@@ -3963,7 +3977,7 @@ export const joinleft = Merge.AllRequired({
 //       });
       
 //       // format.transferSystemsAndShuttles(d,op_input.drafts,op_input.params, 'interlace');
-//       d.gen_name = format.formatName([input], "assign warps")
+//       d.gen_name = formatName([input], "assign warps")
 //       const sys_char = String.fromCharCode(97 +params[1]);
 //       d.gen_name = '|'+sys_char+':'+d.gen_name;
 
@@ -4096,7 +4110,7 @@ export const joinleft = Merge.AllRequired({
 
 //   //     }
       
-//   //     d.gen_name = format.formatName([], "notation");
+//   //     d.gen_name = formatName([], "notation");
 //   //     return  Promise.resolve([d]);
 
      
@@ -4234,7 +4248,7 @@ export const joinleft = Merge.AllRequired({
 
 //       }
       
-//       d.gen_name = format.formatName([], "notation");
+//       d.gen_name = formatName([], "notation");
 //       return  Promise.resolve([d]);
 
 //     }        
@@ -4344,7 +4358,7 @@ export const joinleft = Merge.AllRequired({
 //         }
 //       }
 
-//       d.gen_name = format.formatName([], "warp profile");
+//       d.gen_name = formatName([], "warp profile");
 //       return  Promise.resolve([d]);
 
      
@@ -4447,7 +4461,7 @@ export const joinleft = Merge.AllRequired({
 //         }
 //       }
 
-//       d.gen_name = format.formatName([], "warp profile");
+//       d.gen_name = formatName([], "warp profile");
 //       return  Promise.resolve([d]);
      
 //     }        
@@ -4561,9 +4575,12 @@ export const joinleft = Merge.AllRequired({
 // //       }
 // //     }
 
-// //     d.gen_name = format.formatName([], "profile");
+// //     d.gen_name = formatName([], "profile");
 // //     return  Promise.resolve([d]);
 
     
 // //   }        
 // // }
+
+/** Do the same thing as in utilInstance w/ singleton */
+

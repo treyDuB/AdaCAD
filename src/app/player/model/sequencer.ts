@@ -1,4 +1,4 @@
-import { PedalEvent, SingleOp, ChainOp, forward } from "./op_mappings";
+import { PedalEvent, PlayerOp, ChainOp, forward } from "./op_mappings";
 import { PlayerState, copyState } from "./player";
 
 /**
@@ -14,7 +14,7 @@ import { PlayerState, copyState } from "./player";
   p_select_b?: number = -1;
   p_prog: number = -1;
   _pos: number = -1;
-  ops: Array<SingleOp | ChainOp> = [];
+  ops: Array<PlayerOp | ChainOp> = [];
   selecting: boolean = false;
 
   /** 
@@ -23,7 +23,7 @@ import { PlayerState, copyState } from "./player";
    * pedal. Optionally, provide an array of Ops to load onto the
    * Sequencer.
    */
-  constructor(pedals?: Array<number>, ops?: Array<SingleOp | ChainOp>) {
+  constructor(pedals?: Array<number>, ops?: Array<PlayerOp | ChainOp>) {
     this.name = "sequencer";
     if (pedals) {
       this.p_prog = pedals[0];
@@ -49,7 +49,7 @@ import { PlayerState, copyState } from "./player";
     return (this.p_prog >= 0 && this.p_select_a >= 0);
   }
 
-  get current(): SingleOp | ChainOp {
+  get current(): PlayerOp | ChainOp {
     return this.ops[this._pos];
   }
 
@@ -85,7 +85,7 @@ import { PlayerState, copyState } from "./player";
     }
   }
 
-  addOp(o: SingleOp | ChainOp) {
+  addOp(o: PlayerOp | ChainOp) {
     this.ops.push(o);
     if (this._pos < 0) this._pos = 0;
     return this.ops.length-1;
@@ -131,7 +131,7 @@ import { PlayerState, copyState } from "./player";
   }
 }
 
-export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | ChainOp>) {
+export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<PlayerOp | ChainOp>) {
   let pedals = [conf, sel_fwd];
   if (sel_back) pedals.push(sel_back);
   if (start_ops) return new OpSequencer(pedals, start_ops);

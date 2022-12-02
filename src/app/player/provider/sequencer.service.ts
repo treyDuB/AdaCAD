@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OpSequencer, SingleOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/op_mappings';
+import { OpSequencer, PlayerOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/op_mappings';
 
 /** 
  * each chain op in the sequencer has an ID and 
@@ -44,7 +44,7 @@ export class SequencerService extends OpSequencer {
     }
   }
 
-  addSingleOp(o: SingleOp) {
+  addSingleOp(o: PlayerOp) {
     if (this.active) {
       this.addOp(o);
       // console.log(o);
@@ -54,13 +54,13 @@ export class SequencerService extends OpSequencer {
     }
   }
 
-  addChainOp(o: SingleOp) { 
+  addChainOp(o: PlayerOp) { 
     let ch = makeChainOp([o]);
     ch.id = this.chains.length;
     this.chains.push({id: ch.id, pos: this.addOp(ch)});
   }
 
-  addToChain(ch_id: number, o: SingleOp) {
+  addToChain(ch_id: number, o: PlayerOp) {
     let ch = this.ops[this.chains[ch_id].pos] as ChainOp;
     this.ops[this.chains[ch_id].pos] = makeChainOp(ch.ops.concat([o]));
     console.log(this.ops);

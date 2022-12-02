@@ -37,14 +37,14 @@ function newMapIndex(): MappingIndex {
 })
 export class MappingsService extends Array<PedalAction> {
   // pedals: Array<Pedal>;
-  ops: Array<SingleOp>;
+  ops: Array<SingleOp> = [];
   availPedals: Array<number>;
   // array: PedalOpMap = [];  // pedal ID (number) <-> op (PedalAction)
   
   // where all of the actual OpPairing, OpChain, OpSequencer objects end up so they are only created once
   index: MappingIndex;
 
-constructor(
+  constructor(
   public pds: PedalsService,
   private seq: SequencerService,
 ) { 
@@ -60,6 +60,21 @@ constructor(
     let seq = this.filter((m) => m.name == "sequencer") as Array<OpSequencer>;
     if (seq.length > 0) return seq[0];
     else return undefined as OpSequencer;
+  }
+
+  getMapOptions(p: number): Array<SingleOp> {
+    let res;
+    // if (this.pedalIsPaired(p)) {
+    //   console.log("filtering");
+    //   console.log(this.getMap(p));
+    //   res = this.ops.filter(op => {
+    //   op.name != (this.getMap(p) as SingleOp).name;
+    // });
+    // } else { 
+      res = this.ops; 
+    // }
+    // console.log(res);
+    return res;
   }
 
   // onAddPedal(p: Pedal) {
@@ -109,7 +124,6 @@ constructor(
     // }
   }
   
-  
   unmap(id: number) {
     console.log(`unmapping pedal ${id}`);
     // let op = this.pairs[id];
@@ -125,7 +139,9 @@ constructor(
   }
 
   pair(id: number, opName: string) {
-    let o = this.ops[this.ops.findIndex((op) => op.name == opName)];
+    console.log(this.ops);
+    let o = this.getOp(opName);
+    console.log(o);
     // let thisOp = this.unpairedOps.splice(o, 1);
     this.setMap(id, makePairedOp(id, o));
   }
@@ -171,17 +187,29 @@ constructor(
     } else return false;
   }
 
+  getOp(name: string): SingleOp {
+    console.log(name);
+    let res = this.ops.filter((op) => op.name == name)[0];
+    console.log(res);
+    return res;
+  }
+
   pedalIsMapped(id: number) {
     if (this.getMap(id)) return true;
     return false;
   }
 
   pedalIsChained(id: number) {
-    if (this.pedalIsMapped(id) && this[id].name.startsWith('ch')) { return true; }
+    if (this[id].name.startsWith('ch')) { return true; }
     else {return false; }
   }
 
+  pedalInSequencer(id: number) {
+    if (this[id].name.startsWith('sequencer')) { return true; }
+    else { return false; }
+  }
+
   pedalIsPaired(id: number) {
-    return (this.pedalIsMapped(id) && !this.pedalIsChained(id));
+    return (this.pedalIsMapped(id) && !this.pedalIsChained(id) && !this.pedalInSequencer(id));
   }
 }

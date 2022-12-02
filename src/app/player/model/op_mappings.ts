@@ -7,23 +7,25 @@ import { wefts } from "../../core/model/drafts";
 import { OpInput, TreeOperation as TreeOp, SingleInlet,
   BaseOp as Op, BuildableOperation as GenericOp, 
   Seed, Pipe, AllRequired, DraftsOptional, 
-  getDefaultParams 
+  getDefaultParams, 
+  ParamValue
 } from "../../mixer/model/operation";
 import { PlayerState, initState, copyState } from "./state";
 
 import { OpSequencer, makeOpSequencer } from "./sequencer";
 export * from "./sequencer";
 
-export interface SingleOp {
+export interface PlayerOp {
   id?: number,
   name: string,
+  struct_id?: number,
   dx?: string,
   op?: GenericOp,
   weavingOnly?: boolean,
   chain?: boolean,
   perform: (init: PlayerState) => Promise<PlayerState>;
 }
-export type PlayerOp = SingleOp;
+export type SingleOp = PlayerOp;
 
 /** @const forward a player-specific function to progress through the draft */
 export const forward: PlayerOp = {
@@ -59,14 +61,15 @@ export const reverse: PlayerOp = {
   }
 }
 
-export function playerOpFrom(op: GenericOp) {
+export function playerOpFrom(op: GenericOp, params?: Array<ParamValue>) {
   // use "rotate" op as an example
+  let input_params = params ? params : getDefaultParams(op);
   let perform;
   if (op.classifier.type === 'pipe') {
     const pipeOp = op as Op<Pipe, AllRequired>;
     perform = function(init: PlayerState) {
       let res = copyState(init);
-      res.draft = pipeOp.perform(init.draft, getDefaultParams(pipeOp));
+      res.draft = pipeOp.perform(init.draft, input_params);
       res.row = (init.row) % wefts(res.draft.drawdown);
       res.pedal = op.name;
       return Promise.resolve(res);
@@ -75,16 +78,17 @@ export function playerOpFrom(op: GenericOp) {
     const seedOp = op as Op<Seed, DraftsOptional>;
     perform = function(init: PlayerState) {
       let res = copyState(init);
-      res.draft = seedOp.perform(getDefaultParams(seedOp));
+      res.draft = seedOp.perform(input_params);
       res.row = (init.row) % wefts(res.draft.drawdown);
       res.pedal = op.name;
       return Promise.resolve(res);
     }
   }
   
+  /** @TODO */
   var p: PlayerOp = { 
     name: op.name,
-    op: op,
+    dx: op.dx,
     perform: perform
   }
   return p;
@@ -154,11 +158,11 @@ export interface PedalEvent {
  */
 export interface PairedOp extends PedalEvent {
   pedal:  number,
-  op:     SingleOp,
+  op:     PlayerOp,
 }
 
 // this ...args thing is such a hack
-export function makePairedOp(p: number, op: SingleOp): PairedOp {
+export function makePairedOp(p: number, op: PlayerOp): PairedOp {
   let jankPerform = (init: PlayerState, ...args) => {
     return op.perform(init);
   }
@@ -179,7 +183,7 @@ export function makePairedOp(p: number, op: SingleOp): PairedOp {
  */
 export interface ChainOp extends PedalEvent{
   pedal:  number,
-  ops:    Array<SingleOp>,
+  ops:    Array<PlayerOp>,
 }
 
 export function makeBlankChainOp(p?: number): ChainOp {
@@ -194,7 +198,7 @@ export function makeBlankChainOp(p?: number): ChainOp {
   return res;
 }
 
-export function makeChainOp(ops: Array<SingleOp>, p?: number): ChainOp {
+export function makeChainOp(ops: Array<PlayerOp>, p?: number): ChainOp {
   let res = makeBlankChainOp(p);
   res.name = "ch";
   for (let o of ops) {

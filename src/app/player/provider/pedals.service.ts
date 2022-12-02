@@ -139,8 +139,12 @@ export class PedalsService extends EventEmitter {
   //     pedal_states: {},
   //     loom_ready: false     // is the loom requesting a draft row?
   // };
-  pedals: Array<Pedal> = [];
+  p_pedals: Array<Pedal> = [];
   v_pedals: Array<Pedal> = [];
+  
+  virtual: boolean = true;  // whether to mix virtual pedals in with the regular pedals array;
+
+  get pedals() { return this.p_pedals.concat(this.v_pedals); }
 
   constructor() { 
     super();
@@ -153,6 +157,8 @@ export class PedalsService extends EventEmitter {
     // if pi_online = "true" at start-up, just make sure
     console.log("are you alive?");
     this.pi_online.checkAlive();
+    this.loom_online.attach();
+
     this.virtualPedals(true);
     this.loomPedals(false);
 
@@ -166,23 +172,25 @@ export class PedalsService extends EventEmitter {
       this.loomListeners(state));
 
     /** pedal array listeners */
-    this.pedal_array.on('ready', (state) => 
+    this.p_pedal_array.on('ready', (state) => 
       this.weavingWriters(state)
     );
 
-    this.pedal_array.on('child-added', (newNode) => {
+    this.p_pedal_array.on('child-added', (newNode) => {
       console.log('pedals service: pedal added');
-      this.pedals.push(this.nodeToPedal(newNode));
-      this.emit('pedal-added', this.pedals.length);
+      this.p_pedals.push(this.nodeToPedal(newNode));
+      this.v_pedals.map((el) => { el.id += 1; });
+      this.emit('pedal-added', this.p_pedals.length);
     });
 
-    this.pedal_array.on('child-removed', () => {
-      this.pedals.pop();
-      this.emit('pedal-removed', this.pedals.length);
+    this.p_pedal_array.on('child-removed', () => {
+      this.p_pedals.pop();
+      this.v_pedals.map((el) => { el.id -= 1; });
+      this.emit('pedal-removed', this.p_pedals.length);
     });
 
-    this.pedal_array.on('child-change', (e) => {
-      this.pedals[e.id].state = e.val;
+    this.p_pedal_array.on('child-change', (e) => {
+      this.p_pedals[e.id].state = e.val;
       this.emit('pedal-step', e.id);
       // e = {id: which pedal's id, val: pedal state}
       // call pedal.execute or whatever it ends up being
@@ -198,12 +206,16 @@ export class PedalsService extends EventEmitter {
     });
     
     /** virtual pedal listeners */
-    this.v_pedal_array.on('ready', (state) => 
-      this.weavingWriters(state));
+    this.v_pedal_array.on('ready', (state) => {
+      console.log("weaving writers ", state);
+      this.weavingWriters(state);
+    });
 
     this.v_pedal_array.on('child-added', (newNode) => {
       console.log('pedals service: virtual pedal added');
-      this.v_pedals.push(this.nodeToPedal(newNode));
+      let v = this.nodeToPedal(newNode);
+      v.id += this.p_pedals.length - (this.p_pedals.length ? 1 : 0);
+      this.v_pedals.push(v);
       this.emit('pedal-added', this.v_pedals.length);
     })
 
@@ -235,24 +247,18 @@ export class PedalsService extends EventEmitter {
   /** physical pedals DB nodes */
   get num_pedals() { return this.status.num_pedals; }
   get pedal_states() { return this.status.pedal_states; }
-  get pedal_array() { return this.status.pedal_array; }
+  get p_pedal_array() { return this.status.pedal_array; }
 
   /** virtual pedals DB nodes */
   get num_v_pedals() { return this.status.num_v_pedals; }
   get v_pedal_states() { return this.status.v_pedal_states; }
   get v_pedal_array() { return this.status.v_pedal_array; }
   
-  get readyToWeave() { return (this.loom_online.val && this.pedal_array.ready); }
+  get readyToWeave() { return (this.loom_online.val && (this.p_pedal_array.ready || this.v_pedal_array.ready)); }
 
   // attach all listeners to other values in DB
   loomPedals(state: boolean) {
-    if (state) {
-      this.loom_online.attach();
-      this.pedal_array.attach();
-    } else {
-      this.loom_online.detach();
-      this.pedal_array.detach();
-    }
+    state ? this.p_pedal_array.attach() : this.p_pedal_array.detach();
   }
 
   /** functions to interact with virtual pedals */
@@ -313,6 +319,7 @@ export class PedalsService extends EventEmitter {
     // console.log("toggle weaving");
     let vac = !this.vacuum_on.val;
     console.log("vacuum is turning ", vac);
+    console.log(this.active_draft);
     this.active_draft.setVal(vac);
   }
 
