@@ -5,6 +5,6 @@
     "src/app/mixer/**/*.ts"
   ],
   "exclude": [
-    "src/app/weaver/**/*.ts",
+    "src/app/weaver/**/*.ts"
   ]
 }
