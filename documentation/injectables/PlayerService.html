@@ -277,8 +277,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="392"
-                            class="link-to-prism">src/app/player/player.service.ts:392</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="380"
+                            class="link-to-prism">src/app/player/player.service.ts:380</a></div>
                 </td>
             </tr>
 
@@ -342,8 +342,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="367"
-                            class="link-to-prism">src/app/player/player.service.ts:367</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="355"
+                            class="link-to-prism">src/app/player/player.service.ts:355</a></div>
                 </td>
             </tr>
 
@@ -379,8 +379,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="282"
-                            class="link-to-prism">src/app/player/player.service.ts:282</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="283"
+                            class="link-to-prism">src/app/player/player.service.ts:283</a></div>
                 </td>
             </tr>
 
@@ -448,8 +448,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="334"
-                            class="link-to-prism">src/app/player/player.service.ts:334</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="335"
+                            class="link-to-prism">src/app/player/player.service.ts:335</a></div>
                 </td>
             </tr>
 
@@ -517,8 +517,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="291"
-                            class="link-to-prism">src/app/player/player.service.ts:291</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="292"
+                            class="link-to-prism">src/app/player/player.service.ts:292</a></div>
                 </td>
             </tr>
 
@@ -586,8 +586,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="325"
-                            class="link-to-prism">src/app/player/player.service.ts:325</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="326"
+                            class="link-to-prism">src/app/player/player.service.ts:326</a></div>
                 </td>
             </tr>
 
@@ -667,8 +667,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="310"
-                            class="link-to-prism">src/app/player/player.service.ts:310</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="311"
+                            class="link-to-prism">src/app/player/player.service.ts:311</a></div>
                 </td>
             </tr>
 
@@ -741,8 +741,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="386"
-                            class="link-to-prism">src/app/player/player.service.ts:386</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="374"
+                            class="link-to-prism">src/app/player/player.service.ts:374</a></div>
                 </td>
             </tr>
 
@@ -806,8 +806,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="398"
-                            class="link-to-prism">src/app/player/player.service.ts:398</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="386"
+                            class="link-to-prism">src/app/player/player.service.ts:386</a></div>
                 </td>
             </tr>
 
@@ -1062,9 +1062,16 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="275" class="link-to-prism">src/app/player/player.service.ts:275</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="276" class="link-to-prism">src/app/player/player.service.ts:276</a></div>
                                 </td>
                             </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>get whether or not the loom is weaving</p>
+</div>
+
+                        </td>
+                    </tr>
 
             </tbody>
         </table>
@@ -1084,7 +1091,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="278" class="link-to-prism">src/app/player/player.service.ts:278</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="279" class="link-to-prism">src/app/player/player.service.ts:279</a></div>
                                 </td>
                             </tr>
 
@@ -1338,7 +1345,7 @@ export class PlayerService {
     this.draftClassification.push(
       {category: &#x27;transformation&#x27;,
       dx: &quot;1 input, 1 output, applies an operation to the input that transforms it in some way&quot;,
-      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile]}
+      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile, bindwarp, bindweft]}
     );
 
     // //test this
@@ -1354,11 +1361,11 @@ export class PlayerService {
         mappings.pair(0, &#x27;forward&#x27;);
         console.log(&quot;pedals mapping&quot;, mappings);
       } else if (n &#x3D;&#x3D; 2) {
-      //   if (mappings.pedalIsMapped(0)) mappings.unmap(0);
-      //   mappings[0] &#x3D; this.seq;
-      //   mappings[1] &#x3D; this.seq;
-      //   this.seq.addPedals(0, 1);
-      //   console.log(&quot;pedals mapping&quot;, mappings);
+        if (mappings.pedalIsMapped(0)) mappings.unmap(0);
+        mappings[0] &#x3D; this.seq;
+        mappings[1] &#x3D; this.seq;
+        this.seq.addPedals(0, 1);
+        console.log(&quot;pedals mapping&quot;, mappings);
       }
     })
   }
@@ -1369,6 +1376,7 @@ export class PlayerService {
     );
   }
 
+  /** get whether or not the loom is weaving */
   get weaving() {
     return this.pedals.active_draft.val;
   }
@@ -1447,19 +1455,6 @@ export class PlayerService {
       });
     }
   }
-
-  // compound pedal operations
-  // normal pedal -&gt; op
-  // compound pedal -&gt; Op sequence
-  // if (compound pedal change) {
-      // sequence of operations: [Op, Op, Op]
-      // let finaldraft &#x3D; starting Draft;
-      // for op in sequence:
-      //   finaldraft &#x3D; finaldraft.perform(op);
-      // }
-      // do something with finaldraft
-  // }
-
 
   currentRow() {
     let {draft, row} &#x3D; this.state;

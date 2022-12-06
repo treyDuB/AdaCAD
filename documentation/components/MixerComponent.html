@@ -302,7 +302,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#toggleCollapsed" >toggleCollapsed</a>
+                                <a href="#togglePlayer" >togglePlayer</a>
                             </li>
                             <li>
                                 <a href="#undo" >undo</a>
@@ -804,8 +804,8 @@ dialog - Anglar Material dialog module. Used to control the popup modals.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="914"
-                            class="link-to-prism">src/app/mixer/mixer.component.ts:914</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="930"
+                            class="link-to-prism">src/app/mixer/mixer.component.ts:930</a></div>
                 </td>
             </tr>
 
@@ -1828,8 +1828,8 @@ dialog - Anglar Material dialog module. Used to control the popup modals.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="923"
-                            class="link-to-prism">src/app/mixer/mixer.component.ts:923</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="939"
+                            class="link-to-prism">src/app/mixer/mixer.component.ts:939</a></div>
                 </td>
             </tr>
 
@@ -2581,18 +2581,18 @@ there is a modal showing materials open and update it if there is</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toggleCollapsed"></a>
+                    <a name="togglePlayer"></a>
                     <span class="name">
                         <span class="modifier">Public</span>
-                        <span ><b>toggleCollapsed</b></span>
-                        <a href="#toggleCollapsed"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>togglePlayer</b></span>
+                        <a href="#togglePlayer"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>toggleCollapsed()</code>
+                    <code>togglePlayer(open: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
@@ -2609,8 +2609,40 @@ there is a modal showing materials open and update it if there is</p>
                 <td class="col-md-4">
 
                     <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>open</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -4008,8 +4040,24 @@ export class MixerComponent implements OnInit {
   }
 
 
-  public toggleCollapsed(){
-    this.collapsed &#x3D; !this.collapsed;
+  public togglePlayer(open: boolean){
+    console.log(&quot;mixer component toggling player&quot;);
+    console.log(open);
+    let player &#x3D; document.getElementById(&#x27;player-container&#x27;);
+    let palette &#x3D; document.querySelector(&#x27;app-mixer &gt; mat-drawer-container&#x27;) as HTMLElement;
+    let topbar &#x3D; document.querySelector(&#x27;app-topbar&#x27;);
+
+    let player_h &#x3D; player.getBoundingClientRect().height;
+    let topbar_h &#x3D; topbar.getBoundingClientRect().height;
+    let palette_h &#x3D; palette.getBoundingClientRect().height;
+    // console.log(&quot;player height is &quot; + h.toString());
+    if (open) {
+      palette.style.height &#x3D; &#x27;0px&#x27;;
+      player.style.height &#x3D; &#x27;calc(100vh - &#x27; + topbar_h.toString() + &#x27;px)&#x27;;
+    } else {
+      palette.style.height &#x3D; &#x27;calc(100vh - &#x27; + topbar_h.toString() + &#x27;px)&#x27;;
+      player.style.height &#x3D; &#x27;0px&#x27;; 
+    }
   }
 
   public createNote(){
@@ -4079,7 +4127,10 @@ source&#x3D;&quot;mixer&quot;
 
 &lt;/mat-drawer-container&gt;
 
-&lt;app-player #player id&#x3D;&quot;player&quot;&gt;&lt;/app-player&gt;
+&lt;app-player #player 
+  id&#x3D;&quot;player&quot;
+  (playerOpen)&#x3D;&quot;togglePlayer($event)&quot;
+&gt;&lt;/app-player&gt;
 </code></pre>
     </div>
 
@@ -4099,9 +4150,10 @@ source&#x3D;&quot;mixer&quot;
     background:hsl(0, 100%, 100%);
   }
 
-  .mat-drawer-container {
+  app-mixer &gt; mat-drawer-container {
     width: 100%;
-    // height: calc(100vh - 50px) !important;
+    // height: 100%;
+    height: calc(100vh - 112px) !important;
   }
   
   
@@ -4509,7 +4561,7 @@ source&#x3D;&quot;mixer&quot;
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><app-topbar [drawer] = "drawer"[filename]="filename"source="mixer"  (onUndo)="undo();"   (onRedo)="redo();"  (onLoadNewFile)="loadNewFile($event);"  (onClearScreen)="clearAll();"  (onSave)="onSave($event);"></app-topbar><mat-drawer-container #container class="mat-drawer-container" cdkScrollable>    <mat-drawer #drawer class="example-sidenav" mode="side" position="end" opened>          <app-sidebar #view_tool        [render]=""        source=\'mixer\'        (onUndo)="undo();"         (onRedo)="redo();"        (onDesignModeChange)=\'designModeChange($event)\'        (onZoomChange) ="renderChange($event);"        (onOperationAdded) = "operationAdded($event)"        (onImport) = "importNewFile($event)"        (onZoomChange) ="renderChange($event);"        (onViewPortMove) ="setScroll($event);"        (onNoteCreate) ="createNote();"        (onMaterialChange) = "materialChange()"        (onGlobalLoomChange) = "globalLoomChange($event)"        ></app-sidebar>  </mat-drawer>  <app-palette    [style.width.px]=\'vp.getAbsoluteWidth()\'   [style.height.px]=\'vp.getAbsoluteHeight()\'   #palette  id="scrollable-container"  (onDesignModeChange)="designModeChange($event)"  (onDraftToPlayer)="draftToPlayer($event)">  </app-palette>  <canvas id="saver"></canvas></mat-drawer-container><app-player #player id="player"></app-player></div>'
+        var COMPONENT_TEMPLATE = '<div><app-topbar [drawer] = "drawer"[filename]="filename"source="mixer"  (onUndo)="undo();"   (onRedo)="redo();"  (onLoadNewFile)="loadNewFile($event);"  (onClearScreen)="clearAll();"  (onSave)="onSave($event);"></app-topbar><mat-drawer-container #container class="mat-drawer-container" cdkScrollable>    <mat-drawer #drawer class="example-sidenav" mode="side" position="end" opened>          <app-sidebar #view_tool        [render]=""        source=\'mixer\'        (onUndo)="undo();"         (onRedo)="redo();"        (onDesignModeChange)=\'designModeChange($event)\'        (onZoomChange) ="renderChange($event);"        (onOperationAdded) = "operationAdded($event)"        (onImport) = "importNewFile($event)"        (onZoomChange) ="renderChange($event);"        (onViewPortMove) ="setScroll($event);"        (onNoteCreate) ="createNote();"        (onMaterialChange) = "materialChange()"        (onGlobalLoomChange) = "globalLoomChange($event)"        ></app-sidebar>  </mat-drawer>  <app-palette    [style.width.px]=\'vp.getAbsoluteWidth()\'   [style.height.px]=\'vp.getAbsoluteHeight()\'   #palette  id="scrollable-container"  (onDesignModeChange)="designModeChange($event)"  (onDraftToPlayer)="draftToPlayer($event)">  </app-palette>  <canvas id="saver"></canvas></mat-drawer-container><app-player #player   id="player"  (playerOpen)="togglePlayer($event)"></app-player></div>'
     var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
     var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
     var ACTUAL_COMPONENT = {'name': 'MixerComponent'};

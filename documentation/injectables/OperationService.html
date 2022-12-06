@@ -277,8 +277,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="2318"
-                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2318</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="2319"
+                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2319</a></div>
                 </td>
             </tr>
 
@@ -396,8 +396,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="2298"
-                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2298</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="2299"
+                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2299</a></div>
                 </td>
             </tr>
 
@@ -477,8 +477,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="2337"
-                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2337</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="2338"
+                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2338</a></div>
                 </td>
             </tr>
 
@@ -546,8 +546,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="2349"
-                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2349</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="2350"
+                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2350</a></div>
                 </td>
             </tr>
 
@@ -615,8 +615,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="2345"
-                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2345</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="2346"
+                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2346</a></div>
                 </td>
             </tr>
 
@@ -696,8 +696,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="2312"
-                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2312</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="2313"
+                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2313</a></div>
                 </td>
             </tr>
 
@@ -765,8 +765,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="2181"
-                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2181</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="2182"
+                            class="link-to-prism">src/app/mixer/provider/operation.service.ts:2182</a></div>
                 </td>
             </tr>
 
@@ -2557,9 +2557,10 @@ export class OperationService {
                 }
                 this.transferSystemsAndShuttles(draft, child_input.drafts, &#x27;first&#x27;);
                 draft.gen_name &#x3D; this.formatName(child_input.drafts, &quot;crackleify&quot;);
-                console.log(&quot;new draft id: &quot;, draft.id);
-              return draft;
+              return draft
             }));
+                  
+              
           });  
       }
     }  
@@ -2971,7 +2972,7 @@ export class OperationService {
        
 
         //initialize the base container with the first draft at 0,0, unset for anythign wider
-        const draft: Draft &#x3D; initDraftWithParams({warps: warpnum, wefts:amps});
+        const draft: Draft &#x3D;initDraftWithParams({warps: warpnum, wefts:amps});
           
         for(let j &#x3D; 0; j &lt; warps(draft.drawdown); j++){
           let i &#x3D; Math.floor((amps/2)*Math.sin(j * inc) + (amps/2));

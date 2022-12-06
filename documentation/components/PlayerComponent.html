@@ -134,16 +134,16 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#mixerElement" >mixerElement</a>
+                                <a href="#mixerContainer" >mixerContainer</a>
                             </li>
                             <li>
                                 <a href="#op_sequencer" >op_sequencer</a>
                             </li>
                             <li>
-                                <a href="#ownElement" >ownElement</a>
+                                <a href="#open" >open</a>
                             </li>
                             <li>
-                                <a href="#playOpen" >playOpen</a>
+                                <a href="#ownContainer" >ownContainer</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -176,6 +176,9 @@
                             <li>
                                 <a href="#resizeContainer" >resizeContainer</a>
                             </li>
+                            <li>
+                                <a href="#toggleOpen" >toggleOpen</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -198,6 +201,20 @@
                     </td>
                 </tr>
 
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#player-open" >player-open</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
 
 
@@ -216,7 +233,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/player/player.component.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/player/player.component.ts:36</a></div>
                             </td>
                         </tr>
 
@@ -299,7 +316,30 @@
             </tbody>
         </table>
 </section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="player-open"></a>
+                        <b>player-open</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/core/EventEmitter" target="_blank" >EventEmitter</a></code>
 
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/player/player.component.ts:22</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
 
 
     <section>
@@ -327,8 +367,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">src/app/player/player.component.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">src/app/player/player.component.ts:92</a></div>
                 </td>
             </tr>
 
@@ -364,8 +404,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="47"
-                            class="link-to-prism">src/app/player/player.component.ts:47</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="49"
+                            class="link-to-prism">src/app/player/player.component.ts:49</a></div>
                 </td>
             </tr>
 
@@ -401,8 +441,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="42"
-                            class="link-to-prism">src/app/player/player.component.ts:42</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="44"
+                            class="link-to-prism">src/app/player/player.component.ts:44</a></div>
                 </td>
             </tr>
 
@@ -438,8 +478,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="76"
-                            class="link-to-prism">src/app/player/player.component.ts:76</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">src/app/player/player.component.ts:78</a></div>
                 </td>
             </tr>
 
@@ -455,6 +495,75 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleOpen"></a>
+                    <span class="name">
+                        <span ><b>toggleOpen</b></span>
+                        <a href="#toggleOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleOpen(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="94"
+                            class="link-to-prism">src/app/player/player.component.ts:94</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
     <section>
     
@@ -465,10 +574,10 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="mixerElement"></a>
+                    <a name="mixerContainer"></a>
                     <span class="name">
-                        <span ><b>mixerElement</b></span>
-                        <a href="#mixerElement"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>mixerContainer</b></span>
+                        <a href="#mixerContainer"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -480,7 +589,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/player/player.component.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/player/player.component.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -520,36 +629,10 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ownElement"></a>
+                    <a name="open"></a>
                     <span class="name">
-                        <span ><b>ownElement</b></span>
-                        <a href="#ownElement"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>    <code>HTMLElement</code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/player/player.component.ts:33</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="playOpen"></a>
-                    <span class="name">
-                        <span ><b>playOpen</b></span>
-                        <a href="#playOpen"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>open</b></span>
+                        <a href="#open"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -566,7 +649,33 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/player/player.component.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/player/player.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ownContainer"></a>
+                    <span class="name">
+                        <span ><b>ownContainer</b></span>
+                        <a href="#ownContainer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>HTMLElement</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/player/player.component.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -593,7 +702,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/player/player.component.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/player/player.component.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -635,7 +744,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, Output, OnInit, ViewChild} from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, Output, OnInit, ViewChild, EventEmitter} from &#x27;@angular/core&#x27;;
 import { PlayerService } from &#x27;./player.service&#x27;;
 
 import { OpSequencerComponent } from &#x27;./op-sequencer/op-sequencer.component&#x27;;
@@ -655,6 +764,8 @@ export class PlayerComponent implements OnInit {
 
   @Input()  default_cell: number;
   @Input(&#x27;draft&#x27;) active_draft: Draft;
+
+  @Output(&#x27;player-open&#x27;) playerOpen &#x3D; new EventEmitter&lt;boolean&gt;();
   // @Input() 
   // get draft_set(): boolean {
   //   return (this.pls.draft !&#x3D;&#x3D; null);
@@ -666,9 +777,9 @@ export class PlayerComponent implements OnInit {
   // }
   // private _active_draft: Draft &#x3D; null;
 
-  playOpen: boolean &#x3D; true;
-  ownElement: HTMLElement;
-  mixerElement: HTMLElement;
+  open: boolean &#x3D; true;
+  ownContainer: HTMLElement;
+  mixerContainer: HTMLElement;
   
   constructor(
     public pls: PlayerService
@@ -677,7 +788,7 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(&quot;ng on init, pedals: &quot;, this.pls.pedals);
+    // console.log(&quot;ng on init, pedals: &quot;, this.pls.pedals);
     /** FOR TESTING ONLY: generate random draft and set it at start-up */
   }
 
@@ -688,9 +799,9 @@ export class PlayerComponent implements OnInit {
     //   this.pls.setDraft(result[0]);
     //   this.drawDraft();
     // });
-    this.ownElement &#x3D; document.getElementById(&#x27;player-container&#x27;);
-    this.mixerElement &#x3D; document.querySelector(&#x27;.mat-drawer-container&#x27;);
-    console.log(&quot;init w/ element refs &quot;, this.ownElement, this.mixerElement);
+    this.ownContainer &#x3D; document.querySelector(&quot;#player-container &gt; .mat-expansion-panel&quot;);
+    this.mixerContainer &#x3D; document.querySelector(&#x27;app-mixer &gt; mat-drawer-container&#x27;);
+    console.log(&quot;init w/ element refs &quot;, this.ownContainer, this.mixerContainer);
     // this.draftCanvas &#x3D; &lt;HTMLCanvasElement&gt; document.getElementById(&#x27;active-draft-canvas&#x27;);
     // this.cx &#x3D; this.draftCanvas.getContext(&quot;2d&quot;);
     // this.drawDraft(); //force call here because it likely didn&#x27;t render previously. 
@@ -698,26 +809,40 @@ export class PlayerComponent implements OnInit {
     // let expansionPanel &#x3D; document.querySelector(&#x27;mat-expansion-panel&#x27;);
     // expansionPanel.close();
 
-    this.playOpen &#x3D; false;
-    this.resizeContainer();
-    // this.drawDraft();
+    this.open &#x3D; false;
+    // this.resizeContainer();
+    this.drawDraft();
 
     this.pls.redraw.on(&#x27;redraw&#x27;, () &#x3D;&gt; {
       console.log(&quot;redrawing &quot;, this.pls.state);
       // this.drawDraft();
-      this.resizeContainer();
+      // this.resizeContainer();
     });
 
   }
 
   resizeContainer() {
-    let h &#x3D; this.ownElement.getBoundingClientRect().height;
+    console.log(&quot;resizing&quot;);
     let t &#x3D; document.querySelector(&quot;app-topbar&quot;).getBoundingClientRect().height;
-    // console.log(&quot;player height is &quot; + h.toString());
-    this.mixerElement.style.height &#x3D; &#x27;calc(100vh - &#x27;+ (2.3*h+t).toString() + &#x27;px)&#x27;;
+    if (this.open) {
+      this.mixerContainer.style.height &#x3D; &#x27;0px&#x27;;
+      this.ownContainer.style.height &#x3D; &#x27;calc(100vh - &#x27; + t.toString() + &#x27;px)&#x27;;
+      this.ownContainer.style.overflow &#x3D; &quot;scroll&quot;;
+    } else {
+      let h &#x3D; document.querySelector(&quot;mat-expansion-panel-header&quot;).getBoundingClientRect().height;
+      this.mixerContainer.style.height &#x3D; &#x27;calc(100vh - &#x27;+ (h+t).toString() + &#x27;px)&#x27;;
+      this.ownContainer.style.overflow &#x3D; &quot;unset&quot;;
+    }
   }
 
   drawDraft() { this.weaving_state.drawDraft(); }
+
+  toggleOpen(state: boolean) {
+    console.log(&quot;toggling&quot;);
+    this.open &#x3D; state;
+    // this.resizeContainer();
+    this.playerOpen.emit(this.open);
+  }
 }
   
 </code></pre>
@@ -726,14 +851,14 @@ export class PlayerComponent implements OnInit {
     <div class="tab-pane fade " id="c-templateData">
         <pre class="line-numbers"><code class="language-html">&lt;mat-accordion id&#x3D;&quot;player-container&quot;&gt;
   &lt;mat-expansion-panel
-    [expanded] &#x3D; &quot;playOpen&quot;
-    (opened) &#x3D; &quot;playOpen &#x3D; true&quot;
-    (closed) &#x3D; &quot;playOpen &#x3D; false&quot;
+    [expanded] &#x3D; &quot;open&quot;
+    (opened) &#x3D; &quot;toggleOpen(true)&quot;
+    (closed) &#x3D; &quot;toggleOpen(false)&quot;
     (afterCollapse)&#x3D;&quot;resizeContainer()&quot;
     (afterExpand)&#x3D;&quot;resizeContainer()&quot;&gt;
     &lt;mat-expansion-panel-header&gt;
       &lt;mat-panel-title&gt;
-        {{ playOpen? &#x27;Close&#x27; : &#x27;Open&#x27;}} Player
+        {{ open? &#x27;Close&#x27; : &#x27;Open&#x27;}} Player
       &lt;/mat-panel-title&gt;
     &lt;/mat-expansion-panel-header&gt;
 
@@ -746,15 +871,10 @@ export class PlayerComponent implements OnInit {
       &lt;div class&#x3D;&quot;break&quot;&gt;&lt;/div&gt;
 
       &lt;div class&#x3D;&quot;second-row&quot;&gt;
-        
-      
-       &lt;!-- [matTooltip]&#x3D;&quot;&#x60;Loom must be online AND one pedal must be set to &#x27;forward&#x27;&#x60;&quot;&gt; --&gt;
-        
-        &lt;!-- &lt;div id&#x3D;&quot;draft-container&quot; class&#x3D;&quot;player-field&quot;&gt;
-          &lt;h2 class&#x3D;&quot;player-field-header&quot;&gt;Draft&lt;/h2&gt;
-          &lt;canvas class&#x3D;&quot;draft-field&quot; id&#x3D;&quot;active-draft-canvas&quot;&gt;&lt;/canvas&gt;
-        &lt;/div&gt; --&gt;
+        &lt;app-op-sequencer&gt;&lt;/app-op-sequencer&gt;
       &lt;/div&gt;
+      
+
     &lt;/div&gt;
 
     &lt;app-virtual-pedals&gt;&lt;/app-virtual-pedals&gt;
@@ -891,7 +1011,7 @@ export class PlayerComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><mat-accordion id="player-container">  <mat-expansion-panel    [expanded] = "playOpen"    (opened) = "playOpen = true"    (closed) = "playOpen = false"    (afterCollapse)="resizeContainer()"    (afterExpand)="resizeContainer()">    <mat-expansion-panel-header>      <mat-panel-title>        {{ playOpen? \'Close\' : \'Open\'}} Player      </mat-panel-title>    </mat-expansion-panel-header>    <div id="player-content" class="player">      <div class="first-row">        <app-weaving-state></app-weaving-state>      </div>            <div class="break"></div>      <div class="second-row">                     <!-- [matTooltip]="`Loom must be online AND one pedal must be set to \'forward\'`"> -->                <!-- <div id="draft-container" class="player-field">          <h2 class="player-field-header">Draft</h2>          <canvas class="draft-field" id="active-draft-canvas"></canvas>        </div> -->      </div>    </div>    <app-virtual-pedals></app-virtual-pedals>      </mat-expansion-panel></mat-accordion></div>'
+        var COMPONENT_TEMPLATE = '<div><mat-accordion id="player-container">  <mat-expansion-panel    [expanded] = "open"    (opened) = "toggleOpen(true)"    (closed) = "toggleOpen(false)"    (afterCollapse)="resizeContainer()"    (afterExpand)="resizeContainer()">    <mat-expansion-panel-header>      <mat-panel-title>        {{ open? \'Close\' : \'Open\'}} Player      </mat-panel-title>    </mat-expansion-panel-header>    <div id="player-content" class="player">      <div class="first-row">        <app-weaving-state></app-weaving-state>      </div>            <div class="break"></div>      <div class="second-row">        <app-op-sequencer></app-op-sequencer>      </div>          </div>    <app-virtual-pedals></app-virtual-pedals>      </mat-expansion-panel></mat-accordion></div>'
     var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
     var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
     var ACTUAL_COMPONENT = {'name': 'PlayerComponent'};

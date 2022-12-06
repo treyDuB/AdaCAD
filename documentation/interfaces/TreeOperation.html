@@ -481,14 +481,11 @@ export function buildTreeOp(base: GenericOp): TreeOperation {
       let seedOp &#x3D; base as Op&lt;Seed, DraftsOptional&gt;;
       tree_op_perform &#x3D; (op_inputs: Array&lt;OpInput&gt;) &#x3D;&gt; {
         console.log(&quot;op inputs: &quot;, base.name, op_inputs);
-        let res: Draft;
         if (op_inputs.filter((el) &#x3D;&gt; (el.op_name &#x3D;&#x3D; &#x27;child&#x27;)).length &gt; 0) {
-          res &#x3D; seedOp.perform(op_inputs[0].params, getDraftsFromInputs(op_inputs)[0]);
+          return Promise.resolve([seedOp.perform(op_inputs[0].params, getDraftsFromInputs(op_inputs)[0])]);
         } else {
-          res &#x3D; seedOp.perform(op_inputs[0].params);
+          return Promise.resolve([seedOp.perform(op_inputs[0].params)]);
         }
-        console.log(&quot;tree op call: &quot;, res);
-        return Promise.resolve([res]);
       }
     }
   } else if (base.classifier.type &#x3D;&#x3D;&#x3D; &#x27;pipe&#x27;) {
