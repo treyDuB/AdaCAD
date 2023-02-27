@@ -71,12 +71,9 @@ class PedalConfig {
     this.availPedals.filter((id) => id != this.pedals.length);
   }
 
-  addOperation(o: PlayerOp, chain?: boolean) {
+  addOperation(o: PlayerOp) {
     o.id = this.ops.length;
     this.ops.push(o);
-    if (chain) {
-      o.chain = chain;
-    }
     // this.unpairedOps.push(o);
     // console.log(this.ops);
   }
@@ -215,6 +212,7 @@ export class PlayerService {
 
     const tile: PlayerOp = {
       name: defs.tile.name,
+      classifier: 'pipe',
       perform: (init: PlayerState) => {
         let res = copyState(init);
         res.draft = defs.tile.perform([init.draft], [2, 2]);
@@ -312,6 +310,7 @@ export class PlayerService {
     let structOp: PlayerOp = {
       name: d.gen_name,
       struct_id: d.id,
+      classifier: 'seed',
       perform: (init: PlayerState) => {
         let res = copyState(init);
         res.draft = d;

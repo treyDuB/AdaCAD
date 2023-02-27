@@ -90,9 +90,6 @@ export class MappingsService extends Array<PedalAction> {
   addOperation(o: SingleOp, chain?: boolean) {
     o.id = this.ops.length;
     this.ops.push(o);
-    if (chain) { // chainable?
-      o.chain = chain;
-    };
   }
 
   // I don't know if I'm making this too complicated but I don't trust TypeScript/Javascript passing things by reference

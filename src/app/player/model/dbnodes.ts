@@ -282,7 +282,7 @@ class DBNodeArray extends EventEmitter {
 
   get active() { return (this.lengthNode.active && this.parentNode.active); }
 
-  get ready() { return (this.lengthNode.val > 0 && this.parentNode.val != false); }
+  get ready() { return (<number> this.lengthNode.val > 0 && this.parentNode.val != false); }
 
   nodeAt(n) {
     console.log(this.nodes);

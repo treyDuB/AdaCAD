@@ -35,7 +35,6 @@ import { PlayerState, copyState } from "./player";
 
     if (ops) {
       this.ops = ops;
-      this._pos = 0;
     }
   }
 
@@ -49,7 +48,8 @@ import { PlayerState, copyState } from "./player";
     return (this.p_prog >= 0 && this.p_select_a >= 0);
   }
 
-  get current(): PlayerOp | ChainOp {
+  get current(): PlayerOp | ChainOp | null {
+    if (this._pos == -1) return null;
     return this.ops[this._pos];
   }
 
@@ -80,20 +80,22 @@ import { PlayerState, copyState } from "./player";
 
   prevOp() {
     if (this.ops.length > 0) {
-      this._pos = (this._pos - 1) % this.ops.length;
+      if (this._pos < 0) { this._pos = this.ops.length - 1; }
+      else { this._pos = (this._pos - 1) % this.ops.length; }
       return this.current;
     }
   }
 
   addOp(o: PlayerOp | ChainOp) {
     this.ops.push(o);
-    if (this._pos < 0) this._pos = 0;
-    return this.ops.length-1;
+    // if (this._pos < 0) this._pos = 0;
+    return this.ops.length - 1;
   }
 
   removeOp() {
     this.ops.pop();
     if (this.ops.length == 0) this._pos = -1;
+    if (this._pos == this.ops.length) this._pos--;
   }
 
   delOpAt(x: number) {
@@ -102,7 +104,7 @@ import { PlayerState, copyState } from "./player";
   }
 
   perform(init: PlayerState, n: number): Promise<PlayerState> {
-    // console.log('sequencer perform');
+    console.log('sequencer perform');
     let res = copyState(init);
     if (n == this.p_prog) {
       // console.log("forward in sequencer draft");
@@ -123,6 +125,8 @@ import { PlayerState, copyState } from "./player";
         } else if (n == this.p_select_b) {
           this._pos = (this._pos - 1) % this.ops.length;
         }
+        console.log(this._pos);
+        console.log(this.current);
         return this.current.perform(res);
       } else {
         return Promise.resolve(res); // we really can't do anything without any operations on the sequencer
