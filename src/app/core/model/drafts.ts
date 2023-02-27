@@ -697,7 +697,6 @@ export const flipDraft = (d: Draft, horiz: boolean, vert: boolean) : Promise<Dra
     gen_name: d.gen_name,
     wefts: wefts(d.drawdown),
     warps: warps(d.drawdown),
-    gen_name: d.gen_name,
     ud_name: d.ud_name,
     colShuttleMapping: d.colShuttleMapping,
     colSystemMapping: d.colSystemMapping});

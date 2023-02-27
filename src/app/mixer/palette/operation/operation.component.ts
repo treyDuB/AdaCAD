@@ -80,7 +80,7 @@ export class OperationComponent implements OnInit {
      height: 100
    };
    
-   op: ServiceOp | DynamicOperation;
+   op: DynamicOperation | Operation;
 
    opnode: OpNode;
 
