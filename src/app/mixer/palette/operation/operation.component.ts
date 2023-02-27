@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Bounds, Interlacement, Point,Operation, DynamicOperation,IOTuple, OpNode } from '../../../core/model/datatypes';
 import utilInstance from '../../../core/model/util';
-import { OperationService, ServiceOp} from '../../provider/operation.service';
+import { OperationService } from '../../../core/provider/operation.service';
 import { OpHelpModal } from '../../modal/ophelp/ophelp.modal';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl} from '@angular/forms';
 import { ViewportService } from '../../provider/viewport.service';
-import { TreeService } from '../../provider/tree.service';
+import { TreeService } from '../../../core/provider/tree.service';
 import { DesignmodesService } from '../../../core/provider/designmodes.service';
 import { SubdraftComponent } from '../subdraft/subdraft.component';
 import { ImageService } from '../../../core/provider/image.service';
@@ -147,7 +147,13 @@ export class OperationComponent implements OnInit {
     const container: HTMLElement = document.getElementById('scale-'+this.id);
     this.bounds.height = container.offsetHeight;
 
+    const children = this.tree.getDraftNodes().filter(node => this.tree.getSubdraftParent(node.id) === this.id);
+    if(children.length > 0) this.updatePositionFromChild(<SubdraftComponent>this.tree.getComponent(children[0].id));
+
+
   }
+
+  
 
   drawImagePreview(){
 
@@ -239,7 +245,7 @@ export class OperationComponent implements OnInit {
 
 
        const container = <HTMLElement> document.getElementById("scale-"+this.id);
-       this.setPosition({x: child.bounds.topleft.x, y: child.bounds.topleft.y - (container.offsetHeight * this.scale/this.default_cell) });
+       if(container !== null) this.setPosition({x: child.bounds.topleft.x, y: child.bounds.topleft.y - (container.offsetHeight * this.scale/this.default_cell) });
   
     }
 

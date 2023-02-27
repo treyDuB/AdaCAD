@@ -16,11 +16,11 @@ import { WorkspaceService } from '../provider/workspace.service';
 import { hasCell, insertDrawdownRow, deleteDrawdownRow, insertDrawdownCol, deleteDrawdownCol, isSet, isUp, setHeddle, warps, wefts, pasteIntoDrawdown, initDraftWithParams, createBlankDrawdown, insertMappingRow, insertMappingCol, deleteMappingCol, deleteMappingRow, generateMappingFromPattern, flipDraft } from '../model/drafts';
 import { getLoomUtilByType, isFrame, isInThreadingRange, isInTreadlingRange, isInUserThreadingRange, isInUserTieupRange, isInUserTreadlingRange, numFrames, numTreadles } from '../model/looms';
 import { computeYarnPaths, isEastWest, isNorthEast, isNorthWest, isSouthEast, isSouthWest } from '../model/yarnsimulation';
-import { TreeService } from '../../mixer/provider/tree.service';
+import { TreeService } from '../provider/tree.service';
 import { setDeprecationWarningFn } from '@tensorflow/tfjs-core/dist/tensor';
 import { LoomModal } from '../modal/loom/loom.modal';
 import utilInstance from '../model/util';
-import { OperationService } from '../../mixer/provider/operation.service';
+import { OperationService } from '../provider/operation.service';
 
 @Component({
   selector: 'app-draftviewer',
@@ -240,12 +240,15 @@ export class DraftviewerComponent implements OnInit {
   ngOnInit() {
 
     const draft = this.tree.getDraft(this.id);
+    const loom = this.tree.getLoom(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
     this.isFrame = isFrame(loom_settings);
     this.viewonly = !this.tree.isSeedDraft(this.id);
 
     this.colShuttleMapping = draft.colShuttleMapping;
     this.rowShuttleMapping = draft.rowShuttleMapping;
+
+
 
   }
 

@@ -13,7 +13,7 @@ import { Shape } from '../model/shape';
 import utilInstance from '../../core/model/util';
 import { OperationComponent } from './operation/operation.component';
 import { ConnectionComponent } from './connection/connection.component';
-import { TreeService } from '../provider/tree.service';
+import { TreeService } from '../../core/provider/tree.service';
 import { FileService } from './../../core/provider/file.service';
 import { ViewportService } from '../provider/viewport.service';
 import { NoteComponent } from './note/note.component';
@@ -621,6 +621,7 @@ export class PaletteComponent implements OnInit{
     subdraft.instance.draft_visible =true;
     subdraft.instance.ink = this.inks.getSelected(); //default to the currently selected ink
     subdraft.instance.draft = d;
+    subdraft.instance.parent_id = this.tree.getSubdraftParent(id);
 
     if(nodep.bounds !== null){
       

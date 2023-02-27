@@ -3,7 +3,7 @@ import { DesignmodesService } from '../core/provider/designmodes.service';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import {Subject} from 'rxjs';
 import { PaletteComponent } from './palette/palette.component';
-import { TreeService} from './provider/tree.service';
+import { TreeService} from '../core/provider/tree.service';
 import { Draft, Loom, FileObj, Node, LoadResponse, NodeComponentProxy, OpComponentProxy, SaveObj, TreeNodeProxy, LoomSettings, TreeNode, DraftNode, IOTuple  } from '../core/model/datatypes';
 import { SidebarComponent } from '../core/sidebar/sidebar.component';
 import { ViewportService } from './provider/viewport.service';
@@ -20,7 +20,7 @@ import { AuthService } from '../core/provider/auth.service';
 import {getDatabase, ref as fbref, get as fbget, child} from '@angular/fire/database'
 import {getAnalytics, logEvent} from '@angular/fire/analytics'
 import { ImageService } from '../core/provider/image.service';
-import { OperationService } from './provider/operation.service';
+import { OperationService } from '../core/provider/operation.service';
 import { FileService} from '../core/provider/file.service'
 import { initDraft, initDraftWithParams, loadDraftFromFile } from '../core/model/drafts';
 import * as _ from 'lodash';
@@ -184,8 +184,10 @@ export class MixerComponent implements OnInit {
     this.clearView();
     this.tree.clear();
     console.log("loaded new file", result, result.data)
-    this.processFileData(result.data).then(
-      this.palette.changeDesignmode('move')
+    this.processFileData(result.data).then(data => {
+      this.palette.changeDesignmode('move');
+    }
+
     ).catch(console.error);
     
   }
@@ -338,7 +340,7 @@ export class MixerComponent implements OnInit {
   /** 
    * Take a fileObj returned from the fileservice and process
    */
-   async processFileData(data: FileObj) : Promise<string>{
+   async processFileData(data: FileObj) : Promise<string|void>{
 
 
     let entry_mapping = [];
@@ -361,7 +363,7 @@ export class MixerComponent implements OnInit {
     })
 
 
-    this.image.loadFiles(images_to_load).then(el => {
+    return this.image.loadFiles(images_to_load).then(el => {
       return this.tree.replaceOutdatedOps(data.ops);
     })
     .then(correctedOps => {    
@@ -524,13 +526,13 @@ export class MixerComponent implements OnInit {
   
 
     })
+    .then(data => {return Promise.resolve('alldone')})
     .catch(console.error);
 
 
     //print out all trees:
 
 
-    return Promise.resolve("all done");
 
 
   }
@@ -889,7 +891,6 @@ export class MixerComponent implements OnInit {
    */
   public globalLoomChange(e: any){
     
-    console.log("GLOBAL LOOM CHANGE IN MIXER")
     const dn = this.tree.getDraftNodes();
     dn.forEach(node => {
       const draft = this.tree.getDraft(node.id)

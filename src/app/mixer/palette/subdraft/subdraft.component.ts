@@ -3,8 +3,7 @@ import { Point, Interlacement, Bounds, DraftMap, Draft, LoomSettings } from '../
 import { InkService } from '../../provider/ink.service';
 import { LayersService } from '../../provider/layers.service';
 import utilInstance from '../../../core/model/util';
-import { OperationService } from '../../provider/operation.service';
-import { TreeService } from '../../provider/tree.service';
+import { TreeService } from '../../../core/provider/tree.service';
 import { FileService } from '../../../core/provider/file.service';
 import { ViewportService } from '../../provider/viewport.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -14,6 +13,7 @@ import { OperationComponent } from '../operation/operation.component';
 import { WorkspaceService } from '../../../core/provider/workspace.service';
 import { MaterialsService } from '../../../core/provider/materials.service';
 import { createDraft, getDraftName, initDraftWithParams, isSet, isUp, warps, wefts } from '../../../core/model/drafts';
+import { D } from '@angular/cdk/keycodes';
 
 
 
@@ -132,6 +132,8 @@ export class SubdraftComponent implements OnInit {
 
   loom_settings: LoomSettings;
 
+  ud_name: string;
+
   constructor(private inks: InkService, 
     private layer: LayersService, 
     private ms: MaterialsService, 
@@ -159,6 +161,7 @@ export class SubdraftComponent implements OnInit {
 
     const draft = this.tree.getDraft(this.id);
     this.loom_settings = this.tree.getLoomSettings(this.id);
+    this.ud_name = draft.ud_name;
 
     if(draft !== undefined){
       this.bounds.width = warps(draft.drawdown) * this.scale;
@@ -240,16 +243,22 @@ export class SubdraftComponent implements OnInit {
   updatePositionFromParent(parent: OperationComponent){
 
     if(this.parent_id !== parent.id){
-      console.error("attempitng to update subdraft position from non-parent operation", this.parent_id, parent.id);
+      console.error("attempitng to update subdraft position from non-parent operation",  this.parent_id, parent.id);
       return;
     }
 
-    const container = <HTMLElement> document.getElementById("scale-"+this.parent_id);
-    this.setPosition({x: parent.bounds.topleft.x, y: parent.bounds.topleft.y + (container.offsetHeight * this.scale/this.default_cell) });
-
+    let container = <HTMLElement> document.getElementById("scale-"+this.parent_id);
+    if(container !== null) this.setPosition({x: parent.bounds.topleft.x, y: parent.bounds.topleft.y + (container.offsetHeight * this.scale/this.default_cell) });
+    else {console.error("no element named scale-"+this.parent_id+"found")}
 
   }
 
+
+  updateName(){
+    const draft = this.tree.getDraft(this.id);
+    draft.ud_name = this.ud_name;
+
+  }
 
 
   updateSize(parent: OperationComponent){
