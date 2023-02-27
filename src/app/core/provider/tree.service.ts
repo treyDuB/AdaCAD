@@ -1,8 +1,8 @@
 import { Injectable, ViewRef } from '@angular/core';
 import { cloneDeep, flip, map, toNumber } from 'lodash';
-import { ConnectionComponent } from '../palette/connection/connection.component';
-import { OperationComponent } from '../palette/operation/operation.component';
-import { SubdraftComponent } from '../palette/subdraft/subdraft.component';
+import { ConnectionComponent } from '../../mixer/palette/connection/connection.component';
+import { OperationComponent } from '../../mixer/palette/operation/operation.component';
+import { SubdraftComponent } from '../../mixer/palette/subdraft/subdraft.component';
 import { OperationService} from './operation.service';
 import { OpInput, Node, DynamicOperation, Operation, StringParam, TreeNode, DraftNode, OpNode, IOTuple } from '../../core/model/datatypes';
 import { Draft, DraftNodeProxy, Drawdown, Loom, LoomSettings, LoomUtil, NodeComponentProxy, OpComponentProxy, TreeNodeProxy } from '../../core/model/datatypes';
@@ -12,6 +12,7 @@ import { WorkspaceService } from '../../core/provider/workspace.service';
 import { flipLoom, getLoomUtilByType } from '../../core/model/looms';
 import { createDraft, flipDraft, getDraftName, initDraft, initDraftWithParams, warps, wefts } from '../../core/model/drafts';
 import * as _ from 'lodash';
+import { ignoreElements } from 'rxjs/operators';
 
 
 /**
@@ -118,14 +119,24 @@ export class TreeService {
 
         let static_inputs = op.inlets.filter(el => el.type === 'static');
         let num_dynamic_inlets = inlets.length - static_inputs.length;
+        let matches = [];
 
         switch(type){
 
           case 'notation':
-            const matches = utilInstance.parseRegex(param_val, (<StringParam>op.params[0]).regex);
+            matches = utilInstance.parseRegex(param_val, (<StringParam>op.params[0]).regex);
+            matches = matches.map(el => el.slice(1, -1))
             inlets = inlets.slice(0,static_inputs.length);
             matches.forEach(el => {
               inlets.push(el);
+            })
+          break;
+
+          case 'profile':
+            matches = utilInstance.parseRegex(param_val, (<StringParam>op.params[0]).regex);
+            inlets = inlets.slice(0,static_inputs.length);
+            matches.forEach(el => {
+              if(inlets.find(inletval => inletval == el.charAt(0)) === undefined) inlets.push(el.charAt(0));
             })
           break;
 
@@ -1190,11 +1201,13 @@ removeOperationNode(id:number) : Array<Node>{
       loom_utils.computeLoomFromDrawdown(dn.draft.drawdown, dn.loom_settings, this.ws.selected_origin_option)
       .then(loom => {
         dn.loom = loom;
+        dn.dirty = true;
+        touched.push(out[i]);
+        return Promise.resolve(touched);
       })
-      dn.dirty = true;
-      touched.push(out[i]);
+
     }
-    return Promise.resolve(touched);
+   
   }else{
     const fns:Array<any> = [];
     for(let i = out.length; i < res.length; i++){
@@ -1304,7 +1317,9 @@ isValidIOTuple(io: IOTuple) : boolean {
   const opnode = <OpNode> this.getNode(id);
   const op = this.ops.getOp(opnode.name);
   const all_inputs = this.getInputsWithNdx(id);
+
   
+  if(op === null || op === undefined) return Promise.reject("Operation is null")
 
   let inputs: Array<OpInput> = [];
 

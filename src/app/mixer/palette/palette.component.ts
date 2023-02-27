@@ -13,7 +13,7 @@ import { Shape } from '../model/shape';
 import utilInstance from '../../core/model/util';
 import { OperationComponent } from './operation/operation.component';
 import { ConnectionComponent } from './connection/connection.component';
-import { TreeService } from '../provider/tree.service';
+import { TreeService } from '../../core/provider/tree.service';
 import { FileService } from './../../core/provider/file.service';
 import { ViewportService } from '../provider/viewport.service';
 import { NoteComponent } from './note/note.component';
@@ -58,13 +58,6 @@ export class PaletteComponent implements OnInit{
    */
   selecting_connection: boolean = false;
 
-  /**
-   * store the viewRefs for each note
-   */
-  note_refs: Array<ViewRef> = [];
-
-  note_components: Array<NoteComponent> = [];
-     
   /**
    * holds a reference to the selection component
    * @property {Selection}
@@ -263,7 +256,9 @@ export class PaletteComponent implements OnInit{
    */
    clearComponents(){
     this.unsubscribeFromAll();
-    this.note_refs.forEach(ref => this.removeFromViewContainer(ref));
+
+    this.notes.getRefs().forEach(ref => this.removeFromViewContainer(ref));
+
     this.vc.clear();
   }
 
@@ -410,7 +405,7 @@ export class PaletteComponent implements OnInit{
       sd.rescale(scale);
     });
 
-    this.note_components.forEach(el => {
+    this.notes.getComponents().forEach(el => {
       el.scale = scale;
     });
 
@@ -503,13 +498,15 @@ export class PaletteComponent implements OnInit{
     const note = this.notes.createBlankNode(utilInstance.resolvePointToAbsoluteNdx(tl, this.scale));
     this.setNoteSubscriptions(notecomp.instance);
 
-    this.note_refs.push(notecomp.hostView);
-    this.note_components.push(notecomp.instance);
+    note.component = notecomp.instance;
+    note.ref = notecomp.hostView;
     notecomp.instance.id = note.id;
     notecomp.instance.scale = this.scale;
     notecomp.instance.default_cell = this.default_cell_size;
 
     this.changeDesignmode('move');
+
+    console.log("Note created", note)
 
     return notecomp.instance;
   }
@@ -522,11 +519,11 @@ export class PaletteComponent implements OnInit{
     loadNote(note: Note):NoteComponent{
 
       
-      const factory = this.resolver.resolveComponentFactory(NoteComponent);
-      const notecomp = this.vc.createComponent<NoteComponent>(factory);
+      const notecomp = this.vc.createComponent(NoteComponent);
       this.setNoteSubscriptions(notecomp.instance);
-      this.note_refs.push(notecomp.hostView);
-      this.note_components.push(notecomp.instance);
+
+      note.component = notecomp.instance;
+      note.ref = notecomp.hostView;
 
       notecomp.instance.id = note.id;
       notecomp.instance.scale = this.scale;
@@ -547,10 +544,10 @@ export class PaletteComponent implements OnInit{
   }
 
   deleteNote(id: number){
-    const ref: ViewRef = this.note_refs[id];
-    this.removeFromViewContainer(ref);
-    this.note_refs = this.note_refs.filter((el, ndx) => ndx!= id);
-    this.note_components = this.note_components.filter((el, ndx) => ndx!= id);
+    console.log("get note", id)
+    const note = this.notes.get(id);
+    this.removeFromViewContainer(note.ref);
+    this.notes.delete(id);
   }
 
   saveNote(){
@@ -611,6 +608,7 @@ export class PaletteComponent implements OnInit{
     subdraft.instance.draft_visible =true;
     subdraft.instance.ink = this.inks.getSelected(); //default to the currently selected ink
     subdraft.instance.draft = d;
+    subdraft.instance.parent_id = this.tree.getSubdraftParent(id);
 
     if(nodep.bounds !== null){
       
@@ -1200,7 +1198,6 @@ export class PaletteComponent implements OnInit{
         const sd = <SubdraftComponent> this.tree.getComponent(obj.id);
         const sd_draft = <Draft> this.tree.getDraft(obj.id);
         
-      console.log("DUPLICATE SUBDRAFT", sd_draft);
 
       this.createSubDraft(initDraftWithParams(
         {wefts: wefts(sd_draft.drawdown), 
@@ -1214,7 +1211,6 @@ export class PaletteComponent implements OnInit{
         }), -1)
         .then(new_sd => {
 
-          console.log("JUST MADE NEW SD", new_sd);
 
           new_sd.setComponentSize(sd.bounds.width, sd.bounds.height);
           new_sd.setPosition({
@@ -1479,6 +1475,7 @@ connectionDragged(mouse: Point, shift: boolean){
  */
 calculateInitialLocaiton(id: number) : Bounds {
 
+
   const draft = this.tree.getDraft(id);
   
   const new_bounds = {
@@ -1498,7 +1495,7 @@ calculateInitialLocaiton(id: number) : Bounds {
     if(parent_bounds.topleft.x == 0 && parent_bounds.topleft.y == 0){
 
       //component is not yet initalized on this calculation so we do it manually
-      const default_height =  (60 + 40 * (<OpNode> opnode).params.length) * this.scale/this.default_cell_size;
+      const default_height =  (60 + 50 * (<OpNode> opnode).params.length) * this.scale/this.default_cell_size;
       new_bounds.topleft = {x: this.viewport.getTopLeft().x + 60, y: this.viewport.getTopLeft().y + default_height};
 
     }else{
@@ -2612,9 +2609,9 @@ drawStarted(){
       cxn.drawForPrint(this.canvas, this.cx, this.scale);
     });
 
-    this.note_components.forEach(note =>{
-      note.drawForPrint(this.canvas, this.cx, this.scale);
-    })
+    // this.note_components.forEach(note =>{
+    //   note.drawForPrint(this.canvas, this.cx, this.scale);
+    // })
 
     return this.canvas;
 

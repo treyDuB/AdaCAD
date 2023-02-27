@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {TreeService } from '../../mixer/provider/tree.service';
+import {TreeService } from './tree.service';
 import { Cell } from '../model/cell';
 import { Draft, DraftNodeProxy, Fileloader, FileObj, FileSaver, LoadResponse, Loom, OpComponentProxy, StatusMessage, TreeNodeProxy, NodeComponentProxy, LoomSettings, SaveObj, DraftNode } from '../model/datatypes';
 import utilInstance from '../model/util';
@@ -467,20 +467,20 @@ export class FileService {
 
       var wefts = 20;
       if(f.value.wefts !== undefined) wefts = f.value.wefts;
-      //set default values
 
       const draft: Draft = initDraftWithParams({warps: warps, wefts: wefts});
-      drafts.push(draft);
-
 
       var frame_num = (f.value.frame_num === undefined) ? 8 : f.value.frame_num;
       var treadle_num = (f.value.treadle_num === undefined) ? 10 : f.value.treadle_num;
       var loomtype = (f.value.loomtype === undefined) ? 'frame' : f.value.loomtype;
       var frame_num = (f.value.frame_num === undefined) ? 2 : f.value.frame_num;
       var treadle_num = (f.value.treadle_num === undefined) ? 2 : f.value.treadle_num;
+      if(f.value.loomtype == 'direct') treadle_num = frame_num;
       var epi = (f.value.epi === undefined) ? 10 : f.value.epi;
       var units = (f.value.units === undefined || ! f.value.units) ? "in" : f.value.units;
       
+
+
       const loom_settings: LoomSettings = {
         type: loomtype,
         epi: epi, 
@@ -489,12 +489,22 @@ export class FileService {
         treadles: treadle_num
       }
 
+      this.ws.inferData([loom_settings]);
+      
+
       const loomutils = getLoomUtilByType(loomtype);
       return loomutils.computeLoomFromDrawdown(draft.drawdown, loom_settings, 0).then(loom => {
         looms.push(loom);
         const proxies = this.tree.getNewDraftProxies(draft, []);
+        draft.id  = proxies.node.node_id;
+        proxies.draft_node.draft = draft;
+        proxies.draft_node.draft_id = draft.id;
+        proxies.draft_node.loom = loom;
+        proxies.draft_node.loom_settings = loom_settings;
 
 
+
+        
         const envt: FileObj = {
           version: this.vs.currentVersion(),
           workspace: this.ws.exportWorkspace(),

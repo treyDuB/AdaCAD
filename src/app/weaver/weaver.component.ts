@@ -18,7 +18,7 @@ import { WorkspaceService } from '../core/provider/workspace.service';
 import { deleteDrawdownCol, deleteDrawdownRow, insertDrawdownCol, insertDrawdownRow, warps, wefts, generateMappingFromPattern, insertMappingRow, deleteMappingRow, insertMappingCol, deleteMappingCol, initDraftWithParams } from '../core/model/drafts';
 import { Draft, Drawdown, Loom, LoomSettings } from '../core/model/datatypes';
 import { computeYarnPaths } from '../core/model/yarnsimulation';
-import { TreeService } from '../mixer/provider/tree.service';
+import { TreeService } from '../core/provider/tree.service';
 import { docSnapshots } from '@angular/fire/firestore';
 import { SubdraftComponent } from '../mixer/palette/subdraft/subdraft.component';
 
@@ -687,7 +687,6 @@ export class WeaverComponent implements OnInit {
    */
 
   public globalLoomChange(e: any){
-    console.log("ON GLOBAL LOOM CHANGE IN WEAVER")
 
     const dn = this.tree.getDraftNodes();
     dn.forEach(node => {
@@ -783,79 +782,79 @@ export class WeaverComponent implements OnInit {
   }
 
 
-  public warpNumChange(e:any) {
-    if(e.warps == "") return;
+  // public warpNumChange(e:any) {
+  //   if(e.warps == "") return;
 
-    const draft = this.tree.getDraft(this.id);
-    const loom_settings = this.tree.getLoomSettings(this.id);
+  //   const draft = this.tree.getDraft(this.id);
+  //   const loom_settings = this.tree.getLoomSettings(this.id);
 
-    if(e.warps > warps(draft.drawdown)){
-      var diff = e.warps - warps(draft.drawdown);
+  //   if(e.warps > warps(draft.drawdown)){
+  //     var diff = e.warps - warps(draft.drawdown);
       
-      for(var i = 0; i < diff; i++){  
-        draft.drawdown = insertDrawdownCol(draft.drawdown, i, null);
-        draft.colShuttleMapping = insertMappingCol(draft.colShuttleMapping, i, 0);
-        draft.colSystemMapping = insertMappingCol(draft.colSystemMapping, i, 0);  
-      }
-    }else{
-      var diff = warps(draft.drawdown) - e.warps;
-      for(var i = 0; i < diff; i++){  
-        draft.drawdown = deleteDrawdownCol(draft.drawdown, warps(draft.drawdown)-1);
-        draft.rowSystemMapping = deleteMappingCol(draft.rowSystemMapping, warps(draft.drawdown)-1);
-        draft.rowShuttleMapping = deleteMappingCol(draft.rowShuttleMapping, warps(draft.drawdown)-1);
-      }
+  //     for(var i = 0; i < diff; i++){  
+  //       draft.drawdown = insertDrawdownCol(draft.drawdown, i, null);
+  //       draft.colShuttleMapping = insertMappingCol(draft.colShuttleMapping, i, 0);
+  //       draft.colSystemMapping = insertMappingCol(draft.colSystemMapping, i, 0);  
+  //     }
+  //   }else{
+  //     var diff = warps(draft.drawdown) - e.warps;
+  //     for(var i = 0; i < diff; i++){  
+  //       draft.drawdown = deleteDrawdownCol(draft.drawdown, warps(draft.drawdown)-1);
+  //       draft.rowSystemMapping = deleteMappingCol(draft.rowSystemMapping, warps(draft.drawdown)-1);
+  //       draft.rowShuttleMapping = deleteMappingCol(draft.rowShuttleMapping, warps(draft.drawdown)-1);
+  //     }
 
-    }
+  //   }
 
-    this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
-    .then(loom => {
-      if(this.render.isYarnBasedView()) computeYarnPaths(draft, this.ms.getShuttles());
-      this.weaveRef.redraw(draft, loom, loom_settings,{drawdown: true, loom: true, warp_systems: true, warp_materials:true});
+  //   this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
+  //   .then(loom => {
+  //     if(this.render.isYarnBasedView()) computeYarnPaths(draft, this.ms.getShuttles());
+  //     this.weaveRef.redraw(draft, loom, loom_settings,{drawdown: true, loom: true, warp_systems: true, warp_materials:true});
   
-    });
+  //   });
 
   
-  }
+  // }
 
-  public weftNumChange(e:any) {
+  // public weftNumChange(e:any) {
   
-    if(e.wefts === "" || e.wefts =="null") return;
-    const draft = this.tree.getDraft(this.id);
-    const loom_settings = this.tree.getLoomSettings(this.id);
+  //   if(e.wefts === "" || e.wefts =="null") return;
+  //   const draft = this.tree.getDraft(this.id);
+  //   const loom_settings = this.tree.getLoomSettings(this.id);
 
 
-    if(e.wefts > wefts(draft.drawdown)){
-      var diff = e.wefts - wefts(draft.drawdown);
+  //   if(e.wefts > wefts(draft.drawdown)){
+  //     var diff = e.wefts - wefts(draft.drawdown);
       
-      for(var i = 0; i < diff; i++){  
-        draft.drawdown = insertDrawdownRow(draft.drawdown, wefts(draft.drawdown)+1, null)
-        draft.rowShuttleMapping = insertMappingRow(draft.rowShuttleMapping, wefts(draft.drawdown)+1, 0);
-        draft.rowSystemMapping = insertMappingRow(draft.rowSystemMapping, wefts(draft.drawdown)+1, 0);
-      }
-    }else{
-      var diff = wefts(draft.drawdown) - e.wefts;
-      for(var i = 0; i < diff; i++){  
-        draft.drawdown = deleteDrawdownRow(draft.drawdown, wefts(draft.drawdown)-1);
-        draft.rowShuttleMapping = deleteMappingRow(draft.rowShuttleMapping, wefts(draft.drawdown)-1);
-        draft.rowSystemMapping = deleteMappingRow(draft.rowSystemMapping, wefts(draft.drawdown)-1);
-      }
+  //     for(var i = 0; i < diff; i++){  
+  //       draft.drawdown = insertDrawdownRow(draft.drawdown, wefts(draft.drawdown)+1, null)
+  //       draft.rowShuttleMapping = insertMappingRow(draft.rowShuttleMapping, wefts(draft.drawdown)+1, 0);
+  //       draft.rowSystemMapping = insertMappingRow(draft.rowSystemMapping, wefts(draft.drawdown)+1, 0);
+  //     }
+  //   }else{
+  //     var diff = wefts(draft.drawdown) - e.wefts;
+  //     for(var i = 0; i < diff; i++){  
+  //       draft.drawdown = deleteDrawdownRow(draft.drawdown, wefts(draft.drawdown)-1);
+  //       draft.rowShuttleMapping = deleteMappingRow(draft.rowShuttleMapping, wefts(draft.drawdown)-1);
+  //       draft.rowSystemMapping = deleteMappingRow(draft.rowSystemMapping, wefts(draft.drawdown)-1);
+  //     }
 
-    }
+  //   }
 
-    this.tree.setDraftAndRecomputeLoom(this.id, draft,loom_settings)
-    .then(loom => {
-      this.render.updateVisible(draft);
+  //   this.tree.setDraftAndRecomputeLoom(this.id, draft,loom_settings)
+  //   .then(loom => {
+  //     this.render.updateVisible(draft);
   
-      if(this.render.isYarnBasedView()) computeYarnPaths(draft, this.ms.getShuttles());
+  //     if(this.render.isYarnBasedView()) computeYarnPaths(draft, this.ms.getShuttles());
   
-      this.weaveRef.redraw(draft, loom, loom_settings, {drawdown: true, loom: true, weft_systems: true, weft_materials:true});
+  //     this.weaveRef.redraw(draft, loom, loom_settings, {drawdown: true, loom: true, weft_systems: true, weft_materials:true});
   
-    });
+  //   });
 
 
    
 
-  }
+  // }
 
 
   public updateSelection(e:any){

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { OperationService } from '../../../provider/operation.service';
+import { OperationService } from '../../../../core/provider/operation.service';
 import { SystemsService } from '../../../../core/provider/systems.service';
-import { TreeService } from '../../../provider/tree.service';
+import { TreeService } from '../../../../core/provider/tree.service';
 import { getDraftName } from '../../../../core/model/drafts';
 import { DynamicOperation, OperationInlet,OpNode } from '../../../../core/model/datatypes';
 import { I } from '@angular/cdk/keycodes';
@@ -58,7 +58,16 @@ export class InletComponent implements OnInit {
     }else{
       this.inlet = op.inlets[this.inletid];
     }
-    
+
+    if(this.inlet === undefined){
+      this.inlet = <OperationInlet>{
+        type: 'null',
+        name: '',
+        value: -1,
+        num_drafts: 1,
+        dx: ''
+      }
+    }
 
 
     this.fc = new FormControl(this.parseDefaultInletValue(this.inlet.type, this.opnode.inlets[this.inletid]));

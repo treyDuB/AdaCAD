@@ -5,13 +5,13 @@ import { numFrames, numTreadles } from '../../../core/model/looms';
 import {wefts, warps} from '../../../core/model/drafts'
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { InkService } from '../../provider/ink.service';
-import { OperationService } from '../../provider/operation.service';
+import { OperationService } from '../../../core/provider/operation.service';
 import { DesignmodesService } from '../../../core/provider/designmodes.service';
 import { WeaverComponent } from '../../../weaver/weaver.component';
 import { MaterialsService } from '../../../core/provider/materials.service';
 import { WorkspaceService } from '../../../core/provider/workspace.service';
 import { from } from 'rxjs';
-import { TreeService } from '../../provider/tree.service';
+import { TreeService } from '../../../core/provider/tree.service';
 
 
 /**
@@ -59,7 +59,7 @@ export class DraftdetailComponent implements OnInit {
              @Inject(MAT_DIALOG_DATA) private data: any, 
              private scroll: ScrollDispatcher,
              public inks: InkService,
-             private dm: DesignmodesService,
+             public dm: DesignmodesService,
              private ops: OperationService,
              private ms: MaterialsService,
              public ws: WorkspaceService,
@@ -78,8 +78,12 @@ export class DraftdetailComponent implements OnInit {
                this.ink = data.ink;
                this.viewonly = this.tree.hasParent(this.id);
 
+               if(this.loom_settings.type == 'jacquard'){
+                this.dm.selectDesignMode('drawdown', 'drawdown_editing_style')
+              }else{
+                this.dm.selectDesignMode('loom', 'drawdown_editing_style')
 
-        
+               }
                             
 
               // this.modal_height = (this.draft.wefts+20) * this.render.getCellDims('base').h;
@@ -186,6 +190,15 @@ export class DraftdetailComponent implements OnInit {
   numTreadles(){
     const loom = this.tree.getLoom(this.id);
     return numTreadles(loom);
+  }
+
+  swapEditingStyle(){
+    if(this.dm.getSelectedDesignMode('drawdown_editing_style').value === 'drawdown'){
+      this.dm.selectDesignMode('loom', 'drawdown_editing_style')
+    }else{
+      this.dm.selectDesignMode('drawdown', 'drawdown_editing_style')
+    }
+
   }
   
 }

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, HostListener, Output, ViewChild
 import { Subscription, Subject, fromEvent } from 'rxjs';
 import { Render } from '../model/render';
 import { Cell } from '../model/cell';
-import { DesignMode, Draft, Drawdown, Interlacement, Loom, LoomSettings } from '../model/datatypes';
+import { DesignMode, Draft, Drawdown, Interlacement, Loom, LoomSettings, Operation, OpInput } from '../model/datatypes';
 import {cloneDeep, forEach, now} from 'lodash';
 import { FileService } from '../provider/file.service';
 import { SelectionComponent } from './selection/selection.component';
@@ -13,13 +13,14 @@ import { FabricssimService } from '../provider/fabricssim.service';
 import { Shuttle } from '../model/shuttle';
 import { StateService } from '../provider/state.service';
 import { WorkspaceService } from '../provider/workspace.service';
-import { hasCell, insertDrawdownRow, deleteDrawdownRow, insertDrawdownCol, deleteDrawdownCol, isSet, isUp, setHeddle, warps, wefts, pasteIntoDrawdown, initDraftWithParams, createBlankDrawdown, insertMappingRow, insertMappingCol, deleteMappingCol, deleteMappingRow } from '../model/drafts';
+import { hasCell, insertDrawdownRow, deleteDrawdownRow, insertDrawdownCol, deleteDrawdownCol, isSet, isUp, setHeddle, warps, wefts, pasteIntoDrawdown, initDraftWithParams, createBlankDrawdown, insertMappingRow, insertMappingCol, deleteMappingCol, deleteMappingRow, generateMappingFromPattern, flipDraft } from '../model/drafts';
 import { getLoomUtilByType, isFrame, isInThreadingRange, isInTreadlingRange, isInUserThreadingRange, isInUserTieupRange, isInUserTreadlingRange, numFrames, numTreadles } from '../model/looms';
 import { computeYarnPaths, isEastWest, isNorthEast, isNorthWest, isSouthEast, isSouthWest } from '../model/yarnsimulation';
-import { TreeService } from '../../mixer/provider/tree.service';
+import { TreeService } from '../provider/tree.service';
 import { setDeprecationWarningFn } from '@tensorflow/tfjs-core/dist/tensor';
 import { LoomModal } from '../modal/loom/loom.modal';
 import utilInstance from '../model/util';
+import { OperationService } from '../provider/operation.service';
 
 @Component({
   selector: 'app-draftviewer',
@@ -222,12 +223,13 @@ export class DraftviewerComponent implements OnInit {
 
   constructor(
     private fs: FileService,
-    private dm: DesignmodesService,
+    public dm: DesignmodesService,
     private ms: MaterialsService,
     private ss: SystemsService,
     public ws: WorkspaceService,
     public timeline: StateService,
-    private tree:TreeService
+    private tree:TreeService,
+    private ops: OperationService
     ) { 
 
     this.flag_recompute = false;
@@ -238,12 +240,15 @@ export class DraftviewerComponent implements OnInit {
   ngOnInit() {
 
     const draft = this.tree.getDraft(this.id);
+    const loom = this.tree.getLoom(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
     this.isFrame = isFrame(loom_settings);
     this.viewonly = !this.tree.isSeedDraft(this.id);
 
     this.colShuttleMapping = draft.colShuttleMapping;
     this.rowShuttleMapping = draft.rowShuttleMapping;
+
+
 
   }
 
@@ -339,18 +344,20 @@ export class DraftviewerComponent implements OnInit {
       const loom = this.tree.getLoom(this.id);
       const loom_settings = this.tree.getLoomSettings(this.id);
       
+      const editing_style = this.dm.getSelectedDesignMode('drawdown_editing_style').value;
+
 
       if (target && target.id =='treadling') {
         if(this.viewonly) return;
         currentPos.i = this.render.visibleRows[currentPos.i];
-        this.drawOnTreadling(loom, loom_settings, currentPos);
+        if(editing_style == "loom") this.drawOnTreadling(loom, loom_settings, currentPos);
       } else if (target && target.id === 'tieups') {
         if(this.viewonly || loom_settings.type === "direct") return;
-        this.drawOnTieups(loom, loom_settings, currentPos);
+        if(editing_style == "loom") this.drawOnTieups(loom, loom_settings, currentPos);
       } else if (target && target.id === ('threading')) {
         if(this.viewonly) return;
         //currentPos.i = this.loom.frame_mapping[currentPos.i];
-        this.drawOnThreading(loom, loom_settings, currentPos);
+        if(editing_style == "loom")  this.drawOnThreading(loom, loom_settings, currentPos);
       } else if(target && target.id === ('weft-systems')){
         if(this.viewonly) return;
         currentPos.i = this.render.visibleRows[currentPos.i];
@@ -368,7 +375,7 @@ export class DraftviewerComponent implements OnInit {
       } else{
         if(this.viewonly) return;
         currentPos.i = this.render.visibleRows[currentPos.i];
-        this.drawOnDrawdown(draft, loom_settings, currentPos, shift);
+        if(editing_style == "drawdown")  this.drawOnDrawdown(draft, loom_settings, currentPos, shift);
       }
 
       this.flag_history = true;
@@ -716,6 +723,7 @@ export class DraftviewerComponent implements OnInit {
     }
 
 
+
     //iterate through the selection
     for (var i = 0; i < temp_copy.length; i++) {
       for(var j = 0; j < temp_copy[0].length; j++) {
@@ -771,7 +779,11 @@ export class DraftviewerComponent implements OnInit {
         temp_dd[i][j].setHeddle(cell);
       })
     })
-    this.copy = initDraftWithParams({warps: w, wefts: h, drawdown: temp_dd}).drawdown;
+
+    this.copy = initDraftWithParams({warps: warps(temp_dd), wefts: wefts(temp_dd), drawdown: temp_dd}).drawdown;
+
+
+
     this.onNewSelection.emit(this.copy);
 
 
@@ -2363,6 +2375,7 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
   public insertRow(si:number) {
 
     const draft = this.tree.getDraft(this.id);
+    let loom = this.tree.getLoom(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
 
     si = this.translateDrawdownRowForView(draft, si);
@@ -2372,14 +2385,28 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
     draft.drawdown = insertDrawdownRow(draft.drawdown, index, null);
     draft.rowShuttleMapping = insertMappingRow(draft.rowShuttleMapping, index, 1);
     draft.rowSystemMapping = insertMappingRow(draft.rowSystemMapping, index, 0);
+    const utils = getLoomUtilByType(loom_settings.type);
+    loom = utils.insertIntoTreadling(loom, index, []);
 
-    this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
-    .then(loom => {
-      this.render.updateVisible(draft);
-      this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-      this.timeline.addHistoryState(draft);
-      this.rowShuttleMapping = draft.rowShuttleMapping;
-    })
+    if(this.dm.getSelectedDesignMode('drawdown_editing_style').value == 'drawdown'){
+      this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
+      .then(loom => {
+        this.render.updateVisible(draft);
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.rowShuttleMapping = draft.rowShuttleMapping;
+      })
+    }else{
+      this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+      .then(draft => {
+        this.render.updateVisible(draft);
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.rowShuttleMapping = draft.rowShuttleMapping;
+      })
+    }
+
+   
 
   }
     /**
@@ -2390,6 +2417,7 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
   public cloneRow(si: number) {
     const draft = this.tree.getDraft(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
+    let loom = this.tree.getLoom(this.id);
 
     si = this.translateDrawdownRowForView(draft, si);
     let index = this.render.visibleRows[si];
@@ -2397,15 +2425,28 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
     draft.drawdown = insertDrawdownRow(draft.drawdown, index, draft.drawdown[index].slice());
     draft.rowShuttleMapping = insertMappingRow(draft.rowShuttleMapping, index,draft.rowShuttleMapping[index]);
     draft.rowSystemMapping = insertMappingRow(draft.rowSystemMapping, index,draft.rowSystemMapping[index]);
+    const utils = getLoomUtilByType(loom_settings.type);
 
 
-    this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
-    .then(loom => {
-      this.render.updateVisible(draft);
-      this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-      this.timeline.addHistoryState(draft);
-      this.rowShuttleMapping = draft.rowShuttleMapping;
-    })
+    if(this.dm.getSelectedDesignMode('drawdown_editing_style').value == 'drawdown'){
+      this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
+      .then(loom => {
+        this.render.updateVisible(draft);
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.rowShuttleMapping = draft.rowShuttleMapping;
+      })
+    }else{
+      loom = utils.insertIntoTreadling(loom, index, loom.treadling[index].slice());
+
+      this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+      .then(draft => {
+        this.render.updateVisible(draft);
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.rowShuttleMapping = draft.rowShuttleMapping;
+      })
+    }
 
   }
 
@@ -2413,6 +2454,7 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
 
     const draft = this.tree.getDraft(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
+    let loom = this.tree.getLoom(this.id);
 
     si = this.translateDrawdownRowForView(draft, si);
     let index = this.render.visibleRows[si];
@@ -2421,15 +2463,27 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
     draft.drawdown = deleteDrawdownRow(draft.drawdown, index);
     draft.rowShuttleMapping = deleteMappingRow(draft.rowShuttleMapping, index)
     draft.rowSystemMapping = deleteMappingRow(draft.rowSystemMapping, index)
+    const utils = getLoomUtilByType(loom_settings.type);
+    loom = utils.deleteFromTreadling(loom, index);
 
-    this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
-    .then(loom => {
-      this.render.updateVisible(draft);
-      this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
-      this.timeline.addHistoryState(draft);
-      this.rowShuttleMapping = draft.rowShuttleMapping;
 
-    })
+    if(this.dm.getSelectedDesignMode('drawdown_editing_style').value == 'drawdown'){
+      this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
+      .then(loom => {
+        this.render.updateVisible(draft);
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.rowShuttleMapping = draft.rowShuttleMapping;
+      })
+    }else{
+      this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+      .then(draft => {
+        this.render.updateVisible(draft);
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, weft_systems: true, weft_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.rowShuttleMapping = draft.rowShuttleMapping;
+      })
+    }
   }
 
     /**
@@ -2439,6 +2493,7 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
    */
   public insertCol(j: number) {
     const draft = this.tree.getDraft(this.id);
+    let loom = this.tree.getLoom(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
 
     j = this.translateDrawdownColForView(draft, j);
@@ -2446,19 +2501,36 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
     draft.drawdown = insertDrawdownCol(draft.drawdown, j, null);
     draft.colShuttleMapping = insertMappingCol(draft.colShuttleMapping, j, 0);
     draft.colSystemMapping = insertMappingCol(draft.colSystemMapping, j, 0);
-    this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
-    .then(loom => {
-      computeYarnPaths(draft, this.ms.getShuttles());
-      this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-      this.timeline.addHistoryState(draft);
-      this.colShuttleMapping = draft.colShuttleMapping;
-    })
+    const utils = getLoomUtilByType(loom_settings.type);
+    loom = utils.insertIntoThreading(loom, j, -1);
+
+    if(this.dm.getSelectedDesignMode('drawdown_editing_style').value == 'drawdown'){
+      this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
+      .then(loom => {
+        computeYarnPaths(draft, this.ms.getShuttles());
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, warp_systems: true, warp_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.colShuttleMapping = draft.colShuttleMapping;
+      })
+
+    }else{
+
+      this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+      .then(draft => {
+        computeYarnPaths(draft, this.ms.getShuttles());
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, warp_systems: true, warp_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.colShuttleMapping = draft.colShuttleMapping;
+      })
+
+    }
 
   }
 
   public cloneCol(j: number) {
     const draft = this.tree.getDraft(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
+    let loom = this.tree.getLoom(this.id);
 
     //flip the index based on the flipped view
     j = this.translateDrawdownColForView(draft, j);
@@ -2471,27 +2543,10 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
     draft.drawdown = insertDrawdownCol(draft.drawdown, j, col);
     draft.colShuttleMapping = insertMappingCol(draft.colShuttleMapping, j, draft.colShuttleMapping[j]);
     draft.colSystemMapping = insertMappingCol(draft.colSystemMapping, j, draft.colSystemMapping[j]);
-    this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
-    .then(loom => {
-      computeYarnPaths(draft, this.ms.getShuttles());
-      this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, warp_systems: true, warp_materials:true});
-      this.timeline.addHistoryState(draft);
-      this.colShuttleMapping = draft.colShuttleMapping;
-    })
-
-  }
+    const utils = getLoomUtilByType(loom_settings.type);
 
 
-  public deleteCol(j: number) {
-    const draft = this.tree.getDraft(this.id);
-    const loom_settings = this.tree.getLoomSettings(this.id);
-    
-    j = this.translateDrawdownColForView(draft, j);
-
-    
-      draft.drawdown = deleteDrawdownCol(draft.drawdown, j);
-      draft.colShuttleMapping = deleteMappingCol(draft.colShuttleMapping, j);
-      draft.colSystemMapping = deleteMappingCol(draft.colSystemMapping, j);
+    if(this.dm.getSelectedDesignMode('drawdown_editing_style').value == 'drawdown'){
       this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
       .then(loom => {
         computeYarnPaths(draft, this.ms.getShuttles());
@@ -2499,6 +2554,57 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
         this.timeline.addHistoryState(draft);
         this.colShuttleMapping = draft.colShuttleMapping;
       })
+
+    }else{
+      loom = utils.insertIntoThreading(loom, j, loom.threading[j]);
+
+      this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+      .then(draft => {
+        computeYarnPaths(draft, this.ms.getShuttles());
+        this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, warp_systems: true, warp_materials:true});
+        this.timeline.addHistoryState(draft);
+        this.colShuttleMapping = draft.colShuttleMapping;
+      })
+
+    }
+
+  }
+
+
+  public deleteCol(j: number) {
+    const draft = this.tree.getDraft(this.id);
+    const loom_settings = this.tree.getLoomSettings(this.id);
+    let loom = this.tree.getLoom(this.id);
+
+    j = this.translateDrawdownColForView(draft, j);
+
+    
+      draft.drawdown = deleteDrawdownCol(draft.drawdown, j);
+      draft.colShuttleMapping = deleteMappingCol(draft.colShuttleMapping, j);
+      draft.colSystemMapping = deleteMappingCol(draft.colSystemMapping, j);
+      const utils = getLoomUtilByType(loom_settings.type);
+      loom = utils.deleteFromThreading(loom, j);
+  
+    
+      if(this.dm.getSelectedDesignMode('drawdown_editing_style').value == 'drawdown'){
+        this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
+        .then(loom => {
+          computeYarnPaths(draft, this.ms.getShuttles());
+          this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, warp_systems: true, warp_materials:true});
+          this.timeline.addHistoryState(draft);
+          this.colShuttleMapping = draft.colShuttleMapping;
+        })
+  
+      }else{
+        this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+        .then(draft => {
+          computeYarnPaths(draft, this.ms.getShuttles());
+          this.redraw(draft, loom, loom_settings, {drawdown: true, loom:true, warp_systems: true, warp_materials:true});
+          this.timeline.addHistoryState(draft);
+          this.colShuttleMapping = draft.colShuttleMapping;
+        })
+  
+      }
   }
 
   isLastCol(j: number) : boolean {
@@ -2579,6 +2685,84 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
 
   }
 
+
+
+  public pasteViaOperation(type){
+
+    const draft =  this.tree.getDraft(this.id);
+    const copy_draft = initDraftWithParams({warps: warps(this.copy), wefts: wefts(this.copy), drawdown: this.copy});
+    const loom_settings = this.tree.getLoomSettings(this.id);
+
+    const adj_start_i = this.render.visibleRows[this.selection.getStartingRowScreenIndex()];
+    const adj_end_i = this.render.visibleRows[this.selection.getEndingRowScreenIndex()];
+    const height = adj_end_i - adj_start_i;
+    let op: Operation;
+
+    let inputs: Array<OpInput> = [];
+  
+  
+      const flips = utilInstance.getFlips(this.ws.selected_origin_option, 3);
+      
+
+
+      return flipDraft(copy_draft, flips.horiz, flips.vert)
+      .then(flipped_draft => {
+
+        switch(type){
+          case 'invert':
+            op = this.ops.getOp('invert');
+            inputs.push({op_name: op.name, drafts: [], inlet: -1, params: []});
+            inputs.push({op_name:'child', drafts: [flipped_draft], inlet: 0, params: []});
+          break;
+          case 'mirrorX':
+            op = this.ops.getOp('flip horiz');
+            inputs.push({op_name: op.name, drafts: [], inlet: -1, params: []});
+            inputs.push({op_name:'child', drafts: [flipped_draft], inlet: 0, params: []});
+            break;
+          case 'mirrorY':
+            op = this.ops.getOp('flip vert');
+            inputs.push({op_name: op.name, drafts: [], inlet: -1, params: []});
+            inputs.push({op_name:'child', drafts: [flipped_draft], inlet: 0, params: []});
+            break;
+          case 'shiftLeft':
+            op = this.ops.getOp('shift left');
+            inputs.push({op_name: op.name, drafts: [], inlet: -1, params: [1]});
+            inputs.push({op_name:'child', drafts: [flipped_draft], inlet: 0, params: []});
+            break;
+          case 'shiftUp':
+            op = this.ops.getOp('shift up');
+            inputs.push({op_name: op.name, drafts: [], inlet: -1, params: [1]});
+            inputs.push({op_name:'child', drafts: [flipped_draft], inlet: 0, params: []});
+            break;
+        }
+        return op.perform(inputs);
+      })
+      .then(res => {
+        return flipDraft(res[0], flips.horiz, flips.vert);
+      })
+      .then(finalres => {
+        draft.drawdown = pasteIntoDrawdown(
+          draft.drawdown, 
+          finalres.drawdown, 
+          adj_start_i, 
+          this.selection.getStartingColIndex(),
+          this.selection.getWidth(),
+          height);
+    
+        this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings).then(loom => {
+          this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+
+        })
+
+      })
+     
+
+  
+  
+     
+    
+  }
+
   /**
    * Tells weave reference to paste copied pattern.
    * @extends WeaveComponent
@@ -2587,35 +2771,44 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
    */
    public onPaste(e) {
 
+
+
     const draft = this.tree.getDraft(this.id);
     const loom = this.tree.getLoom(this.id);
     const loom_settings = this.tree.getLoomSettings(this.id);
+    const loom_util = getLoomUtilByType(loom_settings.type);
+    let pattern:Array<number> = [];
+    let mapping:Array<number> = [];
 
     this.hold_copy_for_paste = false;
-
-    var p = this.copy;
 
     var type;
 
     if(e.type === undefined) type = "original";
     else type =  e.type;
 
+    if(type !== 'original'){
+      this.pasteViaOperation(type);
+    }
+
 
     const adj_start_i = this.render.visibleRows[this.selection.getStartingRowScreenIndex()];
     const adj_end_i = this.render.visibleRows[this.selection.getEndingRowScreenIndex()];
-
     const height = adj_end_i - adj_start_i;
-    draft.drawdown = pasteIntoDrawdown(
-      draft.drawdown, 
-      this.copy, 
-      adj_start_i, 
-      this.selection.getStartingColIndex(),
-      this.selection.getWidth(),
-      height);
 
 
     switch(this.selection.getTargetId()){    
       case 'drawdown':
+
+        draft.drawdown = pasteIntoDrawdown(
+          draft.drawdown, 
+          this.copy, 
+          adj_start_i, 
+          this.selection.getStartingColIndex(),
+          this.selection.getWidth(),
+          height);
+    
+
         //if you do this when updates come from loom, it will erase those updates
         this.tree.setDraftAndRecomputeLoom(this.id, draft, loom_settings)
         .then(loom => {
@@ -2624,16 +2817,111 @@ public redraw(draft:Draft, loom: Loom, loom_settings:LoomSettings,  flags:any){
         });
        break;
 
-      case 'treading':
-      case 'tieup':
-      case 'treadling':
+      case 'threading':
+        loom_util.pasteThreading(loom, this.copy, {i: adj_start_i, j: this.selection.getStartingColIndex(), val: null}, this.selection.getWidth(), height);
         this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
         .then(draft => {
           this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
-
         });
+        break;
+      case 'tieup':
+        loom_util.pasteTieup(loom,this.copy, {i: adj_start_i, j: this.selection.getStartingColIndex(), val: null}, this.selection.getWidth(), height);
+        this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+        .then(draft => {
+          this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+        });
+        break;
+      case 'treadling':
+        loom_util.pasteTreadling(loom, this.copy, {i: adj_start_i, j: this.selection.getStartingColIndex(), val: null}, this.selection.getWidth(), height);
+        this.tree.setLoomAndRecomputeDrawdown(this.id, loom, loom_settings)
+        .then(draft => {
+          this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+        });
+        break;
 
-      break;
+      case 'warp-systems':
+
+         pattern = []; 
+          for(let j = 0; j < this.copy[0].length; j++){
+              const assigned_to = this.copy.findIndex(sys => sys[j].getHeddle() == true);
+              pattern.push(assigned_to);
+           }
+            mapping = generateMappingFromPattern(draft.drawdown, pattern, 'col', this.ws.selected_origin_option);
+
+           draft.colSystemMapping = mapping.map((el, ndx) => {
+              if(ndx >= this.selection.getStartingColIndex() && ndx < this.selection.getStartingColIndex() + this.selection.getWidth()){
+                return el;
+              }else{
+                return draft.colSystemMapping[ndx];
+              }
+            });
+
+            this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+
+          break;
+      case 'warp-materials':
+
+        pattern = []; 
+        for(let j = 0; j < this.copy[0].length; j++){
+            const assigned_to = this.copy.findIndex(sys => sys[j].getHeddle() == true);
+            pattern.push(assigned_to);
+         }
+          mapping = generateMappingFromPattern(draft.drawdown, pattern, 'col', this.ws.selected_origin_option);
+
+         draft.colShuttleMapping = mapping.map((el, ndx) => {
+            if(ndx >= this.selection.getStartingColIndex() && ndx < this.selection.getStartingColIndex() + this.selection.getWidth()){
+              return el;
+            }else{
+              return draft.colShuttleMapping[ndx];
+            }
+          });
+
+          this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+
+
+        break;
+
+        case 'weft-systems':
+
+          pattern = []; 
+          for(let i = 0; i < this.copy.length; i++){
+              const assigned_to = this.copy[i].findIndex(sys => sys.getHeddle() == true);
+              pattern.push(assigned_to);
+           }
+            mapping = generateMappingFromPattern(draft.drawdown, pattern, 'row', this.ws.selected_origin_option);
+
+           draft.rowSystemMapping = mapping.map((el, ndx) => {
+              if(ndx >= adj_start_i && ndx < adj_start_i + height){
+                return el;
+              }else{
+                return draft.rowSystemMapping[ndx];
+              }
+            });
+
+            this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+
+          break;
+
+          case 'weft-materials':
+          
+            pattern = []; 
+            for(let i = 0; i < this.copy.length; i++){
+                const assigned_to = this.copy[i].findIndex(sys => sys.getHeddle() == true);
+                pattern.push(assigned_to);
+             }
+              mapping = generateMappingFromPattern(draft.drawdown, pattern, 'row', this.ws.selected_origin_option);
+  
+             draft.rowShuttleMapping = mapping.map((el, ndx) => {
+                if(ndx >= adj_start_i && ndx < adj_start_i + height){
+                  return el;
+                }else{
+                  return draft.rowShuttleMapping[ndx];
+                }
+              });
+  
+              this.redraw(draft, loom, loom_settings, {drawdown:true, loom:true, weft_materials: true, warp_materials:true, weft_systems:true, warp_systems:true});
+  
+            break;
     }
 
   
