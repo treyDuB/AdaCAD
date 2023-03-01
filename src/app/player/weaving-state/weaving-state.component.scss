@@ -5,37 +5,40 @@
   flex-basis: 100%;
 }
 
-.loom-block, .draft-block {
+.loom-block{
   display: inline-block;
 }
 
 .draft-block{
+  display: inline-flex;
+  flex-flow: column nowrap;
   height: inherit; 
-  flex-wrap: nowrap;
   flex: 1;
+  max-width: 1300px;
 }
 
 .draft-scroll{
-  max-width: 1255px;
+  max-width: 1300px;
   max-height: 370px;
   overflow: scroll;
 }
 
-.break{
-  flex-basis: 100%
-}
-
 .player-field-header {
+  max-width: 1300px;
   padding: 14px;
   margin: unset;
   background: #3f51b5;
   color: #ffffff;
 }
 
+.break{
+  flex-basis: 100%
+}
+
+
 .pedal-field-header {
   padding: 10px;
   margin: unset;
-  //background: #3f51b5;
   margin-bottom: 5px;
   color: #0a0000;
 }
