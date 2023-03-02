@@ -159,6 +159,8 @@ export class PlayerService {
   redraw = new EventEmitter();
   draftClassification: Array<DraftOperationClassification> = [];
 
+  get ops() { return this.mappings.ops; }
+
   constructor(
     public pedals: PedalsService,
     public mappings: MappingsService,

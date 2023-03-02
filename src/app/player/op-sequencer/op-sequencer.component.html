@@ -17,6 +17,7 @@
                     matTooltipClass= "visibleTooltip" 
                     [name] = op.name 
                     [matMenuTriggerFor]="opMenu">
+                    <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="Example thumbs up SVG icon"></mat-icon>
                     {{op.name}}
                   </button> 
                   <mat-menu #opMenu="matMenu">

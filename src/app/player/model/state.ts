@@ -12,7 +12,8 @@ import { initDraft } from "../../core/model/drafts";
 export interface PlayerState {
   draft: Draft,
   row: number,
-  pedal: string,
+  pedal: string | number,
+  op?: string,
   weaving: boolean,
   numPicks: number,
 }

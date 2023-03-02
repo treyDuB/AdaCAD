@@ -1,4 +1,7 @@
 import { Component, Input, Output, OnInit, ViewChild, EventEmitter} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material/icon';
+
 import { PlayerService } from './player.service';
 
 import { OpSequencerComponent } from './op-sequencer/op-sequencer.component';
@@ -36,9 +39,19 @@ export class PlayerComponent implements OnInit {
   mixerContainer: HTMLElement;
   
   constructor(
-    public pls: PlayerService
+    public pls: PlayerService,
+    public icons: MatIconRegistry,
+    private sanitizer: DomSanitizer
   ) { 
-
+    // register all the SVG icons
+    // icon registry has property _svgIconConfigs with :icon-name as keys
+    for (let op of pls.ops) {
+      // console.log(op.name);
+      icons.addSvgIcon('op-'+op.name, sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/'+op.name.replaceAll(" ", "-") + ".svg"));
+    }
+    // icons.addSvgIcon('op-random', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/random.svg'));
+    // icons.addSvgIcon('op-rotate', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/rotate.svg'));
+    console.log(icons);
   }
 
   ngOnInit(): void {

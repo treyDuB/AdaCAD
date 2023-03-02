@@ -92,3 +92,22 @@
 .mat-expansion-panel-header-title, .mat-expansion-indicator{
   color: white;
 }
+
+// ICON STUFF, heavily referencing @fortawesome module
+// define variables
+$op-css-prefix          : op !default;
+$op-icons-path          : "/assets/op_icons";
+
+$op-icons               : (
+  "random": "random.svg"
+);
+
+// content property helper function
+@function op-content($op-var) {
+  @return unquote("\"#{ $op-var }\"");
+}
+
+// define list of all the icons (op-icons) and iterate to generate classes
+@each $name, $icon in $op-icons {
+  .#{$op-css-prefix}-#{$name}::before { content: op-content($icon); }
+}

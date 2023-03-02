@@ -1,5 +1,5 @@
 import { PedalEvent, PlayerOp, ChainOp, forward } from "./op_mappings";
-import { PlayerState, copyState } from "./player";
+import { PlayerState, copyState } from "./state";
 
 /**
  * Sequencer:
