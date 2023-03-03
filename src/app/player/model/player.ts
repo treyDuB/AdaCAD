@@ -1,5 +1,8 @@
+// DON'T USE, MOST OF THIS IS REDUNDANT, GET RID OF THIS FILE
+
 import { Draft } from "../../core/model/datatypes"
 import { initDraft } from "../../core/model/drafts";
+import { PlayerState } from "./state";
 
 /** @interface
  * PlayerState represents the Draft Player as an FSM
@@ -9,13 +12,6 @@ import { initDraft } from "../../core/model/drafts";
  * @param numPicks the number of rows (picks) that have been sent to the loom so far (because the TC2 needs to receive this as part of the pick data)
  * @param pedal the name (mapped function) of the pedal that triggered this state change
  */
-export interface PlayerState {
-  draft: Draft,
-  row: number,
-  pedal: string,
-  weaving: boolean,
-  numPicks: number,
-}
 
 export function copyState(init: PlayerState): PlayerState {
   return Object.assign({}, init);

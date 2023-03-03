@@ -4,6 +4,7 @@ import { MaterialsService } from '../../core/provider/materials.service';
 import { Draft } from '../../core/model/datatypes';
 import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
 import { PedalsService } from '../provider/pedals.service';
+import { PlaybackService } from '../provider/playback.service';
 
 @Component({
   selector: 'app-weaving-state',
@@ -25,6 +26,7 @@ export class WeavingStateComponent implements OnInit {
   constructor(
     public pls: PlayerService,
     public pds: PedalsService,
+    public pbs: PlaybackService
   ) { 
     this.default_cell = 10;
   }
@@ -39,8 +41,8 @@ export class WeavingStateComponent implements OnInit {
     this.cx = this.draftCanvas.getContext("2d");
 
     this.pls.redraw.on('redraw', () => {
-      console.log("redrawing ", this.pls.state);
-      this.drawDraft();
+      // console.log("redrawing ", this.pls.state);
+      this.drawPlayback();
       // this.resizeContainer();
     });
 
@@ -50,42 +52,51 @@ export class WeavingStateComponent implements OnInit {
    * draw whetever is stored in the this.pls.draft object to the screen
    * @returns 
    */
-   drawDraft(flipY: boolean = true) {
+   drawPlayback(flipY: boolean = true) {
+    const playback = this.pbs;
+    const preview = playback.preview.drawdown;
+    const history = playback.history.drawdown;
 
     if(this.draftCanvas === undefined) return;
     this.cx = this.draftCanvas.getContext("2d");
    
-    if(this.pls.draft === null) {
+    if(playback.no_draft) {
       this.draftCanvas.width = 0;
       this.draftCanvas.height = 0;
-
     } else {
       this.draft_set = true;
-      this.draftCanvas.width = (warps(this.pls.draft.drawdown)+2) * this.default_cell;
-      this.draftCanvas.height = wefts(this.pls.draft.drawdown) * this.default_cell;
+      this.draftCanvas.width = (playback.max_width+2) * this.default_cell;
+      this.draftCanvas.height = (playback.previewHeight + playback.historyHeight) * this.default_cell;
 
-      for (let i = 0; i < wefts(this.pls.draft.drawdown); i++) {
-        for (let j = 0; j < warps(this.pls.draft.drawdown); j++) {
-          this.drawCell(this.default_cell, i, j, false, flipY);
+      for (let i = 0; i < wefts(preview); i++) {
+        for (let j = 0; j < playback.max_width; j++) {
+          this.drawPreviewCell(this.default_cell, i, j, flipY);
         }
-        if (i == this.pls.state.row) {
+        if (i == 0) {
           this.drawProgressBar(this.default_cell, i, warps(this.pls.draft.drawdown), flipY);
+        }
+      }
+
+      for (let i = 0; i < wefts(history); i++) {
+        for (let j = 0; j < history[i].length; j++) {
+          this.drawHistoryCell(this.default_cell, i, j, flipY);
         }
       }
     }
   }
 
-  drawCell(cell_size: number, i: number, j: number, usecolor: boolean, flipY: boolean = true){
-    let is_up = isUp(this.pls.draft.drawdown, i,j);
-    let is_set = isSet(this.pls.draft.drawdown, i, j);
+  drawPreviewCell(cell_size: number, i: number, j: number, flipY: boolean = true){
+    const preview = this.pbs.preview.drawdown;
+    let is_up = isUp(preview, i,j);
+    let is_set = isSet(preview, i, j);
     let color = "#ffffff"
-    if(is_set){
+    if (is_set) {
       if(this.ink === 'unset' && is_up){
         this.cx.fillStyle = "#999999"; 
       }else{
         if (is_up) {
           color = '#000000'; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
-        }else if (i == this.pls.state.row) { // highlight current row in yellow
+        }else if (i == 0) { // highlight current row in yellow
           color = '#ffff00'; //usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) :
         } else {
           color = '#ffffff'; // usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : 
@@ -95,15 +106,44 @@ export class WeavingStateComponent implements OnInit {
     } else {
       this.cx.fillStyle =  '#0000000d';
     }
-    let y = flipY ? wefts(this.pls.draft.drawdown)-1 - i : i;
+    let y = flipY ? wefts(preview)-1 - i : i;
     this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
 
   drawProgressBar(cell_size: number, i: number, width: number, flipY: boolean = true) {
+    const playback = this.pbs;
+    const preview = playback.preview.drawdown;
+
     this.cx.fillStyle =  '#ffff00';
-    let y = flipY ? wefts(this.pls.draft.drawdown)-1 - i : i;
+    let y = flipY ? wefts(preview)-1 - i : i;
     this.cx.fillRect(0, y*cell_size, cell_size, cell_size);
     this.cx.fillRect((width+1)*cell_size, y*cell_size, cell_size, cell_size);
+  }
+
+  drawHistoryCell(cell_size: number, i: number, j: number, flipY: boolean = true) {
+    const playback = this.pbs;
+    const preview = playback.preview.drawdown;
+    const history = playback.history.drawdown;
+
+    let is_up = isUp(history, i,j);
+    let is_set = isSet(history, i, j);
+    let color = "#ffffff"
+    if (is_set) {
+      if(this.ink === 'unset' && is_up){
+        this.cx.fillStyle = "#999999"; 
+      }else{
+        if (is_up) {
+          color = '#999999'; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
+        } else {
+          color = '#ffffff'; // usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : 
+        }
+        this.cx.fillStyle = color;
+      }
+    } else {
+      this.cx.fillStyle =  '#0000000d';
+    }
+    let y = flipY ? wefts(preview) + i : wefts(history)-1-i;
+    this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
 }
 

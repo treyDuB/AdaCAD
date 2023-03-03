@@ -17,6 +17,7 @@ import { PlayerState, WeavingPick, copyState, initState } from './model/state';
 import { MappingsService } from './provider/mappings.service';
 import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
 import { SequencerService } from './provider/sequencer.service';
+import { PlaybackService } from './provider/playback.service';
 // import { OperationService } from '../mixer/provider/operation.service';
 
 export interface DraftOperationClassification {
@@ -34,7 +35,7 @@ interface LoomConfig {
  * @class PedalConfig
  * @desc OLD, UPDATE THIS ---> 
  * Represents a set of two-way bindings between a set of Pedals
- * and a set of (Player)Operations. A pedal can only be bound to one
+ * and a set of (Player) Operations. A pedal can only be bound to one
  * Action (a single Op, a chain of Ops, or to control an OpRoulette)
  * @todo The second restriction may change, it might make sense for pedals to
  * get bound to a sequence of operations.
@@ -154,17 +155,16 @@ class PedalConfig {
   providedIn: 'root'
 })
 export class PlayerService {
-  state: PlayerState;
   loom: LoomConfig;
   redraw = new EventEmitter();
-  draftClassification: Array<DraftOperationClassification> = [];
-
-  get ops() { return this.mappings.ops; }
+  draftClassification: Array<DraftOperationClassification> 
+  = [];
 
   constructor(
     public pedals: PedalsService,
-    public mappings: MappingsService,
+    public mappings: MappingsService,   // TODO: move Player operations here
     public seq: SequencerService,
+    public playback: PlaybackService,   // has the Player state
     // private oss: OperationService
   ) {
     // this.draft = null; 
@@ -176,8 +176,6 @@ export class PlayerService {
     //   this.setDraft(result[0]);
     // });
 
-    this.state = initState();
-    this.state.draft = defs.tabby.perform([1]);
 
     this.loom = { warps: 2640, draftTiling: true };
 
@@ -272,6 +270,10 @@ export class PlayerService {
     );
   }
 
+  get ops() { return this.mappings.ops; }
+  get state() { return this.playback.state; }
+  set state(s: PlayerState) { this.playback.setState(s); }
+
   /** get whether or not the loom is weaving */
   get weaving() {
     return this.pedals.active_draft.val;
@@ -342,8 +344,8 @@ export class PlayerService {
       console.log('mapping exists for pedal');
       mapped.perform(this.state, id)
       .then((state: PlayerState) => {
-        this.state = copyState(state);
-        console.log(this.state);
+        this.state = state;
+        // console.log(this.state);
         this.redraw.emit('redraw');
         if (this.state.weaving) {
           console.log("draft player: sending row");
@@ -394,9 +396,5 @@ export class PlayerService {
       // send the first row right away
       this.pedals.sendDraftRow(this.currentRow());
     }
-    // this.pedals.vacuum_on.once('change', (state) => {
-    //   if (state) {
-    //   }
-    // });
   }
 }

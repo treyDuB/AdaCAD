@@ -78,7 +78,7 @@ export class PlayerComponent implements OnInit {
 
     this.open = false;
     // this.resizeContainer();
-    this.drawDraft();
+    this.drawPlayback();
 
     this.pls.redraw.on('redraw', () => {
       console.log("redrawing ", this.pls.state);
@@ -102,7 +102,7 @@ export class PlayerComponent implements OnInit {
     }
   }
 
-  drawDraft() { this.weaving_state.drawDraft(); }
+  drawPlayback() { this.weaving_state.drawPlayback(); }
 
   toggleOpen(state: boolean) {
     console.log("toggling");
