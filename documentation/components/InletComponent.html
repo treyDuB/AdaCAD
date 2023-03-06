@@ -246,7 +246,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(tree: <a href="../injectables/TreeService.html" target="_self">TreeService</a>, systems: <a href="../classes/System.html" target="_self">SystemsService</a>, ops: <a href="../injectables/OperationService.html" target="_self">OperationService</a>)</code>
+<code>constructor(tree: TreeService, systems: <a href="../classes/System.html" target="_self">SystemsService</a>, ops: <a href="../interfaces/Operation.html" target="_self">OperationService</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -272,7 +272,7 @@
                                                         <td>tree</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/TreeService.html" target="_self" >TreeService</a></code>
+                                                                    <code>TreeService</code>
                                                         </td>
                                                   
                                                     <td>
@@ -296,7 +296,7 @@
                                                         <td>ops</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/OperationService.html" target="_self" >OperationService</a></code>
+                                                                        <code><a href="../interfaces/Operation.html" target="_self" >OperationService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -853,7 +853,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#OperationInlet" target="_self" >OperationInlet</a></code>
+                        <i>Type : </i>        <code><a href="../interfaces/Operation.html" target="_self" >OperationInlet</a></code>
 
                     </td>
                 </tr>
@@ -984,7 +984,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../injectables/TreeService.html" target="_self" >TreeService</a></code>
+                        <i>Type : </i>    <code>TreeService</code>
 
                     </td>
                 </tr>
@@ -1005,9 +1005,9 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, OnInit, Output, EventEmitter } from &#x27;@angular/core&#x27;;
 import { FormControl, FormGroupDirective, NgForm } from &#x27;@angular/forms&#x27;;
-import { OperationService } from &#x27;../../../provider/operation.service&#x27;;
+import { OperationService } from &#x27;../../../../core/provider/operation.service&#x27;;
 import { SystemsService } from &#x27;../../../../core/provider/systems.service&#x27;;
-import { TreeService } from &#x27;../../../provider/tree.service&#x27;;
+import { TreeService } from &#x27;../../../../core/provider/tree.service&#x27;;
 import { getDraftName } from &#x27;../../../../core/model/drafts&#x27;;
 import { DynamicOperation, OperationInlet,OpNode } from &#x27;../../../../core/model/datatypes&#x27;;
 import { I } from &#x27;@angular/cdk/keycodes&#x27;;
@@ -1342,7 +1342,7 @@ input{
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div>    <ng-container *ngIf="inlet.type !== \'null\'">    <button *ngIf="inlet.type === \'static\'"    class="button is-small input"    [matTooltip]=\'inlet.dx\'    (click)="inputSelected()">         <i class="fas fa-chevron-down"></i>    </button>    <span class="inlet-name">{{inlet.name}}</span>    <ng-container *ngIf="inlet.type === \'number\' || inlet.type === \'draft\'">        <button        class="button is-small input"        [matTooltip]=\'inlet.dx\'        (click)="inputSelected()">             <i class="fas fa-chevron-down"></i>        </button>       <!-- // <span class="inlet-label">{{opnode.inlets[inletid]}}</span> -->       <mat-select matNativeControl       matTooltip="this will assign this draft to the number you select"        [(ngModel)]="opnode.inlets[inletid]"       (selectionChange)="inletChange()">       <mat-option *ngFor="let num of number_opts" [value]="num">           {{num}}       </mat-option>   </mat-select>    </ng-container>        <ng-container *ngIf="inlet.type === \'notation\' || inlet.type === \'profile\' ">        <button        class="button is-small input"        [matTooltip]=\'inlet.dx\'        (click)="inputSelected()">             <i class="fas fa-chevron-down"></i>        </button>        <span  *ngIf="inlet.type === \'notation\'" class="inlet-label"> ({{opnode.inlets[inletid]}})</span>        <span  *ngIf="inlet.type === \'profile\'" class="inlet-label"> {{opnode.inlets[inletid]}}</span>    </ng-container>    <ng-container *ngIf="inlet.type === \'system\'">        <button        class="button is-small input"        [matTooltip]=\'inlet.dx\'        (click)="inputSelected()">             <i class="fas fa-chevron-down"></i>        </button>        <span class="inlet-label">layer {{inletid+1}}, system: </span>            <mat-select matNativeControl            matTooltip="select the system to associate with this layer"             [(ngModel)]="opnode.inlets[inletid]"            (selectionChange)="inletChange()">            <mat-option *ngFor="let sys of all_system_codes" [value]="sys.id">                {{sys.code}}            </mat-option>        </mat-select>     </ng-container>    <ng-container *ngIf="inlet.type === \'color\'">               <button         class="button is-small input"        (click)="inputSelected()">            <i class="fas fa-chevron-down"></i>        </button>        <div *ngIf="inlet.type === \'color\'"        [matTooltip]="fc.value"        [style.background-color] = fc.value        class="input-color"></div>    </ng-container>    <!-- list everything attached here-->    <button *ngFor="let input of tree.getOpComponentInputs(opid, inletid);"    matTooltip = "click to remove this connection"    class="button is-small cxn"    (click)="removeConnectionTo(input)">    <i class="fas fa-times"></i><span class="input-name">{{getInputName(input)}} </span>    </button>   </ng-container></div>'
-    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
     var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
     var ACTUAL_COMPONENT = {'name': 'InletComponent'};
 </script>

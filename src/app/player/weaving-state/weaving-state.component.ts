@@ -6,6 +6,10 @@ import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
 import { PedalsService } from '../provider/pedals.service';
 import { PlaybackService } from '../provider/playback.service';
 
+/**
+ * @class
+ * Component that displays the Playback of the weaver's session.
+ */
 @Component({
   selector: 'app-weaving-state',
   templateUrl: './weaving-state.component.html',
@@ -50,7 +54,8 @@ export class WeavingStateComponent implements OnInit {
   /**
    * COPIED FROM palette/subdraft
    * draw whetever is stored in the this.pls.draft object to the screen
-   * @returns 
+   * @method
+   * @returns void
    */
    drawPlayback(flipY: boolean = true) {
     const playback = this.pbs;
@@ -60,7 +65,7 @@ export class WeavingStateComponent implements OnInit {
     if(this.draftCanvas === undefined) return;
     this.cx = this.draftCanvas.getContext("2d");
    
-    if(playback.no_draft) {
+    if (playback.no_draft) {
       this.draftCanvas.width = 0;
       this.draftCanvas.height = 0;
     } else {
@@ -85,6 +90,13 @@ export class WeavingStateComponent implements OnInit {
     }
   }
 
+  /**
+   * @method
+   * @param cell_size size of one square in the draft
+   * @param i x coord
+   * @param j y coord
+   * @param flipY whether or not to flip vertically
+   */
   drawPreviewCell(cell_size: number, i: number, j: number, flipY: boolean = true){
     const preview = this.pbs.preview.drawdown;
     let is_up = isUp(preview, i,j);

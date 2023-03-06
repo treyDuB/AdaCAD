@@ -68,6 +68,13 @@
 </p>
 
 
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Component that displays the number of virtual pedals connected, and allows the user to interact with them via key/mouse input.</p>
+
+    </p>
 
 
     <p class="comment">
@@ -192,7 +199,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:13</a></div>
                             </td>
                         </tr>
 
@@ -259,8 +266,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="19"
-                            class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:19</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:25</a></div>
                 </td>
             </tr>
 
@@ -293,8 +300,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="15"
-                            class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:15</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="21"
+                            class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:21</a></div>
                 </td>
             </tr>
 
@@ -337,8 +344,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="19"
-                            class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:19</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:25</a></div>
                 </td>
             </tr>
 
@@ -412,7 +419,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/player/virtual-pedals/virtual-pedals.component.ts:17</a></div>
                         </td>
                     </tr>
 
@@ -428,6 +435,10 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, HostListener } from &#x27;@angular/core&#x27;;
 import { PedalsService } from &#x27;../provider/pedals.service&#x27;;
 
+/**
+ * @class
+ * Component that displays the number of virtual pedals connected, and allows the user to interact with them via key/mouse input.
+ */
 @Component({
   selector: &#x27;app-virtual-pedals&#x27;,
   templateUrl: &#x27;./virtual-pedals.component.html&#x27;,
@@ -435,10 +446,12 @@ import { PedalsService } from &#x27;../provider/pedals.service&#x27;;
 })
 export class VirtualPedalsComponent implements OnInit {
 
+  /** @constructor */
   constructor(
     public pds: PedalsService,
   ) { }
 
+  /** @method */
   ngOnInit(): void {
   }
 
@@ -562,7 +575,7 @@ export class VirtualPedalsComponent implements OnInit {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div>Virtual Pedals: {{ pds.num_v_pedals.val }}<div id="v-pedals-container" class="row">  <div id="button-container" class="row">    <button mat-button id="add-v-pedal"       (click)="pds.addVPedal()"       [disabled]="!pds.v_pedal_array.active"      class="row-item">      +    </button>    <button mat-button id="add-v-pedal"       (click)="pds.remVPedal()"       [disabled]="!pds.v_pedal_array.active || pds.v_pedals.length == 0"      class="row-item">      -    </button>  </div>  <div id="v-pedals-list" class="row-item">    <!-- <h2 class="pedal-field-header">Pedals </h2> -->    <div class="pedal-array pedals-field">      <ng-container *ngFor="let p of pds.v_pedals">        <button         [name] = p.id        (click)="pds.togglePedal(p)"        class = "row-item">        {{p.id}}        </button>      </ng-container>    </div>  </div></div></div>'
-    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
     var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
     var ACTUAL_COMPONENT = {'name': 'VirtualPedalsComponent'};
 </script>

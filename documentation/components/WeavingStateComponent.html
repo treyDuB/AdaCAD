@@ -68,6 +68,13 @@
 </p>
 
 
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Component that displays the Playback of the weaver&#39;s session.</p>
+
+    </p>
 
 
     <p class="comment">
@@ -153,6 +160,10 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
+                                <a href="#pbs" >pbs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#pds" >pds</a>
                             </li>
                             <li>
@@ -172,10 +183,13 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#drawCell" >drawCell</a>
+                                <a href="#drawHistoryCell" >drawHistoryCell</a>
                             </li>
                             <li>
-                                <a href="#drawDraft" >drawDraft</a>
+                                <a href="#drawPlayback" >drawPlayback</a>
+                            </li>
+                            <li>
+                                <a href="#drawPreviewCell" >drawPreviewCell</a>
                             </li>
                             <li>
                                 <a href="#drawProgressBar" >drawProgressBar</a>
@@ -221,12 +235,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(pls: <a href="../injectables/PlayerService.html" target="_self">PlayerService</a>, pds: <a href="../injectables/PedalsService.html" target="_self">PedalsService</a>)</code>
+<code>constructor(pls: <a href="../injectables/PlayerService.html" target="_self">PlayerService</a>, pds: <a href="../injectables/PedalsService.html" target="_self">PedalsService</a>, pbs: <a href="../injectables/PlaybackService.html" target="_self">PlaybackService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:28</a></div>
                             </td>
                         </tr>
 
@@ -267,6 +281,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>pbs</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PlaybackService.html" target="_self" >PlaybackService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -294,7 +320,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:20</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -315,7 +341,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:16</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:21</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -333,24 +359,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="drawCell"></a>
+                    <a name="drawHistoryCell"></a>
                     <span class="name">
-                        <span ><b>drawCell</b></span>
-                        <a href="#drawCell"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>drawHistoryCell</b></span>
+                        <a href="#drawHistoryCell"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>drawCell(cell_size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, i: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, j: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, usecolor: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, flipY: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>drawHistoryCell(cell_size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, i: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, j: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, flipY: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="78"
-                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:78</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="135"
+                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:135</a></div>
                 </td>
             </tr>
 
@@ -414,20 +440,6 @@
 
                                 </tr>
                                 <tr>
-                                    <td>usecolor</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
                                     <td>flipY</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
@@ -462,24 +474,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="drawDraft"></a>
+                    <a name="drawPlayback"></a>
                     <span class="name">
-                        <span ><b>drawDraft</b></span>
-                        <a href="#drawDraft"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>drawPlayback</b></span>
+                        <a href="#drawPlayback"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>drawDraft(flipY: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>drawPlayback(flipY: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="53"
-                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:53</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:60</a></div>
                 </td>
             </tr>
 
@@ -528,6 +540,139 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
 
                     </div>
                     <div class="io-description">
+                        <p>void</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="drawPreviewCell"></a>
+                    <span class="name">
+                        <span ><b>drawPreviewCell</b></span>
+                        <a href="#drawPreviewCell"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>drawPreviewCell(cell_size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, i: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, j: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, flipY: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="100"
+                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:100</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>cell_size</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        <p>size of one square in the draft</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>i</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        <p>x coord</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>j</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        <p>y coord</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>flipY</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>true</code>
+                                    </td>
+
+                                    <td>
+                                        <p>whether or not to flip vertically</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
                         
                     </div>
                 </td>
@@ -554,8 +699,8 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="102"
-                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:102</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:125</a></div>
                 </td>
             </tr>
 
@@ -669,8 +814,8 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="40"
+                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:40</a></div>
                 </td>
             </tr>
 
@@ -706,8 +851,8 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:32</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="38"
+                            class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:38</a></div>
                 </td>
             </tr>
 
@@ -748,7 +893,7 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:22</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:27</a></div>
                         </td>
                     </tr>
 
@@ -779,7 +924,7 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -805,7 +950,7 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:21</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:26</a></div>
                         </td>
                     </tr>
 
@@ -836,7 +981,7 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -862,7 +1007,7 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -888,7 +1033,34 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pbs"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>pbs</b></span>
+                        <a href="#pbs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/PlaybackService.html" target="_self" >PlaybackService</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -915,7 +1087,7 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -942,7 +1114,7 @@ draw whetever is stored in the this.pls.draft object to the screen</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/player/weaving-state/weaving-state.component.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -961,7 +1133,12 @@ import { MaterialsService } from &#x27;../../core/provider/materials.service&#x2
 import { Draft } from &#x27;../../core/model/datatypes&#x27;;
 import { wefts, warps, isUp, isSet } from &#x27;../../core/model/drafts&#x27;;
 import { PedalsService } from &#x27;../provider/pedals.service&#x27;;
+import { PlaybackService } from &#x27;../provider/playback.service&#x27;;
 
+/**
+ * @class
+ * Component that displays the Playback of the weaver&#x27;s session.
+ */
 @Component({
   selector: &#x27;app-weaving-state&#x27;,
   templateUrl: &#x27;./weaving-state.component.html&#x27;,
@@ -982,6 +1159,7 @@ export class WeavingStateComponent implements OnInit {
   constructor(
     public pls: PlayerService,
     public pds: PedalsService,
+    public pbs: PlaybackService
   ) { 
     this.default_cell &#x3D; 10;
   }
@@ -996,8 +1174,8 @@ export class WeavingStateComponent implements OnInit {
     this.cx &#x3D; this.draftCanvas.getContext(&quot;2d&quot;);
 
     this.pls.redraw.on(&#x27;redraw&#x27;, () &#x3D;&gt; {
-      console.log(&quot;redrawing &quot;, this.pls.state);
-      this.drawDraft();
+      // console.log(&quot;redrawing &quot;, this.pls.state);
+      this.drawPlayback();
       // this.resizeContainer();
     });
 
@@ -1005,44 +1183,61 @@ export class WeavingStateComponent implements OnInit {
   /**
    * COPIED FROM palette/subdraft
    * draw whetever is stored in the this.pls.draft object to the screen
-   * @returns 
+   * @method
+   * @returns void
    */
-   drawDraft(flipY: boolean &#x3D; true) {
+   drawPlayback(flipY: boolean &#x3D; true) {
+    const playback &#x3D; this.pbs;
+    const preview &#x3D; playback.preview.drawdown;
+    const history &#x3D; playback.history.drawdown;
 
     if(this.draftCanvas &#x3D;&#x3D;&#x3D; undefined) return;
     this.cx &#x3D; this.draftCanvas.getContext(&quot;2d&quot;);
    
-    if(this.pls.draft &#x3D;&#x3D;&#x3D; null) {
+    if (playback.no_draft) {
       this.draftCanvas.width &#x3D; 0;
       this.draftCanvas.height &#x3D; 0;
-
     } else {
       this.draft_set &#x3D; true;
-      this.draftCanvas.width &#x3D; (warps(this.pls.draft.drawdown)+2) * this.default_cell;
-      this.draftCanvas.height &#x3D; wefts(this.pls.draft.drawdown) * this.default_cell;
+      this.draftCanvas.width &#x3D; (playback.max_width+2) * this.default_cell;
+      this.draftCanvas.height &#x3D; (playback.previewHeight + playback.historyHeight) * this.default_cell;
 
-      for (let i &#x3D; 0; i &lt; wefts(this.pls.draft.drawdown); i++) {
-        for (let j &#x3D; 0; j &lt; warps(this.pls.draft.drawdown); j++) {
-          this.drawCell(this.default_cell, i, j, false, flipY);
+      for (let i &#x3D; 0; i &lt; wefts(preview); i++) {
+        for (let j &#x3D; 0; j &lt; playback.max_width; j++) {
+          this.drawPreviewCell(this.default_cell, i, j, flipY);
         }
-        if (i &#x3D;&#x3D; this.pls.state.row) {
+        if (i &#x3D;&#x3D; 0) {
           this.drawProgressBar(this.default_cell, i, warps(this.pls.draft.drawdown), flipY);
+        }
+      }
+
+      for (let i &#x3D; 0; i &lt; wefts(history); i++) {
+        for (let j &#x3D; 0; j &lt; history[i].length; j++) {
+          this.drawHistoryCell(this.default_cell, i, j, flipY);
         }
       }
     }
   }
 
-  drawCell(cell_size: number, i: number, j: number, usecolor: boolean, flipY: boolean &#x3D; true){
-    let is_up &#x3D; isUp(this.pls.draft.drawdown, i,j);
-    let is_set &#x3D; isSet(this.pls.draft.drawdown, i, j);
+  /**
+   * @method
+   * @param cell_size size of one square in the draft
+   * @param i x coord
+   * @param j y coord
+   * @param flipY whether or not to flip vertically
+   */
+  drawPreviewCell(cell_size: number, i: number, j: number, flipY: boolean &#x3D; true){
+    const preview &#x3D; this.pbs.preview.drawdown;
+    let is_up &#x3D; isUp(preview, i,j);
+    let is_set &#x3D; isSet(preview, i, j);
     let color &#x3D; &quot;#ffffff&quot;
-    if(is_set){
+    if (is_set) {
       if(this.ink &#x3D;&#x3D;&#x3D; &#x27;unset&#x27; &amp;&amp; is_up){
         this.cx.fillStyle &#x3D; &quot;#999999&quot;; 
       }else{
         if (is_up) {
           color &#x3D; &#x27;#000000&#x27;; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
-        }else if (i &#x3D;&#x3D; this.pls.state.row) { // highlight current row in yellow
+        }else if (i &#x3D;&#x3D; 0) { // highlight current row in yellow
           color &#x3D; &#x27;#ffff00&#x27;; //usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) :
         } else {
           color &#x3D; &#x27;#ffffff&#x27;; // usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : 
@@ -1052,15 +1247,44 @@ export class WeavingStateComponent implements OnInit {
     } else {
       this.cx.fillStyle &#x3D;  &#x27;#0000000d&#x27;;
     }
-    let y &#x3D; flipY ? wefts(this.pls.draft.drawdown)-1 - i : i;
+    let y &#x3D; flipY ? wefts(preview)-1 - i : i;
     this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
 
   drawProgressBar(cell_size: number, i: number, width: number, flipY: boolean &#x3D; true) {
+    const playback &#x3D; this.pbs;
+    const preview &#x3D; playback.preview.drawdown;
+
     this.cx.fillStyle &#x3D;  &#x27;#ffff00&#x27;;
-    let y &#x3D; flipY ? wefts(this.pls.draft.drawdown)-1 - i : i;
+    let y &#x3D; flipY ? wefts(preview)-1 - i : i;
     this.cx.fillRect(0, y*cell_size, cell_size, cell_size);
     this.cx.fillRect((width+1)*cell_size, y*cell_size, cell_size, cell_size);
+  }
+
+  drawHistoryCell(cell_size: number, i: number, j: number, flipY: boolean &#x3D; true) {
+    const playback &#x3D; this.pbs;
+    const preview &#x3D; playback.preview.drawdown;
+    const history &#x3D; playback.history.drawdown;
+
+    let is_up &#x3D; isUp(history, i,j);
+    let is_set &#x3D; isSet(history, i, j);
+    let color &#x3D; &quot;#ffffff&quot;
+    if (is_set) {
+      if(this.ink &#x3D;&#x3D;&#x3D; &#x27;unset&#x27; &amp;&amp; is_up){
+        this.cx.fillStyle &#x3D; &quot;#999999&quot;; 
+      }else{
+        if (is_up) {
+          color &#x3D; &#x27;#999999&#x27;; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
+        } else {
+          color &#x3D; &#x27;#ffffff&#x27;; // usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : 
+        }
+        this.cx.fillStyle &#x3D; color;
+      }
+    } else {
+      this.cx.fillStyle &#x3D;  &#x27;#0000000d&#x27;;
+    }
+    let y &#x3D; flipY ? wefts(preview) + i : wefts(history)-1-i;
+    this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
 }
 
@@ -1070,59 +1294,60 @@ export class WeavingStateComponent implements OnInit {
 
     <div class="tab-pane fade " id="c-templateData">
         <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;first-row&quot;&gt;
-  &lt;div id&#x3D;&quot;loom-container&quot; class&#x3D;&quot;loom-block&quot;&gt;
-    &lt;div id&#x3D;&quot;loom-status&quot; class&#x3D;&quot;loom-field&quot;&gt;
-      &lt;ng-container *ngIf&#x3D;&quot;pds.loom_online.val; else loomOffline&quot;&gt;
-        &lt;p class&#x3D;&quot;online data-display&quot;&gt;Loom: Online&lt;/p&gt;
-        
-      &lt;/ng-container&gt;
-      &lt;ng-template #loomOffline&gt;
-        &lt;p class&#x3D;&quot;offline data-display&quot;&gt;Loom: Offline&lt;/p&gt;
-      &lt;/ng-template&gt;
-    &lt;/div&gt;
-
-    &lt;mat-form-field id&#x3D;&quot;loom-warps&quot; class&#x3D;&quot;loom-field&quot;&gt;
-      &lt;mat-label&gt;Warps&lt;/mat-label&gt;
-      &lt;input matInput value&#x3D;&quot;{{pls.loom.warps}}&quot; (change)&#x3D;&quot;pls.changeLoomWidth($event)&quot; type&#x3D;&quot;number&quot;&gt;
-    &lt;/mat-form-field&gt;
-
-    &lt;mat-slide-toggle id&#x3D;&quot;loom-draft-tiling&quot; class&#x3D;&quot;loom-field&quot;
-      checked&#x3D;&quot;{{pls.loom.draftTiling}}&quot;
-      (change)&#x3D;&quot;pls.toggleDraftTiling($event)&quot;&gt;
-        Draft Tiling
-    &lt;/mat-slide-toggle&gt;
-
-    &lt;div id&#x3D;&quot;startstop-container&quot; class&#x3D;&quot;loom-field&quot;&gt;
-      &lt;button mat-button id&#x3D;&quot;startstop&quot;
-        matTooltip &#x3D; stuff 
-        (click)&#x3D;&quot;pls.toggleWeaving()&quot; 
-        [disabled]&#x3D;&quot;!pls.readyToWeave&quot;&gt;
-        &lt;div *ngIf&#x3D;&quot;!pls.weaving; else isWeaving&quot;&gt;Start Weaving&lt;/div&gt;
-        &lt;ng-template #isWeaving&gt;Stop Weaving&lt;/ng-template&gt;
-      &lt;/button&gt;
-    &lt;/div&gt;
-    
-    &lt;div id&#x3D;&quot;pedals-list&quot; class&#x3D;&quot;loom-field&quot;&gt;
-      &lt;h2 class&#x3D;&quot;pedal-field-header&quot;&gt;Pedals &lt;/h2&gt;
-      &lt;div class&#x3D;&quot;pedal-array pedals-field&quot;&gt;
-        &lt;ng-container *ngFor&#x3D;&quot;let p of pds.pedals&quot;&gt;
-          &lt;button 
-          [name] &#x3D; p.id
-          class &#x3D; &quot;pedal-box&quot;&gt;
-          {{p.id}}
-          &lt;/button&gt;
-        &lt;/ng-container&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-
-  &lt;/div&gt;
 
   &lt;div id&#x3D;&quot;draft-container&quot; class&#x3D;&quot;draft-block&quot;&gt;
-      &lt;h2 class&#x3D;&quot;player-field-header&quot;&gt;Draft&lt;/h2&gt;
-      &lt;div class&#x3D;&quot;draft-scroll&quot;&gt;
-      &lt;canvas class&#x3D;&quot;draft-field&quot; id&#x3D;&quot;active-draft-canvas&quot;&gt;&lt;/canvas&gt;
-      &lt;/div&gt;
+    &lt;h2 class&#x3D;&quot;player-field-header&quot;&gt;Draft&lt;/h2&gt;
+    &lt;div class&#x3D;&quot;draft-scroll&quot;&gt;
+    &lt;canvas class&#x3D;&quot;draft-field&quot; id&#x3D;&quot;active-draft-canvas&quot;&gt;&lt;/canvas&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id&#x3D;&quot;loom-container&quot; class&#x3D;&quot;loom-block&quot;&gt;
+  &lt;div id&#x3D;&quot;loom-status&quot; class&#x3D;&quot;loom-field&quot;&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;pds.loom_online.val; else loomOffline&quot;&gt;
+      &lt;p class&#x3D;&quot;online data-display&quot;&gt;Loom: Online&lt;/p&gt;
+      
+    &lt;/ng-container&gt;
+    &lt;ng-template #loomOffline&gt;
+      &lt;p class&#x3D;&quot;offline data-display&quot;&gt;Loom: Offline&lt;/p&gt;
+    &lt;/ng-template&gt;
   &lt;/div&gt;
+
+  &lt;mat-form-field id&#x3D;&quot;loom-warps&quot; class&#x3D;&quot;loom-field&quot;&gt;
+    &lt;mat-label&gt;Warps&lt;/mat-label&gt;
+    &lt;input matInput value&#x3D;&quot;{{pls.loom.warps}}&quot; (change)&#x3D;&quot;pls.changeLoomWidth($event)&quot; type&#x3D;&quot;number&quot;&gt;
+  &lt;/mat-form-field&gt;
+
+  &lt;mat-slide-toggle id&#x3D;&quot;loom-draft-tiling&quot; class&#x3D;&quot;loom-field&quot;
+    checked&#x3D;&quot;{{pls.loom.draftTiling}}&quot;
+    (change)&#x3D;&quot;pls.toggleDraftTiling($event)&quot;&gt;
+      Draft Tiling
+  &lt;/mat-slide-toggle&gt;
+
+  &lt;div id&#x3D;&quot;startstop-container&quot; class&#x3D;&quot;loom-field&quot;&gt;
+    &lt;button mat-button id&#x3D;&quot;startstop&quot;
+      matTooltip &#x3D; stuff 
+      (click)&#x3D;&quot;pls.toggleWeaving()&quot; 
+      [disabled]&#x3D;&quot;!pls.readyToWeave&quot;&gt;
+      &lt;div *ngIf&#x3D;&quot;!pls.weaving; else isWeaving&quot;&gt;Start Weaving&lt;/div&gt;
+      &lt;ng-template #isWeaving&gt;Stop Weaving&lt;/ng-template&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+  
+  &lt;div id&#x3D;&quot;pedals-list&quot; class&#x3D;&quot;loom-field&quot;&gt;
+    &lt;h2 class&#x3D;&quot;pedal-field-header&quot;&gt;Pedals &lt;/h2&gt;
+    &lt;div class&#x3D;&quot;pedal-array pedals-field&quot;&gt;
+      &lt;ng-container *ngFor&#x3D;&quot;let p of pds.pedals&quot;&gt;
+        &lt;button 
+        [name] &#x3D; p.id
+        class &#x3D; &quot;pedal-box&quot;&gt;
+        {{p.id}}
+        &lt;/button&gt;
+      &lt;/ng-container&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
 
 &lt;/div&gt;</code></pre>
     </div>
@@ -1138,37 +1363,40 @@ export class WeavingStateComponent implements OnInit {
   flex-basis: 100%;
 }
 
-.loom-block, .draft-block {
+.loom-block{
   display: inline-block;
 }
 
 .draft-block{
+  display: inline-flex;
+  flex-flow: column nowrap;
   height: inherit; 
-  flex-wrap: nowrap;
   flex: 1;
+  max-width: 1300px;
 }
 
 .draft-scroll{
-  max-width: 1255px;
+  max-width: 1300px;
   max-height: 370px;
   overflow: scroll;
 }
 
-.break{
-  flex-basis: 100%
-}
-
 .player-field-header {
+  max-width: 1300px;
   padding: 14px;
   margin: unset;
   background: #3f51b5;
   color: #ffffff;
 }
 
+.break{
+  flex-basis: 100%
+}
+
+
 .pedal-field-header {
   padding: 10px;
   margin: unset;
-  //background: #3f51b5;
   margin-bottom: 5px;
   color: #0a0000;
 }
@@ -1306,8 +1534,8 @@ export class WeavingStateComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="first-row">  <div id="loom-container" class="loom-block">    <div id="loom-status" class="loom-field">      <ng-container *ngIf="pds.loom_online.val; else loomOffline">        <p class="online data-display">Loom: Online</p>              </ng-container>      <ng-template #loomOffline>        <p class="offline data-display">Loom: Offline</p>      </ng-template>    </div>    <mat-form-field id="loom-warps" class="loom-field">      <mat-label>Warps</mat-label>      <input matInput value="{{pls.loom.warps}}" (change)="pls.changeLoomWidth($event)" type="number">    </mat-form-field>    <mat-slide-toggle id="loom-draft-tiling" class="loom-field"      checked="{{pls.loom.draftTiling}}"      (change)="pls.toggleDraftTiling($event)">        Draft Tiling    </mat-slide-toggle>    <div id="startstop-container" class="loom-field">      <button mat-button id="startstop"        matTooltip = stuff         (click)="pls.toggleWeaving()"         [disabled]="!pls.readyToWeave">        <div *ngIf="!pls.weaving; else isWeaving">Start Weaving</div>        <ng-template #isWeaving>Stop Weaving</ng-template>      </button>    </div>        <div id="pedals-list" class="loom-field">      <h2 class="pedal-field-header">Pedals </h2>      <div class="pedal-array pedals-field">        <ng-container *ngFor="let p of pds.pedals">          <button           [name] = p.id          class = "pedal-box">          {{p.id}}          </button>        </ng-container>      </div>    </div>  </div>  <div id="draft-container" class="draft-block">      <h2 class="player-field-header">Draft</h2>      <div class="draft-scroll">      <canvas class="draft-field" id="active-draft-canvas"></canvas>      </div>  </div></div></div>'
-    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+        var COMPONENT_TEMPLATE = '<div><div class="first-row">  <div id="draft-container" class="draft-block">    <h2 class="player-field-header">Draft</h2>    <div class="draft-scroll">    <canvas class="draft-field" id="active-draft-canvas"></canvas>    </div></div><div id="loom-container" class="loom-block">  <div id="loom-status" class="loom-field">    <ng-container *ngIf="pds.loom_online.val; else loomOffline">      <p class="online data-display">Loom: Online</p>          </ng-container>    <ng-template #loomOffline>      <p class="offline data-display">Loom: Offline</p>    </ng-template>  </div>  <mat-form-field id="loom-warps" class="loom-field">    <mat-label>Warps</mat-label>    <input matInput value="{{pls.loom.warps}}" (change)="pls.changeLoomWidth($event)" type="number">  </mat-form-field>  <mat-slide-toggle id="loom-draft-tiling" class="loom-field"    checked="{{pls.loom.draftTiling}}"    (change)="pls.toggleDraftTiling($event)">      Draft Tiling  </mat-slide-toggle>  <div id="startstop-container" class="loom-field">    <button mat-button id="startstop"      matTooltip = stuff       (click)="pls.toggleWeaving()"       [disabled]="!pls.readyToWeave">      <div *ngIf="!pls.weaving; else isWeaving">Start Weaving</div>      <ng-template #isWeaving>Stop Weaving</ng-template>    </button>  </div>    <div id="pedals-list" class="loom-field">    <h2 class="pedal-field-header">Pedals </h2>    <div class="pedal-array pedals-field">      <ng-container *ngFor="let p of pds.pedals">        <button         [name] = p.id        class = "pedal-box">        {{p.id}}        </button>      </ng-container>    </div>  </div></div></div></div>'
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
     var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
     var ACTUAL_COMPONENT = {'name': 'WeavingStateComponent'};
 </script>

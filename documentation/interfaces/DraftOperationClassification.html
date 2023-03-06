@@ -235,6 +235,7 @@ import { PlayerState, WeavingPick, copyState, initState } from &#x27;./model/sta
 import { MappingsService } from &#x27;./provider/mappings.service&#x27;;
 import { PedalsService, PedalStatus, Pedal } from &#x27;./provider/pedals.service&#x27;;
 import { SequencerService } from &#x27;./provider/sequencer.service&#x27;;
+import { PlaybackService } from &#x27;./provider/playback.service&#x27;;
 // import { OperationService } from &#x27;../mixer/provider/operation.service&#x27;;
 
 export interface DraftOperationClassification {
@@ -252,7 +253,7 @@ interface LoomConfig {
  * @class PedalConfig
  * @desc OLD, UPDATE THIS ---&gt; 
  * Represents a set of two-way bindings between a set of Pedals
- * and a set of (Player)Operations. A pedal can only be bound to one
+ * and a set of (Player) Operations. A pedal can only be bound to one
  * Action (a single Op, a chain of Ops, or to control an OpRoulette)
  * @todo The second restriction may change, it might make sense for pedals to
  * get bound to a sequence of operations.
@@ -289,12 +290,9 @@ class PedalConfig {
     this.availPedals.filter((id) &#x3D;&gt; id !&#x3D; this.pedals.length);
   }
 
-  addOperation(o: PlayerOp, chain?: boolean) {
+  addOperation(o: PlayerOp) {
     o.id &#x3D; this.ops.length;
     this.ops.push(o);
-    if (chain) {
-      o.chain &#x3D; chain;
-    }
     // this.unpairedOps.push(o);
     // console.log(this.ops);
   }
@@ -375,15 +373,16 @@ class PedalConfig {
   providedIn: &#x27;root&#x27;
 })
 export class PlayerService {
-  state: PlayerState;
   loom: LoomConfig;
   redraw &#x3D; new EventEmitter();
-  draftClassification: Array&lt;DraftOperationClassification&gt; &#x3D; [];
+  draftClassification: Array&lt;DraftOperationClassification&gt; 
+  &#x3D; [];
 
   constructor(
     public pedals: PedalsService,
-    public mappings: MappingsService,
+    public mappings: MappingsService,   // TODO: move Player operations here
     public seq: SequencerService,
+    public playback: PlaybackService,   // has the Player state
     // private oss: OperationService
   ) {
     // this.draft &#x3D; null; 
@@ -395,8 +394,6 @@ export class PlayerService {
     //   this.setDraft(result[0]);
     // });
 
-    this.state &#x3D; initState();
-    this.state.draft &#x3D; defs.tabby.perform([1]);
 
     this.loom &#x3D; { warps: 2640, draftTiling: true };
 
@@ -433,6 +430,7 @@ export class PlayerService {
 
     const tile: PlayerOp &#x3D; {
       name: defs.tile.name,
+      classifier: &#x27;pipe&#x27;,
       perform: (init: PlayerState) &#x3D;&gt; {
         let res &#x3D; copyState(init);
         res.draft &#x3D; defs.tile.perform([init.draft], [2, 2]);
@@ -490,6 +488,10 @@ export class PlayerService {
     );
   }
 
+  get ops() { return this.mappings.ops; }
+  get state() { return this.playback.state; }
+  set state(s: PlayerState) { this.playback.setState(s); }
+
   /** get whether or not the loom is weaving */
   get weaving() {
     return this.pedals.active_draft.val;
@@ -530,6 +532,7 @@ export class PlayerService {
     let structOp: PlayerOp &#x3D; {
       name: d.gen_name,
       struct_id: d.id,
+      classifier: &#x27;seed&#x27;,
       perform: (init: PlayerState) &#x3D;&gt; {
         let res &#x3D; copyState(init);
         res.draft &#x3D; d;
@@ -559,8 +562,8 @@ export class PlayerService {
       console.log(&#x27;mapping exists for pedal&#x27;);
       mapped.perform(this.state, id)
       .then((state: PlayerState) &#x3D;&gt; {
-        this.state &#x3D; copyState(state);
-        console.log(this.state);
+        this.state &#x3D; state;
+        // console.log(this.state);
         this.redraw.emit(&#x27;redraw&#x27;);
         if (this.state.weaving) {
           console.log(&quot;draft player: sending row&quot;);
@@ -611,10 +614,6 @@ export class PlayerService {
       // send the first row right away
       this.pedals.sendDraftRow(this.currentRow());
     }
-    // this.pedals.vacuum_on.once(&#x27;change&#x27;, (state) &#x3D;&gt; {
-    //   if (state) {
-    //   }
-    // });
   }
 }
 </code></pre>

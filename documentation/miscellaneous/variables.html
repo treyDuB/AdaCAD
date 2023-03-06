@@ -4339,6 +4339,7 @@
     gen_name: d.gen_name,
     wefts: wefts(d.drawdown),
     warps: warps(d.drawdown),
+    ud_name: d.ud_name,
     colShuttleMapping: d.colShuttleMapping,
     colSystemMapping: d.colSystemMapping});
     draft.drawdown &#x3D; createBlankDrawdown(wefts(d.drawdown), warps(d.drawdown));
@@ -5485,6 +5486,38 @@ removes any boundary rows from the input draft that are unset</p>
     computeDrawdownFromLoom: (l: Loom, origin: number) : Promise&lt;Drawdown&gt; &#x3D;&gt; {
       return computeDrawdown(l);
     },
+    recomputeLoomFromThreadingAndDrawdown:(l:Loom, loom_settings: LoomSettings, d: Drawdown, origin: number): Promise&lt;Loom&gt; &#x3D;&gt;{
+      const new_loom: Loom &#x3D; {
+        threading: l.threading.slice(),
+        tieup: [],
+        treadling: []
+    }
+
+  
+      //add treadling
+      for(let i &#x3D; 0; i &lt; wefts(d); i++){
+        let active_ts &#x3D; [];
+        let i_pattern &#x3D; d[i].slice();
+        i_pattern.forEach((cell, j) &#x3D;&gt; {
+          if(cell.isUp()){
+            const frame_assignment &#x3D; new_loom.threading[j];
+            if(frame_assignment !&#x3D;&#x3D; -1){
+              active_ts.push(frame_assignment);
+            }
+          }
+        });
+        new_loom.treadling[i] &#x3D; utilInstance.filterToUniqueValues(active_ts);
+      }
+
+      const num_frames &#x3D; Math.max(numFrames(l), loom_settings.frames);
+      const num_treadles &#x3D; Math.max(numTreadles(l), loom_settings.treadles);
+      const dim &#x3D; Math.max(num_frames, num_treadles)
+
+
+      new_loom.tieup &#x3D; generateDirectTieup(dim);
+      return Promise.resolve(new_loom)
+
+    },
     updateThreading: (loom: Loom, ndx:InterlacementVal) &#x3D;&gt; {
         if(ndx.val) loom.threading[ndx.j] &#x3D; ndx.i;
         else loom.threading[ndx.j] &#x3D; -1;
@@ -5847,8 +5880,47 @@ removes any boundary rows from the input draft that are unset</p>
       
     
     },
+    
     computeDrawdownFromLoom: (l: Loom, origin: number) : Promise&lt;Drawdown&gt; &#x3D;&gt; {
       return computeDrawdown(l);
+    },
+    recomputeLoomFromThreadingAndDrawdown:(l:Loom, loom_settings: LoomSettings, d: Drawdown, origin: number): Promise&lt;Loom&gt; &#x3D;&gt;{
+      const new_loom: Loom &#x3D; {
+        threading: l.threading.slice(),
+        tieup: [],
+        treadling: []
+      }
+     
+      return  generateTreadlingforFrameLoom(d)
+      .then(treadling &#x3D;&gt; {
+        new_loom.treadling &#x3D; treadling.treadling;
+    
+        new_loom.tieup &#x3D; [];
+        const num_frames &#x3D; Math.max(numFrames(l), loom_settings.frames);
+        const num_treadles &#x3D; Math.max(numTreadles(l), loom_settings.treadles);
+
+        for(let frames &#x3D; 0; frames &lt; num_frames; frames++){
+          new_loom.tieup.push([]);
+          for(let treadles &#x3D; 0; treadles &lt; num_treadles; treadles++){
+            new_loom.tieup[frames].push(false);
+          }
+        }
+
+        for(let i &#x3D; 0; i &lt; new_loom.treadling.length; i++){
+          if(new_loom.treadling[i].length &gt; 0){
+            const active_treadle_id &#x3D; new_loom.treadling[i][0];
+            const row &#x3D; d[i];
+            row.forEach((cell, j) &#x3D;&gt; {
+              if(cell.isUp()){
+                const active_frame_id &#x3D; new_loom.threading[j];
+                new_loom.tieup[active_frame_id][active_treadle_id] &#x3D; true;
+              } 
+            });
+          }
+        }
+
+        return Promise.resolve(new_loom);
+      })
     },
     updateThreading: (loom:Loom, ndx: InterlacementVal) : Loom &#x3D;&gt; {
         if(ndx.val) loom.threading[ndx.j] &#x3D; ndx.i;
@@ -6334,6 +6406,9 @@ removes any boundary rows from the input draft that are unset</p>
      return Promise.resolve(null);
     },
     computeDrawdownFromLoom: (l: Loom) : Promise&lt;Drawdown&gt; &#x3D;&gt; {
+      return Promise.resolve(null);
+    },
+    recomputeLoomFromThreadingAndDrawdown:(l:Loom, loom_settings: LoomSettings, d: Drawdown, origin: number): Promise&lt;Loom&gt; &#x3D;&gt;{
       return Promise.resolve(null);
     },
     updateThreading: (loom: Loom, ndx:InterlacementVal) &#x3D;&gt; {
@@ -7869,6 +7944,7 @@ number of input and output Drafts. Classifies Operations.</p>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   name: &#x27;forward&#x27;,
+  classifier: &#x27;prog&#x27;,
   perform: (init: PlayerState) &#x3D;&gt; { 
     let res &#x3D; copyState(init);
     res.row &#x3D; (init.row+1) % wefts(init.draft.drawdown);
@@ -7904,6 +7980,7 @@ number of input and output Drafts. Classifies Operations.</p>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   name: &#x27;refresh&#x27;,
+  classifier: &#x27;prog&#x27;,
   perform: (init: PlayerState) &#x3D;&gt; { 
     let res &#x3D; copyState(init);
     if (res.weaving) res.numPicks++;
@@ -7937,6 +8014,7 @@ number of input and output Drafts. Classifies Operations.</p>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   name: &#x27;reverse&#x27;,
+  classifier: &#x27;prog&#x27;,
   perform: (init: PlayerState) &#x3D;&gt; { 
     let res &#x3D; copyState(init);
     res.row &#x3D; (init.row+wefts(init.draft.drawdown)-1) % wefts(init.draft.drawdown);

@@ -240,7 +240,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(tree: <a href="../injectables/TreeService.html" target="_self">TreeService</a>)</code>
+<code>constructor(tree: TreeService)</code>
                     </td>
                 </tr>
                         <tr>
@@ -266,7 +266,7 @@
                                                         <td>tree</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/TreeService.html" target="_self" >TreeService</a></code>
+                                                                    <code>TreeService</code>
                                                         </td>
                                                   
                                                     <td>
@@ -316,7 +316,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Draft.html" target="_self" >NumParam | StringParam | SelectParam | BoolParam | FileParam | DraftParam</a></code>
+                        <i>Type : </i>        <code><a href="../classes/Draft.html" target="_self" >NumParam | StringParam | SelectParam | BoolParam | FileParam | DraftParam</a></code>
 
                     </td>
                 </tr>
@@ -623,7 +623,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Draft.html" target="_self" >DraftParam</a></code>
+                        <i>Type : </i>        <code><a href="../classes/Draft.html" target="_self" >DraftParam</a></code>
 
                     </td>
                 </tr>
@@ -832,7 +832,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../injectables/TreeService.html" target="_self" >TreeService</a></code>
+                        <i>Type : </i>    <code>TreeService</code>
 
                     </td>
                 </tr>
@@ -854,7 +854,7 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, EventEmitter, Input, OnInit, Output } from &#x27;@angular/core&#x27;;
 import { AbstractControl, FormControl, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn, Validators } from &#x27;@angular/forms&#x27;;
 import { BoolParam, DraftParam, FileParam, NumParam, SelectParam, StringParam, OpNode } from &#x27;../../../../core/model/datatypes&#x27;;
-import {TreeService } from &#x27;../../../provider/tree.service&#x27;;
+import {TreeService } from &#x27;../../../../core/provider/tree.service&#x27;;
 
 
 export function regexValidator(nameRe: RegExp): ValidatorFn {
@@ -1116,27 +1116,27 @@ export class ParameterComponent implements OnInit {
 
 
 
-    &lt;!-- &lt;ng-container  *ngIf&#x3D;&quot;param.type &#x3D;&#x3D; &#x27;file&#x27;&quot;&gt;
+    &lt;ng-container  *ngIf&#x3D;&quot;param.type &#x3D;&#x3D; &#x27;file&#x27;&quot;&gt;
        
       &lt;div class&#x3D;&#x27;param-file&#x27;&gt;
         &lt;upload-form type&#x3D;&quot;init&quot; (onData)&#x3D;&quot;handleFile($event)&quot; class&#x3D;&quot;button&quot;&gt;&lt;/upload-form&gt;
      &lt;/div&gt;
 
    
-  &lt;/ng-container&gt; --&gt;
+  &lt;/ng-container&gt;
 
 
 &lt;/div&gt;
 
 
 
-  &lt;!-- &lt;div class&#x3D;&quot;text-err&quot; *ngIf&#x3D;&quot;fc.hasError(&#x27;required&#x27;)&quot;&gt;
+  &lt;div class&#x3D;&quot;text-err&quot; *ngIf&#x3D;&quot;fc.hasError(&#x27;required&#x27;)&quot;&gt;
      an input is required 
     &lt;/div&gt;
 
   &lt;div class&#x3D;&quot;text-err&quot; *ngIf&#x3D;&quot;fc.hasError(&#x27;forbiddenInput&#x27;)&quot;&gt;
     the current input is not correctly formatted
-    &lt;/div&gt; --&gt;</code></pre>
+    &lt;/div&gt;</code></pre>
     </div>
 
     <div class="tab-pane fade " id="c-styleData">
@@ -1275,8 +1275,8 @@ button.is-primary.is-active{
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="param-row">        <ng-container  *ngIf="param.type === \'number\'">              <mat-form-field>          <mat-label class="param-name">{{param.name}}</mat-label>            <input             matInput            [ngModel] = "opnode.params[paramid]"            [formControl]="fc"            [matTooltip]=param.dx            type = "number"            [name]=param.name            [min]=param.min            [max]=param.max            step = 1            (change)= "onParamChange(fc.value)"        >        </mat-form-field>      <!-- <div class="param-slider">        <mat-slider         matInput        [ngModel] = "opnode.params[paramid]"        tickInterval="1"        [formControl]="fc"        [matTooltip]=param.dx        [min]=numparam.min        [max]=numparam.max        step="1"         (change)= "onParamChange(fc.value)">    </mat-slider>    </div> -->  </ng-container>  <ng-container  *ngIf="param.type == \'select\'">    <mat-form-field>        <mat-label class="param-name">{{param.name}}</mat-label>        <mat-select             [ngModel] = "opnode.params[paramid]"            [matTooltip]=param.dx            [formControl]="fc"            (selectionChange)=\'onParamChange(fc.value)\'>          <mat-option *ngFor="let opt of selectparam.selectlist" [value]="opt.value">            {{opt.name}}          </mat-option>        </mat-select>     </mat-form-field> </ng-container>    <ng-container  *ngIf="param.type == \'boolean\'">      <div class="mat-form-field">        <mat-slide-toggle            [ngModel] = "opnode.params[paramid]"            [formControl]="fc"            [matTooltip]=param.dx            (change)= "onParamChange(fc.value)"            >             <span *ngIf="fc.value==1">{{boolparam.truestate}}</span>            <span *ngIf="fc.value==0">{{boolparam.falsestate}}</span>           </mat-slide-toggle>        </div>    </ng-container>    <ng-container  *ngIf="param.type == \'string\'">                <div class=\'param-text\'>            <input matInput            [(ngModel)] = "opnode.params[paramid]"            [formControl]="fc"            [errorStateMatcher]="regexValidator"            [matTooltip]=param.dx            type = "text"            (change)= "onParamChange(fc.value)"          >        </div>         <div class=\'param-label\'>            <button class="refresh"             mat-icon-button            color = "accent"            (click)= "onParamChange(fc.value)"            [disabled]="!fc.dirty || fc.hasError(\'required\') || fc.hasError(\'forbiddenInput\')"            matTooltip="update draft with input values">            <i class="fas fa-redo"></i></button>        </div>             </ng-container>    <!-- <ng-container  *ngIf="param.type == \'draft\'">            <div class=\'param-label\'>         <button class="refresh"          mat-icon-button         color = "accent"         (click)= "onParamChange(fc.value)"         matTooltip="update draft with input values">         <i class="fas fa-redo"></i></button>     </div>    </ng-container> -->    <!-- <ng-container  *ngIf="param.type == \'file\'">             <div class=\'param-file\'>        <upload-form type="init" (onData)="handleFile($event)" class="button"></upload-form>     </div>     </ng-container> --></div>  <!-- <div class="text-err" *ngIf="fc.hasError(\'required\')">     an input is required     </div>  <div class="text-err" *ngIf="fc.hasError(\'forbiddenInput\')">    the current input is not correctly formatted    </div> --></div>'
-    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+        var COMPONENT_TEMPLATE = '<div><div class="param-row">        <ng-container  *ngIf="param.type === \'number\'">              <mat-form-field>          <mat-label class="param-name">{{param.name}}</mat-label>            <input             matInput            [ngModel] = "opnode.params[paramid]"            [formControl]="fc"            [matTooltip]=param.dx            type = "number"            [name]=param.name            [min]=param.min            [max]=param.max            step = 1            (change)= "onParamChange(fc.value)"        >        </mat-form-field>      <!-- <div class="param-slider">        <mat-slider         matInput        [ngModel] = "opnode.params[paramid]"        tickInterval="1"        [formControl]="fc"        [matTooltip]=param.dx        [min]=numparam.min        [max]=numparam.max        step="1"         (change)= "onParamChange(fc.value)">    </mat-slider>    </div> -->  </ng-container>  <ng-container  *ngIf="param.type == \'select\'">    <mat-form-field>        <mat-label class="param-name">{{param.name}}</mat-label>        <mat-select             [ngModel] = "opnode.params[paramid]"            [matTooltip]=param.dx            [formControl]="fc"            (selectionChange)=\'onParamChange(fc.value)\'>          <mat-option *ngFor="let opt of selectparam.selectlist" [value]="opt.value">            {{opt.name}}          </mat-option>        </mat-select>     </mat-form-field> </ng-container>    <ng-container  *ngIf="param.type == \'boolean\'">      <div class="mat-form-field">        <mat-slide-toggle            [ngModel] = "opnode.params[paramid]"            [formControl]="fc"            [matTooltip]=param.dx            (change)= "onParamChange(fc.value)"            >             <span *ngIf="fc.value==1">{{boolparam.truestate}}</span>            <span *ngIf="fc.value==0">{{boolparam.falsestate}}</span>           </mat-slide-toggle>        </div>    </ng-container>    <ng-container  *ngIf="param.type == \'string\'">                <div class=\'param-text\'>            <input matInput            [(ngModel)] = "opnode.params[paramid]"            [formControl]="fc"            [errorStateMatcher]="regexValidator"            [matTooltip]=param.dx            type = "text"            (change)= "onParamChange(fc.value)"          >        </div>         <div class=\'param-label\'>            <button class="refresh"             mat-icon-button            color = "accent"            (click)= "onParamChange(fc.value)"            [disabled]="!fc.dirty || fc.hasError(\'required\') || fc.hasError(\'forbiddenInput\')"            matTooltip="update draft with input values">            <i class="fas fa-redo"></i></button>        </div>             </ng-container>    <!-- <ng-container  *ngIf="param.type == \'draft\'">            <div class=\'param-label\'>         <button class="refresh"          mat-icon-button         color = "accent"         (click)= "onParamChange(fc.value)"         matTooltip="update draft with input values">         <i class="fas fa-redo"></i></button>     </div>    </ng-container> -->    <ng-container  *ngIf="param.type == \'file\'">             <div class=\'param-file\'>        <upload-form type="init" (onData)="handleFile($event)" class="button"></upload-form>     </div>     </ng-container></div>  <div class="text-err" *ngIf="fc.hasError(\'required\')">     an input is required     </div>  <div class="text-err" *ngIf="fc.hasError(\'forbiddenInput\')">    the current input is not correctly formatted    </div></div>'
+    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
     var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
     var ACTUAL_COMPONENT = {'name': 'ParameterComponent'};
 </script>

@@ -64,10 +64,10 @@
                             <a href="#buildTreeOp" title="src/app/mixer/model/operation.ts" ><b>buildTreeOp</b>&nbsp;&nbsp;&nbsp;(src/.../operation.ts)</a>
                         </li>
                         <li>
-                            <a href="#copyState" title="src/app/player/model/state.ts" ><b>copyState</b>&nbsp;&nbsp;&nbsp;(src/.../state.ts)</a>
+                            <a href="#copyState" title="src/app/player/model/player.ts" ><b>copyState</b>&nbsp;&nbsp;&nbsp;(src/.../player.ts)</a>
                         </li>
                         <li>
-                            <a href="#copyState" title="src/app/player/model/player.ts" ><b>copyState</b>&nbsp;&nbsp;&nbsp;(src/.../player.ts)</a>
+                            <a href="#copyState" title="src/app/player/model/state.ts" ><b>copyState</b>&nbsp;&nbsp;&nbsp;(src/.../state.ts)</a>
                         </li>
                         <li>
                             <a href="#formatName" title="src/app/mixer/model/op_definitions.ts" ><b>formatName</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
@@ -88,13 +88,16 @@
                             <a href="#getParamsFromInputs" title="src/app/mixer/model/operation.ts" ><b>getParamsFromInputs</b>&nbsp;&nbsp;&nbsp;(src/.../operation.ts)</a>
                         </li>
                         <li>
+                            <a href="#getParamVals" title="src/app/player/model/op_mappings.ts" ><b>getParamVals</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                        </li>
+                        <li>
                             <a href="#getParamValues" title="src/app/mixer/model/operation/params.ts" ><b>getParamValues</b>&nbsp;&nbsp;&nbsp;(src/.../params.ts)</a>
                         </li>
                         <li>
-                            <a href="#initState" title="src/app/player/model/state.ts" ><b>initState</b>&nbsp;&nbsp;&nbsp;(src/.../state.ts)</a>
+                            <a href="#initState" title="src/app/player/model/player.ts" ><b>initState</b>&nbsp;&nbsp;&nbsp;(src/.../player.ts)</a>
                         </li>
                         <li>
-                            <a href="#initState" title="src/app/player/model/player.ts" ><b>initState</b>&nbsp;&nbsp;&nbsp;(src/.../player.ts)</a>
+                            <a href="#initState" title="src/app/player/model/state.ts" ><b>initState</b>&nbsp;&nbsp;&nbsp;(src/.../state.ts)</a>
                         </li>
                         <li>
                             <a href="#makeBlankChainOp" title="src/app/player/model/op_mappings.ts" ><b>makeBlankChainOp</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
@@ -313,7 +316,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/Draft.html" target="_self" >Array&lt;Draft&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/Draft.html" target="_self" >Array&lt;Draft&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -388,7 +391,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/Draft.html" target="_self" >InletDrafts</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/Draft.html" target="_self" >InletDrafts</a></code>
 
                     </div>
                     <div class="io-description">
@@ -461,7 +464,7 @@
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/app/player/model/state.ts</h3>
+</section>    <h3>src/app/player/model/player.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -557,7 +560,7 @@
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/app/player/model/player.ts</h3>
+</section>    <h3>src/app/player/model/state.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -914,22 +917,22 @@
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/app/mixer/model/operation/params.ts</h3>
+</section>    <h3>src/app/player/model/op_mappings.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getParamValues"></a>
+                    <a name="getParamVals"></a>
                     <span class="name">
-                        <span ><b>getParamValues</b></span>
-                        <a href="#getParamValues"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>getParamVals</b></span>
+                        <a href="#getParamVals"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getParamValues(input: Array)</code>
+<code>getParamVals(params)</code>
                 </td>
             </tr>
 
@@ -938,8 +941,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Utility function to extract values from an array of Params</p>
-</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -948,27 +949,18 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>input</td>
-                                    <td>
-                                            <code>Array</code>
-                                    </td>
+                                    <td>params</td>
 
                                     <td>
                                         No
                                     </td>
 
 
-                                    <td>
-                                        <p>Array of OperationParams, any type</p>
-
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -980,16 +972,13 @@
 
                     </div>
                     <div class="io-description">
-                        <p>Array of ParamValues</p>
-
+                        
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/app/player/model/op_mappings.ts</h3>
-    <section>
-    <h3></h3>    <table class="table table-sm table-bordered">
+    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
@@ -1321,6 +1310,79 @@
                         </table>
                     </div>
                     <div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/mixer/model/operation/params.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getParamValues"></a>
+                    <span class="name">
+                        <span ><b>getParamValues</b></span>
+                        <a href="#getParamValues"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getParamValues(input: Array)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Utility function to extract values from an array of Params</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>input</td>
+                                    <td>
+                                            <code>Array</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Array of OperationParams, any type</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ParamValue" target="_self" >Array&lt;ParamValue&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Array of ParamValues</p>
+
                     </div>
                 </td>
             </tr>

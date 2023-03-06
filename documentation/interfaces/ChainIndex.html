@@ -240,9 +240,9 @@ export class SequencerService extends OpSequencer {
     if (this.active) {
       this.addOp(o);
       /** if this is the first op loaded into the player, run the op so that updates the starting draft */
-      if (this.ops.length &#x3D;&#x3D; 1) {
-        this.pedals.emit(&#x27;pedal-step&#x27;, this.p_select_a);
-      }
+      // if (this.ops.length &#x3D;&#x3D; 1) {
+      //   this.pedals.emit(&#x27;pedal-step&#x27;, this.p_select_a);
+      // }
       // console.log(o);
       // console.log(this.seq);
     } else {

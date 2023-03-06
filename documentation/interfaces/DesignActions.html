@@ -221,8 +221,7 @@ import { Point, Interlacement, Bounds, DraftMap, Draft, LoomSettings } from &#x2
 import { InkService } from &#x27;../../provider/ink.service&#x27;;
 import { LayersService } from &#x27;../../provider/layers.service&#x27;;
 import utilInstance from &#x27;../../../core/model/util&#x27;;
-import { OperationService } from &#x27;../../provider/operation.service&#x27;;
-import { TreeService } from &#x27;../../provider/tree.service&#x27;;
+import { TreeService } from &#x27;../../../core/provider/tree.service&#x27;;
 import { FileService } from &#x27;../../../core/provider/file.service&#x27;;
 import { ViewportService } from &#x27;../../provider/viewport.service&#x27;;
 import { MatDialog, MatDialogRef } from &#x27;@angular/material/dialog&#x27;;
@@ -232,6 +231,7 @@ import { OperationComponent } from &#x27;../operation/operation.component&#x27;;
 import { WorkspaceService } from &#x27;../../../core/provider/workspace.service&#x27;;
 import { MaterialsService } from &#x27;../../../core/provider/materials.service&#x27;;
 import { createDraft, getDraftName, initDraftWithParams, isSet, isUp, warps, wefts } from &#x27;../../../core/model/drafts&#x27;;
+import { D } from &#x27;@angular/cdk/keycodes&#x27;;
 
 
 
@@ -350,6 +350,8 @@ export class SubdraftComponent implements OnInit {
 
   loom_settings: LoomSettings;
 
+  ud_name: string;
+
   constructor(private inks: InkService, 
     private layer: LayersService, 
     private ms: MaterialsService, 
@@ -377,6 +379,7 @@ export class SubdraftComponent implements OnInit {
 
     const draft &#x3D; this.tree.getDraft(this.id);
     this.loom_settings &#x3D; this.tree.getLoomSettings(this.id);
+    this.ud_name &#x3D; draft.ud_name;
 
     if(draft !&#x3D;&#x3D; undefined){
       this.bounds.width &#x3D; warps(draft.drawdown) * this.scale;
@@ -458,16 +461,22 @@ export class SubdraftComponent implements OnInit {
   updatePositionFromParent(parent: OperationComponent){
 
     if(this.parent_id !&#x3D;&#x3D; parent.id){
-      console.error(&quot;attempitng to update subdraft position from non-parent operation&quot;, this.parent_id, parent.id);
+      console.error(&quot;attempitng to update subdraft position from non-parent operation&quot;,  this.parent_id, parent.id);
       return;
     }
 
-    const container &#x3D; &lt;HTMLElement&gt; document.getElementById(&quot;scale-&quot;+this.parent_id);
-    this.setPosition({x: parent.bounds.topleft.x, y: parent.bounds.topleft.y + (container.offsetHeight * this.scale/this.default_cell) });
-
+    let container &#x3D; &lt;HTMLElement&gt; document.getElementById(&quot;scale-&quot;+this.parent_id);
+    if(container !&#x3D;&#x3D; null) this.setPosition({x: parent.bounds.topleft.x, y: parent.bounds.topleft.y + (container.offsetHeight * this.scale/this.default_cell) });
+    else {console.error(&quot;no element named scale-&quot;+this.parent_id+&quot;found&quot;)}
 
   }
 
+
+  updateName(){
+    const draft &#x3D; this.tree.getDraft(this.id);
+    draft.ud_name &#x3D; this.ud_name;
+
+  }
 
 
   updateSize(parent: OperationComponent){

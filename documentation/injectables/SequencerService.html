@@ -598,7 +598,7 @@ that are less often called in HTML</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:88</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:89</a></code>
 </div>
                 </td>
             </tr>
@@ -673,7 +673,7 @@ that are less often called in HTML</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:99</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:101</a></code>
 </div>
                 </td>
             </tr>
@@ -953,7 +953,7 @@ that are less often called in HTML</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:104</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:106</a></code>
 </div>
                 </td>
             </tr>
@@ -1004,7 +1004,7 @@ that are less often called in HTML</p>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#layer" target="_self" >Promise&lt;PlayerState&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../interfaces/PlayerState.html" target="_self" >Promise&lt;PlayerState&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1083,7 +1083,7 @@ that are less often called in HTML</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:94</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/OpSequencer.html#source" target="_self" >OpSequencer:95</a></code>
 </div>
                 </td>
             </tr>
@@ -1536,9 +1536,9 @@ export class SequencerService extends OpSequencer {
     if (this.active) {
       this.addOp(o);
       /** if this is the first op loaded into the player, run the op so that updates the starting draft */
-      if (this.ops.length &#x3D;&#x3D; 1) {
-        this.pedals.emit(&#x27;pedal-step&#x27;, this.p_select_a);
-      }
+      // if (this.ops.length &#x3D;&#x3D; 1) {
+      //   this.pedals.emit(&#x27;pedal-step&#x27;, this.p_select_a);
+      // }
       // console.log(o);
       // console.log(this.seq);
     } else {

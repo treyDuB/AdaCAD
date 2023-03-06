@@ -501,8 +501,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="88"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:88</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="89"
+                            class="link-to-prism">src/app/player/model/sequencer.ts:89</a></div>
                 </td>
             </tr>
 
@@ -570,8 +570,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="99"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:99</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="101"
+                            class="link-to-prism">src/app/player/model/sequencer.ts:101</a></div>
                 </td>
             </tr>
 
@@ -826,8 +826,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="104"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:104</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="106"
+                            class="link-to-prism">src/app/player/model/sequencer.ts:106</a></div>
                 </td>
             </tr>
 
@@ -877,7 +877,7 @@ Sequencer.</p>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#layer" target="_self" >Promise&lt;PlayerState&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../interfaces/PlayerState.html" target="_self" >Promise&lt;PlayerState&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -944,8 +944,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="94"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:94</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="95"
+                            class="link-to-prism">src/app/player/model/sequencer.ts:95</a></div>
                 </td>
             </tr>
 
@@ -987,7 +987,7 @@ Sequencer.</p>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/player/model/sequencer.ts:43</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/player/model/sequencer.ts:42</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -1016,7 +1016,7 @@ Sequencer.</p>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/player/model/sequencer.ts:48</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/player/model/sequencer.ts:47</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -1045,7 +1045,7 @@ Sequencer.</p>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/player/model/sequencer.ts:52</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/player/model/sequencer.ts:51</a></div>
                                 </td>
                             </tr>
 
@@ -1057,7 +1057,7 @@ Sequencer.</p>
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PedalEvent, PlayerOp, ChainOp, forward } from &quot;./op_mappings&quot;;
-import { PlayerState, copyState } from &quot;./player&quot;;
+import { PlayerState, copyState } from &quot;./state&quot;;
 
 /**
  * Sequencer:
@@ -1093,7 +1093,6 @@ import { PlayerState, copyState } from &quot;./player&quot;;
 
     if (ops) {
       this.ops &#x3D; ops;
-      this._pos &#x3D; 0;
     }
   }
 
@@ -1107,7 +1106,8 @@ import { PlayerState, copyState } from &quot;./player&quot;;
     return (this.p_prog &gt;&#x3D; 0 &amp;&amp; this.p_select_a &gt;&#x3D; 0);
   }
 
-  get current(): PlayerOp | ChainOp {
+  get current(): PlayerOp | ChainOp | null {
+    if (this._pos &#x3D;&#x3D; -1) return null;
     return this.ops[this._pos];
   }
 
@@ -1138,20 +1138,22 @@ import { PlayerState, copyState } from &quot;./player&quot;;
 
   prevOp() {
     if (this.ops.length &gt; 0) {
-      this._pos &#x3D; (this._pos - 1) % this.ops.length;
+      if (this._pos &lt; 0) { this._pos &#x3D; this.ops.length - 1; }
+      else { this._pos &#x3D; (this._pos - 1) % this.ops.length; }
       return this.current;
     }
   }
 
   addOp(o: PlayerOp | ChainOp) {
     this.ops.push(o);
-    if (this._pos &lt; 0) this._pos &#x3D; 0;
-    return this.ops.length-1;
+    // if (this._pos &lt; 0) this._pos &#x3D; 0;
+    return this.ops.length - 1;
   }
 
   removeOp() {
     this.ops.pop();
     if (this.ops.length &#x3D;&#x3D; 0) this._pos &#x3D; -1;
+    if (this._pos &#x3D;&#x3D; this.ops.length) this._pos--;
   }
 
   delOpAt(x: number) {
@@ -1160,7 +1162,7 @@ import { PlayerState, copyState } from &quot;./player&quot;;
   }
 
   perform(init: PlayerState, n: number): Promise&lt;PlayerState&gt; {
-    // console.log(&#x27;sequencer perform&#x27;);
+    console.log(&#x27;sequencer perform&#x27;);
     let res &#x3D; copyState(init);
     if (n &#x3D;&#x3D; this.p_prog) {
       // console.log(&quot;forward in sequencer draft&quot;);
@@ -1181,6 +1183,8 @@ import { PlayerState, copyState } from &quot;./player&quot;;
         } else if (n &#x3D;&#x3D; this.p_select_b) {
           this._pos &#x3D; (this._pos - 1) % this.ops.length;
         }
+        console.log(this._pos);
+        console.log(this.current);
         return this.current.perform(res);
       } else {
         return Promise.resolve(res); // we really can&#x27;t do anything without any operations on the sequencer

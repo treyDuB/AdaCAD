@@ -1,6 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { PedalsService } from '../provider/pedals.service';
 
+/**
+ * @class
+ * Component that displays the number of virtual pedals connected, and allows the user to interact with them via key/mouse input.
+ */
 @Component({
   selector: 'app-virtual-pedals',
   templateUrl: './virtual-pedals.component.html',
@@ -8,10 +12,12 @@ import { PedalsService } from '../provider/pedals.service';
 })
 export class VirtualPedalsComponent implements OnInit {
 
+  /** @constructor */
   constructor(
     public pds: PedalsService,
   ) { }
 
+  /** @method */
   ngOnInit(): void {
   }
 

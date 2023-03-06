@@ -205,23 +205,45 @@ import { OpInput, TreeOperation as TreeOp, SingleInlet,
 import { PlayerState, initState, copyState } from &quot;./state&quot;;
 
 import { OpSequencer, makeOpSequencer } from &quot;./sequencer&quot;;
+import { cloneDeep } from &quot;lodash&quot;;
 export * from &quot;./sequencer&quot;;
+
+type PlayerOpClassifier &#x3D; GenericOp[&quot;classifier&quot;][&quot;type&quot;] | &#x27;prog&#x27; | &#x27;chain&#x27;;
 
 export interface PlayerOp {
   id?: number,
+  classifier: PlayerOpClassifier,
   name: string,
   struct_id?: number,
   dx?: string,
-  op?: GenericOp,
+  params?: GenericOp[&quot;params&quot;],
   weavingOnly?: boolean,
-  chain?: boolean,
   perform: (init: PlayerState) &#x3D;&gt; Promise&lt;PlayerState&gt;;
+  setParams?: (params: Array&lt;ParamValue&gt;) &#x3D;&gt; void;
 }
 export type SingleOp &#x3D; PlayerOp;
+
+/**
+ * Op chain:
+ * - 1 pedal, multiple operations in a chain (array)
+ * - if pedal, perform() each Op in sequence
+ * @param ops   array of Op ID numbers to execute in order
+ */
+export interface ChainOp extends PlayerOp {
+  ops: Array&lt;SingleOp&gt;;
+}
+
+export function getParamVals(params: GenericOp[&quot;params&quot;]): Array&lt;ParamValue&gt; {
+  if (!params || params.length &#x3D;&#x3D; 0) {
+    return [] as Array&lt;ParamValue&gt;;
+  }
+  return params.map((el) &#x3D;&gt; el.value);
+}
 
 /** @const forward a player-specific function to progress through the draft */
 export const forward: PlayerOp &#x3D; {
   name: &#x27;forward&#x27;,
+  classifier: &#x27;prog&#x27;,
   perform: (init: PlayerState) &#x3D;&gt; { 
     let res &#x3D; copyState(init);
     res.row &#x3D; (init.row+1) % wefts(init.draft.drawdown);
@@ -234,6 +256,7 @@ export const forward: PlayerOp &#x3D; {
 /** @const refresh a player-specific function to progress through the draft (re-sends the row to give more time) */
 export const refresh: PlayerOp &#x3D; {
   name: &#x27;refresh&#x27;,
+  classifier: &#x27;prog&#x27;,
   perform: (init: PlayerState) &#x3D;&gt; { 
     let res &#x3D; copyState(init);
     if (res.weaving) res.numPicks++;
@@ -244,6 +267,7 @@ export const refresh: PlayerOp &#x3D; {
 /** @const reverse a player-specific function to progress backwards through the draft */
 export const reverse: PlayerOp &#x3D; {
   name: &#x27;reverse&#x27;,
+  classifier: &#x27;prog&#x27;,
   perform: (init: PlayerState) &#x3D;&gt; { 
     let res &#x3D; copyState(init);
     res.row &#x3D; (init.row+wefts(init.draft.drawdown)-1) % wefts(init.draft.drawdown);
@@ -254,21 +278,28 @@ export const reverse: PlayerOp &#x3D; {
 }
 
 export function playerOpFrom(op: GenericOp, params?: Array&lt;ParamValue&gt;) {
-  // use &quot;rotate&quot; op as an example
   let input_params &#x3D; params ? params : getDefaultParams(op);
-  let perform;
-  if (op.classifier.type &#x3D;&#x3D;&#x3D; &#x27;pipe&#x27;) {
+
+  var p: PlayerOp &#x3D; { 
+    name: op.name,
+    classifier: op.classifier.type,
+    params: cloneDeep(op.params),
+    dx: op.dx,
+    perform: refresh.perform,
+  }
+
+  if (p.classifier &#x3D;&#x3D;&#x3D; &#x27;pipe&#x27;) {
     const pipeOp &#x3D; op as Op&lt;Pipe, AllRequired&gt;;
-    perform &#x3D; function(init: PlayerState) {
+    p.perform &#x3D; function(init: PlayerState) {
       let res &#x3D; copyState(init);
       res.draft &#x3D; pipeOp.perform(init.draft, input_params);
       res.row &#x3D; (init.row) % wefts(res.draft.drawdown);
-      res.pedal &#x3D; op.name;
+      res.pedal &#x3D; p.name;
       return Promise.resolve(res);
     }
-  } else if (op.classifier.type &#x3D;&#x3D;&#x3D; &#x27;seed&#x27;) {
+  } else if (p.classifier &#x3D;&#x3D;&#x3D; &#x27;seed&#x27;) {
     const seedOp &#x3D; op as Op&lt;Seed, DraftsOptional&gt;;
-    perform &#x3D; function(init: PlayerState) {
+    p.perform &#x3D; function(init: PlayerState) {
       let res &#x3D; copyState(init);
       res.draft &#x3D; seedOp.perform(input_params);
       res.row &#x3D; (init.row) % wefts(res.draft.drawdown);
@@ -277,12 +308,6 @@ export function playerOpFrom(op: GenericOp, params?: Array&lt;ParamValue&gt;) {
     }
   }
   
-  /** @TODO */
-  var p: PlayerOp &#x3D; { 
-    name: op.name,
-    dx: op.dx,
-    perform: perform
-  }
   return p;
 }
 
@@ -328,6 +353,7 @@ function playerOpFromTree(op: PlayableTreeOp) {
 
   var p: PlayerOp &#x3D; { 
     name: op.name,
+    classifier: &#x27;&#x27;,
     perform: perform
   }
   return p;
@@ -366,56 +392,51 @@ export function makePairedOp(p: number, op: PlayerOp): PairedOp {
   }
 }
 
-/**
- * Op chain:
- * - 1 pedal, multiple operations in a chain (array)
- * - if pedal, perform() each Op in sequence
- * @param pedal ID number of pedals
- * @param ops   array of Op ID numbers to execute in order
- */
-export interface ChainOp extends PedalEvent{
-  pedal:  number,
-  ops:    Array&lt;PlayerOp&gt;,
-}
-
 export function makeBlankChainOp(p?: number): ChainOp {
   let res: ChainOp &#x3D; {
-    pedal: -1,
-    name: &quot;&quot;,
+    classifier: &#x27;chain&#x27;,
+    name: &#x27;ch&#x27;,
     ops: [],
-    perform: (init: PlayerState, ...args) &#x3D;&gt; {return Promise.resolve(init);}
+    perform: (init: PlayerState) &#x3D;&gt; {return Promise.resolve(init);}
   }
   
-  if (p) res.pedal &#x3D; p;
   return res;
 }
 
 export function makeChainOp(ops: Array&lt;PlayerOp&gt;, p?: number): ChainOp {
   let res &#x3D; makeBlankChainOp(p);
-  res.name &#x3D; &quot;ch&quot;;
   for (let o of ops) {
     res.name +&#x3D; &quot;-&quot; + o.name;
   }
 
+  const performChain &#x3D; (init: PlayerState, ops: Array&lt;PlayerOp&gt;) &#x3D;&gt; {
+    let res &#x3D; Promise.resolve(init);
+    for (let o of ops) {
+      res &#x3D; res.then((state) &#x3D;&gt; o.perform(state));
+    }
+  }
+
   res.ops &#x3D; ops;
-  res.perform &#x3D; (init: PlayerState, ...args) &#x3D;&gt; {
+  res.perform &#x3D; (init: PlayerState) &#x3D;&gt; {
     let newState &#x3D; copyState(init);
     newState.pedal &#x3D; &quot;ch&quot;;
-    let d: Draft &#x3D; init.draft;
+    let res &#x3D; Promise.resolve(newState);
     for (let o of ops) {
-      if (o.op.classifier.type &#x3D;&#x3D; &#x27;seed&#x27;) {
-        let base_op &#x3D; o.op as Op&lt;Seed, DraftsOptional&gt;;
-        d &#x3D; base_op.perform(getDefaultParams(base_op));
-      } else if (o.op.classifier.type &#x3D;&#x3D; &#x27;pipe&#x27;) {
-        let base_op &#x3D; o.op as Op&lt;Pipe, AllRequired&gt;;
-        d &#x3D; base_op.perform(d, getDefaultParams(base_op));
-      }
-      newState.pedal +&#x3D; &quot;-&quot; + o.name;
+      console.log(&quot;op in chain &quot;, o);
+      // if (o.classifier &#x3D;&#x3D; &#x27;seed&#x27;) {
+      //   let base_op &#x3D; o.op as Op&lt;Seed, DraftsOptional&gt;;
+      //   d &#x3D; base_op.perform(getDefaultParams(base_op));
+      // } else if (o.classifier &#x3D;&#x3D; &#x27;pipe&#x27;) {
+      //   let base_op &#x3D; o as Op&lt;Pipe, AllRequired&gt;;
+      //   d &#x3D; base_op.perform(d, getDefaultParams(base_op));
+      // }
+      res &#x3D; res.then((state) &#x3D;&gt; o.perform(state)).then((state) &#x3D;&gt; { 
+        state.pedal +&#x3D; &quot;-&quot; + o.name; 
+        console.log(state);
+        return state; });
+      // newState.pedal +&#x3D; &quot;-&quot; + o.name;
     }
-
-    newState.draft &#x3D; d;
-
-    return Promise.resolve(newState);
+    return res;
   }
 
   console.log(&#x27;op chain: &#x27;, res);
