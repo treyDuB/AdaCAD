@@ -74,7 +74,7 @@ export class WeavingStateComponent implements OnInit {
       this.draftCanvas.height = (playback.previewHeight + playback.historyHeight) * this.default_cell;
 
       for (let i = 0; i < wefts(preview); i++) {
-        for (let j = 0; j < playback.max_width; j++) {
+        for (let j = 0; j < warps(preview); j++) {
           this.drawPreviewCell(this.default_cell, i, j, flipY);
         }
         if (i == 0) {
@@ -83,7 +83,7 @@ export class WeavingStateComponent implements OnInit {
       }
 
       for (let i = 0; i < wefts(history); i++) {
-        for (let j = 0; j < history[i].length; j++) {
+        for (let j = 0; j < warps(history); j++) {
           this.drawHistoryCell(this.default_cell, i, j, flipY);
         }
       }
@@ -137,13 +137,13 @@ export class WeavingStateComponent implements OnInit {
     const preview = playback.preview.drawdown;
     const history = playback.history.drawdown;
 
-    let is_up = isUp(history, i,j);
+    let is_up = isUp(history, i, j);
     let is_set = isSet(history, i, j);
     let color = "#ffffff"
     if (is_set) {
       if(this.ink === 'unset' && is_up){
         this.cx.fillStyle = "#999999"; 
-      }else{
+      } else {
         if (is_up) {
           color = '#999999'; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
         } else {
@@ -151,11 +151,13 @@ export class WeavingStateComponent implements OnInit {
         }
         this.cx.fillStyle = color;
       }
-    } else {
-      this.cx.fillStyle =  '#0000000d';
-    }
-    let y = flipY ? wefts(preview) + i : wefts(history)-1-i;
-    this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
+      let y = flipY ? wefts(preview) + i : wefts(history)-1-i;
+      this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
+    } 
+    // else {
+    //   this.cx.fillStyle =  '#0000000d';
+    // }
+    
   }
 }
 

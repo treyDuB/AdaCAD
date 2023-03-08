@@ -617,7 +617,12 @@ export const createDraft = (
     return d;
   }
 
-
+  export const appendBlankCol = (d: Drawdown) : Drawdown => {
+    for (var i = 0; i < wefts(d); i++) {
+      d[i].push(new Cell(null));
+    }
+    return d;
+  }
 
 
   /**

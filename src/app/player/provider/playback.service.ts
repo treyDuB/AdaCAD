@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Draft } from '../../core/model/datatypes';
-import { initDraft, warps, wefts } from '../../core/model/drafts';
+import { initDraft, warps, wefts, appendBlankCol } from '../../core/model/drafts';
 import { PlayerState, initState, copyState } from '../model/state';
 
 import { tabby } from '../../mixer/model/op_definitions';
 import { max } from 'lodash';
+import { Cell } from '../../core/model/cell';
 
 /**
  * @class
@@ -65,27 +66,42 @@ export class PlaybackService {
     this.state.draft = tabby.perform([1]);
     this.max_width = 2;
     this.updatePreview();
+    console.log("playback service constructor done");
   }
 
   setState(s: PlayerState) {
     const prev = copyState(this.state);
     this.prevStates.push(prev);
+    this.state = copyState(s);
     this.logHistory(prev);
 
-    this.state = copyState(s);
+    this.max_width = max([warps(this.history.drawdown), warps(this.state.draft.drawdown)]);
     this.updatePreview();
   }
 
   updatePreview() {
     const drawdown = this.state.draft.drawdown;
     this.preview.drawdown = drawdown.slice(this.state.row).concat(drawdown.slice(0, this.state.row));
-    console.log(this.preview.drawdown);
+    // console.log(this.preview.drawdown);
   }
 
   logHistory(s: PlayerState) {
     let history = this.history.drawdown;
-    this.max_width = max([warps(s.draft.drawdown), this.max_width]);
-    history.unshift(s.draft.drawdown[s.row]); 
+    // do some resizing if needed, history needs to be a uniform width even if the pattern's width has changed
+    let diff = warps(s.draft.drawdown) - warps(history);
+    let logRow = Array.from(s.draft.drawdown[s.row]);
+    if (diff > 0) {
+      // new row is wider than history
+      for (var i=0; i < diff; i++) {
+        history = appendBlankCol(history);
+      }
+    } else if (diff < 0) {
+      // new row is narrower than history
+      for (var i=0; i < -diff; i++) {
+        logRow.push(new Cell(null));
+      }
+    }
+    history.unshift(logRow); 
     console.log(this.history.drawdown);
   }
 }

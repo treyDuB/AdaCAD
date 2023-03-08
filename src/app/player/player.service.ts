@@ -262,6 +262,8 @@ export class PlayerService {
         console.log("pedals mapping", mappings);
       }
     })
+    
+    this.redraw.emit('redraw');
   }
 
   get readyToWeave() {  // need either one pedal forward or one pedal reverse, in order to progress through draft
