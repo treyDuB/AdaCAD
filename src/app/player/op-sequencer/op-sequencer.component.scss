@@ -24,7 +24,7 @@
 
 .op-menu-block {
   display: block;
-  //max-width: 210px;
+  max-width: 310px;
 }
 
 #opChains {
@@ -49,13 +49,39 @@
   flex-direction: column;
 }
 
+.op-field-info{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 15px;
+  padding-left: 1.2em;
+}
+
+.sub-menu{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1em;
+}
+
+.sub-menu-button{
+  padding: 0.3em;
+}
+
+.sub-menu-chain{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1em;
+}
+
 .operation-sequence {
-  margin: 10px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   row-gap: 20px;
-  padding: 10px;
+  padding: 20px;
 }
 
 .operation-box {
@@ -63,6 +89,11 @@
   margin-right: 10px;
   margin-left: 10px;
   padding: 10px;
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+  border: none;
+  border-radius: 5px;
 }
 
 .selected-operation-box {
@@ -70,6 +101,11 @@
   margin-right: 10px;
   margin-left: 10px;
   padding: 10px;
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+  border: none;
+  border-radius: 5px;
 }
 
 

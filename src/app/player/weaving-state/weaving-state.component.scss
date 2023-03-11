@@ -7,6 +7,7 @@
 
 .loom-block{
   display: inline-block;
+  min-width: 280px;
 }
 
 .draft-block{
@@ -19,7 +20,7 @@
 
 .draft-scroll{
   max-width: 1300px;
-  max-height: 370px;
+  max-height: 390px;
   overflow: scroll;
 }
 
@@ -31,8 +32,8 @@
   color: #ffffff;
 }
 
-.break{
-  flex-basis: 100%
+.virtual-wrapper{
+  padding: 1em;
 }
 
 
