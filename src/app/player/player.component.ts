@@ -49,8 +49,10 @@ export class PlayerComponent implements OnInit {
       // console.log(op.name);
       icons.addSvgIcon('op-'+op.name, sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/'+op.name.replaceAll(" ", "-") + ".svg"));
     }
-    // icons.addSvgIcon('op-random', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/random.svg'));
-    // icons.addSvgIcon('op-rotate', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/rotate.svg'));
+
+    icons.addSvgIcon('op-chain', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/chain.svg'));
+    icons.addSvgIcon('op-custom', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/custom.svg'));
+    
     console.log(icons);
   }
 

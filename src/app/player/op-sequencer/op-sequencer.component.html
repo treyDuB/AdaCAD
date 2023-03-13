@@ -9,7 +9,13 @@
           <button 
           [name] = o.name
           class="selected-operation-box">
-          <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          <div *ngIf="o.chain_check == 1; else notChain">
+            <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+          </div>
+          
+          <ng-template #notChain>
+            <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          </ng-template>
           {{o.name}}
           </button>
         </div>
@@ -18,7 +24,13 @@
           <button 
           [name] = o.name
           class="operation-box">
-          <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          <div *ngIf="o.chain_check == 1; else notChain">
+            <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+          </div>
+          
+          <ng-template #notChain>
+            <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          </ng-template>
           {{o.name}}
           </button>
         </ng-template>
