@@ -9,8 +9,13 @@
           <button 
           [name] = o.name
           class="selected-operation-box">
-          <div *ngIf="o.chain_check == 1; else notChain">
-            <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+          <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
+            <div *ngIf="o.chain_check == 1">
+              <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+            </div>
+            <div *ngIf="o.custom_check == 1">
+              <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+            </div>
           </div>
           
           <ng-template #notChain>
@@ -24,8 +29,13 @@
           <button 
           [name] = o.name
           class="operation-box">
-          <div *ngIf="o.chain_check == 1; else notChain">
-            <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+          <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
+            <div *ngIf="o.chain_check == 1">
+              <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+            </div>
+            <div *ngIf="o.custom_check == 1">
+              <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+            </div>
           </div>
           
           <ng-template #notChain>
@@ -62,7 +72,13 @@
               [matMenuTriggerFor]="opMenu"
             >
             <div class="op-field-info">
-              <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="icon for {{op.name}} operation"></mat-icon>
+              <div *ngIf="class.category_id == 1; else notCustom" class="op-field-info-custom">
+                <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+              </div>
+              <ng-template #notCustom>
+                <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="icon for {{op.name}} operation"></mat-icon>
+              </ng-template>
+
               <div>{{op.name}}</div>
             </div>
             </button> 

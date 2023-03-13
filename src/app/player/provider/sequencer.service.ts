@@ -51,7 +51,7 @@ export class SequencerService extends OpSequencer {
   /** Add a single operation to the sequencer. */
   addSingleOp(o: PlayerOp) {
     if (this.active) {
-      o.chain_check = 0;
+      o.chain_check = -1;
       this.addOp(o);
       /** if this is the first op loaded into the player, run the op so that updates the starting draft */
       // if (this.ops.length == 1) {
