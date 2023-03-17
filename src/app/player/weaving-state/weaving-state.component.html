@@ -1,60 +1,65 @@
 <div class="first-row">
+  
   <div id="draft-container" class="draft-block">
     <h2 class="player-field-header">Draft</h2>
     <div class="draft-scroll">
       <canvas class="draft-field" id="active-draft-canvas"></canvas>
-  </div>
-</div>
-
-<div id="loom-container" class="loom-block">
-  <div id="loom-status" class="loom-field">
-    <ng-container *ngIf="pds.loom_online.val; else loomOffline">
-      <p class="online data-display">Loom: Online</p>
-      
-    </ng-container>
-    <ng-template #loomOffline>
-      <p class="offline data-display">Loom: Offline</p>
-    </ng-template>
-  </div>
-
-  <mat-form-field id="loom-warps" class="loom-field">
-    <mat-label>Warps</mat-label>
-    <input matInput value="{{pls.loom.warps}}" (change)="pls.changeLoomWidth($event)" type="number">
-  </mat-form-field>
-
-  <mat-slide-toggle id="loom-draft-tiling" class="loom-field"
-    checked="{{pls.loom.draftTiling}}"
-    (change)="pls.toggleDraftTiling($event)">
-      Draft Tiling
-  </mat-slide-toggle>
-
-  <div id="startstop-container" class="loom-field">
-    <button mat-button id="startstop"
-      matTooltip = stuff 
-      (click)="pls.toggleWeaving()" 
-      [disabled]="!pls.readyToWeave">
-      <div *ngIf="!pls.weaving; else isWeaving">Start Weaving</div>
-      <ng-template #isWeaving>Stop Weaving</ng-template>
-    </button>
-  </div>
-  
-  <div id="pedals-list" class="loom-field">
-    <h2 class="pedal-field-header">Pedals </h2>
-    <div class="pedal-array pedals-field">
-      <ng-container *ngFor="let p of pds.pedals">
-        <button 
-        [name] = p.id
-        class = "pedal-box">
-        {{p.id}}
-        </button>
-      </ng-container>
     </div>
   </div>
 
-  <div class="virtual-wrapper">
-    <app-virtual-pedals></app-virtual-pedals>
-  </div>
+  <div id="loom-container" class="loom-info">
 
-</div>
+    <div id="startstop-container" class="loom-field">
+      <button mat-button id="startstop" 
+        matTooltip = "signal the TC2 to begin weaving" 
+        (click)="pls.toggleWeaving()" 
+        [disabled]="!pls.readyToWeave">
+        <div *ngIf="!pls.weaving; else isWeaving">Start Weaving</div>
+        <ng-template #isWeaving>Stop Weaving</ng-template>
+      </button>
+    </div>
+
+    <div id="loom-status" class="loom-field">
+      <ng-container *ngIf="pds.loom_online.val; else loomOffline">
+        <p class="online data-display"
+        matTooltip = "the loom is connected and ready to weave" 
+        >Loom: Online</p>
+      </ng-container>
+      <ng-template #loomOffline>
+        <p class="offline data-display"
+        matTooltip = "the loom is not connected" 
+        >Loom: Offline</p>
+      </ng-template>
+    </div>
+
+    <mat-form-field id="loom-warps" class="loom-field">
+      <mat-label>Warps</mat-label>
+      <input matInput value="{{pls.loom.warps}}" (change)="pls.changeLoomWidth($event)" type="number">
+    </mat-form-field>
+    
+    <div id="pedals-list" class="loom-field">
+      <h2 class="pedal-field-header">Pedals </h2>
+      <div class="pedal-array pedals-field">
+        <ng-container *ngFor="let p of pds.pedals">
+          <button 
+          [name] = p.id
+          class = "pedal-box">
+          {{p.id}}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="virtual-wrapper">
+      <app-virtual-pedals></app-virtual-pedals>
+    </div>
+
+    <!-- <mat-slide-toggle id="loom-draft-tiling" class="loom-field"
+      checked="{{pls.loom.draftTiling}}"
+      (change)="pls.toggleDraftTiling($event)">
+        Draft Tiling
+    </mat-slide-toggle> -->
+
+  </div>
 
 </div>

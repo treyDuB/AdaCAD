@@ -24,7 +24,14 @@
 
 .op-menu-block {
   display: block;
-  max-width: 310px;
+}
+
+#operations-menu-s{
+  max-width: 220px;
+}
+
+#operations-menu-t{
+  max-width: 250px;
 }
 
 #opChains {
@@ -54,8 +61,8 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  column-gap: 15px;
-  padding-left: 1.2em;
+  column-gap: 10px;
+  padding-left: 0.25em;
 }
 
 .op-field-info-custom{
@@ -87,14 +94,14 @@
   flex-direction: row;
   flex-wrap: wrap;
   row-gap: 20px;
-  padding: 20px;
+  padding: 15px;
 }
 
 .operation-box {
   background-color: #bbc5ff;
   margin-right: 10px;
   margin-left: 10px;
-  padding: 10px;
+  padding: 15px;
   display: flex;
   align-items: center;
   column-gap: 5px;
@@ -106,7 +113,7 @@
   background-color: #f6ff00;
   margin-right: 10px;
   margin-left: 10px;
-  padding: 10px;
+  padding: 15px;
   display: flex;
   align-items: center;
   column-gap: 5px;
@@ -137,8 +144,13 @@
   
 }
 
-.mat-expansion-panel-header, 
-.mat-expansion-panel-header.mat-expanded:focus {
+.op-header-s, 
+.op-header-s.mat-expanded:focus {
+  background: #319072;
+}
+
+.op-header-t, 
+.op-header-t.mat-expanded:focus {
   background: #121f6b;
 }
 
@@ -158,12 +170,26 @@
   border-bottom: 0pt;
 }
 
-.mat-expansion-panel-header:hover, 
-.mat-expansion-panel-header.mat-expanded:hover,
-.mat-expansion-panel:not(.mat-expanded), 
-.mat-expansion-panel-header:hover:not([aria-disabled=true])   {
-  background: #566be2;
-}
+// .mat-expansion-panel-header:hover, 
+// .mat-expansion-panel-header.mat-expanded:hover,
+// .mat-expansion-panel:not(.mat-expanded), 
+// .mat-expansion-panel-header:hover:not([aria-disabled=true])   {
+//  background: #566be2;
+// }
+
+.op-header-s:hover, 
+.op-header-s.mat-expanded:hover,
+#operations-menu-s:not(.mat-expanded),
+.op-header-s:hover:not([aria-disabled=true])   {
+ background: #3fb58f;
+ }
+
+.op-header-t:hover, 
+.op-header-t.mat-epanded:hover,
+#operations-menu-t:not(.mat-expanded),
+.op-header-t:hover:not([aria-disabled=true])   {
+ background: #566be2;
+ }
 
 .mat-expansion-panel-header-title, .mat-expansion-indicator, .mat-expansion-indicator::after, .mat-expansion-indicator.ng-tns-c130-8.ng-trigger.ng-trigger-indicatorRotate.ng-star-inserted::after, #op-header.mat-expansion-indicator::after {
   color: white;

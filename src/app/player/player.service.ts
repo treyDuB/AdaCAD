@@ -158,8 +158,8 @@ class PedalConfig {
 export class PlayerService {
   loom: LoomConfig;
   redraw = new EventEmitter();
-  draftClassification: Array<DraftOperationClassification> 
-  = [];
+  draftClassificationS: Array<DraftOperationClassification> = [];
+  draftClassificationT: Array<DraftOperationClassification> = [];
 
   constructor(
     public pedals: PedalsService,
@@ -224,14 +224,14 @@ export class PlayerService {
     }
     mappings.addOperation(tile);
 
-    this.draftClassification.push(
+    this.draftClassificationS.push(
       { category_id: 0,
         category: 'structure',
         dx: "0-1 input, 1 output, algorithmically generates weave structures based on parameters",
         ops: [tabby, twill, satin, waffle, random]}
     );
 
-    this.draftClassification.push(
+    this.draftClassificationS.push(
       { category_id: 1,
         category: 'custom structure',
         dx: "custom structures loaded from the Mixer",
@@ -239,7 +239,7 @@ export class PlayerService {
       }
     );
 
-    this.draftClassification.push(
+    this.draftClassificationT.push(
       { category_id: 2,
         category: 'transformation',
         dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
@@ -289,7 +289,7 @@ export class PlayerService {
   }
 
   hasCustomStructure(d: Draft): boolean {
-    let ops = this.draftClassification.filter((c) => c.category == "custom structure")[0].ops;
+    let ops = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
     console.log(ops);
     if (ops.length == 0) return false;
     return ops
@@ -300,7 +300,7 @@ export class PlayerService {
   setDraft(d: Draft) {
     if (!this.hasCustomStructure(d)) {
       console.log("a new structure!");
-      let structOps = this.draftClassification.filter((c) => c.category == "custom structure")[0].ops;
+      let structOps = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
       let op = this.structureOpFromDraft(d);
       structOps.push(op);
       this.mappings.addOperation(op);
