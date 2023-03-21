@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OpSequencer, PlayerOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/op_mappings';
+import { OpSequencer, PlayerOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/mappings';
 import { PlayerService } from '../player.service';
 import { PedalsService } from './pedals.service';
 
@@ -27,9 +27,6 @@ export class SequencerService extends OpSequencer {
   selecting: boolean = false;
   chains: Array<ChainIndex> = []; // a number pointing to index in sequencer ops
 
-  // get pos() { return this.seq_array.pos; }
-  // get ops() { return this.seq_array ? this.seq_array.ops : []; }
-  // get current() { return this.seq_array.current; }
   get active() { return (this.readyToWeave ? true : false); }
   get pos() { return this._pos; }
 
@@ -37,10 +34,9 @@ export class SequencerService extends OpSequencer {
     public pedals: PedalsService,
   ) {
     super();
-    // this.seq_array = new OpSequencer();
   }
 
-  addPedals(fwd_pedal: number, select_pedal_a: number, select_pedal_b?: number) {
+  mapPedals(fwd_pedal: number, select_pedal_a: number, select_pedal_b?: number) {
     this.mapPedal(fwd_pedal, 'fwd');
     this.mapPedal(select_pedal_a, 'sel-next');
     if (select_pedal_b) {
@@ -48,7 +44,7 @@ export class SequencerService extends OpSequencer {
     }
   }
 
-  /** Add a single operation to the sequencer. */
+  /** Add a single operation to the end of the sequencer. */
   addSingleOp(o: PlayerOp) {
     if (this.active) {
       this.addOp(o);
@@ -77,7 +73,4 @@ export class SequencerService extends OpSequencer {
     console.log(this.ops);
   }
 
-  // removeOp() { this.seq_array.removeOp(); }
-  // nextOp() { this.seq_array.nextOp(); }
-  // prevOp() { this.seq_array.prevOp(); }
 }

@@ -12,7 +12,7 @@ import { PlayerOp, playerOpFrom,
   ChainOp, OpSequencer, PairedOp, PedalOpMapping,
   makePairedOp, makeChainOp, makeOpSequencer,
   forward, refresh, reverse
-} from './model/op_mappings';
+} from './model/mappings';
 import { PlayerState, WeavingPick, copyState, initState } from './model/state';
 import { MappingsService } from './provider/mappings.service';
 import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
@@ -253,14 +253,13 @@ export class PlayerService {
     pedals.on('pedal-added', (n) => {
       if (n == 1) {
         mappings.pair(0, 'forward');
-        console.log("pedals mapping", mappings);
       } else if (n == 2) {
         if (mappings.pedalIsMapped(0)) mappings.unmap(0);
         mappings[0] = this.seq;
         mappings[1] = this.seq;
-        this.seq.addPedals(0, 1);
-        console.log("pedals mapping", mappings);
+        this.seq.mapPedals(0, 1);
       }
+      console.log("pedals mapping", mappings);
     })
     
     this.redraw.emit('redraw');

@@ -5,7 +5,7 @@ import { PlayerOp as SingleOp, PedalOpMapping,
   ChainOp, PairedOp, OpSequencer,
   makeChainOp, makePairedOp, makeOpSequencer,
   MappingShapes, MappingType, PedalAction
-} from '../model/op_mappings';
+} from '../model/mappings';
 import { SequencerService } from './sequencer.service';
 
 type PedalOpMap = {
