@@ -5,9 +5,11 @@
   flex-basis: 100%;
 }
 
-.loom-block{
-  display: inline-block;
-  min-width: 280px;
+.loom-info{
+  display: flex;
+  flex-flow: column nowrap;
+  max-width: 455px;
+  min-width: 455px;
 }
 
 .draft-block{
@@ -20,7 +22,7 @@
 
 .draft-scroll{
   max-width: 1300px;
-  max-height: 390px;
+  max-height: 375px;
   overflow: scroll;
 }
 
@@ -32,21 +34,21 @@
   color: #ffffff;
 }
 
-.virtual-wrapper{
-  padding: 1em;
-}
-
-
 .pedal-field-header {
-  padding: 10px;
+  padding-top: 10px;
   margin: unset;
   margin-bottom: 5px;
   color: #0a0000;
 }
 
+.virtual-wrapper{
+  padding-top: 1em;
+  padding-right: 1em;
+  padding-bottom: 0.6em;
+}
 
-.loom-field, .pedals-field, .draft-field, .op-field {
-  display: block;
+.loom-field {
+  display: flex;
   margin-top: 10px;
   margin-bottom: 5px;
 }
@@ -54,11 +56,15 @@
 .online {
   background-color: rgb(58, 255, 19);
   color: #222222;
+  border-radius: 5px;
+  flex-grow: 0.3;
 }
 
 .offline {
   background-color: rgb(150, 0, 0);
   color: #ffffff;
+  border-radius: 5px;
+  flex-grow: 0.3;
 }
 
 .pedal-array, .active-draft, .status-row {
@@ -74,19 +80,15 @@
   background-color: #bbc5ff;
   margin-right: 10px;
   margin-left: 10px;
+  border: none;
 }
 
 .pedal-box, .data-display, #loom-container {
   padding: 10px;
 }
 
-.pedal-state {
-  font-size: x-small;
-  color: #444444;
-}
-
-#loom-container {
-  padding-right: 20px;
+.loom-warps{
+  flex-grow: 1;
 }
 
 #draft-container {
@@ -97,20 +99,23 @@
   padding: 10px;
 }
 
-.pedal-box-row > .mat-form-field, .mat-option {
-  width: 130px;
+#startstop{
+  display: flex;
+  flex-grow: 1;
+  padding: 1em;
+  margin-bottom: 5px;
+  margin-top: -5px;
 }
 
-.pedal-field, .pedal-field-label {
-  padding: 2px;
+.pedal-box-row > .mat-form-field, .mat-option {
+  width: 130px;
 }
 
 .mat-button {
   background-color: #ff4081;
   color: white;
   width: inherit;
-  margin-left: 10px;
-  margin-right: 10px;
+  text-align: center;
 }
 
 .mat-button.mat-button-disabled {
@@ -123,6 +128,7 @@
 .mat-expansion-panel-header.mat-expanded:focus {
   background: #121f6b;
 }
+
 
 .mat-expansion-panel-body {
   padding: 0px;

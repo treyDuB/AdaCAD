@@ -9,7 +9,18 @@
           <button 
           [name] = o.name
           class="selected-operation-box">
-          <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
+            <div *ngIf="o.chain_check == 1">
+              <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+            </div>
+            <div *ngIf="o.custom_check == 1">
+              <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+            </div>
+          </div>
+          
+          <ng-template #notChain>
+            <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          </ng-template>
           {{o.name}}
           </button>
         </div>
@@ -18,7 +29,18 @@
           <button 
           [name] = o.name
           class="operation-box">
-          <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
+            <div *ngIf="o.chain_check == 1">
+              <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+            </div>
+            <div *ngIf="o.custom_check == 1">
+              <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+            </div>
+          </div>
+          
+          <ng-template #notChain>
+            <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+          </ng-template>
           {{o.name}}
           </button>
         </ng-template>
@@ -29,14 +51,92 @@
   </div>
   
   <div class = "op-block">
-    <mat-expansion-panel id ="operations-menu" class="op-menu-block">
-      <mat-expansion-panel-header id ="operations-header" class="op-header">
+    <mat-expansion-panel id ="operations-menu-s" class="op-menu-block">
+      <mat-expansion-panel-header id ="operations-header-structure" class="op-header-s">
         <mat-panel-title>
-          Operations
+          Structure Operations
         </mat-panel-title>
       </mat-expansion-panel-header>
         
-        <ng-container *ngFor="let class of pls.draftClassification">
+        <ng-container *ngFor="let class of pls.draftClassificationS">
+          <div id="op-container" class="op-field">
+          <h3>{{class.category}}</h3>
+          <p> {{class.dx}}</p>
+          <ng-container *ngFor="let op of class.ops">
+           
+            <button 
+              mat-stroked-button
+              [matTooltip] = op.dx
+              matTooltipClass= "visibleTooltip" 
+              [name] = op.name 
+              [matMenuTriggerFor]="opMenu"
+            >
+            <div class="op-field-info">
+              <div *ngIf="class.category_id == 1; else notCustom" class="op-field-info-custom">
+                <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+              </div>
+              <ng-template #notCustom>
+                <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="icon for {{op.name}} operation"></mat-icon>
+              </ng-template>
+
+              <div>{{op.name}}</div>
+            </div>
+            </button> 
+
+            <mat-menu #opMenu="matMenu">
+
+              <div class="sub-menu">
+                <button mat-stroked-menu-item
+                (click) ="seq.addSingleOp(op)"
+                class="sub-menu-button">
+                  Add to Sequencer
+                </button>
+
+                <button mat-stroked-menu-item
+                (click) ="seq.addChainOp(op)"
+                class="sub-menu-button">
+                  Add Chain to Sequencer
+                </button>
+
+                <ng-container *ngIf="seq.chains != 0">
+                  <button mat-stroked-menu-item
+                  [matMenuTriggerFor]="opChains"
+                  (click)="$event.stopPropagation();"
+                  class="sub-menu-button">
+                  Add to Existing Chain
+                  </button>
+                </ng-container>
+                
+                <mat-menu #opChains="matMenu">
+                  <div class="sub-menu-chain">
+                    <ng-container *ngFor="let ch of seq.chains">
+                      <button mat-stroked-menu-item
+                      (click) ="seq.addToChain(ch.id, op)">
+                      Chain {{ch.id}}
+                      </button>
+                    </ng-container>
+                  </div>
+                </mat-menu>
+                
+              </div>
+
+            </mat-menu>
+
+          </ng-container>
+        </div>
+        </ng-container>
+    </mat-expansion-panel>
+  </div>
+
+  <div class = "op-block">
+    <mat-expansion-panel id ="operations-menu-t" class="op-menu-block">
+      <mat-expansion-panel-header id ="operations-header-transformations" class="op-header-t">
+        <mat-panel-title>
+          Transformation Operations
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        
+        <ng-container *ngFor="let class of pls.draftClassificationT">
           <div id="op-container" class="op-field">
           <h3>{{class.category}}</h3>
           <p> {{class.dx}}</p>

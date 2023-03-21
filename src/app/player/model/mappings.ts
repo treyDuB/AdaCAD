@@ -26,6 +26,8 @@ export interface PlayerOp {
   dx?: string,
   params?: GenericOp["params"],
   weavingOnly?: boolean,
+  chain_check?: number,
+  custom_check?: number,
   perform: (init: PlayerState) => Promise<PlayerState>;
   setParams?: (params: Array<ParamValue>) => void;
 }
@@ -205,6 +207,8 @@ export function makeBlankChainOp(p?: number): ChainOp {
     classifier: 'chain',
     name: 'ch',
     ops: [],
+    chain_check: 1,
+    struct_id: -1,
     perform: (init: PlayerState) => {return Promise.resolve(init);}
   }
   

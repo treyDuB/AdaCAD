@@ -4,9 +4,14 @@
 }
 
 .row-item {
-  margin: 0 0.5em;
+  margin: 0.4em;
   padding: 0.8em;
   border: none;
+}
+
+.pedal-array{
+  display: flex;
+  flex-flow: row wrap;
 }
 
 .mat-button {
@@ -20,5 +25,5 @@
 }
 
 #button-container {
-  padding: 1em 0;
+  padding: 1.2em 0;
 }

@@ -21,6 +21,7 @@ import { PlaybackService } from './provider/playback.service';
 // import { OperationService } from '../mixer/provider/operation.service';
 
 export interface DraftOperationClassification {
+  category_id: number,
   category: string,
   dx: string,
   ops: Array<PlayerOp> 
@@ -157,8 +158,8 @@ class PedalConfig {
 export class PlayerService {
   loom: LoomConfig;
   redraw = new EventEmitter();
-  draftClassification: Array<DraftOperationClassification> 
-  = [];
+  draftClassificationS: Array<DraftOperationClassification> = [];
+  draftClassificationT: Array<DraftOperationClassification> = [];
 
   constructor(
     public pedals: PedalsService,
@@ -223,23 +224,26 @@ export class PlayerService {
     }
     mappings.addOperation(tile);
 
-    this.draftClassification.push(
-      {category: 'structure',
-      dx: "0-1 input, 1 output, algorithmically generates weave structures based on parameters",
-      ops: [tabby, twill, satin, waffle, random]}
+    this.draftClassificationS.push(
+      { category_id: 0,
+        category: 'structure',
+        dx: "0-1 input, 1 output, algorithmically generates weave structures based on parameters",
+        ops: [tabby, twill, satin, waffle, random]}
     );
 
-    this.draftClassification.push(
-      { category: 'custom structure',
+    this.draftClassificationS.push(
+      { category_id: 1,
+        category: 'custom structure',
         dx: "custom structures loaded from the Mixer",
         ops: []
       }
     );
 
-    this.draftClassification.push(
-      {category: 'transformation',
-      dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
-      ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile, bindwarp, bindweft]}
+    this.draftClassificationT.push(
+      { category_id: 2,
+        category: 'transformation',
+        dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
+        ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile, bindwarp, bindweft]}
     );
 
     // //test this
@@ -284,7 +288,7 @@ export class PlayerService {
   }
 
   hasCustomStructure(d: Draft): boolean {
-    let ops = this.draftClassification.filter((c) => c.category == "custom structure")[0].ops;
+    let ops = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
     console.log(ops);
     if (ops.length == 0) return false;
     return ops
@@ -295,7 +299,7 @@ export class PlayerService {
   setDraft(d: Draft) {
     if (!this.hasCustomStructure(d)) {
       console.log("a new structure!");
-      let structOps = this.draftClassification.filter((c) => c.category == "custom structure")[0].ops;
+      let structOps = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
       let op = this.structureOpFromDraft(d);
       structOps.push(op);
       this.mappings.addOperation(op);
@@ -315,6 +319,7 @@ export class PlayerService {
     let structOp: PlayerOp = {
       name: d.gen_name,
       struct_id: d.id,
+      custom_check: 1,
       classifier: 'seed',
       perform: (init: PlayerState) => {
         let res = copyState(init);
