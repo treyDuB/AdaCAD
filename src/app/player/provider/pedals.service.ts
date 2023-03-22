@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WeavingPick } from '../model/player';
+import { WeavingPick } from '../model/state';
 import { EventEmitter } from 'events';
 import { getDatabase } from "firebase/database";
 import { Database } from '@angular/fire/database';

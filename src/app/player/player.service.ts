@@ -9,10 +9,11 @@ import { BaseOp, BuildableOperation as GenericOp,
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
 import { PlayerOp, playerOpFrom, 
-  ChainOp, OpSequencer, PairedOp, PedalOpMapping,
-  makePairedOp, makeChainOp, makeOpSequencer,
+  ChainOp, makeChainOp,
   forward, refresh, reverse
-} from './model/mappings';
+} from './model/playerop';
+import { OpSequencer, makeOpSequencer } from './model/sequencer';
+import { PairedOp, PedalOpMapping, makePairedOp} from './model/mapping';
 import { PlayerState, WeavingPick, copyState, initState } from './model/state';
 import { MappingsService } from './provider/mappings.service';
 import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
@@ -169,7 +170,7 @@ export class PlayerService {
     // private oss: OperationService
   ) {
     // this.draft = null; 
-    console.log("draft player constructor");
+    // console.log("draft player constructor");
     // const startPattern = playerOpFrom(defs.tabby);
     // console.log(startPattern);
     // startPattern.perform(nullOpInput).then((result) => {
@@ -262,6 +263,9 @@ export class PlayerService {
         mappings[0] = this.seq;
         mappings[1] = this.seq;
         this.seq.mapPedals(0, 1);
+      } else if (n == 3) {
+        mappings[2] = this.seq;
+        this.seq.mapPedal(2, 'sel-back');
       }
       console.log("pedals mapping", mappings);
     })

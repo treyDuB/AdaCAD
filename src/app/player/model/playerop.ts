@@ -12,9 +12,9 @@ import { OpInput, TreeOperation as TreeOp, SingleInlet,
 } from "../../mixer/model/operation";
 import { PlayerState, initState, copyState } from "./state";
 
-import { OpSequencer, makeOpSequencer } from "./sequencer";
+// import { OpSequencer, makeOpSequencer } from "./sequencer";
 import { cloneDeep } from "lodash";
-export * from "./sequencer";
+// export * from "./sequencer";
 
 type PlayerOpClassifier = GenericOp["classifier"]["type"] | 'prog' | 'chain';
 
@@ -169,39 +169,6 @@ function playerOpFromTree(op: PlayableTreeOp) {
   return p;
 }
 
-/** things that can happen in response to a pedal */
-export interface PedalEvent {
-  id?: number,
-  pedal?: number,
-  name: string
-  perform: (init: PlayerState, ...args) => Promise<PlayerState>;
-}
-
-/** 
- * Basic combination: 
- *  - 1 pedal, 1 operation
- *  - if pedal, then operation perform() 
- * @param pedal ID number of pedal
- * @param op    ID number of Operation (assigned in Draft Player service)
- */
-export interface PairedOp extends PedalEvent {
-  pedal:  number,
-  op:     PlayerOp,
-}
-
-// this ...args thing is such a hack
-export function makePairedOp(p: number, op: PlayerOp): PairedOp {
-  let jankPerform = (init: PlayerState, ...args) => {
-    return op.perform(init);
-  }
-  return {
-    pedal: p,
-    name: op.name,
-    op: op,
-    perform: jankPerform
-  }
-}
-
 export function makeBlankChainOp(p?: number): ChainOp {
   let res: ChainOp = {
     classifier: 'chain',
@@ -255,17 +222,3 @@ export function makeChainOp(ops: Array<PlayerOp>, p?: number): ChainOp {
 
   return res;
 }
-
-export type PedalOpMapping = Array<PedalAction>;// & {
-//   [id: number]: PedalAction
-// }
-
-export type MappingShapes = {
-  'pairing': PairedOp,
-  'chain': ChainOp,
-  'sequencer': OpSequencer
-};
-
-export type PedalAction = MappingShapes[keyof MappingShapes];
-
-export type MappingType = 'pairing' | 'chain' | 'sequencer';

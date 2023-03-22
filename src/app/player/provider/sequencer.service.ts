@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { OpSequencer, PlayerOp, ChainOp, makeOpSequencer, makeChainOp } from '../model/mappings';
+import { PlayerOp, ChainOp, makeChainOp } from '../model/playerop';
+import { OpSequencer, makeOpSequencer } from '../model/sequencer';
 import { PlayerService } from '../player.service';
 import { PedalsService } from './pedals.service';
 
@@ -42,6 +43,65 @@ export class SequencerService extends OpSequencer {
     if (select_pedal_b) {
       this.mapPedal(select_pedal_b, 'sel-back');
     }
+  }
+
+  nextOp() {
+    if (this.ops.length > 0) {
+      this._pos = (this._pos + 1) % this.ops.length;
+      return this.current;
+    }
+  }
+
+  prevOp() {
+    if (this.ops.length > 0) {
+      if (this._pos < 0) { this._pos = this.ops.length - 1; }
+      else { this._pos = (this._pos - 1) % this.ops.length; }
+      return this.current;
+    }
+  }
+
+  addOp(o: PlayerOp | ChainOp) {
+    this.ops.push(o);
+    // if (this._pos < 0) this._pos = 0;
+    return this.ops.length - 1;
+  }
+
+  removeOp() {
+    this.ops.pop();
+    if (this.ops.length == 0) this._pos = -1;
+    if (this._pos == this.ops.length) this._pos--;
+  }
+
+  /** Deletes the operation at position x and returns the removed operation. */
+  delOpAt(x: number) {
+    let rem = this.ops.splice(x, 1);
+    if (this.ops.length == 0) this._pos = -1;
+    return rem;
+  }
+
+  insertOpAt(op: PlayerOp | ChainOp, x: number) {
+    let arr;
+    if (x > -1 && x < this.ops.length) {
+      arr = this.ops.slice(0, x);
+    } else { arr = this.ops; }
+    arr.push(op);
+    arr.concat(this.ops.slice(x));
+    this.ops = arr;
+  }
+
+  /** Moves the operation at position `a` to position `b` in the sequencer order. */
+  moveOpTo(a: number, b: number) {
+    if (this.ops[a] && this.ops[b]) {
+      let op = this.ops.splice(a, 1)[0];
+      this.insertOpAt(op, b);
+      if (this._pos == a) { this._pos = b; }
+    }
+  }
+
+  /** Shifts the operation at position `x` to an adjacent position by swapping places with its neighbor. If `dir = true`, operation swaps with its right neighbor. If `dir = false`, operation swaps with its left neighbor. */
+  shiftOp(x: number, dir: boolean) {
+    let shift = dir? 1 : -1;
+    this.moveOpTo(x, x+shift);
   }
 
   /** Add a single operation to the end of the sequencer. */

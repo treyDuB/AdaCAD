@@ -1,5 +1,6 @@
-import { PedalEvent, PlayerOp, ChainOp, forward } from "./mappings";
+import { PlayerOp, ChainOp, forward } from "./playerop";
 import { PlayerState, copyState } from "./state";
+import { PedalTarget } from "./mapping";
 
 /**
  * Sequencer:
@@ -8,7 +9,7 @@ import { PlayerState, copyState } from "./state";
  *  - 1 "progress" pedal (forward)
  *  - if select pedal, go to next/previous operation in Sequencer
  */
- export class OpSequencer implements PedalEvent {
+ export class OpSequencer implements PedalTarget {
   name: string;
   p_select_a: number = -1;
   p_select_b?: number = -1;
@@ -71,67 +72,10 @@ import { PlayerState, copyState } from "./state";
     else return false;
   }
 
-  nextOp() {
-    if (this.ops.length > 0) {
-      this._pos = (this._pos + 1) % this.ops.length;
-      return this.current;
-    }
-  }
-
-  prevOp() {
-    if (this.ops.length > 0) {
-      if (this._pos < 0) { this._pos = this.ops.length - 1; }
-      else { this._pos = (this._pos - 1) % this.ops.length; }
-      return this.current;
-    }
-  }
-
-  addOp(o: PlayerOp | ChainOp) {
-    this.ops.push(o);
-    // if (this._pos < 0) this._pos = 0;
-    return this.ops.length - 1;
-  }
-
-  removeOp() {
-    this.ops.pop();
-    if (this.ops.length == 0) this._pos = -1;
-    if (this._pos == this.ops.length) this._pos--;
-  }
-
-  /** Deletes the operation at position x and returns the removed operation. */
-  delOpAt(x: number) {
-    let rem = this.ops.splice(x, 1);
-    if (this.ops.length == 0) this._pos = -1;
-    return rem;
-  }
-
-  insertOpAt(op: PlayerOp | ChainOp, x: number) {
-    let arr;
-    if (x > -1 && x < this.ops.length) {
-      arr = this.ops.slice(0, x);
-    } else { arr = this.ops; }
-    arr.push(op);
-    arr.concat(this.ops.slice(x));
-    this.ops = arr;
-  }
-
-  /** Moves the operation at position `a` to position `b` in the sequencer order. */
-  moveOpTo(a: number, b: number) {
-    if (this.ops[a] && this.ops[b]) {
-      let op = this.ops.splice(a, 1)[0];
-      this.insertOpAt(op, b);
-      if (this._pos == a) { this._pos = b; }
-    }
-  }
-
-  /** Shifts the operation at position `x` to an adjacent position by swapping places with its neighbor. If `dir = true`, operation swaps with its right neighbor. If `dir = false`, operation swaps with its left neighbor. */
-  shiftOp(x: number, dir: boolean) {
-    let shift = dir? 1 : -1;
-    this.moveOpTo(x, x+shift);
-  }
+  
 
   perform(init: PlayerState, n: number): Promise<PlayerState> {
-    console.log('sequencer perform');
+    // console.log('sequencer perform');
     let res = copyState(init);
     if (n == this.p_prog) {
       // console.log("forward in sequencer draft");

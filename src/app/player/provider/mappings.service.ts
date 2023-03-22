@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Pedal, PedalsService } from './pedals.service';
 import { PlayerService } from '../player.service';
-import { PlayerOp as SingleOp, PedalOpMapping,
-  ChainOp, PairedOp, OpSequencer,
-  makeChainOp, makePairedOp, makeOpSequencer,
-  MappingShapes, MappingType, PedalAction
-} from '../model/mappings';
+import { PlayerOp as SingleOp, ChainOp, makeChainOp } from '../model/playerop';
 import { SequencerService } from './sequencer.service';
+import { OpSequencer, makeOpSequencer } from '../model/sequencer';
+import { PedalOpMapping, PairedOp, makePairedOp, MappingShapes, MappingType, PedalAction } from '../model/mapping';
 
 type PedalOpMap = {
   [key: number]: { type: MappingType, i: number }
@@ -45,16 +43,16 @@ export class MappingsService extends Array<PedalAction> {
   index: MappingIndex;
 
   constructor(
-  public pds: PedalsService,
-  private seq: SequencerService,
-) { 
-    super();
-    this.ops = [];
-    // this.availPedals = pds.pedals.array((p) => p.id);
+    public pds: PedalsService,
+    private seq: SequencerService,
+  ) { 
+      super();
+      this.ops = [];
+      // this.availPedals = pds.pedals.array((p) => p.id);
 
-    // this.array = [];
-    // this.index = newMapIndex();
-  }
+      // this.array = [];
+      // this.index = newMapIndex();
+    }
 
   get sequencer(): OpSequencer {
     let seq = this.filter((m) => m.name == "sequencer") as Array<OpSequencer>;
@@ -198,7 +196,7 @@ export class MappingsService extends Array<PedalAction> {
 
   pedalIsChained(id: number) {
     if (this[id].name.startsWith('ch')) { return true; }
-    else {return false; }
+    else { return false; }
   }
 
   pedalInSequencer(id: number) {
