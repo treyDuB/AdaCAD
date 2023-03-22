@@ -14,8 +14,12 @@
     <div id="player-content" class="player">
 
       <div class="first-row">
-        <app-weaving-state></app-weaving-state>
-        <app-op-sequencer></app-op-sequencer>
+        <app-weaving-state 
+          (isWeaving)="toggleWeaving($event)"
+        ></app-weaving-state>
+        <app-op-sequencer
+          [isWeaving]="pls.weaving"
+        ></app-op-sequencer>
       </div>
       
       <div class="break"></div>

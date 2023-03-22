@@ -281,7 +281,7 @@ export class PlayerService {
 
   /** get whether or not the loom is weaving */
   get weaving() {
-    return this.pedals.active_draft.val;
+    return this.pedals.active_draft.val as boolean;
   }
   get draft() {
     return this.state.draft;

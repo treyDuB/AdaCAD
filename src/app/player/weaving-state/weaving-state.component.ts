@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit} from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
 import { PlayerService } from '../player.service';
 import { MaterialsService } from '../../core/provider/materials.service';
 import { Draft } from '../../core/model/datatypes';
@@ -19,6 +19,8 @@ export class WeavingStateComponent implements OnInit {
 
   @Input()  default_cell: number;
   @Input('draft') active_draft: Draft;
+
+  @Output() isWeaving = new EventEmitter<boolean>();
 
   draft_set: boolean = false;
   ownElement: HTMLElement;
@@ -51,6 +53,13 @@ export class WeavingStateComponent implements OnInit {
     });
 
   }
+
+  toggleWeaving() {
+    this.pls.toggleWeaving();
+    // console.log("toggle weaving ", this.pls.weaving);
+    this.isWeaving.emit(this.pls.weaving);
+  }
+
   /**
    * COPIED FROM palette/subdraft
    * draw whetever is stored in the this.pls.draft object to the screen

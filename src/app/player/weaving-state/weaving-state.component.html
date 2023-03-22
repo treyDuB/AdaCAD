@@ -12,7 +12,7 @@
     <div id="startstop-container" class="loom-field">
       <button mat-button id="startstop" 
         matTooltip = "signal the TC2 to begin weaving" 
-        (click)="pls.toggleWeaving()" 
+        (click)="toggleWeaving()" 
         [disabled]="!pls.readyToWeave">
         <div *ngIf="!pls.weaving; else isWeaving">Start Weaving</div>
         <ng-template #isWeaving>Stop Weaving</ng-template>

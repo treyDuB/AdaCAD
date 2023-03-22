@@ -62,7 +62,7 @@ export class PlayerComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log("ng after view init, pedals: ", this.pls.pedals);
+    // console.log("ng after view init, pedals: ", this.pls.pedals);
     // const startPattern = this.oss.getOp('tabby');
     // startPattern.perform([]).then((result) => {
     //   this.pls.setDraft(result[0]);
@@ -70,7 +70,7 @@ export class PlayerComponent implements OnInit {
     // });
     this.ownContainer = document.querySelector("#player-container > .mat-expansion-panel");
     this.mixerContainer = document.querySelector('app-mixer > mat-drawer-container');
-    console.log("init w/ element refs ", this.ownContainer, this.mixerContainer);
+    // console.log("init w/ element refs ", this.ownContainer, this.mixerContainer);
     // this.draftCanvas = <HTMLCanvasElement> document.getElementById('active-draft-canvas');
     // this.cx = this.draftCanvas.getContext("2d");
     // this.drawDraft(); //force call here because it likely didn't render previously. 
@@ -88,6 +88,12 @@ export class PlayerComponent implements OnInit {
       // this.resizeContainer();
     });
 
+    window.addEventListener('keydown', function(e) {
+      if(e.key == ' ' && e.target == document.body) {
+        e.preventDefault();
+        console.log("no scrolling!");
+      }
+    });
   }
 
   resizeContainer() {
@@ -111,6 +117,13 @@ export class PlayerComponent implements OnInit {
     this.open = state;
     // this.resizeContainer();
     this.playerOpen.emit(this.open);
+  }
+
+  toggleWeaving(state: boolean) {
+    console.log("weaving state toggle ", state);
+    if (state) {
+      this.op_sequencer.closeMenus();
+    }
   }
 }
   
