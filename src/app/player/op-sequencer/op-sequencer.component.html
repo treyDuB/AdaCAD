@@ -6,46 +6,143 @@
       <ng-container *ngFor="let o of seq.ops; index as i">
         
         <div *ngIf="seq.pos == i; else notSelected">
-          <button 
-          [name] = o.name
-          class="selected-operation-box">
           <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
             <div *ngIf="o.chain_check == 1">
-              <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+              <button 
+              [name] = o.name
+              class="selected-operation-box"  
+              [matMenuTriggerFor]="seqChainMenu">
+                <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+                {{o.name}}
+              </button>
             </div>
             <div *ngIf="o.custom_check == 1">
-              <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+              <button 
+              [name] = o.name
+              class="selected-operation-box"  
+              [matMenuTriggerFor]="seqMenu">
+                <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+                {{o.name}}
+              </button>
             </div>
           </div>
           
           <ng-template #notChain>
-            <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+            <button 
+            [name] = o.name
+            class="selected-operation-box"  
+            [matMenuTriggerFor]="seqMenu">
+              <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+              {{o.name}}
+            </button>
           </ng-template>
-          {{o.name}}
-          </button>
         </div>
         
         <ng-template #notSelected>
-          <button 
-          [name] = o.name
-          class="operation-box">
           <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
             <div *ngIf="o.chain_check == 1">
-              <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+              <button 
+              [name] = o.name
+              class="operation-box"  
+              [matMenuTriggerFor]="seqChainMenu">
+                <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+                {{o.name}}
+              </button>
             </div>
             <div *ngIf="o.custom_check == 1">
-              <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+              <button 
+              [name] = o.name
+              class="operation-box"  
+              [matMenuTriggerFor]="seqMenu">
+                <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+                {{o.name}}
+              </button>
             </div>
           </div>
           
           <ng-template #notChain>
-            <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+            <button 
+            [name] = o.name
+            class="operation-box"  
+            [matMenuTriggerFor]="seqMenu">
+              <mat-icon svgIcon="op-{{o.name}}" aria-hidden="false" aria-label="icon for {{o.name}} operation"></mat-icon>
+              {{o.name}}
+            </button>
           </ng-template>
-          {{o.name}}
-          </button>
+
         </ng-template>
         
-          
+        <mat-menu #seqMenu="matMenu">
+          <div class="sub-menu">
+
+            <button mat-stroked-menu-item
+              class="sub-menu-button"
+              (click) ="seq.shiftOp(i, false)">
+              Shift Left
+            </button>
+
+            <button mat-stroked-menu-item
+              class="sub-menu-button"
+              (click) ="seq.shiftOp(i, true)">
+              Shift Right
+            </button>
+            
+            <button mat-stroked-menu-item
+              class="sub-menu-button"
+              (click) ="seq.delOpAt(i)">
+              Remove from Sequencer
+            </button>
+
+            <mat-form-field
+            (click)="$event.stopPropagation();">
+              <input matInput placeholder="Input">
+            </mat-form-field>
+
+          </div>
+        </mat-menu>
+
+        <mat-menu #seqChainMenu="matMenu">
+          <div class="sub-menu">
+
+            <button mat-stroked-menu-item
+              class="sub-menu-button"
+              (click) ="seq.shiftOp(i, false)">
+              Shift Left
+            </button>
+
+            <button mat-stroked-menu-item
+              class="sub-menu-button"
+              (click) ="seq.shiftOp(i, true)">
+              Shift Right
+            </button>
+            
+            <button mat-stroked-menu-item
+              class="sub-menu-button"
+              (click) ="seq.delOpAt(i)">
+              Remove from Sequencer
+            </button>
+
+            <button mat-stroked-menu-item
+              [matMenuTriggerFor]="chainEdit"
+              class="sub-menu-button"
+              (click)="$event.stopPropagation();">
+              Edit Chain
+            </button>
+
+            <mat-menu #chainEdit="matMenu">
+              <div class="sub-menu-chain">
+                <ng-container *ngFor="let ch of seq.chains">
+                  <button mat-stroked-menu-item
+                  >
+                  Chain {{ch.id}}
+                  </button>
+                </ng-container>
+              </div>
+            </mat-menu>
+
+          </div>
+        </mat-menu>
+
       </ng-container>
     </div>
   </div>
