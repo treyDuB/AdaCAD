@@ -1,25 +1,18 @@
 import { Injectable} from '@angular/core';
 import { EventEmitter } from 'events';
-import { wefts } from '../core/model/drafts';
+import utilInstance from '../core/model/util';
+import { warps, wefts, flipDraft, initDraftWithParams } from '../core/model/drafts';
 import { Draft } from '../core/model/datatypes';
-import { BaseOp, BuildableOperation as GenericOp, 
-  TreeOperation as TreeOp,
-  Seed, Pipe, DraftsOptional, AllRequired, getDefaultParams,
-  SingleInlet, OpInput
+import { BuildableOperation as GenericOp, OpInput, NumParam
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
-import { PlayerOp, playerOpFrom, 
-  ChainOp, makeChainOp,
-  forward, refresh, reverse
+import { PlayerOp, playerOpFrom, forward, refresh, reverse
 } from './model/playerop';
-import { OpSequencer, makeOpSequencer } from './model/sequencer';
-import { PairedOp, PedalOpMapping, makePairedOp} from './model/mapping';
-import { PlayerState, WeavingPick, copyState, initState } from './model/state';
+import { PlayerState, WeavingPick, copyState } from './model/state';
 import { MappingsService } from './provider/mappings.service';
-import { PedalsService, PedalStatus, Pedal } from './provider/pedals.service';
+import { PedalsService, Pedal } from './provider/pedals.service';
 import { SequencerService } from './provider/sequencer.service';
 import { PlaybackService } from './provider/playback.service';
-// import { OperationService } from '../mixer/provider/operation.service';
 
 export interface DraftOperationClassification {
   category_id: number,
@@ -31,123 +24,6 @@ export interface DraftOperationClassification {
 interface LoomConfig {
   warps: number,
   draftTiling: boolean
-}
-
-/**
- * @class PedalConfig
- * @desc OLD, UPDATE THIS ---> 
- * Represents a set of two-way bindings between a set of Pedals
- * and a set of (Player) Operations. A pedal can only be bound to one
- * Action (a single Op, a chain of Ops, or to control an OpRoulette)
- * @todo The second restriction may change, it might make sense for pedals to
- * get bound to a sequence of operations.
- */
-class PedalConfig {
-  // numPedals: number;
-  pedals: Array<Pedal>;
-  ops: Array<PlayerOp>;
-  availPedals: Array<number>;
-  mapping: PedalOpMapping;
-
-  constructor(pedalArray: Array<Pedal>, loadConfig = false) {
-    this.pedals = pedalArray;
-    this.ops = []
-    this.availPedals = pedalArray.map((p) => p.id);
-    this.mapping = [];
-  }
-
-  get numPedals() {
-    return this.pedals.length;
-  }
-
-  get numMappings() {
-    return Object.entries(this.mapping).length;
-  }
-
-  addPedal(p: Pedal) {
-    // this.pedals.push(p);
-    this.availPedals.push(p.id);
-  }
-
-  remPedal() {
-    // this.pedals.pop();
-    this.availPedals.filter((id) => id != this.pedals.length);
-  }
-
-  addOperation(o: PlayerOp) {
-    o.id = this.ops.length;
-    this.ops.push(o);
-    // this.unpairedOps.push(o);
-    // console.log(this.ops);
-  }
-
-  pair(pedalId: number, opName: string) {
-    let o = this.ops.findIndex((op) => op.name == opName);
-    // let thisOp = this.unpairedOps.splice(o, 1);
-    let thisOp = this.ops;
-    this.mapping[pedalId] = makePairedOp(pedalId, thisOp[o]); 
-  }
-
-  chain(pedalId: number, opName: string) {
-    let o = this.ops[this.ops.findIndex((op) => op.name == opName)];
-    if (this.pedalIsChained(pedalId)) {
-      let curr_ops = (<ChainOp> this.mapping[pedalId]).ops;
-      this.mapping[pedalId] = makeChainOp(curr_ops.concat([o]), pedalId);
-    } else if (this.pedalIsPaired(pedalId)) {
-      let first_op = (<PairedOp> this.mapping[pedalId]).op;
-      this.mapping[pedalId] = makeChainOp([first_op].concat([o]), pedalId);
-    } else {
-      this.mapping[pedalId] = makeChainOp([o], pedalId);
-    }
-  }
-
-  chainToPedal(pedalId: number, ops: Array<string>) {
-    let op_array = ops.map((name) => this.ops[this.ops.findIndex((op) => op.name == name)]);
-    if (this.pedalIsChained(pedalId)) { 
-      // if pedal already has a chain, add ops to the chain
-      let curr_ops = (<ChainOp> this.mapping[pedalId]).ops;
-      this.mapping[pedalId] = makeChainOp(curr_ops.concat(op_array), pedalId);
-    } else if (this.pedalIsPaired(pedalId)) {
-      // if pedal is paired, you can turn it into a chain
-      let first_op = (<PairedOp> this.mapping[pedalId]).op;
-      this.mapping[pedalId] = makeChainOp([first_op].concat(op_array), pedalId);
-    } else {
-      // pedal doesn't have anything mapped, just add a new chain
-      this.mapping[pedalId] = makeChainOp(op_array, pedalId);
-    }
-  }
-
-  // will return true if an op is mapped to a pedal in any way
-  opIsMapped(opName: string): boolean {
-    if (this.mapping.filter((m) => m.name.includes(opName)).length > 0) {
-      return true;
-    } else return false;
-  }
-
-  pedalIsMapped(id: number) {
-    return (this.mapping[id]);
-  }
-
-  pedalIsChained(id: number) {
-    if (this.pedalIsMapped(id) && this.mapping[id].name.startsWith('ch')) { return true; }
-    else {return false; }
-  }
-
-  pedalIsPaired(id: number) {
-    return (this.pedalIsMapped(id) && !this.pedalIsChained(id));
-  }
-
-  unpairPedal(id: number) {
-    console.log(`unpairing pedal ${id}`);
-    // let op = this.pairs[id];
-    // this.unpairedOps.splice(op.id, 0, op);
-    delete this.mapping[id];
-  }
-
-  // unpairOp(name: string) {
-  //   let pid = this.opIsPaired(name);
-  //   this.unpairPedal(pid);
-  // }
 }
 
 /**
@@ -164,20 +40,11 @@ export class PlayerService {
 
   constructor(
     public pedals: PedalsService,
-    public mappings: MappingsService,   // TODO: move Player operations here
+    public mappings: MappingsService, 
     public seq: SequencerService,
     public playback: PlaybackService,   // has the Player state
     // private oss: OperationService
   ) {
-    // this.draft = null; 
-    // console.log("draft player constructor");
-    // const startPattern = playerOpFrom(defs.tabby);
-    // console.log(startPattern);
-    // startPattern.perform(nullOpInput).then((result) => {
-    //   console.log(result);
-    //   this.setDraft(result[0]);
-    // });
-
 
     this.loom = { warps: 2640, draftTiling: true };
 
@@ -225,6 +92,76 @@ export class PlayerService {
     }
     mappings.addOperation(tile);
 
+    const chaos: PlayerOp = {
+      name: 'chaos',
+      classifier: 'pipe',
+      dx: 'tiles the input drafts, randomly selecting which draft to place at which position',
+      params: <Array<NumParam>>[
+        {
+          name: 'warp-repeats',
+          type: 'number',
+          min: 1,
+          max: 100,
+          value: 2,
+          dx: 'the number of times to repeat this time across the width'
+        }, {
+          name: 'weft-repeats',
+          type: 'number',
+          min: 1,
+          max: 100,
+          value: 2,
+          dx: 'the number of times to repeat this time across the length'
+        }
+      ],
+      perform: async (init: PlayerState) => {
+        const res = copyState(init);
+        const draft = res.draft;
+
+        const total_warps = warps(draft.drawdown);
+        // const total_warps = utilInstance.lcm(all_warps);
+        const total_wefts = wefts(draft.drawdown);
+        // const total_wefts = utilInstance.lcm(all_wefts);
+
+        const warp_repeats = <number> chaos.params[0].value;
+        const weft_repeats = <number> chaos.params[1].value;
+
+        const draft_indexing: Array<Array<Draft>> = [];
+        for(let i = 0; i < weft_repeats; i++){
+          draft_indexing.push([]);
+          for(let j = 0; j < warp_repeats; j++){
+            const x_flip = (Math.random() < 0.5) ? false: true; 
+            const y_flip = (Math.random() < 0.5) ? false: true; 
+            draft_indexing[i].push(await flipDraft(draft, x_flip, y_flip));
+          }
+        }
+
+        const width: number = warp_repeats*total_warps;
+        const height: number = weft_repeats*total_wefts;
+        const output: Draft = initDraftWithParams({warps: width, wefts: height});
+
+        output.drawdown.forEach((row, i) => {
+          let draft_index_row  = Math.floor(i / total_wefts);
+          let within_draft_row = i % total_wefts;
+          row.forEach((cell, j) => {
+            let draft_index_col  = Math.floor(j / total_warps);
+            let within_draft_col  = j % total_warps;
+
+            const draft = draft_indexing[draft_index_row][draft_index_col];
+
+            const w = warps(draft.drawdown);
+            const h = wefts(draft.drawdown);
+            cell.setHeddle(draft.drawdown[within_draft_row%w][within_draft_col%h].getHeddle()); 
+          });
+        });
+      
+        res.draft = output;
+        res.row = init.row % wefts(res.draft.drawdown);
+        res.pedal = chaos.name;
+        return Promise.resolve(res);
+      }
+    }
+    mappings.addOperation(chaos);
+
     this.draftClassificationS.push(
       { category_id: 0,
         category: 'structure',
@@ -244,8 +181,10 @@ export class PlayerService {
       { category_id: 2,
         category: 'transformation',
         dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
-        ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile, bindwarp, bindweft]}
+        ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile, chaos, bindwarp, bindweft]}
     );
+
+    console.log(mappings.ops);
 
     // //test this
     // console.log(this.oss.getOp('germanify'));

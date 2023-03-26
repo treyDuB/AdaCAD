@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Pedal, PedalsService } from './pedals.service';
 import { PlayerService } from '../player.service';
-import { PlayerOp as SingleOp, ChainOp, makeChainOp } from '../model/playerop';
+import { SingleOp, PlayerOp } from '../model/playerop';
+import { ChainOp, makeChainOp } from '../model/chainop';
 import { SequencerService } from './sequencer.service';
-import { OpSequencer, makeOpSequencer } from '../model/sequencer';
-import { PedalOpMapping, PairedOp, makePairedOp, MappingShapes, MappingType, PedalAction } from '../model/mapping';
-
-type PedalOpMap = {
-  [key: number]: { type: MappingType, i: number }
-}
+import { PairedOp, makePairedOp, MappingShapes, PedalAction } from '../model/mapping';
 
 type MappingIndex = {
   [m in keyof MappingShapes]: Array<PedalAction>;//Array<MappingShapes[m]>;
@@ -19,12 +15,15 @@ function newMapIndex(): MappingIndex {
     'pairing': [],
     'chain': [],
     'sequencer': [],
+    'param': [],
   }
 }
 
 /**
  * @class MappingsService (was PedalConfig class)
- * @desc A collection of key: value entries where keys (numbers)
+ * @desc Keeps track of:
+ *  - All options for PlayerOps
+ *  - A collection of key: value entries where keys (numbers)
  * correspond to pedal ID's, and values (PedalActions) correspond 
  * to a mapped SingleOp, ChainOp, or OpSequencer.
  * @todo I WILL ASSUME THAT IF MULTIPLE PEDALS ARE MAPPED TO THE SAME THING, THE KEYS WILL POINT TO THE SAME OBJECT
@@ -36,8 +35,8 @@ function newMapIndex(): MappingIndex {
 export class MappingsService extends Array<PedalAction> {
   // pedals: Array<Pedal>;
   ops: Array<SingleOp> = [];
+  op_instances: Array<SingleOp> = [];
   availPedals: Array<number>;
-  // array: PedalOpMap = [];  // pedal ID (number) <-> op (PedalAction)
   
   // where all of the actual OpPairing, OpChain, OpSequencer objects end up so they are only created once
   index: MappingIndex;
@@ -48,31 +47,11 @@ export class MappingsService extends Array<PedalAction> {
   ) { 
       super();
       this.ops = [];
-      // this.availPedals = pds.pedals.array((p) => p.id);
-
-      // this.array = [];
-      // this.index = newMapIndex();
+      this.op_instances = [];
     }
 
-  get sequencer(): OpSequencer {
-    let seq = this.filter((m) => m.name == "sequencer") as Array<OpSequencer>;
-    if (seq.length > 0) return seq[0];
-    else return undefined as OpSequencer;
-  }
-
   getMapOptions(p: number): Array<SingleOp> {
-    let res;
-    // if (this.pedalIsPaired(p)) {
-    //   console.log("filtering");
-    //   console.log(this.getMap(p));
-    //   res = this.ops.filter(op => {
-    //   op.name != (this.getMap(p) as SingleOp).name;
-    // });
-    // } else { 
-      res = this.ops; 
-    // }
-    // console.log(res);
-    return res;
+    return this.ops;
   }
 
   // onAddPedal(p: Pedal) {
@@ -85,38 +64,17 @@ export class MappingsService extends Array<PedalAction> {
   // }
 
   // register an operation from the Player to the options for mapping
-  addOperation(o: SingleOp, chain?: boolean) {
+  addOperation(o: PlayerOp) {
     o.id = this.ops.length;
     this.ops.push(o);
   }
 
-  // I don't know if I'm making this too complicated but I don't trust TypeScript/Javascript passing things by reference
   getMap(id: number) {
     return this[id];
-    // let x = this.array[id];
-    // if (x) {
-    //   return this.index[x.type][x.i];
-    // } else return undefined;
   }
 
   setMap(p: number, m: PedalAction) {
     this[p] = m;
-    // if (this.getMap[p]) this.unmap(p);
-    
-    // const copyMap = ((src: number, dst: number) => {
-    //   if (this.getMap(dst)) this.unmap(dst);
-    //   this.array[dst] = this.array[src];
-    // }).bind(this);
-
-    // let ind = this.index[type].push(m) - 1;
-    // this.array[p] = { type: type, i: ind };
-    // if (type === 'sequencer') { // p_conf had been mapped
-    //   let r = m as OpSequencer;
-
-    //   // set mappings for the other roulette pedals to the same
-    //   copyMap(p, r.p_select_a);
-    //   if (r.p_select_b) copyMap(r.p_select_b);
-    // }
   }
   
   unmap(id: number) {
