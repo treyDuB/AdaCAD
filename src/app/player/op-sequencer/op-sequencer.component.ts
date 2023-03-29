@@ -80,7 +80,11 @@ export class OpSequencerComponent implements OnInit {
     this.seq.delOpAt(i);
   }
 
-  updateParam(x:any) {
-    console.log(x);
+  updateParam(id: string, value: any) {
+    console.log("param updated", id, value);
+    let splitStr = id.split("-");
+    const op_id = parseInt(splitStr[1]);
+    const param_id = parseInt(splitStr[2]);
+    this.map.updateInstanceParams(op_id, param_id, parseInt(value));
   }
 }

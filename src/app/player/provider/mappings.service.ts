@@ -154,6 +154,21 @@ export class MappingsService extends Array<PedalAction> {
     }
   }
 
+  getInstanceById(op_id: number) {
+    const res = this.op_instances.filter((el) => (el.id == op_id));
+    if (res.length == 0) {
+      console.log("could not find op instance id ", op_id);
+      return <SingleOp> undefined;
+    } else {
+      return res[0];
+    }
+  }
+
+  updateInstanceParams(op_id: number, param_id: number, value: number | boolean) {
+    const op = this.getInstanceById(op_id);
+    op.params[param_id].value = value;
+  }
+
   pedalIsMapped(id: number) {
     if (this.getMap(id)) return true;
     return false;

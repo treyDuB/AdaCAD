@@ -276,4 +276,8 @@ export class SequencerService extends OpSequencer {
     console.log(this.ops);
   }
 
+  updateParams(op_id: number, param_id: number, value: number | boolean) {
+    
+  }
+
 }

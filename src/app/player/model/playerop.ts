@@ -76,8 +76,18 @@ export function newOpInstance(base: SingleOpBase): SingleOpInstance {
     name: base.name,
     op: base, 
     params: cloneDeep(base.params),
-    perform: (init: PlayerState) => { return inst.op.perform(init, inst.params); }
-  }
+    perform: (init: PlayerState) => { 
+      console.log(inst.params);
+      return inst.op.perform(init, getParamVals(inst.params)); 
+    }
+  };
+  // inst.perform = function(init: PlayerState, params?: Array<ParamValue>) {
+  //   let input_params = params ? params : getParamVals(op.params);
+  //   let res = copyState(init);
+  //   res.draft = pipeOp.perform(init.draft, input_params);
+  //   res.row = (init.row) % wefts(res.draft.drawdown);
+  //   res.pedal = op.name;
+  //   return Promise.resolve(res);
   return inst;
 }
 

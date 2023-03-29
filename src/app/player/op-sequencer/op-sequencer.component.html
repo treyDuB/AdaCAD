@@ -113,7 +113,7 @@
                       [min]= param.min
                       [max]= param.max
                       [(value)] = param.value
-                      (change)="updateParam($event)"
+                      (change)="updateParam($event.target.id, $event.target.value)"
                       step = 1
                   >
                 </mat-form-field>
