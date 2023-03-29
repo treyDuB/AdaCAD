@@ -14,23 +14,21 @@ source="mixer"
   
   <mat-drawer #drawer class="example-sidenav" mode="side" position="end" opened>  
 
-
-        <app-sidebar #view_tool
-        [render]=""
-        source='mixer'
-        (onUndo)="undo();" 
-        (onRedo)="redo();"
-        (onDesignModeChange)='designModeChange($event)'
-        (onZoomChange) ="renderChange($event);"
-        (onOperationAdded) = "operationAdded($event)"
-        (onImport) = "importNewFile($event)"
-        (onZoomChange) ="renderChange($event);"
-        (onViewPortMove) ="setScroll($event);"
-        (onNoteCreate) ="createNote();"
-        (onMaterialChange) = "materialChange()"
-        (onGlobalLoomChange) = "globalLoomChange($event)"
-        ></app-sidebar>
-
+    <app-sidebar #view_tool
+    [render]=""
+    source='mixer'
+    (onUndo)="undo();" 
+    (onRedo)="redo();"
+    (onDesignModeChange)='designModeChange($event)'
+    (onZoomChange) ="renderChange($event);"
+    (onOperationAdded) = "operationAdded($event)"
+    (onImport) = "importNewFile($event)"
+    (onZoomChange) ="renderChange($event);"
+    (onViewPortMove) ="setScroll($event);"
+    (onNoteCreate) ="createNote();"
+    (onMaterialChange) = "materialChange()"
+    (onGlobalLoomChange) = "globalLoomChange($event)"
+    ></app-sidebar>
 
   </mat-drawer>
 

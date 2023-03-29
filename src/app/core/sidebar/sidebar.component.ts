@@ -51,7 +51,6 @@ export class SidebarComponent implements OnInit {
   @Output() onNoteCreate: any = new EventEmitter();
   @Output() onMLChange: any = new EventEmitter();
 
-
   
   draft:Draft;
   loom_settings:LoomSettings;

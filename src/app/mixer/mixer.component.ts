@@ -130,9 +130,9 @@ export class MixerComponent implements OnInit {
 
     let searchParams = new URLSearchParams(window.location.search);
 
-    if(searchParams.has('ex')){
+    if(searchParams.has('ex')) {
       this.loadExampleAtURL(searchParams.get('ex'));  
-    }else{
+    } else {
       this.loadLoggedInUser();
     }
 
@@ -140,10 +140,10 @@ export class MixerComponent implements OnInit {
 
 
   private onWindowScroll(data: any) {
-    if(!this.manual_scroll){
+    if(!this.manual_scroll) {
      this.palette.handleWindowScroll(data);
      this.view_tool.updateViewPort(data);
-    }else{
+    } else {
       this.manual_scroll = false;
     }
   }
@@ -151,7 +151,7 @@ export class MixerComponent implements OnInit {
  setScroll(delta: any) {
     this.palette.handleScroll(delta);
     this.manual_scroll = true;
-   //this.view_tool.updateViewPort(data);
+    //this.view_tool.updateViewPort(data);
   }
 
 
@@ -159,7 +159,7 @@ export class MixerComponent implements OnInit {
    * A function originating in the deisgn tool that signals a design mode change and communicates it to the palette
    * @param name the name of the current design mode
    */
-  designModeChange(name: string){
+  designModeChange(name: string) {
     this.palette.designModeChanged();
   }
 
@@ -167,7 +167,7 @@ export class MixerComponent implements OnInit {
    * A function originating in the deisgn tool that signals a design mode change and communicates it to the palette
    * @param name the name of the current design mode
    */
-  private inkChanged(name: string){
+  private inkChanged(name: string) {
     // this.palette.inkChanged();
   }
   
@@ -179,15 +179,14 @@ export class MixerComponent implements OnInit {
    * this gets called when a new file is started from the topbar or a new file is reload via undo/redo
    * @param result 
    */
-  loadNewFile(result: LoadResponse){
+  loadNewFile(result: LoadResponse) {
 
     this.clearView();
     this.tree.clear();
     console.log("loaded new file", result, result.data)
     this.processFileData(result.data).then(data => {
-      this.palette.changeDesignmode('move');
-    }
-
+        this.palette.changeDesignmode('move');
+      }
     ).catch(console.error);
     
   }
@@ -198,7 +197,7 @@ export class MixerComponent implements OnInit {
    * this gets called when a new file is started from the topbar
    * @param result 
    */
-   importNewFile(result: LoadResponse){
+  importNewFile(result: LoadResponse){
     
     this.processFileData(result.data)
     .then( data => {

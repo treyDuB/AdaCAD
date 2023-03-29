@@ -2,6 +2,7 @@
   
   <div id="sequencer-container" class="sequencer-block">
     <h2 class="player-field-header">Operation Sequencer </h2>
+    <ng-container #vc></ng-container>
     <div class="operation-sequence">
       <ng-container *ngFor="let o of seq.ops; index as i">
         
@@ -69,7 +70,6 @@
               {{o.name}}
             </button>
           </ng-template>
-
         </ng-template>
         
         <mat-menu #seqMenu="matMenu">
@@ -93,10 +93,34 @@
               Remove from Sequencer
             </button>
 
-            <mat-form-field
-            (click)="$event.stopPropagation();">
-              <input matInput placeholder="Input">
-            </mat-form-field>
+            <ng-container *ngFor="let param of o.params; let j = index">
+        
+              <!-- <app-parameter 
+              [param]='param' 
+              [opid]='id' 
+              [paramid]='i'
+              (onOperationParamChange) = onParamChange($event)></app-parameter> -->
+              <!-- <p>{{ param.name }}</p> -->
+              <ng-container  *ngIf="param.type === 'number'">
+                <mat-form-field>
+                    <mat-label class="param-name">{{param.name}}</mat-label>
+                      <input 
+                      matInput
+                      id = "param-{{o.id}}-{{j}}"
+                      [matTooltip]=param.dx
+                      type = "number"
+                      [name]= param.name
+                      [min]= param.min
+                      [max]= param.max
+                      [(value)] = param.value
+                      (change)="updateParam($event)"
+                      step = 1
+                  >
+                </mat-form-field>
+              </ng-container>
+          
+      
+            </ng-container>  
 
           </div>
         </mat-menu>
@@ -155,8 +179,8 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
         
-        <ng-container *ngFor="let class of pls.draftClassificationS">
-          <div id="op-container" class="op-field">
+      <ng-container *ngFor="let class of pls.draftClassificationS">
+        <div id="op-container" class="op-field">
           <h3>{{class.category}}</h3>
           <p> {{class.dx}}</p>
           <ng-container *ngFor="let op of class.ops">
@@ -184,7 +208,7 @@
 
               <div class="sub-menu">
                 <button mat-stroked-menu-item
-                (click) ="seq.addSingleOp(op)"
+                (click) ="addSequencerOp(op)"
                 class="sub-menu-button">
                   Add to Sequencer
                 </button>
@@ -221,7 +245,7 @@
 
           </ng-container>
         </div>
-        </ng-container>
+      </ng-container>
     </mat-expansion-panel>
   </div>
 
@@ -233,12 +257,12 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
         
-        <ng-container *ngFor="let class of pls.draftClassificationT">
-          <div id="op-container" class="op-field">
+      <ng-container *ngFor="let class of pls.draftClassificationT">
+        <div id="op-container" class="op-field">
           <h3>{{class.category}}</h3>
           <p> {{class.dx}}</p>
           <ng-container *ngFor="let op of class.ops">
-           
+            
             <button 
               mat-stroked-button
               [matTooltip] = op.dx
@@ -256,7 +280,7 @@
 
               <div class="sub-menu">
                 <button mat-stroked-menu-item
-                (click) ="seq.addSingleOp(op)"
+                (click) ="addSequencerOp(op)"
                 class="sub-menu-button">
                   Add to Sequencer
                 </button>
@@ -293,7 +317,7 @@
 
           </ng-container>
         </div>
-        </ng-container>
+      </ng-container>
     </mat-expansion-panel>
   </div>
 

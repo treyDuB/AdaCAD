@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { 
-  Performable, CompoundPerformable, PlayerOp,
-  SingleOp, forward
+  Performable, CompoundPerformable,
+  SingleOp, forward, CustomStructOp
 } from '../model/playerop';
-import { ChainOp, makeChainOp } from '../model/chainop';
+import { ChainOp } from '../model/chainop';
 import { PlayerState, copyState } from '../model/state';
-import { PlayerService } from '../player.service';
+// import { PlayerService } from '../player.service';
 import { PedalsService } from './pedals.service';
 import { min } from 'lodash';
+import { MappingsService } from './mappings.service';
+import { MenuOp } from '../model/mapping';
 
 /** 
  * each chain op in the sequencer has an ID and 
@@ -17,6 +19,8 @@ interface ChainIndex {
   id: number,
   pos: number, // position in ops array
 }
+
+export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
 
 
 /**
@@ -32,7 +36,7 @@ interface ChainIndex {
   p_select_b?: number = -1;
   p_prog: number = -1;
   _pos: number = -1;
-  ops: Array<ChainOp | SingleOp> = [];
+  ops: Array<SequencerOp> = [];
   selecting: boolean = false;
 
   /** 
@@ -41,7 +45,7 @@ interface ChainIndex {
    * pedal. Optionally, provide an array of Ops to load onto the
    * Sequencer.
    */
-  constructor(pedals?: Array<number>, ops?: Array<PlayerOp | ChainOp>) {
+  constructor(pedals?: Array<number>, ops?: Array<SequencerOp>) {
     this.name = "sequencer";
     if (pedals) {
       this.p_prog = pedals[0];
@@ -58,7 +62,7 @@ interface ChainIndex {
 
   /** @method isMapped whether any pedals are mapped to the sequencer */
   get isMapped() {
-    return !(this.p_prog >= 0 && this.p_select_a >= 0 && this.p_select_b >= 0);
+    return !(this.p_prog >= 0 && this.p_select_a >= 0 && (<number> this.p_select_b) >= 0);
   }
 
   /** @method readyToWeave progress pedal and at least one select pedal mapped */
@@ -110,17 +114,56 @@ interface ChainIndex {
         } else if (n == this.p_select_b) {
           this._pos = (this._pos - 1) % this.ops.length;
         }
-        console.log(this._pos);
-        console.log(this.current);
-        return this.current.perform(res);
+        // console.log(this._pos);
+        // console.log(this.current);
+        return (<Performable> this.current).perform(res);
       } else {
         return Promise.resolve(res); // we really can't do anything without any operations on the sequencer
       }
     }
   }
+
+  addOp(o: SequencerOp) {
+    this.ops.push(o);
+    // if (this._pos < 0) this._pos = 0;
+    console.log(o);
+    return this.ops.length - 1;
+  }
+
+  removeOp() {
+    this.ops.pop();
+    if (this.ops.length == 0) this._pos = -1;
+    if (this._pos == this.ops.length) this._pos--;
+  }
+
+  /** Deletes the operation at position x and returns the removed operation. */
+  delOpAt(x: number) {
+    let rem = this.ops.splice(x, 1)[0];
+    if (this.ops.length == 0) this._pos = -1;
+    if (this._pos >= x) { this._pos--; }
+    return rem;
+  }
+
+  insertOpAt(op: SequencerOp, x: number) {
+    let arr: Array<any>;
+    if (x > -1) {
+      if (x == 0) {
+        this.ops.unshift(op);
+      } else if (x < this.ops.length) {
+        arr = this.ops.splice(x);
+        console.log(arr);
+        this.ops.push(op);
+        this.ops = this.ops.concat(arr);
+      } else {
+        this.ops.push(op);
+      }
+    }
+
+    if (this._pos >= x) { this._pos++; }
+  }
 }
 
-export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<PlayerOp | ChainOp>) {
+export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SequencerOp>) {
   let pedals = [conf, sel_fwd];
   if (sel_back) pedals.push(sel_back);
   if (start_ops) return new OpSequencer(pedals, start_ops);
@@ -147,6 +190,7 @@ export class SequencerService extends OpSequencer {
 
   constructor(
     public pedals: PedalsService,
+    public map: MappingsService
   ) {
     super();
   }
@@ -162,6 +206,7 @@ export class SequencerService extends OpSequencer {
   nextOp() {
     if (this.ops.length > 0) {
       this._pos = (this._pos + 1) % this.ops.length;
+      console.log(this.current);
       return this.current;
     }
   }
@@ -172,44 +217,6 @@ export class SequencerService extends OpSequencer {
       else { this._pos = (this._pos - 1) % this.ops.length; }
       return this.current;
     }
-  }
-
-  addOp(o: PlayerOp | ChainOp) {
-    this.ops.push(o);
-    // if (this._pos < 0) this._pos = 0;
-    return this.ops.length - 1;
-  }
-
-  removeOp() {
-    this.ops.pop();
-    if (this.ops.length == 0) this._pos = -1;
-    if (this._pos == this.ops.length) this._pos--;
-  }
-
-  /** Deletes the operation at position x and returns the removed operation. */
-  delOpAt(x: number) {
-    let rem = this.ops.splice(x, 1)[0];
-    if (this.ops.length == 0) this._pos = -1;
-    if (this._pos >= x) { this._pos--; }
-    return rem;
-  }
-
-  insertOpAt(op: PlayerOp | ChainOp, x: number) {
-    let arr: Array<any>;
-    if (x > -1) {
-      if (x == 0) {
-        this.ops.unshift(op);
-      } else if (x < this.ops.length) {
-        arr = this.ops.splice(x);
-        console.log(arr);
-        this.ops.push(op);
-        this.ops = this.ops.concat(arr);
-      } else {
-        this.ops.push(op);
-      }
-    }
-
-    if (this._pos >= x) { this._pos++; }
   }
 
   /** Moves the operation at position `a` to position `b` in the sequencer order. */
@@ -235,11 +242,16 @@ export class SequencerService extends OpSequencer {
   }
 
   /** Add a single operation to the end of the sequencer. */
-  addSingleOp(o: PlayerOp) {
+  addSingleOp(o: SequencerOp) {
     if (this.active) {
-      o.chain_check = -1;
+      console.log(o);
+      // this.map.getMap(0);
+      // this.map.createOpInstance(o);
+      // console.log(opInstance);
+      // o.chain_check = -1;
       this.addOp(o);
-      /** if this is the first op loaded into the player, run the op so that updates the starting draft */
+      /** if this is the first op l
+       * 3oaded into the player, run the op so that updates the starting draft */
       // if (this.ops.length == 1) {
       //   this.pedals.emit('pedal-step', this.p_select_a);
       // }
@@ -251,16 +263,16 @@ export class SequencerService extends OpSequencer {
   }
 
   /** Add a new chain operation to the sequencer. */
-  addChainOp(o: PlayerOp) { 
-    let ch = makeChainOp([o]);
+  addChainOp(o: SingleOp) { 
+    let ch = ChainOp.fromSingleOp(o);
     ch.id = this.chains.length;
     this.chains.push({id: ch.id, pos: this.addOp(ch)});
   }
 
   /** Add a single operation onto an existing chain op in the sequencer. */
-  addToChain(ch_id: number, o: PlayerOp) {
-    let ch = this.ops[this.chains[ch_id].pos] as ChainOp;
-    this.ops[this.chains[ch_id].pos] = makeChainOp(ch.ops.concat([o]));
+  addToChain(ch_id: number, o: SingleOp) {
+    const ch = this.ops[this.chains[ch_id].pos] as ChainOp;
+    ch.addOp(o);
     console.log(this.ops);
   }
 

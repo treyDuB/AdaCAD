@@ -3,8 +3,8 @@
  * Player, namely Operations
  */
 
-import { PlayerState, copyState } from "./state";
-import { PlayerOp, SingleOp, OpInstance } from "./playerop";
+import { PlayerState } from "./state";
+import { PlayerOp, SingleOpBase, SingleOp, CustomStructOp } from "./playerop";
 import { ChainOp } from "./chainop";
 import { OpSequencer } from "../provider/sequencer.service";
 import { OperationParam } from "../../mixer/model/operation";
@@ -12,7 +12,7 @@ import { OperationParam } from "../../mixer/model/operation";
 /** things that can happen in response to a pedal */
 export interface PedalTarget {
   id?: number,
-  pedal?: number,
+  pedal: number,
   name: string
   perform: (init: PlayerState, ...args) => Promise<PlayerState>;
 }
@@ -22,9 +22,14 @@ export interface PedalTarget {
  *  - `run` = fire the operation every time
  *  - `toggle` = first time: run the operation; 
  *      second time: undo the operation; alternate on/off
+ *  - `redo` = undo the operation, then run it again (for operations that are randomized, or may accumulate resizing the draft, etc.)
  */
-export type OpControlMode = 'run' | 'toggle';
+export type OpControlMode = 'run' | 'toggle' | 'redo';
 export type ParamControlMode = 'inc' | 'dec' | 'rand';
+
+/** operations that will show up as menu options for mapping */
+export type MenuOp = SingleOpBase | CustomStructOp;
+export type PairableOp = SingleOp | CustomStructOp;
 
 /** 
  * Basic combination: 
@@ -33,17 +38,18 @@ export type ParamControlMode = 'inc' | 'dec' | 'rand';
  * @param pedal ID number of pedal
  * @param op    ID number of Operation (assigned in Draft Player service)
  */
-export interface PairedOp extends PedalTarget {
+export interface SimplePairing extends PedalTarget {
   pedal:  number,
-  op:     PlayerOp,
+  op:     PairableOp,
   mode?:  OpControlMode,
 }
 
-// this ...args thing is such a hack
-export function makePairedOp(p: number, op: PlayerOp): PairedOp {
-  let jankPerform = (init: PlayerState, ...args) => {
-    return op.perform(init);
-  }
+export interface ChainPairing extends PedalTarget {
+  pedal:  number,
+  ch:     ChainOp
+}
+
+export function makeSimplePairing(p: number, op: SingleOp | CustomStructOp): SimplePairing {
   return {
     pedal: p,
     name: op.name,
@@ -52,8 +58,17 @@ export function makePairedOp(p: number, op: PlayerOp): PairedOp {
   }
 }
 
+export function makeChainPairing(p: number, ch: ChainOp): ChainPairing {
+  return {
+    pedal: p,
+    name: ch.name,
+    ch: ch,
+    perform: ch["perform"],
+  }
+}
+
 export interface ParamControl extends PedalTarget {
-  op: OpInstance,
+  op: SingleOp,
   mode: ParamControlMode,
   perform: SingleOp["perform"],
 }
@@ -61,7 +76,7 @@ export interface ParamControl extends PedalTarget {
 // export type PedalOpMapping = Array<PedalAction>;
 
 export type MappingShapes = {
-  'pairing': PairedOp,
+  'pairing': SimplePairing,
   'chain': ChainOp,
   'sequencer': OpSequencer,
   'param': ParamControl,

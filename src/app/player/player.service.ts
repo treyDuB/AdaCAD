@@ -6,9 +6,10 @@ import { Draft } from '../core/model/datatypes';
 import { BuildableOperation as GenericOp, OpInput, NumParam
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
-import { PlayerOp, playerOpFrom, forward, refresh, reverse
+import { PlayerOp, playerOpFrom, forward, refresh, reverse, SingleOpBase, CustomStructOp
 } from './model/playerop';
 import { PlayerState, WeavingPick, copyState } from './model/state';
+import { MenuOp } from './model/mapping';
 import { MappingsService } from './provider/mappings.service';
 import { PedalsService, Pedal } from './provider/pedals.service';
 import { SequencerService } from './provider/sequencer.service';
@@ -49,13 +50,13 @@ export class PlayerService {
     this.loom = { warps: 2640, draftTiling: true };
 
     // load the draft progress ops
-    mappings.addOperation(forward);
-    mappings.addOperation(refresh);
-    mappings.addOperation(reverse);
+    mappings.addMenuOperation(<MenuOp> forward);
+    mappings.addMenuOperation(<MenuOp> refresh);
+    mappings.addMenuOperation(<MenuOp> reverse);
 
     function addOp(op: GenericOp, params?: Array<number | string>) {
       let p_op = params ? playerOpFrom(op, params) : playerOpFrom(op);
-      mappings.addOperation(p_op);
+      mappings.addMenuOperation(p_op);
       return p_op;
     }
 
@@ -78,21 +79,22 @@ export class PlayerService {
     const stretch = addOp(defs.stretch);
     const bindweft = addOp(defs.bindweftfloats);
     const bindwarp = addOp(defs.bindwarpfloats);
+    const tile = addOp(defs.tile);
+    // : SingleOpBase = {
+    //   name: defs.tile.name,
+    //   classifier: 'pipe',
+    //   perform: (init: PlayerState) => {
+    //     let res = copyState(init);
+    //     res.draft = defs.tile.perform([init.draft], [2, 2]);
+    //     res.row = init.row % wefts(res.draft.drawdown);
+    //     res.pedal = defs.tile.name;
+    //     return Promise.resolve(res);
+    //   }
+    // }
+    // mappings.addMenuOperation(tile);
 
-    const tile: PlayerOp = {
-      name: defs.tile.name,
-      classifier: 'pipe',
-      perform: (init: PlayerState) => {
-        let res = copyState(init);
-        res.draft = defs.tile.perform([init.draft], [2, 2]);
-        res.row = init.row % wefts(res.draft.drawdown);
-        res.pedal = defs.tile.name;
-        return Promise.resolve(res);
-      }
-    }
-    mappings.addOperation(tile);
-
-    const chaos: PlayerOp = {
+    const chaos: SingleOpBase = {
+      id: -1,
       name: 'chaos',
       classifier: 'pipe',
       dx: 'tiles the input drafts, randomly selecting which draft to place at which position',
@@ -160,7 +162,7 @@ export class PlayerService {
         return Promise.resolve(res);
       }
     }
-    mappings.addOperation(chaos);
+    mappings.addMenuOperation(chaos);
 
     this.draftClassificationS.push(
       { category_id: 0,
@@ -245,7 +247,7 @@ export class PlayerService {
       let structOps = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
       let op = this.structureOpFromDraft(d);
       structOps.push(op);
-      this.mappings.addOperation(op);
+      this.mappings.addMenuOperation(<MenuOp> op);
     }
     this.state.draft = d;
     this.state.row = 0;
@@ -259,7 +261,8 @@ export class PlayerService {
    * @param d the Draft to turn into a custom structure Operation
    */
   structureOpFromDraft(d: Draft) {
-    let structOp: PlayerOp = {
+    let structOp: CustomStructOp = {
+      id: d.id,
       name: d.gen_name,
       struct_id: d.id,
       custom_check: 1,

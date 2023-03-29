@@ -89,7 +89,7 @@ export class PaletteComponent implements OnInit{
    * triggers a class to handle disabling pointerevents when switching modes
    * @property {boolean}
    */
-   pointer_events: boolean;
+  pointer_events: boolean;
 
   /**
    * a value to represent the current user defined scale for this component. 
@@ -99,7 +99,7 @@ export class PaletteComponent implements OnInit{
    scale: number;
 
 
-    /**
+  /**
    * a string to represent the current user defined scale for this component to be used in background grid css. 
    * @property {striing}
    */
@@ -109,31 +109,29 @@ export class PaletteComponent implements OnInit{
   /**
    * links to the z-index to push the canvas to the front or back of view when freehand drawing. 
    */
-   canvas_zndx:number = -1;
+  canvas_zndx: number = -1;
   
   
   /**
    * stores the bounds of the shape being drawn
    */
-   shape_bounds:Bounds;
+  shape_bounds: Bounds;
   
   /**
    * stores the vtx for freehand shapes
    */
-   shape_vtxs:Array<Point>;
+  shape_vtxs: Array<Point>;
   
-
   /**
    * trackable inputs to snackbar
    */
-   snack_message:string;
-   snack_bounds: Bounds;
+  snack_message: string;
+  snack_bounds: Bounds;
 
-
-   /**
-    * a reference to the base size of each cell. Zoom in and out only modifies the view, not this base size.
-    */
-   default_cell_size: number = 5;
+  /**
+   * a reference to the base size of each cell. Zoom in and out only modifies the view, not this base size.
+   */
+  default_cell_size: number = 5;
   
   /**
    * Constructs a palette object. The palette supports drawing without components and dynamically
@@ -164,16 +162,14 @@ export class PaletteComponent implements OnInit{
     this.pointer_events = true;
   }
 
-/**
- * Called when palette is initailized
- */
+  /**
+   * Called when palette is initailized
+   */
   ngOnInit(){
     this.scale = 5; //default set from zoom
     this.scale_string = this.default_cell_size+"px "+this.default_cell_size+"px";
     this.vc.clear();
 
-
-    
   }
 
   /**
@@ -181,7 +177,7 @@ export class PaletteComponent implements OnInit{
    */
    ngAfterViewInit(){
     
-    const div:HTMLElement = document.getElementById('scrollable-container');
+    const div: HTMLElement = document.getElementById('scrollable-container');
     this.viewport.set(div.offsetParent.scrollLeft, div.offsetParent.scrollTop,  div.offsetParent.clientWidth,  div.offsetParent.clientHeight);
     
     // const center:Point = this.viewport.setViewportCenter();
@@ -368,12 +364,11 @@ export class PaletteComponent implements OnInit{
   //  */
   addOperation(name:string){
       
-      const opcomp:OperationComponent = this.createOperation(name);
-      this.performAndUpdateDownstream(opcomp.id).then(el => {
-        this.addTimelineState();
-      });
+    const opcomp:OperationComponent = this.createOperation(name);
+    this.performAndUpdateDownstream(opcomp.id).then(el => {
+      this.addTimelineState();
+    });
 
-      
   }
 
 
@@ -661,13 +656,10 @@ export class PaletteComponent implements OnInit{
    * @param name the name of the operation this component will perform
    * @returns the OperationComponent created
    */
-    createOperation(name: string):OperationComponent{
+    createOperation(name: string): OperationComponent{
       const factory = this.resolver.resolveComponentFactory(OperationComponent);
       const op = this.vc.createComponent<OperationComponent>(factory);
       const id = this.tree.createNode('op', op.instance, op.hostView);
-
-
-
 
       this.tree.loadOpData({prev_id: -1, cur_id: id}, name, undefined, undefined);
       this.setOperationSubscriptions(op.instance);
@@ -677,10 +669,6 @@ export class PaletteComponent implements OnInit{
       op.instance.zndx = this.layers.createLayer();
       op.instance.scale = this.scale;
       op.instance.default_cell = this.default_cell_size;
-
-     
-
-
 
       return op.instance;
     }

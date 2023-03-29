@@ -22,87 +22,83 @@ import { stat } from 'fs';
 })
 export class OperationComponent implements OnInit {
 
-   @Input() id: number; //generated from the tree service
-   @Input() name: string;
+  @Input() id: number; //generated from the tree service
+  @Input() name: string;
+
+  @Input()
+  get scale(): number { return this._scale; }
+  set scale(value: number) {
+    this._scale = value;
+    this.rescale();
+  }
+  private _scale:number = 5;
+
+  @Input() default_cell: number;
+  @Input() zndx: number;
+  @Output() onConnectionRemoved = new EventEmitter <any>();
+  @Output() onConnectionMove = new EventEmitter <any>();
+  @Output() onOperationMove = new EventEmitter <any>(); 
+  @Output() onOperationMoveEnded = new EventEmitter <any>(); 
+  @Output() onOperationParamChange = new EventEmitter <any>(); 
+  @Output() deleteOp = new EventEmitter <any>(); 
+  @Output() duplicateOp = new EventEmitter <any>(); 
+  @Output() onInputAdded = new EventEmitter <any> ();
 
 
-   @Input()
-   get scale(): number { return this._scale; }
-   set scale(value: number) {
-     this._scale = value;
-     this.rescale();
-   }
-   private _scale:number = 5;
- 
+  params_visible: boolean = true;
+  /**
+  * reference to top, left positioin as absolute interlacement
+  */
+  interlacement:Interlacement;
 
+  /**
+  * reference to the height of this element in units of the base cell 
+  */
+  base_height:number;
 
-   @Input() default_cell: number;
-   @Input() zndx: number;
-   @Output() onConnectionRemoved = new EventEmitter <any>();
-   @Output() onConnectionMove = new EventEmitter <any>();
-   @Output() onOperationMove = new EventEmitter <any>(); 
-   @Output() onOperationMoveEnded = new EventEmitter <any>(); 
-   @Output() onOperationParamChange = new EventEmitter <any>(); 
-   @Output() deleteOp = new EventEmitter <any>(); 
-   @Output() duplicateOp = new EventEmitter <any>(); 
-   @Output() onInputAdded = new EventEmitter <any> ();
+  /**
+  * flag to tell if this is being from a loaded from a saved file
+  */
+  loaded: boolean = false;
 
-
-   params_visible: boolean = true;
-    /**
-    * reference to top, left positioin as absolute interlacement
+  /**
+    * flag to tell if this has been duplicated from another operation
     */
-   interlacement:Interlacement;
+  duplicated: boolean = false;
 
-    /**
-    * reference to the height of this element in units of the base cell 
-    */
-    base_height:number;
+  tooltip: string = "select drafts to input to this operation"
 
-    /**
-    * flag to tell if this is being from a loaded from a saved file
-    */
-    loaded: boolean = false;
+  disable_drag: boolean = false;
 
-    /**
-      * flag to tell if this has been duplicated from another operation
-      */
-    duplicated: boolean = false;
+  bounds: Bounds = {
+    topleft: {x: 0, y:0},
+    width: 200,
+    height: 100
+  };
+  
+  op: DynamicOperation | Operation;
 
+  opnode: OpNode;
 
-   tooltip: string = "select drafts to input to this operation"
+  //for input params form control
+  loaded_inputs: Array<number> = [];
 
-   disable_drag: boolean = false;
- 
-   bounds: Bounds = {
-     topleft: {x: 0, y:0},
-     width: 200,
-     height: 100
-   };
-   
-   op: DynamicOperation | Operation;
+  has_image_preview: boolean = false;
 
-   opnode: OpNode;
-
-   //for input params form control
-   loaded_inputs: Array<number> = [];
-
-   has_image_preview: boolean = false;
-
-   //these are the drafts with any input parameters
+  //these are the drafts with any input parameters
   //  inlets: Array<FormControl> = [];
 
 
   // has_connections_in: boolean = false;
-   subdraft_visible: boolean = true;
+  subdraft_visible: boolean = true;
 
-   is_dynamic_op: boolean = false;
-   
-   dynamic_type: string = 'main';
+  is_dynamic_op: boolean = false;
+  
+  dynamic_type: string = 'main';
 
-   filewarning: string = "";
+  filewarning: string = "";
 
-   all_system_codes: Array<string> = [];
+  all_system_codes: Array<string> = [];
 
   constructor(
     private operations: OperationService, 
@@ -112,9 +108,6 @@ export class OperationComponent implements OnInit {
     public dm: DesignmodesService,
     private imageService: ImageService,
     public systems: SystemsService) { 
-     
-
-
   }
 
   ngOnInit() {
@@ -157,28 +150,27 @@ export class OperationComponent implements OnInit {
 
   drawImagePreview(){
 
-      const opnode = this.tree.getOpNode(this.id);
-      const paramid = this.op.params.findIndex(el => el.type === 'file');
-      const obj = this.imageService.getImageData(opnode.params[paramid]);
+    const opnode = this.tree.getOpNode(this.id);
+    const paramid = this.op.params.findIndex(el => el.type === 'file');
+    const obj = this.imageService.getImageData(opnode.params[paramid]);
 
-      if(obj === undefined) return;
+    if(obj === undefined) return;
 
-      this.has_image_preview = true;
-      const image_div =  document.getElementById('param-image-'+this.id);
-      image_div.style.display = 'flex';
+    this.has_image_preview = true;
+    const image_div =  document.getElementById('param-image-'+this.id);
+    image_div.style.display = 'flex';
 
-      const dims_div =  document.getElementById('param-image-dims-'+this.id);
-      dims_div.innerHTML=obj.data.width+"px x "+obj.data.height+"px";
+    const dims_div =  document.getElementById('param-image-dims-'+this.id);
+    dims_div.innerHTML=obj.data.width+"px x "+obj.data.height+"px";
 
-      const canvas: HTMLCanvasElement =  <HTMLCanvasElement> document.getElementById('preview_canvas-'+this.id);
-      const ctx = canvas.getContext('2d');
+    const canvas: HTMLCanvasElement =  <HTMLCanvasElement> document.getElementById('preview_canvas-'+this.id);
+    const ctx = canvas.getContext('2d');
 
-      const max_dim = (obj.data.width > obj.data.height) ? obj.data.width : obj.data.height;
-      canvas.width = obj.data.width / max_dim * 100;
-      canvas.height = obj.data.height / max_dim * 100;
-      ctx.drawImage(obj.data.image, 0, 0, obj.data.width / max_dim * 100, obj.data.height / max_dim * 100);
-     
-    }
+    const max_dim = (obj.data.width > obj.data.height) ? obj.data.width : obj.data.height;
+    canvas.width = obj.data.width / max_dim * 100;
+    canvas.height = obj.data.height / max_dim * 100;
+    ctx.drawImage(obj.data.image, 0, 0, obj.data.width / max_dim * 100, obj.data.height / max_dim * 100);
+  }
 
 
   setBounds(bounds:Bounds){
@@ -211,10 +203,6 @@ export class OperationComponent implements OnInit {
 
     this.bounds.height = this.base_height * zoom_factor;
 
- 
-  
-
-
   }
 
   drawForPrint(canvas, cx, scale){
@@ -235,14 +223,12 @@ export class OperationComponent implements OnInit {
 
     cx.fillText(datastring,this.bounds.topleft.x + 5, this.bounds.topleft.y+25 );
 
-
   }
 
    /**
    * updates this components position based on the child component's position
    * */
     updatePositionFromChild(child: SubdraftComponent){
-
 
        const container = <HTMLElement> document.getElementById("scale-"+this.id);
        if(container !== null) this.setPosition({x: child.bounds.topleft.x, y: child.bounds.topleft.y - (container.offsetHeight * this.scale/this.default_cell) });
@@ -272,12 +258,10 @@ export class OperationComponent implements OnInit {
     console.log("dropped");
   }
 
-
   inputSelected(input_id: number){
     this.disableDrag();
     this.onInputAdded.emit({id: this.id, ndx: input_id});
   }
-
 
   removeConnectionTo(obj:any){
     this.onConnectionRemoved.emit(obj);

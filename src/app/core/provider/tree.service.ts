@@ -195,8 +195,6 @@ export class TreeService {
     return inlets;
   }
 
-
-
   /**
    * loads data into an operation node from a file load, or when an operation is first instantiated,  or undo/redo event
    * @param entry the upload entry associated with this node or null if there was no upload associated
@@ -205,9 +203,8 @@ export class TreeService {
    * @param inlets an array containing the paramteres that get mapped to inputs at each inlets
    * @returns the node and the entry
    */
-   loadOpData(entry: {prev_id: number, cur_id: number}, name: string, params:Array<any>, inlets: Array<any>) : Promise<{on: OpNode, entry:{prev_id: number, cur_id: number}}>{
+  loadOpData(entry: {prev_id: number, cur_id: number}, name: string, params:Array<any>, inlets: Array<any>) : Promise<{on: OpNode, entry:{prev_id: number, cur_id: number}}>{
     
-
     const nodes = this.nodes.filter(el => el.id === entry.cur_id);
     let op = this.ops.getOp(name);
 
@@ -222,8 +219,6 @@ export class TreeService {
 
     }  
 
-
-
     if(params === undefined){
       params = [];
     }
@@ -234,53 +229,47 @@ export class TreeService {
 
     const param_types = op.params.map(el => el.type);
 
-
-      const formatted_params = param_types.map((type, ndx) => {
-        switch(type){
-          case "boolean":
-            return (params[ndx]) ? 1 : 0;
-          
-            case "file":
-              return params[ndx];
+    const formatted_params = param_types.map((type, ndx) => {
+      switch(type){
+        case "boolean":
+          return (params[ndx]) ? 1 : 0;
         
-            default:
-              return params[ndx];
-        }
-      });
-  
-      const default_param_values = this.ops.getOp(name).params.map(el => el.value);
-  
-      //this gets teh default values for the opration
-      //this overwrites some of those with any value that has been previous added
-      const params_out = default_param_values.map((p, ndx) => {
-        if(ndx < params.length) return formatted_params[ndx];
-        else return p;
-      });
-
-      const default_inlet_values = this.ops.getOp(name).inlets.map(el => el.value);
-
-      if(inlets === undefined || inlets.length == 0){
-        inlets = default_inlet_values.slice();
-        if(this.ops.isDynamic(name)){
-          const op = <DynamicOperation> this.ops.getOp(name);
-          let dynamic_inlets = this.onDynanmicOperationParamChange(name, inlets, op.dynamic_param_id, op.params[op.dynamic_param_id].value);
-          inlets = dynamic_inlets.slice();
-        }
+          case "file":
+            return params[ndx];
+      
+          default:
+            return params[ndx];
       }
-
-       inlets = inlets.map(el => (el === null) ? 0 : el); 
-
+    });
   
-      node.dirty = false;
-      (<OpNode> node).name = name;
-      (<OpNode> node).params = params_out.slice();
-      (<OpNode> node).inlets = inlets.slice();
-  
-     return Promise.resolve({on:<OpNode> nodes[0], entry});
-  
+    const default_param_values = this.ops.getOp(name).params.map(el => el.value);
 
+    //this gets teh default values for the opration
+    //this overwrites some of those with any value that has been previous added
+    const params_out = default_param_values.map((p, ndx) => {
+      if(ndx < params.length) return formatted_params[ndx];
+      else return p;
+    });
 
-  
+    const default_inlet_values = this.ops.getOp(name).inlets.map(el => el.value);
+
+    if(inlets === undefined || inlets.length == 0){
+      inlets = default_inlet_values.slice();
+      if(this.ops.isDynamic(name)){
+        const op = <DynamicOperation> this.ops.getOp(name);
+        let dynamic_inlets = this.onDynanmicOperationParamChange(name, inlets, op.dynamic_param_id, op.params[op.dynamic_param_id].value);
+        inlets = dynamic_inlets.slice();
+      }
+    }
+
+    inlets = inlets.map(el => (el === null) ? 0 : el); 
+
+    node.dirty = false;
+    (<OpNode> node).name = name;
+    (<OpNode> node).params = params_out.slice();
+    (<OpNode> node).inlets = inlets.slice();
+
+    return Promise.resolve({on:<OpNode> nodes[0], entry}); 
   }
 
   /**

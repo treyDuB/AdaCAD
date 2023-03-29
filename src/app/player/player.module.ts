@@ -11,6 +11,7 @@ import { PlayerComponent } from './player.component';
 import { VirtualPedalsComponent } from './virtual-pedals/virtual-pedals.component';
 import { PlaybackComponent } from './playback/playback/playback.component';
 import { Browser } from 'protractor';
+import { OperationComponent } from './op-sequencer/operation/operation.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { Browser } from 'protractor';
     OpSequencerComponent,
     WeavingStateComponent,
     VirtualPedalsComponent,
-    PlaybackComponent
+    PlaybackComponent,
+    OperationComponent
   ],
   imports: [
     CommonModule,

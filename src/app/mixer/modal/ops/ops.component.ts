@@ -46,8 +46,6 @@ export class OpsComponent implements OnInit {
     this.dialogRef.close(null);
   }
 
-
-
   addOp(name: string){
       this.onOperationAdded.emit(name);  
   }
@@ -58,7 +56,6 @@ export class OpsComponent implements OnInit {
     if(ndx !== -1){
       this.onOperationAdded.emit(this.opnames[ndx]);
     }
-
 
   }
 
