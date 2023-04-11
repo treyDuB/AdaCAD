@@ -1,8 +1,15 @@
 /** COPY-PASTED FROM MIXER PALETTE OPERATION SUB-COMPONENT */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { OpSequencer, SequencerOp } from '../../provider/sequencer.service';
+import { OpSequencer, SequencerOp, SequencerService } from '../../provider/sequencer.service';
 import { MatMenu } from '@angular/material/menu';
+
+export type OpComponentEvent = {
+  id: number,
+  param?: any,
+  val?: any,
+  dir?: boolean
+}
 
 @Component({
   selector: 'app-operation',
@@ -10,18 +17,22 @@ import { MatMenu } from '@angular/material/menu';
   styleUrls: ['./operation.component.scss']
 })
 export class OperationComponent implements OnInit {
+  /** The Operation's index in sequencer array */
+  @Input() seq_id: number;
+  /** Operation Instance belonging to the component */
+  @Input() op: SequencerOp;
+  @Input() is_selected: boolean;
 
-  @Input() id: number; // index in the sequencer
-  @Input() name: string;
+  /** event emitter outputs */
+  /** NAMING CONVENTION: onAction */
+  @Output() onOperationParamChange = new EventEmitter <OpComponentEvent>(); 
+  @Output() onDeleteOp = new EventEmitter <OpComponentEvent>(); 
+  @Output() onDuplicateOp = new EventEmitter <OpComponentEvent>();
+  @Output() onShiftOp = new EventEmitter <OpComponentEvent>(); 
 
-  @Output() onOperationParamChange = new EventEmitter <any>(); 
-  @Output() deleteOp = new EventEmitter <any>(); 
-  @Output() duplicateOp = new EventEmitter <any>();
-  @Output() shiftOp = new EventEmitter <boolean>(); 
-
-  op: SequencerOp;
-
-  constructor() { 
+  constructor(
+    public seq: SequencerService
+  ) { 
   }
 
   ngOnInit() {
@@ -35,16 +46,24 @@ export class OperationComponent implements OnInit {
    * @param id an object containing the id of hte parameter that has changed
    * @param value 
    */
-  onParamChange(obj: any){
-    this.onOperationParamChange.emit({id: this.id});
+  updateParam(id: string, value: string){
+    console.log("param updated", id, value);
+    let splitStr = id.split("-");
+    const op_id = parseInt(splitStr[1]);
+    const param_id = parseInt(splitStr[2]);
+    this.onOperationParamChange.emit({id: op_id, param: param_id, val: parseInt(value)});
   }
 
   delete(){
-    this.deleteOp.emit({id: this.id});
+    this.onDeleteOp.emit({id: this.op.id});
   }
 
   duplicate(){
-    this.duplicateOp.emit({id: this.id});
+    this.onDuplicateOp.emit({id: this.op.id});
+  }
+
+  shift(dir: boolean) {
+    this.onShiftOp.emit({id: this.op.id, dir: dir});
   }
  
 }

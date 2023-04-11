@@ -12,6 +12,7 @@ import { VirtualPedalsComponent } from './virtual-pedals/virtual-pedals.componen
 import { PlaybackComponent } from './playback/playback/playback.component';
 import { Browser } from 'protractor';
 import { OperationComponent } from './op-sequencer/operation/operation.component';
+import { ChainOpComponent } from './op-sequencer/chain-op/chain-op.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { OperationComponent } from './op-sequencer/operation/operation.component
     WeavingStateComponent,
     VirtualPedalsComponent,
     PlaybackComponent,
-    OperationComponent
+    OperationComponent,
+    ChainOpComponent
   ],
   imports: [
     CommonModule,

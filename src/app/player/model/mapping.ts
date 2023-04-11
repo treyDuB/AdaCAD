@@ -12,8 +12,8 @@ import { OperationParam } from "../../mixer/model/operation";
 /** things that can happen in response to a pedal */
 export interface PedalTarget {
   id?: number,
-  pedal: number,
-  name: string
+  pedal: number, 
+  name: string, // name of the operation that matches icon name
   perform: (init: PlayerState, ...args) => Promise<PlayerState>;
 }
 
@@ -40,6 +40,7 @@ export type PairableOp = SingleOp | CustomStructOp;
  */
 export interface SimplePairing extends PedalTarget {
   pedal:  number,
+  name:   string, // name of the operation that matches icon name
   op:     PairableOp,
   mode?:  OpControlMode,
 }

@@ -6,6 +6,7 @@ newOpInstance } from '../model/playerop';
 import { ChainOp } from '../model/chainop';
 import { SequencerService } from './sequencer.service';
 import { MenuOp, SimplePairing, makeSimplePairing, MappingShapes, PedalAction } from '../model/mapping';
+import { E } from '@angular/cdk/keycodes';
 
 type MappingIndex = {
   [m in keyof MappingShapes]: Array<PedalAction>;//Array<MappingShapes[m]>;
@@ -52,19 +53,6 @@ export class MappingsService extends Array<PedalAction> {
       this.op_instances = [];
     }
 
-  // getMapOptions(p: number): Array<MenuOp> {
-  //   return this.ops;
-  // }
-
-  // onAddPedal(p: Pedal) {
-  //   this.availPedals.push(p.id);
-  // }
-
-  // onRemPedal() {
-  //   // this.pedals.pop();
-  //   this.availPedals.filter((id) => id != this.pedals.length);
-  // }
-
   // register an operation from the Player to the options for mapping
   addMenuOperation(o: MenuOp) {
     o.id = this.ops.length;
@@ -88,7 +76,6 @@ export class MappingsService extends Array<PedalAction> {
     console.log(this.ops);
     let o = this.createOpInstance(this.getOp(opName));
     console.log(o);
-    // let thisOp = this.unpairedOps.splice(o, 1);
     this.setMap(id, makeSimplePairing(id, o));
   }
 
@@ -104,26 +91,6 @@ export class MappingsService extends Array<PedalAction> {
       this.setMap(id, ChainOp.fromSingleOp(o));
     }
   }
-
-  // chainArray(id: number, ops: Array<string>) {
-  //   let op_array = ops.map((name) => this.ops[this.ops.findIndex((op) => op.name == name)]);
-  //   if (this.pedalIsChained(id)) { 
-  //     // if pedal already has a chain, add ops to the chain
-  //     let curr_ops = (<ChainOp> this.getMap(id)).ops;
-  //     this.setMap(id, makeChainOp(curr_ops.concat(op_array), id));
-  //   } else if (this.pedalIsPaired(id)) {
-  //     // if pedal is paired, you can turn it into a chain
-  //     let first_op = (<SimplePairing> this.getMap(id)).op;
-  //     this.setMap(id, makeChainOp([first_op].concat(op_array), id));
-  //   } else {
-  //     // pedal doesn't have anything mapped, just add a new chain
-  //     this.setMap(id, makeChainOp(op_array, id));
-  //   }
-  // }
-
-  // makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | ChainOp>) {
-  //   this.setMap("sequencer", conf, makeOpSequencer(conf, sel_fwd, sel_back, start_ops));
-  // }
 
   // will return true if an op is mapped to a pedal in any way
   opIsMapped(opName: string): boolean {
@@ -167,6 +134,13 @@ export class MappingsService extends Array<PedalAction> {
   updateInstanceParams(op_id: number, param_id: number, value: number | boolean) {
     const op = this.getInstanceById(op_id);
     op.params[param_id].value = value;
+  }
+
+  deleteInstance(op_id: number) {
+    let rem = this.getInstanceById(op_id);
+    console.log("deleted ", rem);
+    this.op_instances = this.op_instances.filter((el) => el.id != op_id);
+    return rem;
   }
 
   pedalIsMapped(id: number) {

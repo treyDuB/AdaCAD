@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { 
   Performable, CompoundPerformable,
-  SingleOp, forward, CustomStructOp
+  SingleOp, forward, refresh, CustomStructOp
 } from '../model/playerop';
 import { ChainOp } from '../model/chainop';
 import { PlayerState, copyState } from '../model/state';
@@ -39,6 +39,16 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
   ops: Array<SequencerOp> = [];
   selecting: boolean = false;
 
+  onChangePosition = new EventEmitter <number>();
+
+  get pos() { return this._pos; }
+
+  set pos(x: number) {
+    this._pos = x;
+    console.log("new seq position ", this.pos);
+    this.onChangePosition.emit(this._pos);
+  }
+
   /** 
    * @constructor Provide an array of pedals to initialize the 
    * OpSequencer, specifying the select pedal(s) and confirm 
@@ -70,9 +80,9 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
     return (this.p_prog >= 0 && this.p_select_a >= 0);
   }
 
-  get current(): Performable | null {
-    if (this._pos == -1) return null;
-    return this.ops[this._pos];
+  get current(): Performable {
+    if (this.pos == -1) return refresh;
+    return this.ops[this.pos];
   }
 
   mapPedal(id: number, role: 'fwd' | 'sel-next' | 'sel-back') {
@@ -110,11 +120,11 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
       res.weaving = false;
       if (this.ops.length > 0) {
         if (n == this.p_select_a) {
-          this._pos = (this._pos + 1) % this.ops.length;
+          this.pos = (this.pos + 1) % this.ops.length;
         } else if (n == this.p_select_b) {
-          this._pos = (this._pos - 1) % this.ops.length;
+          this.pos = (this.pos - 1) % this.ops.length;
         }
-        // console.log(this._pos);
+        // console.log(this.pos);
         // console.log(this.current);
         return (<Performable> this.current).perform(res);
       } else {
@@ -125,22 +135,22 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
 
   addOp(o: SequencerOp) {
     this.ops.push(o);
-    // if (this._pos < 0) this._pos = 0;
+    // if (this.pos < 0) this.pos = 0;
     console.log(o);
     return this.ops.length - 1;
   }
 
   removeOp() {
     this.ops.pop();
-    if (this.ops.length == 0) this._pos = -1;
-    if (this._pos == this.ops.length) this._pos--;
+    if (this.ops.length == 0) this.pos = -1;
+    if (this.pos == this.ops.length) this.pos--;
   }
 
   /** Deletes the operation at position x and returns the removed operation. */
   delOpAt(x: number) {
     let rem = this.ops.splice(x, 1)[0];
-    if (this.ops.length == 0) this._pos = -1;
-    if (this._pos >= x) { this._pos--; }
+    if (this.ops.length == 0) this.pos = -1;
+    if (this.pos >= x) { this.pos--; }
     return rem;
   }
 
@@ -159,7 +169,7 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
       }
     }
 
-    if (this._pos >= x) { this._pos++; }
+    if (this.pos >= x) { this.pos++; }
   }
 }
 
@@ -186,7 +196,6 @@ export class SequencerService extends OpSequencer {
   chains: Array<ChainIndex> = []; // a number pointing to index in sequencer ops
 
   get active() { return (this.readyToWeave ? true : false); }
-  get pos() { return this._pos; }
 
   constructor(
     public pedals: PedalsService,
@@ -205,7 +214,8 @@ export class SequencerService extends OpSequencer {
 
   nextOp() {
     if (this.ops.length > 0) {
-      this._pos = (this._pos + 1) % this.ops.length;
+      if (this.pos < 0) { this.pos = 0; }
+      else { this.pos = (this.pos + 1) % this.ops.length; }
       console.log(this.current);
       return this.current;
     }
@@ -213,8 +223,8 @@ export class SequencerService extends OpSequencer {
 
   prevOp() {
     if (this.ops.length > 0) {
-      if (this._pos < 0) { this._pos = this.ops.length - 1; }
-      else { this._pos = (this._pos - 1) % this.ops.length; }
+      if (this.pos < 0) { this.pos = this.ops.length - 1; }
+      else { this.pos = (this.pos - 1) % this.ops.length; }
       return this.current;
     }
   }
@@ -229,8 +239,8 @@ export class SequencerService extends OpSequencer {
         this.insertOpAt(this.ops[a], b+1);
         this.delOpAt(a);
       }
-      if (this._pos == a) { this._pos = b; }
-      if (this._pos == b) { this._pos++; }
+      if (this.pos == a) { this.pos = b; }
+      if (this.pos == b) { this.pos++; }
     }
   }
 
@@ -244,7 +254,7 @@ export class SequencerService extends OpSequencer {
   /** Add a single operation to the end of the sequencer. */
   addSingleOp(o: SequencerOp) {
     if (this.active) {
-      console.log(o);
+      // console.log(o);
       // this.map.getMap(0);
       // this.map.createOpInstance(o);
       // console.log(opInstance);
@@ -276,8 +286,13 @@ export class SequencerService extends OpSequencer {
     console.log(this.ops);
   }
 
-  updateParams(op_id: number, param_id: number, value: number | boolean) {
-    
+  findOp(id: number) {
+    return this.ops.findIndex((el) => el.id == id);
+  }
+
+  removeOpById(id: number) {
+    console.log("removing id: ", id);
+    this.ops = this.ops.filter((el) => el.id != id);
   }
 
 }
