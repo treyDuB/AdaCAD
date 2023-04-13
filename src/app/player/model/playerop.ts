@@ -31,27 +31,15 @@ export const defaultPerform = (init: PlayerState) => {
 /** A Performable whose effect is determined by the combination of other perform functions. */
 export interface CompoundPerformable extends Performable {
   ops: Array<Performable>;
-  addOp: (o: PlayerOp) => any;
+  addOp: (o: Performable) => any;
   removeOp: () => any;
   delOpAt: (x: number) => any;
-  insertOpAt: (o: PlayerOp, x: number) => any;
-}
-
-export interface PlayerOpProperties {
-  id: number,
-  classifier?: PlayerOpClassifier,
-  name: string,
-  struct_id?: number,
-  dx?: string,
-  params?: GenericOp["params"],
-  weavingOnly?: boolean,
-  chain_check?: number,
-  custom_check?: number,
+  insertOpAt: (o: Performable, x: number) => any;
 }
 
 
 /** Mixer-like parameterized operations. Each operation's base can be loaded into multiple instances with unique parameters. */
-export interface SingleOpBase extends Performable, PlayerOpProperties {
+export interface SingleOpTemplate extends Performable {
   id: number,
   classifier: PlayerOpClassifier,
   name: string,
@@ -59,26 +47,53 @@ export interface SingleOpBase extends Performable, PlayerOpProperties {
   params: Array<OperationParam>,
 }
 
-/** A single instance of an operation and its parameters. */
-export interface SingleOpInstance extends Performable, PlayerOpProperties {
+export interface CustomStructOp extends Performable {
   id: number,
+  classifier: 'struct',
   name: string,
-  op: SingleOpBase,
+  gen_name?: string, /** automatically generated draft name */
   params: Array<OperationParam>,
-  perform: SingleOpBase["perform"],
+  struct_id: number,
+  custom_check: number,
 }
 
-export type SingleOp = SingleOpInstance;
+export type OpTemplate = SingleOpTemplate | CustomStructOp;
 
-export function newOpInstance(base: SingleOpBase): SingleOpInstance {
+interface BaseOpInstance extends Performable {
+  id: number,
+  name: string,
+  template: Performable,
+  params: Array<OperationParam>,
+}
+
+/** A single instance of an operation and its parameters. */
+export interface SingleOpInstance extends BaseOpInstance {
+  id: number,
+  name: string,
+  template: SingleOpTemplate,
+  perform: SingleOpTemplate["perform"],
+}
+
+export interface StructOpInstance extends BaseOpInstance {
+  id: number,
+  classifier: 'struct',
+  template: CustomStructOp,
+  perform: CustomStructOp["perform"],
+}
+
+// export type SingleOp = SingleOpInstance;
+export type OpInstance = SingleOpInstance | StructOpInstance | BaseOpInstance;
+
+export function newOpInstance(base: SingleOpTemplate | CustomStructOp): OpInstance {
   const inst = {
     id: utilInstance.generateId(8),
     name: base.name,
-    op: base, 
+    classifier: base.classifier,
+    template: base, 
     params: cloneDeep(base.params),
     perform: (init: PlayerState) => { 
       console.log(inst.params);
-      return inst.op.perform(init, getParamVals(inst.params)); 
+      return inst.template.perform(init, getParamVals(inst.params)); 
     }
   };
   // inst.perform = function(init: PlayerState, params?: Array<ParamValue>) {
@@ -91,17 +106,7 @@ export function newOpInstance(base: SingleOpBase): SingleOpInstance {
   return inst;
 }
 
-export interface CustomStructOp extends Performable, PlayerOpProperties {
-  id: number,
-  classifier: 'seed',
-  name: string,
-  struct_id: number,
-  custom_check: number,
-}
-
-export type PlayerOp = (SingleOpBase | SingleOp | ChainOp | CustomStructOp); // | PlayerOpProperties;
-
-export function getParamVals(params: GenericOp["params"]): Array<ParamValue> {
+export function getParamVals(params: Array<OperationParam>): Array<ParamValue> {
   if (!params || params.length == 0) {
     return [] as Array<ParamValue>;
   }
@@ -109,7 +114,7 @@ export function getParamVals(params: GenericOp["params"]): Array<ParamValue> {
 }
 
 /** @const forward a player-specific function to progress through the draft */
-export const forward: SingleOpBase = {
+export const forward: SingleOpTemplate = {
   id: -1,
   name: 'forward',
   classifier: 'prog',
@@ -131,7 +136,7 @@ export const forward: SingleOpBase = {
 }
 
 /** @const refresh a player-specific function to progress through the draft (re-sends the row to give more time) */
-export const refresh: SingleOpBase = {
+export const refresh: SingleOpTemplate = {
   id: -1,
   name: 'refresh',
   classifier: 'prog',
@@ -140,7 +145,7 @@ export const refresh: SingleOpBase = {
 }
 
 /** @const reverse a player-specific function to progress backwards through the draft */
-export const reverse: SingleOpBase = {
+export const reverse: SingleOpTemplate = {
   id: -1,
   name: 'reverse',
   classifier: 'prog',
@@ -161,6 +166,8 @@ export const reverse: SingleOpBase = {
   }
 }
 
+export type ProgressOp = OpTemplate | OpInstance & { name: 'forward' | 'refresh' | 'reverse' };
+
 export function playerOpFrom(op: GenericOp, params?: Array<ParamValue>) {
   let player_params = cloneDeep(op.params);
   if (params) {
@@ -168,7 +175,7 @@ export function playerOpFrom(op: GenericOp, params?: Array<ParamValue>) {
       el.value = params[i];
     });
   }
-  var p: SingleOpBase = {
+  var p: SingleOpTemplate = {
     id: -1, 
     name: op.name,
     classifier: op.classifier.type,
@@ -201,6 +208,9 @@ export function playerOpFrom(op: GenericOp, params?: Array<ParamValue>) {
   
   return p;
 }
+
+export type PlayerOp = OpTemplate;
+
 
 
 /** 

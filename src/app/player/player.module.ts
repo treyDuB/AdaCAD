@@ -8,10 +8,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { OpSequencerComponent } from './op-sequencer/op-sequencer.component';
 import { WeavingStateComponent } from './weaving-state/weaving-state.component';
 import { PlayerComponent } from './player.component';
-import { VirtualPedalsComponent } from './virtual-pedals/virtual-pedals.component';
+import { VirtualPedalsComponent } from './weaving-state/virtual-pedals/virtual-pedals.component';
 import { PlaybackComponent } from './playback/playback/playback.component';
-import { Browser } from 'protractor';
 import { OperationComponent } from './op-sequencer/operation/operation.component';
+import { ChainOpComponent } from './op-sequencer/operation/chain-op/chain-op.component';
 
 @NgModule({
   declarations: [

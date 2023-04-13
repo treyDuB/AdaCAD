@@ -1,15 +1,28 @@
 /** COPY-PASTED FROM MIXER PALETTE OPERATION SUB-COMPONENT */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { OpSequencer, SequencerOp } from '../../provider/sequencer.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { OpSequencer, SequencerOp, SequencerService } from '../../provider/sequencer.service';
 import { MatMenu } from '@angular/material/menu';
+
+/** events that an OperationComponent can emit */
+export type OpComponentEvent = {
+  id: number, /** ID of the op instance */
+  param?: any,
+  val?: any,
+  dir?: boolean
+}
 
 @Component({
   selector: 'app-operation',
   templateUrl: './operation.component.html',
   styleUrls: ['./operation.component.scss']
 })
-export class OperationComponent implements OnInit {
+export class OperationComponent implements OnInit, OnDestroy {
+  /** The Operation's index in sequencer array */
+  @Input() seq_id: number;
+  /** Operation Instance belonging to the component */
+  @Input() op: SequencerOp;
+  @Input() is_selected: boolean;
 
   @Input() id: number; // index in the sequencer
   @Input() name: string;
@@ -19,15 +32,17 @@ export class OperationComponent implements OnInit {
   @Output() duplicateOp = new EventEmitter <any>();
   @Output() shiftOp = new EventEmitter <boolean>(); 
 
-  op: SequencerOp;
-
   constructor() { 
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    
   }
 
   /**

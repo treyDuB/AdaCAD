@@ -4,7 +4,7 @@
  */
 
 import { PlayerState } from "./state";
-import { PlayerOp, SingleOpBase, SingleOp, CustomStructOp } from "./playerop";
+import { OpTemplate, OpInstance, CustomStructOp, ProgressOp } from "./playerop";
 import { ChainOp } from "./chainop";
 import { OpSequencer } from "../provider/sequencer.service";
 import { OperationParam } from "../../mixer/model/operation";
@@ -28,8 +28,8 @@ export type OpControlMode = 'run' | 'toggle' | 'redo';
 export type ParamControlMode = 'inc' | 'dec' | 'rand';
 
 /** operations that will show up as menu options for mapping */
-export type MenuOp = SingleOpBase | CustomStructOp;
-export type PairableOp = SingleOp | CustomStructOp;
+// export type MenuOp = SingleOpTemplate | CustomStructOp;
+// export type PairableOp = OpInstance | CustomStructOp;
 
 /** 
  * Basic combination: 
@@ -40,7 +40,8 @@ export type PairableOp = SingleOp | CustomStructOp;
  */
 export interface SimplePairing extends PedalTarget {
   pedal:  number,
-  op:     PairableOp,
+  // name:   string, // name of the operation that matches icon name
+  op:     OpInstance,
   mode?:  OpControlMode,
 }
 
@@ -49,7 +50,21 @@ export interface ChainPairing extends PedalTarget {
   ch:     ChainOp
 }
 
-export function makeSimplePairing(p: number, op: SingleOp | CustomStructOp): SimplePairing {
+export interface SequencerProg extends PedalTarget {
+  pedal: number,
+  role: 'prog',
+  op: ProgressOp
+}
+
+export interface SequencerSelect extends PedalTarget {
+  pedal: number,
+  role: 'sel',
+  dir: boolean
+}
+
+export type SequencerMapping = SequencerProg | SequencerSelect;
+
+export function makeSimplePairing(p: number, op: OpInstance): SimplePairing {
   return {
     pedal: p,
     name: op.name,
@@ -67,10 +82,32 @@ export function makeChainPairing(p: number, ch: ChainOp): ChainPairing {
   }
 }
 
+type SeqMapOptions = {
+  op?: OpInstance,
+  dir?: boolean,
+  seq?: number | OpSequencer
+}
+
+export function mapToSequencer(p: number, role: 'sel' | 'prog', opts: SeqMapOptions): SequencerMapping {
+  let m: SequencerMapping;
+  if (role === 'sel') {
+    m = <SequencerSelect>{ pedal: p, role: role };
+    m.name = (opts.dir) ? 'next' : 'prev';
+    m.dir = <boolean> opts.dir;
+    m.perform = (<OpSequencer> opts.seq)["perform"];
+  } else {
+    m = <SequencerProg>{ pedal: p, role: role };
+    let op = <OpInstance> opts.op;
+    m.name = op.name;
+    m.perform = op["perform"];
+  }
+  return m;
+}
+
 export interface ParamControl extends PedalTarget {
-  op: SingleOp,
+  op: OpInstance,
   mode: ParamControlMode,
-  perform: SingleOp["perform"],
+  perform: OpInstance["perform"],
 }
 
 // export type PedalOpMapping = Array<PedalAction>;

@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Pedal, PedalsService } from './pedals.service';
 import { PlayerService } from '../player.service';
-import { SingleOp, SingleOpBase, PlayerOp, CustomStructOp,
-newOpInstance } from '../model/playerop';
+import { SingleOpTemplate, OpTemplate as MenuOp, CustomStructOp,
+newOpInstance, OpInstance } from '../model/playerop';
 import { ChainOp } from '../model/chainop';
 import { SequencerService } from './sequencer.service';
-import { MenuOp, SimplePairing, makeSimplePairing, MappingShapes, PedalAction } from '../model/mapping';
+import { SimplePairing, makeSimplePairing, MappingShapes, PedalAction } from '../model/maptypes';
 
 type MappingIndex = {
   [m in keyof MappingShapes]: Array<PedalAction>;//Array<MappingShapes[m]>;
 }
-
 
 function newMapIndex(): MappingIndex {
   return {
@@ -37,7 +36,8 @@ function newMapIndex(): MappingIndex {
 export class MappingsService extends Array<PedalAction> {
   // pedals: Array<Pedal>;
   ops: Array<MenuOp> = [];
-  op_instances: Array<SingleOp> = [];
+  op_instances: Array<OpInstance> = [];
+  op_chains: Array<ChainOp> = [];
   availPedals: Array<number>;
   
   // where all of the actual OpPairing, OpChain, OpSequencer objects end up so they are only created once
@@ -51,19 +51,6 @@ export class MappingsService extends Array<PedalAction> {
       this.ops = [];
       this.op_instances = [];
     }
-
-  // getMapOptions(p: number): Array<MenuOp> {
-  //   return this.ops;
-  // }
-
-  // onAddPedal(p: Pedal) {
-  //   this.availPedals.push(p.id);
-  // }
-
-  // onRemPedal() {
-  //   // this.pedals.pop();
-  //   this.availPedals.filter((id) => id != this.pedals.length);
-  // }
 
   // register an operation from the Player to the options for mapping
   addMenuOperation(o: MenuOp) {
@@ -88,7 +75,6 @@ export class MappingsService extends Array<PedalAction> {
     console.log(this.ops);
     let o = this.createOpInstance(this.getOp(opName));
     console.log(o);
-    // let thisOp = this.unpairedOps.splice(o, 1);
     this.setMap(id, makeSimplePairing(id, o));
   }
 
@@ -105,26 +91,6 @@ export class MappingsService extends Array<PedalAction> {
     }
   }
 
-  // chainArray(id: number, ops: Array<string>) {
-  //   let op_array = ops.map((name) => this.ops[this.ops.findIndex((op) => op.name == name)]);
-  //   if (this.pedalIsChained(id)) { 
-  //     // if pedal already has a chain, add ops to the chain
-  //     let curr_ops = (<ChainOp> this.getMap(id)).ops;
-  //     this.setMap(id, makeChainOp(curr_ops.concat(op_array), id));
-  //   } else if (this.pedalIsPaired(id)) {
-  //     // if pedal is paired, you can turn it into a chain
-  //     let first_op = (<SimplePairing> this.getMap(id)).op;
-  //     this.setMap(id, makeChainOp([first_op].concat(op_array), id));
-  //   } else {
-  //     // pedal doesn't have anything mapped, just add a new chain
-  //     this.setMap(id, makeChainOp(op_array, id));
-  //   }
-  // }
-
-  // makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SingleOp | ChainOp>) {
-  //   this.setMap("sequencer", conf, makeOpSequencer(conf, sel_fwd, sel_back, start_ops));
-  // }
-
   // will return true if an op is mapped to a pedal in any way
   opIsMapped(opName: string): boolean {
     // let allMaps = this.index["roulette"].concat(this.index["chain"], this.index["pairing"]);
@@ -140,25 +106,18 @@ export class MappingsService extends Array<PedalAction> {
     return res;
   }
 
-  createOpInstance(op: MenuOp): SingleOp | CustomStructOp
-  // createOpInstance(name: string): SingleOp | CustomStructOp 
-  // createOpInstance(opOrName: MenuOp | string) 
+  createOpInstance(op: MenuOp): OpInstance
   {
-    console.log(op);
-    if (op.struct_id > 0) {
-      return <CustomStructOp> op;
-    } else {
-      const newInstance = newOpInstance(<SingleOpBase> op)
-      this.op_instances.push(newInstance)
-      return newInstance;
-    }
+    const newInstance = newOpInstance(<SingleOpTemplate> op)
+    this.op_instances.push(newInstance)
+    return newInstance;
   }
 
   getInstanceById(op_id: number) {
     const res = this.op_instances.filter((el) => (el.id == op_id));
     if (res.length == 0) {
       console.log("could not find op instance id ", op_id);
-      return <SingleOp> undefined;
+      return <OpInstance> undefined;
     } else {
       return res[0];
     }
@@ -167,6 +126,13 @@ export class MappingsService extends Array<PedalAction> {
   updateInstanceParams(op_id: number, param_id: number, value: number | boolean) {
     const op = this.getInstanceById(op_id);
     op.params[param_id].value = value;
+  }
+
+  deleteInstance(op_id: number) {
+    let rem = this.getInstanceById(op_id);
+    console.log("deleted ", rem);
+    this.op_instances = this.op_instances.filter((el) => el.id != op_id);
+    return rem;
   }
 
   pedalIsMapped(id: number) {

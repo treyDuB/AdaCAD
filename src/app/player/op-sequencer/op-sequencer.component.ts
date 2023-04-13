@@ -1,11 +1,19 @@
-import { Component, OnInit, ViewChild, Input, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ViewContainerRef, ViewRef } from '@angular/core';
 import { PlayerService } from '../player.service';
 import { PedalsService } from '../provider/pedals.service';
-import { SequencerService } from '../provider/sequencer.service';
+import { OpTemplate as MenuOp } from '../model/playerop';
+import { SequencerOp, SequencerService } from '../provider/sequencer.service';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { OperationComponent } from './operation/operation.component';
 import { MappingsService } from '../provider/mappings.service';
-import { MenuOp } from '../model/mapping';
+import { Subscription } from 'rxjs';
+
+interface SequencerRef {
+  id: number,
+  ref: ViewRef,
+  comp: OperationComponent,
+  inst: SequencerOp,
+}
 
 @Component({
   selector: 'app-op-sequencer',

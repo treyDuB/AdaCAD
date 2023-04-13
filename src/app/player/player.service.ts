@@ -6,10 +6,9 @@ import { Draft } from '../core/model/datatypes';
 import { BuildableOperation as GenericOp, OpInput, NumParam
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
-import { PlayerOp, playerOpFrom, forward, refresh, reverse, SingleOpBase, CustomStructOp
+import { PlayerOp, OpTemplate as MenuOp, playerOpFrom, forward, refresh, reverse, SingleOpTemplate, CustomStructOp
 } from './model/playerop';
 import { PlayerState, WeavingPick, copyState } from './model/state';
-import { MenuOp } from './model/mapping';
 import { MappingsService } from './provider/mappings.service';
 import { PedalsService, Pedal } from './provider/pedals.service';
 import { SequencerService } from './provider/sequencer.service';
@@ -93,7 +92,7 @@ export class PlayerService {
     // }
     // mappings.addMenuOperation(tile);
 
-    const chaos: SingleOpBase = {
+    const chaos: SingleOpTemplate = {
       id: -1,
       name: 'chaos',
       classifier: 'pipe',
@@ -237,7 +236,7 @@ export class PlayerService {
     console.log(ops);
     if (ops.length == 0) return false;
     return ops
-      .map((el) => { return el.struct_id == d.id})
+      .map((el) => { return (<CustomStructOp> el).struct_id == d.id})
       .reduce((a, b) => { return a || b; });
   }
 
@@ -265,8 +264,9 @@ export class PlayerService {
       id: d.id,
       name: d.gen_name,
       struct_id: d.id,
+      params: [],
       custom_check: 1,
-      classifier: 'seed',
+      classifier: 'struct',
       perform: (init: PlayerState) => {
         let res = copyState(init);
         res.draft = d;

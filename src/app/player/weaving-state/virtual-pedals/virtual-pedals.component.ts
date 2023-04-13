@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { PedalsService } from '../provider/pedals.service';
-import { PlayerService } from '../player.service';
+import { PedalsService } from '../../provider/pedals.service';
+import { PlayerService } from '../../player.service';
 
 /**
  * @class

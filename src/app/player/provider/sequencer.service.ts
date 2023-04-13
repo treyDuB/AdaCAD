@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { 
   Performable, CompoundPerformable,
-  SingleOp, forward, CustomStructOp
+  OpInstance as SingleOp, forward, refresh, CustomStructOp
 } from '../model/playerop';
 import { ChainOp } from '../model/chainop';
 import { PlayerState, copyState } from '../model/state';
@@ -9,7 +9,6 @@ import { PlayerState, copyState } from '../model/state';
 import { PedalsService } from './pedals.service';
 import { min } from 'lodash';
 import { MappingsService } from './mappings.service';
-import { MenuOp } from '../model/mapping';
 
 /** 
  * each chain op in the sequencer has an ID and 
@@ -20,8 +19,8 @@ interface ChainIndex {
   pos: number, // position in ops array
 }
 
-export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
-
+export type SequencerOp = ChainOp | SingleOp;
+type OpInstanceID = number;
 
 /**
  * Sequencer:
@@ -38,6 +37,16 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
   _pos: number = -1;
   ops: Array<SequencerOp> = [];
   selecting: boolean = false;
+
+  onChangePosition = new EventEmitter <number>();
+
+  get pos() { return this._pos; }
+
+  set pos(x: number) {
+    this._pos = x;
+    // console.log("new seq position ", this.pos);
+    this.onChangePosition.emit(this._pos);
+  }
 
   /** 
    * @constructor Provide an array of pedals to initialize the 
@@ -116,13 +125,14 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
         }
         // console.log(this._pos);
         // console.log(this.current);
-        return (<Performable> this.current).perform(res);
+        return this.current.perform(res);
       } else {
         return Promise.resolve(res); // we really can't do anything without any operations on the sequencer
       }
     }
   }
 
+  /** Adds an operation to the end of the sequencer */
   addOp(o: SequencerOp) {
     this.ops.push(o);
     // if (this._pos < 0) this._pos = 0;
@@ -130,6 +140,7 @@ export type SequencerOp = ChainOp | SingleOp | CustomStructOp;
     return this.ops.length - 1;
   }
 
+  /** Removes the last operation in the sequencer */
   removeOp() {
     this.ops.pop();
     if (this.ops.length == 0) this._pos = -1;
@@ -186,7 +197,6 @@ export class SequencerService extends OpSequencer {
   chains: Array<ChainIndex> = []; // a number pointing to index in sequencer ops
 
   get active() { return (this.readyToWeave ? true : false); }
-  get pos() { return this._pos; }
 
   constructor(
     public pedals: PedalsService,
@@ -205,8 +215,9 @@ export class SequencerService extends OpSequencer {
 
   nextOp() {
     if (this.ops.length > 0) {
-      this._pos = (this._pos + 1) % this.ops.length;
-      console.log(this.current);
+      if (this.pos < 0) { this.pos = 0; }
+      else { this.pos = (this.pos + 1) % this.ops.length; }
+      // console.log(this.current);
       return this.current;
     }
   }
@@ -243,23 +254,7 @@ export class SequencerService extends OpSequencer {
 
   /** Add a single operation to the end of the sequencer. */
   addSingleOp(o: SequencerOp) {
-    if (this.active) {
-      console.log(o);
-      // this.map.getMap(0);
-      // this.map.createOpInstance(o);
-      // console.log(opInstance);
-      // o.chain_check = -1;
-      this.addOp(o);
-      /** if this is the first op l
-       * 3oaded into the player, run the op so that updates the starting draft */
-      // if (this.ops.length == 1) {
-      //   this.pedals.emit('pedal-step', this.p_select_a);
-      // }
-      // console.log(o);
-      // console.log(this.seq);
-    } else {
-      console.log('no sequencer to add to!');
-    }
+    this.addOp(o);
   }
 
   /** Add a new chain operation to the sequencer. */
@@ -277,7 +272,17 @@ export class SequencerService extends OpSequencer {
   }
 
   updateParams(op_id: number, param_id: number, value: number | boolean) {
+
+  }
     
+  findOp(id: number) {
+    return this.ops.findIndex((el) => el.id == id);
+  }
+
+  removeOpById(id: number) {
+    console.log("removing op id: ", id);
+    this.ops = this.ops.filter((el) => el.id != id);
+    this.map.deleteInstance(id);
   }
 
 }

@@ -1,20 +1,5 @@
 <div class="operation-container">
-
-  <div id='scale-{{id}}' class="operation-container">
-
-    <div class="top-row" >
-
-      <div class="operation-details">
-        <div class="name">{{op.name}}</div>
-        <button 
-        class="help">
-          <i class="fas fa-question"></i>
-        </button> 
-      </div>
-
-      
-    </div>    
-
+  <div *ngIf="is_selected; else notSelected">
     <div *ngIf="op.chain_check == 1 || op.custom_check == 1; else notChain">
       <div *ngIf="op.chain_check == 1">
         <button 
