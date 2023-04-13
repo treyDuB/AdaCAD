@@ -250,8 +250,6 @@ export class PlayerService {
     }
     this.state.draft = d;
     this.state.row = 0;
-    // console.log("player has active draft");
-    // console.log("draft is ", this.draft);
     console.log("draft set ", this.state);
   }
 
@@ -277,8 +275,8 @@ export class PlayerService {
     return structOp;
   }
 
-  // e is a string = op.name
-  setPedalOp(e: any, p: Pedal) {
+  // e = op.name
+  setPedalOp(e: string, p: Pedal) {
     console.log(e, p);
     if (this.mappings.pedalIsPaired(p.id)) {
       this.mappings.unmap(p.id);

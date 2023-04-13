@@ -79,9 +79,9 @@ type OpInstanceID = number;
     return (this.p_prog >= 0 && this.p_select_a >= 0);
   }
 
-  get current(): Performable | null {
-    if (this._pos == -1) return null;
-    return this.ops[this._pos];
+  get current(): Performable {
+    if (this.pos == -1) return refresh;
+    return this.ops[this.pos];
   }
 
   mapPedal(id: number, role: 'fwd' | 'sel-next' | 'sel-back') {
@@ -119,11 +119,11 @@ type OpInstanceID = number;
       res.weaving = false;
       if (this.ops.length > 0) {
         if (n == this.p_select_a) {
-          this._pos = (this._pos + 1) % this.ops.length;
+          this.pos = (this.pos + 1) % this.ops.length;
         } else if (n == this.p_select_b) {
-          this._pos = (this._pos - 1) % this.ops.length;
+          this.pos = (this.pos - 1) % this.ops.length;
         }
-        // console.log(this._pos);
+        // console.log(this.pos);
         // console.log(this.current);
         return this.current.perform(res);
       } else {
@@ -135,7 +135,7 @@ type OpInstanceID = number;
   /** Adds an operation to the end of the sequencer */
   addOp(o: SequencerOp) {
     this.ops.push(o);
-    // if (this._pos < 0) this._pos = 0;
+    // if (this.pos < 0) this.pos = 0;
     console.log(o);
     return this.ops.length - 1;
   }
@@ -143,15 +143,15 @@ type OpInstanceID = number;
   /** Removes the last operation in the sequencer */
   removeOp() {
     this.ops.pop();
-    if (this.ops.length == 0) this._pos = -1;
-    if (this._pos == this.ops.length) this._pos--;
+    if (this.ops.length == 0) this.pos = -1;
+    if (this.pos == this.ops.length) this.pos--;
   }
 
   /** Deletes the operation at position x and returns the removed operation. */
   delOpAt(x: number) {
     let rem = this.ops.splice(x, 1)[0];
-    if (this.ops.length == 0) this._pos = -1;
-    if (this._pos >= x) { this._pos--; }
+    if (this.ops.length == 0) this.pos = -1;
+    if (this.pos >= x) { this.pos--; }
     return rem;
   }
 
@@ -170,7 +170,7 @@ type OpInstanceID = number;
       }
     }
 
-    if (this._pos >= x) { this._pos++; }
+    if (this.pos >= x) { this.pos++; }
   }
 }
 
@@ -224,8 +224,8 @@ export class SequencerService extends OpSequencer {
 
   prevOp() {
     if (this.ops.length > 0) {
-      if (this._pos < 0) { this._pos = this.ops.length - 1; }
-      else { this._pos = (this._pos - 1) % this.ops.length; }
+      if (this.pos < 0) { this.pos = this.ops.length - 1; }
+      else { this.pos = (this.pos - 1) % this.ops.length; }
       return this.current;
     }
   }
@@ -240,8 +240,8 @@ export class SequencerService extends OpSequencer {
         this.insertOpAt(this.ops[a], b+1);
         this.delOpAt(a);
       }
-      if (this._pos == a) { this._pos = b; }
-      if (this._pos == b) { this._pos++; }
+      if (this.pos == a) { this.pos = b; }
+      if (this.pos == b) { this.pos++; }
     }
   }
 

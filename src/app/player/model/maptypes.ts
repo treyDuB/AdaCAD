@@ -1,7 +1,7 @@
 /**
  * MAPPINGS: Ways that Pedals can control things in the 
  * Player, namely Operations
- */
+ */ 
 
 import { PlayerState } from "./state";
 import { OpTemplate, OpInstance, CustomStructOp, ProgressOp } from "./playerop";
@@ -12,8 +12,8 @@ import { OperationParam } from "../../mixer/model/operation";
 /** things that can happen in response to a pedal */
 export interface PedalTarget {
   id?: number,
-  pedal: number,
-  name: string
+  pedal: number, 
+  name: string, // name of the operation that matches icon name
   perform: (init: PlayerState, ...args) => Promise<PlayerState>;
 }
 
@@ -120,5 +120,3 @@ export type MappingShapes = {
 };
 
 export type PedalAction = MappingShapes[keyof MappingShapes];
-
-// export type MappingType = 'pairing' | 'chain' | 'sequencer';

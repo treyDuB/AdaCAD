@@ -53,6 +53,12 @@ export class PlayerComponent implements OnInit {
     icons.addSvgIcon('op-chain', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/chain.svg'));
     icons.addSvgIcon('op-custom', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/custom.svg'));
     
+    icons.addSvgIcon('op-forward', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/forward.svg'));
+    icons.addSvgIcon('op-next', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/next.svg'));
+    icons.addSvgIcon('op-previous', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/previous.svg'));
+    icons.addSvgIcon('op-refresh', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/refresh.svg'));
+    icons.addSvgIcon('op-reverse', sanitizer.bypassSecurityTrustResourceUrl('assets/op_icons/reverse.svg'));
+
     console.log(icons);
   }
 

@@ -16,7 +16,7 @@ import { PlayerState, initState, copyState } from "./state";
 
 import { cloneDeep } from "lodash";
 
-export type PlayerOpClassifier = GenericOp["classifier"]["type"] | 'prog' | 'chain';
+export type PlayerOpClassifier = GenericOp["classifier"]["type"] | 'prog' | 'chain' | 'struct';
 
 /** `Performable` means anything that runs a `perform` function to generate a Draft. */
 export interface Performable { 
@@ -96,13 +96,6 @@ export function newOpInstance(base: SingleOpTemplate | CustomStructOp): OpInstan
       return inst.template.perform(init, getParamVals(inst.params)); 
     }
   };
-  // inst.perform = function(init: PlayerState, params?: Array<ParamValue>) {
-  //   let input_params = params ? params : getParamVals(op.params);
-  //   let res = copyState(init);
-  //   res.draft = pipeOp.perform(init.draft, input_params);
-  //   res.row = (init.row) % wefts(res.draft.drawdown);
-  //   res.pedal = op.name;
-  //   return Promise.resolve(res);
   return inst;
 }
 
@@ -212,50 +205,3 @@ export function playerOpFrom(op: GenericOp, params?: Array<ParamValue>) {
 export type PlayerOp = OpTemplate;
 
 
-
-/** 
- * @type 
- * a TreeOperation is compatible with the player if it takes one or zero draft inputs 
- * and outputs one draft.
- */
-type PlayableTreeOp = TreeOp & 
-  ( { inlets: [ SingleInlet ] } | 
-    { inlets: [] });
-
-/** @function playerOpFromTree (untested) */
-// function playerOpFromTree(op: PlayableTreeOp) {
-//   let perform: PlayerOp["perform"];
-//   let param_input: OpInput = { op_name: op.name, drafts: [], params: getDefaultParams(op), inlet: -1 }
-//   if (op.inlets.length == 0) {
-//     perform = function(init: PlayerState) {
-//       return op.perform([param_input]).then((output) => {
-//         return { 
-//           draft: output[0], 
-//           row: init.row, 
-//           weaving: init.weaving, 
-//           pedal: op.name, 
-//           numPicks: init.numPicks 
-//         };
-//       });
-//     }
-//   } else {
-//     perform = function(init: PlayerState) {
-//       let draft_input: OpInput = { op_name: 'child', drafts: [init.draft], params: [], inlet: 0}
-//       return op.perform([param_input, draft_input]).then((output) => {
-//         return { 
-//           draft: output[0], 
-//           row: init.row, 
-//           weaving: init.weaving,
-//           pedal: op.name,
-//           numPicks: init.numPicks };
-//       });
-//     }
-//   }
-
-//   var p: SingleOpBase = { 
-//     name: op.name,
-//     classifier: '',
-//     perform: perform
-//   }
-//   return p;
-// }

@@ -24,13 +24,12 @@ export class OperationComponent implements OnInit, OnDestroy {
   @Input() op: SequencerOp;
   @Input() is_selected: boolean;
 
-  @Input() id: number; // index in the sequencer
-  @Input() name: string;
-
-  @Output() onOperationParamChange = new EventEmitter <any>(); 
-  @Output() deleteOp = new EventEmitter <any>(); 
-  @Output() duplicateOp = new EventEmitter <any>();
-  @Output() shiftOp = new EventEmitter <boolean>(); 
+  /** event emitter outputs */
+  /** NAMING CONVENTION: onAction */
+  @Output() onOperationParamChange = new EventEmitter <OpComponentEvent>(); 
+  @Output() onDeleteOp = new EventEmitter <OpComponentEvent>(); 
+  @Output() onDuplicateOp = new EventEmitter <OpComponentEvent>();
+  @Output() onShiftOp = new EventEmitter <OpComponentEvent>(); 
 
   constructor() { 
   }
@@ -50,16 +49,24 @@ export class OperationComponent implements OnInit, OnDestroy {
    * @param id an object containing the id of hte parameter that has changed
    * @param value 
    */
-  onParamChange(obj: any){
-    this.onOperationParamChange.emit({id: this.id});
+  updateParam(id: string, value: string){
+    console.log("param updated", id, value);
+    let splitStr = id.split("-");
+    const op_id = parseInt(splitStr[1]);
+    const param_id = parseInt(splitStr[2]);
+    this.onOperationParamChange.emit({id: op_id, param: param_id, val: parseInt(value)});
   }
 
   delete(){
-    this.deleteOp.emit({id: this.id});
+    this.onDeleteOp.emit({id: this.op.id});
   }
 
   duplicate(){
-    this.duplicateOp.emit({id: this.id});
+    this.onDuplicateOp.emit({id: this.op.id});
+  }
+
+  shift(dir: boolean) {
+    this.onShiftOp.emit({id: this.op.id, dir: dir});
   }
  
 }

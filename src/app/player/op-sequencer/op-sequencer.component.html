@@ -2,10 +2,9 @@
   
   <div id="sequencer-container" class="sequencer-block">
     <h2 class="player-field-header">Operation Sequencer </h2>
-    <ng-container #vc></ng-container>
     <div class="operation-sequence">
-      <ng-container *ngFor="let o of seq.ops; index as i">
-        
+      <ng-container #vc></ng-container>
+      <!-- <ng-container *ngFor="let o of seq.ops; index as i">
         <div *ngIf="seq.pos == i; else notSelected">
           <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
             <div *ngIf="o.chain_check == 1">
@@ -94,34 +93,24 @@
             </button>
 
             <ng-container *ngFor="let param of o.params; let j = index">
-        
-              <!-- <app-parameter 
-              [param]='param' 
-              [opid]='id' 
-              [paramid]='i'
-              (onOperationParamChange) = onParamChange($event)></app-parameter> -->
-              <!-- <p>{{ param.name }}</p> -->
               <ng-container  *ngIf="param.type === 'number'">
                 <mat-form-field>
-                    <mat-label class="param-name">{{param.name}}</mat-label>
-                      <input 
-                      matInput
-                      id = "param-{{o.id}}-{{j}}"
-                      [matTooltip]=param.dx
-                      type = "number"
-                      [name]= param.name
-                      [min]= param.min
-                      [max]= param.max
-                      [(value)] = param.value
-                      (change)="updateParam($event.target.id, $event.target.value)"
-                      step = 1
+                  <mat-label class="param-name">{{param.name}}</mat-label>
+                  <input 
+                    matInput
+                    id = "param-{{o.id}}-{{j}}"
+                    [matTooltip]=param.dx
+                    type = "number"
+                    [name]= param.name
+                    [min]= param.min
+                    [max]= param.max
+                    [(value)] = param.value
+                    (change)="updateParam($event.target.id, $event.target.value)"
+                    step = 1
                   >
                 </mat-form-field>
               </ng-container>
-          
-      
             </ng-container>  
-
           </div>
         </mat-menu>
 
@@ -167,7 +156,7 @@
           </div>
         </mat-menu>
 
-      </ng-container>
+      </ng-container> -->
     </div>
   </div>
   

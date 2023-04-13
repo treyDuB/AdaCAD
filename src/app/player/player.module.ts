@@ -20,7 +20,8 @@ import { ChainOpComponent } from './op-sequencer/operation/chain-op/chain-op.com
     WeavingStateComponent,
     VirtualPedalsComponent,
     PlaybackComponent,
-    OperationComponent
+    OperationComponent,
+    ChainOpComponent
   ],
   imports: [
     CommonModule,
