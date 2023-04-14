@@ -5,6 +5,7 @@ import { Draft } from '../../core/model/datatypes';
 import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
 import { PedalsService } from '../provider/pedals.service';
 import { PlaybackService } from '../provider/playback.service';
+import { MappingsService } from '../provider/mappings.service';
 
 /**
  * @class
@@ -32,6 +33,7 @@ export class WeavingStateComponent implements OnInit {
   constructor(
     public pls: PlayerService,
     public pds: PedalsService,
+    public map: MappingsService,
     public pbs: PlaybackService
   ) { 
     this.default_cell = 10;
@@ -58,6 +60,11 @@ export class WeavingStateComponent implements OnInit {
     this.pls.toggleWeaving();
     // console.log("toggle weaving ", this.pls.weaving);
     this.isWeaving.emit(this.pls.weaving);
+  }
+
+  test(){
+    console.log(this.map);
+    return this.map;
   }
 
   /**
