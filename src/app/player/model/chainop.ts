@@ -1,8 +1,12 @@
 /** CHAIN OPS */
 
-import { Performable, CompoundPerformable, SingleOp, PlayerOpClassifier, defaultPerform, CustomStructOp } from "./playerop";
+import { Performable, CompoundPerformable, 
+  OpInstance, PlayerOpClassifier, 
+  BaseOpInstance,
+} from "./playerop";
 import { PlayerState, copyState } from "./state";
-import { ParamValue } from "../../mixer/model/operation";
+import { BaseOp, ParamValue } from "../../mixer/model/operation";
+import utilInstance from "../../core/model/util";
 
 /**
  * Op chain:
@@ -10,8 +14,8 @@ import { ParamValue } from "../../mixer/model/operation";
  * - if pedal, perform() each Op in sequence
  * @param ops   array of Op ID numbers to execute in order
  */
-export class ChainOp implements CompoundPerformable {
-  id?: number;
+export class ChainOp implements CompoundPerformable, BaseOpInstance {
+  id: number;
   classifier: PlayerOpClassifier = 'chain';
   name: string = 'ch';
   params: Array<any> = [];
@@ -21,15 +25,20 @@ export class ChainOp implements CompoundPerformable {
   chain_check: number = 1;
   custom_check: number = -1;
 
-  ops: Array<SingleOp | CustomStructOp> = [];
+  ops: Array<OpInstance> = [];
 
   constructor(p?: number) {
-    if (p) { this.id = p; }
+    this.classifier = 'chain';
+    this.name = 'ch';
+    if (p !== undefined) { this.id = p; }
+    else { this.id = utilInstance.generateId(8); }
   }
 
-  static fromSingleOp(o: SingleOp | CustomStructOp, id?: number) {
+  static fromSingleOp(o: OpInstance, id?: number) {
+    // console.log("input id", id);
     let ch = new ChainOp(id);
     ch.addOp(o);
+    // console.log(ch);
     return ch;
   }
   
@@ -43,7 +52,7 @@ export class ChainOp implements CompoundPerformable {
     return res;
   }
 
-  addOp(op: SingleOp | CustomStructOp) {
+  addOp(op: OpInstance) {
     this.ops.push(op);
     this.name = this.name.concat("-"+op.name);
   }
@@ -56,7 +65,7 @@ export class ChainOp implements CompoundPerformable {
     return this.ops.splice(x, 1)[0];
   }
 
-  insertOpAt(o: SingleOp, x: number) {
+  insertOpAt(o: OpInstance, x: number) {
     let arr: Array<any>;
     if (x > -1) {
       if (x == 0) {

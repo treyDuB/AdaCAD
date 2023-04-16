@@ -197,27 +197,27 @@
 
               <div class="sub-menu">
                 <button mat-stroked-menu-item
-                (click) ="addSequencerOp(op)"
+                (click) ="addSingleOp(op)"
                 class="sub-menu-button">
                   Add to Sequencer
                 </button>
 
                 <button mat-stroked-menu-item
-                (click) ="seq.addChainOp(op)"
+                (click) ="addChainOp(op)"
                 class="sub-menu-button">
                   Add Chain to Sequencer
                 </button>
 
-                <ng-container *ngIf="seq.chains != 0">
+                <!-- <ng-container *ngIf="seq.chains != 0">
                   <button mat-stroked-menu-item
                   [matMenuTriggerFor]="opChains"
                   (click)="$event.stopPropagation();"
                   class="sub-menu-button">
                   Add to Existing Chain
                   </button>
-                </ng-container>
+                </ng-container> -->
                 
-                <mat-menu #opChains="matMenu">
+                <!-- <mat-menu #opChains="matMenu">
                   <div class="sub-menu-chain">
                     <ng-container *ngFor="let ch of seq.chains">
                       <button mat-stroked-menu-item
@@ -226,7 +226,7 @@
                       </button>
                     </ng-container>
                   </div>
-                </mat-menu>
+                </mat-menu> -->
                 
               </div>
 
@@ -269,13 +269,13 @@
 
               <div class="sub-menu">
                 <button mat-stroked-menu-item
-                (click) ="addSequencerOp(op)"
+                (click) ="addSingleOp(op)"
                 class="sub-menu-button">
                   Add to Sequencer
                 </button>
 
                 <button mat-stroked-menu-item
-                (click) ="seq.addChainOp(op)"
+                (click) ="addChainOp(op)"
                 class="sub-menu-button">
                   Add Chain to Sequencer
                 </button>

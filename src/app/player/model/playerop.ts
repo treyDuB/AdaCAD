@@ -16,13 +16,17 @@ import { PlayerState, initState, copyState } from "./state";
 
 import { cloneDeep } from "lodash";
 
+/** classifies operations in the player */
 export type PlayerOpClassifier = GenericOp["classifier"]["type"] | 'prog' | 'chain' | 'struct';
+/** the thing that calls an operation's perform */
+type PerformTrigger = 'pedal' | 'seq' | 'none';
 
 /** `Performable` means anything that runs a `perform` function to generate a Draft. */
 export interface Performable { 
   perform: (init: PlayerState, ...args) => Promise<PlayerState>; 
 }
 
+/** The "do nothing" perform */
 export const defaultPerform = (init: PlayerState) => { 
   let res = copyState(init);
   return Promise.resolve(res);
@@ -59,10 +63,12 @@ export interface CustomStructOp extends Performable {
 
 export type OpTemplate = SingleOpTemplate | CustomStructOp;
 
-interface BaseOpInstance extends Performable {
+export interface BaseOpInstance extends Performable {
   id: number,
   name: string,
-  template: Performable,
+  classifier: OpTemplate['classifier'],
+  trigger?: PerformTrigger,
+  template?: Performable,
   params: Array<OperationParam>,
 }
 

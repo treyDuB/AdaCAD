@@ -1,13 +1,12 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { 
-  Performable, CompoundPerformable,
+  Performable, CompoundPerformable, OpTemplate,
   OpInstance as SingleOp, forward, refresh, CustomStructOp
 } from '../model/playerop';
 import { ChainOp } from '../model/chainop';
 import { PlayerState, copyState } from '../model/state';
 // import { PlayerService } from '../player.service';
 import { PedalsService } from './pedals.service';
-import { min } from 'lodash';
 import { MappingsService } from './mappings.service';
 
 /** 
@@ -121,7 +120,7 @@ type OpInstanceID = number;
         if (n == this.p_select_a) {
           this.pos = (this.pos + 1) % this.ops.length;
         } else if (n == this.p_select_b) {
-          this.pos = (this.pos - 1) % this.ops.length;
+          this.pos = (this.pos + this.ops.length - 1) % this.ops.length;
         }
         // console.log(this.pos);
         // console.log(this.current);
@@ -136,7 +135,7 @@ type OpInstanceID = number;
   addOp(o: SequencerOp) {
     this.ops.push(o);
     // if (this.pos < 0) this.pos = 0;
-    console.log(o);
+    // console.log(o);
     return this.ops.length - 1;
   }
 
@@ -187,6 +186,13 @@ export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?
  * that isn't clunky, but it does let me separate methods
  * that are useful to call in the HTML, from the methods
  * that are less often called in HTML
+ * 
+ * The SequencerService is in charge of tracking what 
+ * operations are in the Sequencer, and where the 
+ * position tracker is pointing. For what the actual 
+ * operations are, the Sequencer's perform function 
+ * updates position, then calls the Mapping service 
+ * to perform the actual operation.
  */
 @Injectable({
   providedIn: 'root'
@@ -194,9 +200,11 @@ export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?
 export class SequencerService extends OpSequencer {
   // seq_array: OpSequencer;
   selecting: boolean = false;
-  chains: Array<ChainIndex> = []; // a number pointing to index in sequencer ops
+  // chains: Array<ChainIndex> = []; // a number pointing to index in sequencer ops
 
   get active() { return (this.readyToWeave ? true : false); }
+  get chains() { return this.map.chains; }
+  get lastOpIndex() { return this.ops.length - 1;}
 
   constructor(
     public pedals: PedalsService,
@@ -217,7 +225,7 @@ export class SequencerService extends OpSequencer {
     if (this.ops.length > 0) {
       if (this.pos < 0) { this.pos = 0; }
       else { this.pos = (this.pos + 1) % this.ops.length; }
-      // console.log(this.current);
+      console.log(this.current);
       return this.current;
     }
   }
@@ -246,27 +254,42 @@ export class SequencerService extends OpSequencer {
   }
 
   /** Shifts the operation at position `x` to an adjacent position by swapping places with its neighbor. If `dir = true`, operation swaps with its right neighbor. If `dir = false`, operation swaps with its left neighbor. */
-  shiftOp(x: number, dir: boolean) {
-    console.log("moving op");
+  shiftOp(x: number, dir: boolean): boolean {
+    console.log("moving op " + x + " in dir " + dir);
     let shift = dir? 1 : -1;
-    this.moveOpTo(x, x+shift);
+    if ((x==0 && shift < 0) || (x==this.lastOpIndex && shift > 0)) { 
+      console.log("can't move out of bounds");
+      return false;
+    } else { 
+      this.moveOpTo(x, x+shift); 
+      return true;
+    }
   }
 
   /** Add a single operation to the end of the sequencer. */
-  addSingleOp(o: SequencerOp) {
-    this.addOp(o);
+  addSingleOp(o: OpTemplate): SingleOp {
+    // console.log(this.map);
+    // console.log(o);
+    const inst = this.map.createOpInstance(o);
+    this.addOp(inst);
+    return inst;
   }
 
   /** Add a new chain operation to the sequencer. */
-  addChainOp(o: SingleOp) { 
-    let ch = ChainOp.fromSingleOp(o);
-    ch.id = this.chains.length;
-    this.chains.push({id: ch.id, pos: this.addOp(ch)});
+  addChainOp(o: OpTemplate): ChainOp { 
+    const ch = this.map.createChainOp(o);
+    this.addOp(ch);
+    return ch;
+    // let ch = ChainOp.fromSingleOp(o);
+    // ch.id = this.map.chains.length;
+    // this.chains.push({id: ch.id, pos: this.addOp(ch)});
+    // this.map.chains.push(ch);
   }
 
   /** Add a single operation onto an existing chain op in the sequencer. */
   addToChain(ch_id: number, o: SingleOp) {
-    const ch = this.ops[this.chains[ch_id].pos] as ChainOp;
+    const ch = this.map.getChain(ch_id);
+    // const ch = this.ops[this.chains[ch_id].pos] as ChainOp;
     ch.addOp(o);
     console.log(this.ops);
   }

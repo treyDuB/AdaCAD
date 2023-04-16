@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Pedal, PedalsService } from './pedals.service';
-import { PlayerService } from '../player.service';
-import { SingleOpTemplate, OpTemplate as MenuOp, CustomStructOp,
+import { SingleOpTemplate, OpTemplate as MenuOp,
 newOpInstance, OpInstance } from '../model/playerop';
 import { ChainOp } from '../model/chainop';
 import { SequencerService } from './sequencer.service';
@@ -45,12 +44,15 @@ export class MappingsService extends Array<PedalAction> {
 
   constructor(
     public pds: PedalsService,
-    private seq: SequencerService,
+    // got rid of sequencer service dependency here because NO CIRCULAR DEPENDENCIES OR THINGS WILL BE WEIRD https://stackoverflow.com/questions/57071850/angular-7-typeerror-service-x-is-not-a-function
   ) { 
-      super();
-      this.ops = [];
-      this.op_instances = [];
-    }
+    super();
+    this.ops = [];
+    this.op_instances = [];
+    this.op_chains = [];
+  }
+
+  get chains() { return this.op_chains; }
 
   // register an operation from the Player to the options for mapping
   addMenuOperation(o: MenuOp) {
@@ -133,6 +135,17 @@ export class MappingsService extends Array<PedalAction> {
     console.log("deleted ", rem);
     this.op_instances = this.op_instances.filter((el) => el.id != op_id);
     return rem;
+  }
+
+  createChainOp(op: MenuOp): ChainOp {
+    let inst = this.createOpInstance(op);
+    const ch = ChainOp.fromSingleOp(inst, this.chains.length);
+    this.op_chains.push(ch);
+    return ch;
+  }
+
+  getChain(id: number) {
+    return this.chains[id];
   }
 
   pedalIsMapped(id: number) {

@@ -12,6 +12,8 @@ import { VirtualPedalsComponent } from './weaving-state/virtual-pedals/virtual-p
 import { PlaybackComponent } from './playback/playback/playback.component';
 import { OperationComponent } from './op-sequencer/operation/operation.component';
 import { ChainOpComponent } from './op-sequencer/operation/chain-op/chain-op.component';
+import { SequencerService } from './provider/sequencer.service';
+import { MappingsService } from './provider/mappings.service';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,10 @@ import { ChainOpComponent } from './op-sequencer/operation/chain-op/chain-op.com
     HttpClientModule,
     BrowserModule,
     MatIconModule
+  ],
+  providers: [
+    SequencerService,
+    MappingsService
   ],
   exports: [
     PlayerComponent

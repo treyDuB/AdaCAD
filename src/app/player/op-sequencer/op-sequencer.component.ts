@@ -1,20 +1,16 @@
 import { Component, OnInit, ViewChild, Input, ViewContainerRef, ViewRef } from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { Subscription } from 'rxjs';
+
+import { OperationComponent, OpComponentEvent } from './operation/operation.component';
+
+import { MappingsService } from '../provider/mappings.service';
 import { PlayerService } from '../player.service';
 import { PedalsService } from '../provider/pedals.service';
-import { OpTemplate as MenuOp } from '../model/playerop';
 import { SequencerOp, SequencerService } from '../provider/sequencer.service';
-import { MatExpansionPanel } from '@angular/material/expansion';
-import { OperationComponent, OpComponentEvent } from './operation/operation.component';
-import { MappingsService } from '../provider/mappings.service';
-import { Subscription } from 'rxjs';
+import { OpTemplate as MenuOp, OpInstance as SingleOp } from '../model/playerop';
+import { ChainOp } from '../model/chainop';
  
-interface SequencerRef {
-  id: number,
-  ref: ViewRef,
-  comp: OperationComponent,
-  inst: SequencerOp,
-}
-
 interface SequencerRef {
   id: number,
   ref: ViewRef,
@@ -69,6 +65,7 @@ export class OpSequencerComponent implements OnInit {
   highlightCurrent() {
     console.log("components in seq ", this.componentRefs);
     console.log("seq service ", this.seq.ops);
+    console.log("current ", this.seq.pos);
     if (this.seq.ops.length > 0) {
       for (let i=0; i < this.seq.ops.length; i++) {
         const ref = this.componentRefs[i];
@@ -93,13 +90,13 @@ export class OpSequencerComponent implements OnInit {
    * @param name the name of the operation this component will perform
    * @returns the OperationComponent created
    */
-  createOperation(op: MenuOp): OperationComponent{
+  createOpComponent(inst: SequencerOp): OperationComponent{
     const opRef = this.vc.createComponent<OperationComponent>(OperationComponent);
+    console.log(inst);
 
-    const inst = this.map.createOpInstance(op);
+    // const inst = this.map.createOpInstance(op);
     opRef.instance.op = inst;
     opRef.instance.seq_id = inst.id;
-    this.seq.addSingleOp(inst);
     this.setSequencerSubscriptions(opRef.instance);
 
     let o: SequencerRef = {
@@ -109,8 +106,21 @@ export class OpSequencerComponent implements OnInit {
       ref: opRef.hostView,
     }
     this.componentRefs.push(o);
+    console.log(o);
 
     return opRef.instance;
+  }
+
+  addChainOp(op: MenuOp) {
+    const inst = this.seq.addChainOp(op);
+    this.createOpComponent(inst);
+  }
+
+  addSingleOp(op: MenuOp) {
+    // console.log(this.map);
+    const inst = this.seq.addSingleOp(op);
+    console.log(inst);
+    this.createOpComponent(inst);
   }
 
   findOpIndex(id: number) {
@@ -150,24 +160,18 @@ export class OpSequencerComponent implements OnInit {
     const ref = this.getSequencerRef(obj.id);
     let x = this.vc.indexOf(ref.ref);
     let dir = (obj.dir) ? 1 : -1;
-    this.vc.move(ref.ref, x+dir);
+    if (this.seq.shiftOp(x, obj.dir)) {
+      this.vc.move(ref.ref, x+dir);
+    }
     
     // if (x > 0) {
-    this.seq.shiftOp(x, obj.dir);
+    console.log(x);
       // this.vc.move()
     // }
   }
 
   paramUpdated(obj: any) {
     this.map.updateInstanceParams(obj.id, obj.param, obj.val);
-  }
-
-  addSequencerOp(op: MenuOp) {
-    // // console.log(op);
-    // let inst = this.map.createOpInstance(op);
-    // // console.log(inst);
-    // this.seq.addSingleOp(inst);
-    this.createOperation(op);
   }
 
   // ALL METHODS BELOW THIS IS FROM BEFORE DYNAMIC COMPONENTS, REPLACE EVENTUALLY
