@@ -67,43 +67,51 @@
 
   <mat-menu #seqMenu="matMenu">
     <div class="sub-menu">
-      <button mat-stroked-menu-item
-        class="sub-menu-button"
-        (click) ="shift(false)">
-        Shift Left
-      </button>
+      <div class="sub-menu-top">
+        <div class="sub-menu-lr">
+          <button mat-stroked-menu-item
+          class="sub-menu-button"
+            (click) ="shift(false)">
+            Shift Left
+          </button>
 
-      <button mat-stroked-menu-item
-        class="sub-menu-button"
-        (click) ="shift(true)">
-        Shift Right
-      </button>
+          <button mat-stroked-menu-item
+            class="sub-menu-button"
+            (click) ="shift(true)">
+            Shift Right
+          </button>
+        </div>
+        
+        <button mat-stroked-menu-item
+          class="sub-menu-button"
+          (click) ="delete()">
+          Remove Operation
+        </button>
+      </div>
       
-      <button mat-stroked-menu-item
-        class="sub-menu-button"
-        (click) ="delete()">
-        Remove from Sequencer
-      </button>
-
-      <ng-container *ngFor="let param of op.params; let i = index">
-        <ng-container  *ngIf="param.type === 'number'">
-          <mat-form-field>
-            <mat-label class="param-name">{{param.name}}</mat-label>
-            <input 
-              matInput
-              id = "param-{{op.id}}-{{i}}"
-              [matTooltip] = param.dx
-              type = "number"
-              [name]= param.name
-              [min]= param.min
-              [max]= param.max
-              [(value)] = param.value
-              (change)="updateParam($event.target.id, $event.target.value)"
-              step = 1
-            >
-          </mat-form-field>
-        </ng-container>
-      </ng-container>  
+      <div class="sub-menu-rest">
+        <ng-container *ngFor="let param of op.params; let i = index">
+          <ng-container  *ngIf="param.type === 'number'">
+            <mat-form-field
+            (click)="$event.stopPropagation();">
+              <mat-label class="param-name">{{param.name}}</mat-label>
+              <input 
+                matInput
+                id = "param-{{op.id}}-{{i}}"
+                [matTooltip] = param.dx
+                type = "number"
+                [name]= param.name
+                [min]= param.min
+                [max]= param.max
+                [(value)] = param.value
+                (change)="updateParam($event.target.id, $event.target.value)"
+                step = 1
+              >
+            </mat-form-field>
+          </ng-container>
+        </ng-container>  
+      </div>
+      
     </div>
   </mat-menu>
 </div>  
