@@ -9,15 +9,6 @@ import { PlayerState, copyState } from '../model/state';
 import { PedalsService } from './pedals.service';
 import { MappingsService } from './mappings.service';
 
-/** 
- * each chain op in the sequencer has an ID and 
- * its position in the sequencer 
- */
-interface ChainIndex {
-  id: number,
-  pos: number, // position in ops array
-}
-
 export type SequencerOp = ChainOp | SingleOp;
 type OpInstanceID = number;
 
@@ -295,7 +286,7 @@ export class SequencerService extends OpSequencer {
   }
 
   updateParams(op_id: number, param_id: number, value: number | boolean) {
-
+    this.map.updateInstanceParams(op_id, param_id, value);
   }
     
   findOp(id: number) {

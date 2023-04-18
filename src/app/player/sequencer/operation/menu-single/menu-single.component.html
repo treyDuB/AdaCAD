@@ -1,0 +1,48 @@
+<mat-menu #seqMenu="matMenu">
+  <div class="sub-menu">
+    <div class="sub-menu-top">
+      <div class="sub-menu-lr">
+        <button mat-stroked-menu-item
+        class="sub-menu-button"
+          (click) ="seq.shiftOp(index, false)">
+          Shift Left
+        </button>
+
+        <button mat-stroked-menu-item
+          class="sub-menu-button"
+          (click) ="seq.shiftOp(index, true)">
+          Shift Right
+        </button>
+      </div>
+      
+      <button mat-stroked-menu-item
+        class="sub-menu-button"
+        (click) ="seq.delOpAt(index)">
+        Remove Operation
+      </button>
+    </div>
+    
+    <div class="sub-menu-rest">
+      <ng-container *ngFor="let param of op.params; let i = index">
+        <ng-container  *ngIf="param.type === 'number'">
+          <mat-form-field
+          (click)="$event.stopPropagation();">
+            <mat-label class="param-name">{{param.name}}</mat-label>
+            <input 
+              matInput
+              id = "param-{{op.id}}-{{i}}"
+              [matTooltip] = param.dx
+              type = "number"
+              [name]= param.name
+              [min]= param.min
+              [max]= param.max
+              [(value)] = param.value
+              (change)="seq.updateParams(op.id, i, param.value)"
+              step = 1
+            >
+          </mat-form-field>
+        </ng-container>
+      </ng-container>  
+    </div>
+  </div>
+</mat-menu>

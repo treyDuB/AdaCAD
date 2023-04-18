@@ -5,15 +5,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { OpSequencerComponent } from './op-sequencer/op-sequencer.component';
+import { OpSequencerComponent } from './sequencer/sequencer.component';
 import { WeavingStateComponent } from './weaving-state/weaving-state.component';
 import { PlayerComponent } from './player.component';
 import { VirtualPedalsComponent } from './weaving-state/virtual-pedals/virtual-pedals.component';
 import { PlaybackComponent } from './playback/playback/playback.component';
-import { OperationComponent } from './op-sequencer/operation/operation.component';
-import { ChainOpComponent } from './op-sequencer/operation/chain-op/chain-op.component';
+import { OperationComponent } from './sequencer/operation/operation.component';
+import { ChainOpMenuComponent } from './sequencer/operation/menu-chain/menu-chain.component';
 import { SequencerService } from './provider/sequencer.service';
 import { MappingsService } from './provider/mappings.service';
+import { OpButtonComponent } from './sequencer/operation/op-button/op-button.component';
+import { SingleOpMenuComponent } from './sequencer/operation/menu-single/menu-single.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { MappingsService } from './provider/mappings.service';
     VirtualPedalsComponent,
     PlaybackComponent,
     OperationComponent,
-    ChainOpComponent
+    ChainOpMenuComponent,
+    OpButtonComponent,
+    SingleOpMenuComponent
   ],
   imports: [
     CommonModule,

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OpSequencerComponent } from './op-sequencer.component';
+import { SingleOpMenuComponent } from './menu-single.component';
 
-describe('OpSequencerComponent', () => {
-  let component: OpSequencerComponent;
-  let fixture: ComponentFixture<OpSequencerComponent>;
+describe('SingleMenuComponent', () => {
+  let component: SingleOpMenuComponent;
+  let fixture: ComponentFixture<SingleOpMenuComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OpSequencerComponent ]
+      declarations: [ SingleOpMenuComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OpSequencerComponent);
+    fixture = TestBed.createComponent(SingleOpMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

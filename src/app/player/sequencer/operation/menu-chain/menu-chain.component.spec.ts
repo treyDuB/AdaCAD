@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChainOpComponent } from './chain-op.component';
+import { ChainOpMenuComponent } from './menu-chain.component';
 
 describe('ChainOpComponent', () => {
-  let component: ChainOpComponent;
-  let fixture: ComponentFixture<ChainOpComponent>;
+  let component: ChainOpMenuComponent;
+  let fixture: ComponentFixture<ChainOpMenuComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChainOpComponent ]
+      declarations: [ ChainOpMenuComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChainOpComponent);
+    fixture = TestBed.createComponent(ChainOpMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,8 +1,11 @@
 /** COPY-PASTED FROM MIXER PALETTE OPERATION SUB-COMPONENT */
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { OpSequencer, SequencerOp, SequencerService } from '../../provider/sequencer.service';
 import { MatMenu } from '@angular/material/menu';
+import { SingleOpMenuComponent } from './menu-single/menu-single.component';
+import { ChainOpMenuComponent } from './menu-chain/menu-chain.component';
+
 
 /** events that an OperationComponent can emit */
 export type OpComponentEvent = {
@@ -18,6 +21,11 @@ export type OpComponentEvent = {
   styleUrls: ['./operation.component.scss']
 })
 export class OperationComponent implements OnInit, OnDestroy {
+  @ViewChild(SingleOpMenuComponent) singleMenu;
+  @ViewChild(ChainOpMenuComponent) chainMenu;
+
+  menu: MatMenu;
+
   /** The Operation's index in sequencer array */
   @Input() seq_id: number;
   /** Operation Instance belonging to the component */
@@ -31,13 +39,16 @@ export class OperationComponent implements OnInit, OnDestroy {
   @Output() onDuplicateOp = new EventEmitter <OpComponentEvent>();
   @Output() onShiftOp = new EventEmitter <OpComponentEvent>(); 
 
-  constructor() { 
+  constructor(
+    public seq: SequencerService
+  ) { 
   }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
+    this.menu = (this.op.classifier == 'chain') ? this.chainMenu.menu : this.singleMenu.menu;
   }
 
   ngOnDestroy(): void {

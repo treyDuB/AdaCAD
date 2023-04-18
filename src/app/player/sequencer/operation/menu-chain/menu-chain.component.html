@@ -1,0 +1,44 @@
+<mat-menu #seqChainMenu="matMenu">
+  <div class="sub-menu">
+    <button mat-stroked-menu-item
+      class="sub-menu-button"
+      (click) ="seq.shiftOp(index, false)">
+      Shift Left
+    </button>
+
+    <button mat-stroked-menu-item
+      class="sub-menu-button"
+      (click) ="seq.shiftOp(index, true)">
+      Shift Right
+    </button>
+    
+    <button mat-stroked-menu-item
+      class="sub-menu-button"
+      (click) ="seq.delOpAt(index)">
+      Delete
+    </button>
+
+    <button mat-stroked-menu-item
+      [matMenuTriggerFor]="chainEdit"
+      class="sub-menu-button"
+      (click)="$event.stopPropagation();">
+      Edit Chain
+    </button>
+
+    <mat-menu #chainEdit="matMenu">
+      <div class="sub-menu-chain">
+        <ng-container *ngFor="let o of op.ops; index as i">
+          <app-operation
+            [seq_id] = i
+            [op] = o
+            (onOperationParamChange) = "seq.updateParams(o.id, i, param.value)"
+          ></app-operation>
+          <!-- <button mat-stroked-menu-item
+          >
+          Chain {{ch.id}}
+          </button> -->
+        </ng-container>
+      </div>
+    </mat-menu>
+  </div>
+</mat-menu>

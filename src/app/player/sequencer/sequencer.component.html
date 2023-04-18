@@ -3,9 +3,17 @@
   <div id="sequencer-container" class="sequencer-block">
     <h2 class="player-field-header">Operation Sequencer </h2>
     <div class="operation-sequence">
-      <ng-container #vc></ng-container>
-      <!-- <ng-container *ngFor="let o of seq.ops; index as i">
-        <div *ngIf="seq.pos == i; else notSelected">
+      <ng-container *ngFor="let o of seq.ops; index as i">
+        <app-operation
+          [seq_id] = i
+          [op] = o
+          [is_selected] = "seq.pos == i"
+          (onOperationParamChange) = "paramUpdated($event)"
+          (onDeleteOp) = "opDeleted($event)"
+          (onShiftOp) = "opShifted($event, i)"
+        ></app-operation>
+      </ng-container>
+        <!--<div *ngIf="seq.pos == i; else notSelected">
           <div *ngIf="o.chain_check == 1 || o.custom_check == 1; else notChain">
             <div *ngIf="o.chain_check == 1">
               <button 
@@ -112,51 +120,7 @@
               </ng-container>
             </ng-container>  
           </div>
-        </mat-menu>
-
-        <mat-menu #seqChainMenu="matMenu">
-          <div class="sub-menu">
-
-            <button mat-stroked-menu-item
-              class="sub-menu-button"
-              (click) ="seq.shiftOp(i, false)">
-              Shift Left
-            </button>
-
-            <button mat-stroked-menu-item
-              class="sub-menu-button"
-              (click) ="seq.shiftOp(i, true)">
-              Shift Right
-            </button>
-            
-            <button mat-stroked-menu-item
-              class="sub-menu-button"
-              (click) ="seq.delOpAt(i)">
-              Remove from Sequencer
-            </button>
-
-            <button mat-stroked-menu-item
-              [matMenuTriggerFor]="chainEdit"
-              class="sub-menu-button"
-              (click)="$event.stopPropagation();">
-              Edit Chain
-            </button>
-
-            <mat-menu #chainEdit="matMenu">
-              <div class="sub-menu-chain">
-                <ng-container *ngFor="let ch of seq.chains">
-                  <button mat-stroked-menu-item
-                  >
-                  Chain {{ch.id}}
-                  </button>
-                </ng-container>
-              </div>
-            </mat-menu>
-
-          </div>
-        </mat-menu>
-
-      </ng-container> -->
+        </mat-menu>-->
     </div>
   </div>
   
@@ -194,7 +158,6 @@
             </button> 
 
             <mat-menu #opMenu="matMenu">
-
               <div class="sub-menu">
                 <button mat-stroked-menu-item
                 (click) ="addSingleOp(op)"
@@ -206,32 +169,9 @@
                 (click) ="addChainOp(op)"
                 class="sub-menu-button">
                   Add Chain to Sequencer
-                </button>
-
-                <!-- <ng-container *ngIf="seq.chains != 0">
-                  <button mat-stroked-menu-item
-                  [matMenuTriggerFor]="opChains"
-                  (click)="$event.stopPropagation();"
-                  class="sub-menu-button">
-                  Add to Existing Chain
-                  </button>
-                </ng-container> -->
-                
-                <!-- <mat-menu #opChains="matMenu">
-                  <div class="sub-menu-chain">
-                    <ng-container *ngFor="let ch of seq.chains">
-                      <button mat-stroked-menu-item
-                      (click) ="seq.addToChain(ch.id, op)">
-                      Chain {{ch.id}}
-                      </button>
-                    </ng-container>
-                  </div>
-                </mat-menu> -->
-                
+                </button>             
               </div>
-
             </mat-menu>
-
           </ng-container>
         </div>
       </ng-container>
@@ -298,16 +238,12 @@
                       </button>
                     </ng-container>
                   </div>
-                </mat-menu>
-                
+                </mat-menu>            
               </div>
-
             </mat-menu>
-
           </ng-container>
         </div>
       </ng-container>
     </mat-expansion-panel>
   </div>
-
 </div>

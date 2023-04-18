@@ -4,7 +4,7 @@ import {MatIconRegistry} from '@angular/material/icon';
 
 import { PlayerService } from './player.service';
 
-import { OpSequencerComponent } from './op-sequencer/op-sequencer.component';
+import { OpSequencerComponent } from './sequencer/sequencer.component';
 import { WeavingStateComponent } from './weaving-state/weaving-state.component';
 
 import { Draft } from '../core/model/datatypes';
@@ -68,12 +68,6 @@ export class PlayerComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // console.log("ng after view init, pedals: ", this.pls.pedals);
-    // const startPattern = this.oss.getOp('tabby');
-    // startPattern.perform([]).then((result) => {
-    //   this.pls.setDraft(result[0]);
-    //   this.drawDraft();
-    // });
     this.ownContainer = document.querySelector("#player-container > .mat-expansion-panel");
     this.mixerContainer = document.querySelector('app-mixer > mat-drawer-container');
     // console.log("init w/ element refs ", this.ownContainer, this.mixerContainer);

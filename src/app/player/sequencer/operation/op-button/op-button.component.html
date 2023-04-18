@@ -1,0 +1,34 @@
+<ng-container [ngSwitch] = classifier>
+  <div *ngSwitchCase = "'chain'">
+    <button 
+      [name] = name
+      [ngClass] = "selected ? 'selected-operation-box' : 'operation-box' " 
+      [matMenuTriggerFor]="seqChainMenu"
+    >
+      <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+      {{name}}
+    </button>
+  </div>
+
+  <div *ngSwitchCase = "'struct'">
+    <button 
+      [name] = name
+      class="selected-operation-box"  
+      [matMenuTriggerFor]="seqMenu"
+    >
+      <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+      {{name}}
+    </button>
+  </div>
+
+  <div *ngSwitchDefault>
+    <button 
+      [name] = name
+      [ngClass] = "selected ? 'selected-operation-box' : 'operation-box' " 
+      [matMenuTriggerFor]="seqMenu"
+    >
+      <mat-icon svgIcon="op-{{name}}" aria-hidden="false" aria-label="icon for {{name}} operation"></mat-icon>
+      {{name}}
+    </button>
+  </div>
+</ng-container>
