@@ -24,7 +24,7 @@
     
     <div class="sub-menu-rest">
       <ng-container *ngFor="let param of op.params; let i = index">
-        <ng-container  *ngIf="param.type === 'number'">
+        <ng-container  *ngIf="param.type === 'number' || param.type === 'boolean'">
           <mat-form-field
           (click)="$event.stopPropagation();">
             <mat-label class="param-name">{{param.name}}</mat-label>

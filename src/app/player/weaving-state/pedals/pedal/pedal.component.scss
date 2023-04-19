@@ -1,0 +1,23 @@
+.virtual {
+  background-color: #ff4081;
+  color: white;
+}
+
+.physical {
+  background-color: #353535;
+  color: white;
+}
+
+button {
+  margin: 10px;
+  padding: 2px 10px;
+  border-style: none;
+  height: -webkit-fill-available;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+
+  .mat-icon{
+    margin: 5px;
+  }
+}

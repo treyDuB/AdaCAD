@@ -1,0 +1,28 @@
+
+<h2 class="pedal-field-header">Pedals</h2>
+<div id="pedals-list" class="loom-field pedals-container">
+
+  <div class="pedal-array pedals-field physical" #physPedals>
+    <ng-container *ngFor="let p of pds.p_pedals">
+      <app-pedal
+        class="physical-pedal"
+        [pedal] = p
+        [mapped] = "map.getMapByID(p.id)"
+        [physical] = "true"
+      ></app-pedal>
+    </ng-container>
+  </div>
+
+  <div class="pedal-array pedals-field virtual" #virtPedals>
+    <ng-container *ngFor="let p of pds.v_pedals">
+      <app-pedal
+        class="virtual-pedal"
+        [pedal] = p
+        [mapped] = "map.getMapByID(p.id)"
+        [physical] = "false"
+      ></app-pedal>
+    </ng-container>
+  </div>
+
+  <app-virtual-pedals></app-virtual-pedals>
+</div>

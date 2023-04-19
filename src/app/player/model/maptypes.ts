@@ -4,7 +4,7 @@
  */ 
 
 import { PlayerState } from "./state";
-import { OpTemplate, OpInstance, CustomStructOp, ProgressOp } from "./playerop";
+import { OpTemplate, OpInstance, CustomStructOp, ProgressOp, refresh, newOpInstance } from "./playerop";
 import { ChainOp } from "./chainop";
 import { OpSequencer } from "../provider/sequencer.service";
 import { OperationParam } from "../../mixer/model/operation";
@@ -62,6 +62,16 @@ export interface SequencerSelect extends PedalTarget {
   dir: boolean
 }
 
+function nullMapping(p: number): SimplePairing {
+  return {
+    pedal: p,
+    name: 'null',
+    op: newOpInstance(refresh),
+    perform: refresh["perform"]
+  }
+
+}
+
 export type SequencerMapping = SequencerProg | SequencerSelect;
 
 export function makeSimplePairing(p: number, op: OpInstance): SimplePairing {
@@ -82,21 +92,23 @@ export function makeChainPairing(p: number, ch: ChainOp): ChainPairing {
   }
 }
 
-type SeqMapOptions = {
+export type SeqMapOptions = {
+  role: 'sel' | 'prog',
+  op_name?: string,
   op?: OpInstance,
   dir?: boolean,
   seq?: number | OpSequencer
 }
 
-export function mapToSequencer(p: number, role: 'sel' | 'prog', opts: SeqMapOptions): SequencerMapping {
+export function mapToSequencer(p: number, opts: SeqMapOptions): SequencerMapping {
   let m: SequencerMapping;
-  if (role === 'sel') {
-    m = <SequencerSelect>{ pedal: p, role: role };
-    m.name = (opts.dir) ? 'next' : 'prev';
+  if (opts.role === 'sel') {
+    m = <SequencerSelect>{ pedal: p, role: opts.role };
+    m.name = (opts.dir) ? 'next' : 'previous';
     m.dir = <boolean> opts.dir;
     m.perform = (<OpSequencer> opts.seq)["perform"];
   } else {
-    m = <SequencerProg>{ pedal: p, role: role };
+    m = <SequencerProg>{ pedal: p, role: opts.role };
     let op = <OpInstance> opts.op;
     m.name = op.name;
     m.perform = op["perform"];
@@ -113,10 +125,20 @@ export interface ParamControl extends PedalTarget {
 // export type PedalOpMapping = Array<PedalAction>;
 
 export type MappingShapes = {
-  'pairing': SimplePairing,
-  'chain': ChainOp,
-  'sequencer': OpSequencer,
+  'pairing': SimplePairing | ChainPairing,
+  'sequencer': SequencerMapping,
   'param': ParamControl,
 };
+
+export function makeMapping(p: number, targ: any, type: keyof MappingShapes): PedalAction {
+  switch (type) {
+    case 'pairing':
+      return makeSimplePairing(p, <OpInstance> targ) as SimplePairing;
+    case 'sequencer':
+      return mapToSequencer(p, <SeqMapOptions> targ) as SequencerMapping;
+    case 'param':
+      return nullMapping(p);
+  }
+}
 
 export type PedalAction = MappingShapes[keyof MappingShapes];

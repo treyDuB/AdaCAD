@@ -16,6 +16,8 @@ import { SequencerService } from './provider/sequencer.service';
 import { MappingsService } from './provider/mappings.service';
 import { OpButtonComponent } from './sequencer/operation/op-button/op-button.component';
 import { SingleOpMenuComponent } from './sequencer/operation/menu-single/menu-single.component';
+import { PedalsComponent } from './weaving-state/pedals/pedals.component';
+import { PedalComponent } from './weaving-state/pedals/pedal/pedal.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { SingleOpMenuComponent } from './sequencer/operation/menu-single/menu-si
     OperationComponent,
     ChainOpMenuComponent,
     OpButtonComponent,
-    SingleOpMenuComponent
+    SingleOpMenuComponent,
+    PedalsComponent,
+    PedalComponent
   ],
   imports: [
     CommonModule,

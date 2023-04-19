@@ -13,6 +13,7 @@ import { MappingsService } from './provider/mappings.service';
 import { PedalsService, Pedal } from './provider/pedals.service';
 import { SequencerService } from './provider/sequencer.service';
 import { PlaybackService } from './provider/playback.service';
+import { SequencerMapping } from './model/maptypes';
 
 export interface DraftOperationClassification {
   category_id: number,
@@ -200,12 +201,17 @@ export class PlayerService {
         mappings.pair(0, 'forward');
       } else if (n == 2) {
         if (mappings.pedalIsMapped(0)) mappings.unmap(0);
-        mappings[0] = this.seq;
-        mappings[1] = this.seq;
+        mappings.mapToSequencer(0, {role: 'prog', op_name: 'forward'});
+        mappings.mapToSequencer(1, {role: 'sel', dir: true, seq: mappings});
         this.seq.mapPedals(0, 1);
       } else if (n == 3) {
-        mappings[2] = this.seq;
-        this.seq.mapPedal(2, 'sel-back');
+        if (mappings.pedalIsMapped(0)) mappings.unmap(0);
+        if (mappings.pedalIsMapped(1)) mappings.unmap(1);
+        mappings.mapToSequencer(0, {role: 'prog', op_name: 'forward'});
+        mappings.mapToSequencer(1, {role: 'sel', dir: false, seq: mappings});
+        mappings.mapToSequencer(2, {role: 'sel', dir: true, seq: mappings});
+        this.seq.mapPedal(1, 'sel-back');
+        this.seq.mapPedal(2, 'sel-next');
       }
       console.log("pedals mapping", mappings);
     })
@@ -287,12 +293,16 @@ export class PlayerService {
 
   onPedal(id: number) {
     console.log('player service: pedal ', id);
-    let mapped = this.mappings.getMap(id);
+    let mapped = this.mappings.getMapByID(id);
+    console.log(mapped);
     // console.log(this.mappings);
     // console.log(this.seq);
     if (mapped) {
+      let performer;
       console.log('mapping exists for pedal');
-      mapped.perform(this.state, id)
+      if ((<SequencerMapping> mapped).role) { performer = this.seq; }
+      else performer = mapped;
+      performer.perform(this.state, id)
       .then((state: PlayerState) => {
         this.state = state;
         // console.log(this.state);
