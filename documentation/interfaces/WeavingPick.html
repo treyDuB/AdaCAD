@@ -65,7 +65,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/app/player/model/player.ts</code>
+            <code>src/app/player/model/state.ts</code>
         </p>
 
 
@@ -179,7 +179,6 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Draft } from &quot;../../core/model/datatypes&quot;
 import { initDraft } from &quot;../../core/model/drafts&quot;;
-import { PlayerState } from &quot;./state&quot;;
 
 /** @interface
  * PlayerState represents the Draft Player as an FSM
@@ -189,6 +188,14 @@ import { PlayerState } from &quot;./state&quot;;
  * @param numPicks the number of rows (picks) that have been sent to the loom so far (because the TC2 needs to receive this as part of the pick data)
  * @param pedal the name (mapped function) of the pedal that triggered this state change
  */
+export interface PlayerState {
+  draft: Draft,
+  row: number,
+  pedal: string | number,
+  op?: string,
+  weaving: boolean,
+  numPicks: number,
+}
 
 export function copyState(init: PlayerState): PlayerState {
   return Object.assign({}, init);
@@ -205,13 +212,7 @@ export function initState(): PlayerState {
 
 export interface WeavingPick {
   pickNum: number,
-  rowData: string,
-}
-
-export interface WeavingLog {
-  draft: Draft,
-  shortDraft: Draft,
-  states: Array&lt;PlayerState&gt;,
+  rowData: string
 }</code></pre>
     </div>
 </div>

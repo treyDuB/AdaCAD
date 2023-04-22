@@ -64,9 +64,6 @@
                             <a href="#buildTreeOp" title="src/app/mixer/model/operation.ts" ><b>buildTreeOp</b>&nbsp;&nbsp;&nbsp;(src/.../operation.ts)</a>
                         </li>
                         <li>
-                            <a href="#copyState" title="src/app/player/model/player.ts" ><b>copyState</b>&nbsp;&nbsp;&nbsp;(src/.../player.ts)</a>
-                        </li>
-                        <li>
                             <a href="#copyState" title="src/app/player/model/state.ts" ><b>copyState</b>&nbsp;&nbsp;&nbsp;(src/.../state.ts)</a>
                         </li>
                         <li>
@@ -88,28 +85,25 @@
                             <a href="#getParamsFromInputs" title="src/app/mixer/model/operation.ts" ><b>getParamsFromInputs</b>&nbsp;&nbsp;&nbsp;(src/.../operation.ts)</a>
                         </li>
                         <li>
-                            <a href="#getParamVals" title="src/app/player/model/op_mappings.ts" ><b>getParamVals</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#getParamVals" title="src/app/player/model/playerop.ts" ><b>getParamVals</b>&nbsp;&nbsp;&nbsp;(src/.../playerop.ts)</a>
                         </li>
                         <li>
                             <a href="#getParamValues" title="src/app/mixer/model/operation/params.ts" ><b>getParamValues</b>&nbsp;&nbsp;&nbsp;(src/.../params.ts)</a>
                         </li>
                         <li>
-                            <a href="#initState" title="src/app/player/model/player.ts" ><b>initState</b>&nbsp;&nbsp;&nbsp;(src/.../player.ts)</a>
-                        </li>
-                        <li>
                             <a href="#initState" title="src/app/player/model/state.ts" ><b>initState</b>&nbsp;&nbsp;&nbsp;(src/.../state.ts)</a>
                         </li>
                         <li>
-                            <a href="#makeBlankChainOp" title="src/app/player/model/op_mappings.ts" ><b>makeBlankChainOp</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#makeChainPairing" title="src/app/player/model/maptypes.ts" ><b>makeChainPairing</b>&nbsp;&nbsp;&nbsp;(src/.../maptypes.ts)</a>
                         </li>
                         <li>
-                            <a href="#makeChainOp" title="src/app/player/model/op_mappings.ts" ><b>makeChainOp</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#makeMapping" title="src/app/player/model/maptypes.ts" ><b>makeMapping</b>&nbsp;&nbsp;&nbsp;(src/.../maptypes.ts)</a>
                         </li>
                         <li>
-                            <a href="#makeOpSequencer" title="src/app/player/model/sequencer.ts" ><b>makeOpSequencer</b>&nbsp;&nbsp;&nbsp;(src/.../sequencer.ts)</a>
+                            <a href="#makeOpSequencer" title="src/app/player/provider/sequencer.service.ts" ><b>makeOpSequencer</b>&nbsp;&nbsp;&nbsp;(src/.../sequencer.service.ts)</a>
                         </li>
                         <li>
-                            <a href="#makePairedOp" title="src/app/player/model/op_mappings.ts" ><b>makePairedOp</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#makeSimplePairing" title="src/app/player/model/maptypes.ts" ><b>makeSimplePairing</b>&nbsp;&nbsp;&nbsp;(src/.../maptypes.ts)</a>
                         </li>
                         <li>
                             <a href="#makeSystemsUnique" title="src/app/core/model/system.ts" ><b>makeSystemsUnique</b>&nbsp;&nbsp;&nbsp;(src/.../system.ts)</a>
@@ -118,16 +112,25 @@
                             <a href="#makeTopoFactory" title="src/app/mixer/model/operation/topology.ts" ><b>makeTopoFactory</b>&nbsp;&nbsp;&nbsp;(src/.../topology.ts)</a>
                         </li>
                         <li>
+                            <a href="#mapToSequencer" title="src/app/player/model/maptypes.ts" ><b>mapToSequencer</b>&nbsp;&nbsp;&nbsp;(src/.../maptypes.ts)</a>
+                        </li>
+                        <li>
                             <a href="#newMapIndex" title="src/app/player/provider/mappings.service.ts" ><b>newMapIndex</b>&nbsp;&nbsp;&nbsp;(src/.../mappings.service.ts)</a>
                         </li>
                         <li>
-                            <a href="#playerOpFrom" title="src/app/player/model/op_mappings.ts" ><b>playerOpFrom</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#newOpInstance" title="src/app/player/model/playerop.ts" ><b>newOpInstance</b>&nbsp;&nbsp;&nbsp;(src/.../playerop.ts)</a>
                         </li>
                         <li>
-                            <a href="#playerOpFromTree" title="src/app/player/model/op_mappings.ts" ><b>playerOpFromTree</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#nullMapping" title="src/app/player/model/maptypes.ts" ><b>nullMapping</b>&nbsp;&nbsp;&nbsp;(src/.../maptypes.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#playerOpFrom" title="src/app/player/model/playerop.ts" ><b>playerOpFrom</b>&nbsp;&nbsp;&nbsp;(src/.../playerop.ts)</a>
                         </li>
                         <li>
                             <a href="#regexValidator" title="src/app/mixer/palette/operation/parameter/parameter.component.ts" ><b>regexValidator</b>&nbsp;&nbsp;&nbsp;(src/.../parameter.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#regexValidator" title="src/app/player/sequencer/operation/parameter/parameter.component.ts" ><b>regexValidator</b>&nbsp;&nbsp;&nbsp;(src/.../parameter.component.ts)</a>
                         </li>
                         <li>
                             <a href="#transferSystemsAndShuttles" title="src/app/mixer/model/operation/formatting.ts" ><b>transferSystemsAndShuttles</b>&nbsp;&nbsp;&nbsp;(src/.../formatting.ts)</a>
@@ -459,102 +462,6 @@
                     </div>
                     <div class="io-description">
                         
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>    <h3>src/app/player/model/player.ts</h3>
-    <section>
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="copyState"></a>
-                    <span class="name">
-                        <span ><b>copyState</b></span>
-                        <a href="#copyState"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>copyState(init: <a href="../interfaces/PlayerState.html" target="_self">PlayerState</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>init</td>
-                                    <td>
-                                                <code><a href="../interfaces/PlayerState.html" target="_self" >PlayerState</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/PlayerState.html" target="_self" >PlayerState</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="initState"></a>
-                    <span class="name">
-                        <span ><b>initState</b></span>
-                        <a href="#initState"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>initState()</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/PlayerState.html" target="_self" >PlayerState</a></code>
-
                     </div>
                 </td>
             </tr>
@@ -917,7 +824,7 @@
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/app/player/model/op_mappings.ts</h3>
+</section>    <h3>src/app/player/model/playerop.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -932,7 +839,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getParamVals(params)</code>
+<code>getParamVals(params: Array)</code>
                 </td>
             </tr>
 
@@ -949,12 +856,16 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
+                                    <td>Type</td>
                                     <td>Optional</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>params</td>
+                                    <td>
+                                            <code>Array</code>
+                                    </td>
 
                                     <td>
                                         No
@@ -982,16 +893,16 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="makeBlankChainOp"></a>
+                    <a name="newOpInstance"></a>
                     <span class="name">
-                        <span ><b>makeBlankChainOp</b></span>
-                        <a href="#makeBlankChainOp"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>newOpInstance</b></span>
+                        <a href="#newOpInstance"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>makeBlankChainOp(p?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>newOpInstance(base: <a href="../undefineds/OpTemplate.html" target="_self">OpTemplate</a>)</code>
                 </td>
             </tr>
 
@@ -1000,6 +911,8 @@
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Helper function to generate an instance of an OpTemplate</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -1014,159 +927,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>p</td>
+                                    <td>base</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/ChainOp.html" target="_self" >ChainOp</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="makeChainOp"></a>
-                    <span class="name">
-                        <span ><b>makeChainOp</b></span>
-                        <a href="#makeChainOp"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>makeChainOp(ops: Array, p?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>ops</td>
-                                    <td>
-                                            <code>Array</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>p</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/ChainOp.html" target="_self" >ChainOp</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="makePairedOp"></a>
-                    <span class="name">
-                        <span ><b>makePairedOp</b></span>
-                        <a href="#makePairedOp"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>makePairedOp(p: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, op: <a href="../interfaces/PlayerOp.html" target="_self">PlayerOp</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>p</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>op</td>
-                                    <td>
-                                                <code><a href="../interfaces/PlayerOp.html" target="_self" >PlayerOp</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#OpTemplate" target="_self" >OpTemplate</a></code>
                                     </td>
 
                                     <td>
@@ -1181,11 +944,12 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/PairedOp.html" target="_self" >PairedOp</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#OpInstance" target="_self" >OpInstance</a></code>
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>instance of the OpTemplate</p>
+
                     </div>
                 </td>
             </tr>
@@ -1246,62 +1010,6 @@
 
                                     <td>
                                         Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="playerOpFromTree"></a>
-                    <span class="name">
-                        <span ><b>playerOpFromTree</b></span>
-                        <a href="#playerOpFromTree"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>playerOpFromTree(op: <a href="../undefineds/PlayableTreeOp.html" target="_self">PlayableTreeOp</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>op</td>
-                                    <td>
-                                                <code><a href="../miscellaneous/typealiases.html#PlayableTreeOp" target="_self" >PlayableTreeOp</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
                                     </td>
 
 
@@ -1388,7 +1096,383 @@
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/app/player/model/sequencer.ts</h3>
+</section>    <h3>src/app/player/model/maptypes.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="makeChainPairing"></a>
+                    <span class="name">
+                        <span ><b>makeChainPairing</b></span>
+                        <a href="#makeChainPairing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>makeChainPairing(p: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, ch: <a href="../classes/ChainOp.html" target="_self">ChainOp</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>p</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>ch</td>
+                                    <td>
+                                                <code><a href="../classes/ChainOp.html" target="_self" >ChainOp</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/ChainPairing.html" target="_self" >ChainPairing</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="makeMapping"></a>
+                    <span class="name">
+                        <span ><b>makeMapping</b></span>
+                        <a href="#makeMapping"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>makeMapping(p: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, targ: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, type)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>p</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>targ</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/Pedal.html" target="_self" >PedalAction</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="makeSimplePairing"></a>
+                    <span class="name">
+                        <span ><b>makeSimplePairing</b></span>
+                        <a href="#makeSimplePairing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>makeSimplePairing(p: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, op: <a href="../undefineds/OpInstance.html" target="_self">OpInstance</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>p</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>op</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#OpInstance" target="_self" >OpInstance</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/SimplePairing.html" target="_self" >SimplePairing</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mapToSequencer"></a>
+                    <span class="name">
+                        <span ><b>mapToSequencer</b></span>
+                        <a href="#mapToSequencer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>mapToSequencer(p: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, opts: <a href="../undefineds/SeqMapOptions.html" target="_self">SeqMapOptions</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>p</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#SeqMapOptions" target="_self" >SeqMapOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#SequencerMapping" target="_self" >SequencerMapping</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nullMapping"></a>
+                    <span class="name">
+                        <span ><b>nullMapping</b></span>
+                        <a href="#nullMapping"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>nullMapping(p: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>p</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/SimplePairing.html" target="_self" >SimplePairing</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/player/provider/sequencer.service.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -1659,6 +1743,71 @@ This function will also return standard sized arrays = to the maximum sized inpu
         </tbody>
     </table>
 </section>    <h3>src/app/mixer/palette/operation/parameter/parameter.component.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="regexValidator"></a>
+                    <span class="name">
+                        <span ><b>regexValidator</b></span>
+                        <a href="#regexValidator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>regexValidator(nameRe: RegExp)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>nameRe</td>
+                                    <td>
+                                            <code>RegExp</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://angular.io/api/forms/ValidatorFn" target="_blank" >ValidatorFn</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/player/sequencer/operation/parameter/parameter.component.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>

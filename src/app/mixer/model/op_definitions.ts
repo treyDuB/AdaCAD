@@ -122,12 +122,13 @@ export const tabby_der = Seed.NoDrafts({
     value: 1,
     dx: 'the number of pics upon which the first tabby pic will be repeated'
     },
-    {name: 'alt pics',
-    type: 'number',
-    min: 0,
-    max: 100,
-    value: 1,
-    dx: 'the number of pics upon which the repeat the alteranting pattern'
+    {
+      name: 'alt pics',
+      type: 'number',
+      min: 0,
+      max: 100,
+      value: 1,
+      dx: 'the number of pics upon which the repeat the alteranting pattern'
     },
   ],
   perform: (params: Array<number>) => {
@@ -162,26 +163,29 @@ export const rib = Seed.DraftsOptional({
   old_names: [],
   dx: 'generates a rib/cord/half-basket structure defined by the parameters',
   params: <Array<NumParam>>[
-    {name: 'unders',
-    type: 'number',
-    min: 1,
-    max: 100,
-    value: 2,
-    dx: 'number of weft unders in a pic'
+    {
+      name: 'unders',
+      type: 'number',
+      min: 1,
+      max: 100,
+      value: 2,
+      dx: 'number of weft unders in a pic'
     },
-    {name: 'overs',
-    type: 'number',
-    min: 1,
-    max: 100,
-    value: 2,
-    dx: 'number of weft overs in a pic'
+    {
+      name: 'overs',
+      type: 'number',
+      min: 1,
+      max: 100,
+      value: 2,
+      dx: 'number of weft overs in a pic'
     },
-    {name: 'repeats',
-    type: 'number',
-    min: 1,
-    max: 100,
-    value: 1,
-    dx: 'number of weft pics to repeat within the structure'
+    {
+      name: 'repeats',
+      type: 'number',
+      min: 1,
+      max: 100,
+      value: 1,
+      dx: 'number of weft pics to repeat within the structure'
     }
   ],
   inlets: [{

@@ -129,21 +129,36 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/PlayerModule.html" data-type="entity-link" >PlayerModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                            'data-target="#components-links-module-PlayerModule-b057e11994dd4346233188ced41005091ce031fd515e27723ed7ba2a90ec323157b7e9fe8eb5a163cbde4b3ea217f5636cb36799a5a96412a53e064459b0f8b2"' : 'data-target="#xs-components-links-module-PlayerModule-b057e11994dd4346233188ced41005091ce031fd515e27723ed7ba2a90ec323157b7e9fe8eb5a163cbde4b3ea217f5636cb36799a5a96412a53e064459b0f8b2"' }>
+                                            'data-target="#components-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' : 'data-target="#xs-components-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' }>
                                             <span class="icon ion-md-cog"></span>
                                             <span>Components</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-PlayerModule-b057e11994dd4346233188ced41005091ce031fd515e27723ed7ba2a90ec323157b7e9fe8eb5a163cbde4b3ea217f5636cb36799a5a96412a53e064459b0f8b2"' :
-                                            'id="xs-components-links-module-PlayerModule-b057e11994dd4346233188ced41005091ce031fd515e27723ed7ba2a90ec323157b7e9fe8eb5a163cbde4b3ea217f5636cb36799a5a96412a53e064459b0f8b2"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="components-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' :
+                                            'id="xs-components-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' }>
+                                            <li class="link">
+                                                <a href="components/ChainOpMenuComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >ChainOpMenuComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/OpButtonComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >OpButtonComponent</a>
+                                            </li>
                                             <li class="link">
                                                 <a href="components/OpSequencerComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >OpSequencerComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/PedalComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >PedalComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/PedalsComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >PedalsComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/PlaybackComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >PlaybackComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/PlayerComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >PlayerComponent</a>
+                                            </li>
+                                            <li class="link">
+                                                <a href="components/SingleOpMenuComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >SingleOpMenuComponent</a>
                                             </li>
                                             <li class="link">
                                                 <a href="components/VirtualPedalsComponent.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >VirtualPedalsComponent</a>
@@ -153,6 +168,23 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                             </li>
                                         </ul>
                                     </li>
+                                <li class="chapter inner">
+                                    <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
+                                        'data-target="#injectables-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' : 'data-target="#xs-injectables-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' }>
+                                        <span class="icon ion-md-arrow-round-down"></span>
+                                        <span>Injectables</span>
+                                        <span class="icon ion-ios-arrow-down"></span>
+                                    </div>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' :
+                                        'id="xs-injectables-links-module-PlayerModule-f3101318951090b2be115b14d4741ca1f5e186477273fa558181f67fda6269e992d5cb492a59806fd10ff6acac2301c90afb96e69af63a284354661b9efb7009"' }>
+                                        <li class="link">
+                                            <a href="injectables/MappingsService.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >MappingsService</a>
+                                        </li>
+                                        <li class="link">
+                                            <a href="injectables/SequencerService.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >SequencerService</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </li>
                 </ul>
                 </li>
@@ -165,10 +197,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? 'id="components-links"' : 'id="xs-components-links"' }>
                             <li class="link">
-                                <a href="components/VirtualPedalsComponent.html" data-type="entity-link" >VirtualPedalsComponent</a>
+                                <a href="components/OperationComponent-1.html" data-type="entity-link" >OperationComponent</a>
                             </li>
                             <li class="link">
-                                <a href="components/WeavingStateComponent.html" data-type="entity-link" >WeavingStateComponent</a>
+                                <a href="components/ParameterComponent-1.html" data-type="entity-link" >ParameterComponent</a>
                             </li>
                         </ul>
                     </li>
@@ -207,6 +239,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/Cell.html" data-type="entity-link" >Cell</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ChainOp.html" data-type="entity-link" >ChainOp</a>
                             </li>
                             <li class="link">
                                 <a href="classes/DBListener.html" data-type="entity-link" >DBListener</a>
@@ -249,9 +284,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/Params.html" data-type="entity-link" >Params</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/PedalConfig.html" data-type="entity-link" >PedalConfig</a>
                             </li>
                             <li class="link">
                                 <a href="classes/PedalStatus.html" data-type="entity-link" >PedalStatus</a>
@@ -328,22 +360,28 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? ' id="interfaces-links"' : 'id="xs-interfaces-links"' }>
                             <li class="link">
+                                <a href="interfaces/BaseOpInstance.html" data-type="entity-link" >BaseOpInstance</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/Bounds.html" data-type="entity-link" >Bounds</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Bounds-1.html" data-type="entity-link" >Bounds</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ChainIndex.html" data-type="entity-link" >ChainIndex</a>
+                                <a href="interfaces/ChainPairing.html" data-type="entity-link" >ChainPairing</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ChainOp.html" data-type="entity-link" >ChainOp</a>
+                                <a href="interfaces/CompoundPerformable.html" data-type="entity-link" >CompoundPerformable</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Crossing.html" data-type="entity-link" >Crossing</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Crossing-1.html" data-type="entity-link" >Crossing</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/CustomStructOp.html" data-type="entity-link" >CustomStructOp</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/DensityUnits.html" data-type="entity-link" >DensityUnits</a>
@@ -490,16 +528,16 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/OpInput-1.html" data-type="entity-link" >OpInput</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/PairedOp.html" data-type="entity-link" >PairedOp</a>
+                                <a href="interfaces/ParamControl.html" data-type="entity-link" >ParamControl</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Pedal.html" data-type="entity-link" >Pedal</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/PedalEvent.html" data-type="entity-link" >PedalEvent</a>
+                                <a href="interfaces/PedalTarget.html" data-type="entity-link" >PedalTarget</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/PlayerOp.html" data-type="entity-link" >PlayerOp</a>
+                                <a href="interfaces/Performable.html" data-type="entity-link" >Performable</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/PlayerState.html" data-type="entity-link" >PlayerState</a>
@@ -517,10 +555,31 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/SaveObj-1.html" data-type="entity-link" >SaveObj</a>
                             </li>
                             <li class="link">
+                                <a href="interfaces/SequencerProg.html" data-type="entity-link" >SequencerProg</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/SequencerRef.html" data-type="entity-link" >SequencerRef</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/SequencerSelect.html" data-type="entity-link" >SequencerSelect</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/SimplePairing.html" data-type="entity-link" >SimplePairing</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/SingleOpInstance.html" data-type="entity-link" >SingleOpInstance</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/SingleOpTemplate.html" data-type="entity-link" >SingleOpTemplate</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/StatusMessage.html" data-type="entity-link" >StatusMessage</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/StatusMessage-1.html" data-type="entity-link" >StatusMessage</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/StructOpInstance.html" data-type="entity-link" >StructOpInstance</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/TopologyDef.html" data-type="entity-link" >TopologyDef</a>
@@ -553,13 +612,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/ViewModes-1.html" data-type="entity-link" >ViewModes</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/WeavingLog.html" data-type="entity-link" >WeavingLog</a>
+                                <a href="interfaces/WarpConfig.html" data-type="entity-link" >WarpConfig</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/WeavingPick.html" data-type="entity-link" >WeavingPick</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/WeavingPick-1.html" data-type="entity-link" >WeavingPick</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/YarnPath.html" data-type="entity-link" >YarnPath</a>
@@ -588,9 +644,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                         </ul>
                     </li>
-                        <li class="chapter">
-                            <a data-type="chapter-link" href="routes.html"><span class="icon ion-ios-git-branch"></span>Routes</a>
-                        </li>
                     <li class="chapter">
                         <a data-type="chapter-link" href="coverage.html"><span class="icon ion-ios-stats"></span>Documentation coverage</a>
                     </li>

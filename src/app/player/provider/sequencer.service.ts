@@ -96,15 +96,8 @@ type OpInstanceID = number;
     // console.log('sequencer perform');
     let res = copyState(init);
     if (n == this.p_prog) {
-      // console.log("forward in sequencer draft");
-      // if prev step was one of the selects, this row gets sent
       res.weaving = true;
-      // if (this.ops.length > 0) {
-      //   // this.selecting = false; // unset because we've confirmed the selection
-      //   return this.current.perform(res);
-      // } else {
-        return forward.perform(res);
-      // }
+      return forward.perform(res);
     } else {
       res.weaving = false;
       if (this.ops.length > 0) {
@@ -113,8 +106,6 @@ type OpInstanceID = number;
         } else if (n == this.p_select_b) {
           this.pos = (this.pos + this.ops.length - 1) % this.ops.length;
         }
-        // console.log(this.pos);
-        // console.log(this.current);
         return this.current.perform(res);
       } else {
         return Promise.resolve(res); // we really can't do anything without any operations on the sequencer

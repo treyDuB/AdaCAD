@@ -183,6 +183,9 @@
                             <li>
                                 <a href="#toggleOpen" >toggleOpen</a>
                             </li>
+                            <li>
+                                <a href="#toggleWeaving" >toggleWeaving</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -395,8 +398,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="105"
-                            class="link-to-prism">src/app/player/player.component.ts:105</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="113"
+                            class="link-to-prism">src/app/player/player.component.ts:113</a></div>
                 </td>
             </tr>
 
@@ -432,8 +435,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="62"
-                            class="link-to-prism">src/app/player/player.component.ts:62</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">src/app/player/player.component.ts:70</a></div>
                 </td>
             </tr>
 
@@ -469,8 +472,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">src/app/player/player.component.ts:57</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">src/app/player/player.component.ts:65</a></div>
                 </td>
             </tr>
 
@@ -506,8 +509,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="91"
-                            class="link-to-prism">src/app/player/player.component.ts:91</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">src/app/player/player.component.ts:99</a></div>
                 </td>
             </tr>
 
@@ -543,8 +546,77 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">src/app/player/player.component.ts:107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/app/player/player.component.ts:115</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleWeaving"></a>
+                    <span class="name">
+                        <span ><b>toggleWeaving</b></span>
+                        <a href="#toggleWeaving"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleWeaving(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="122"
+                            class="link-to-prism">src/app/player/player.component.ts:122</a></div>
                 </td>
             </tr>
 
@@ -805,7 +877,7 @@ import {MatIconRegistry} from &#x27;@angular/material/icon&#x27;;
 
 import { PlayerService } from &#x27;./player.service&#x27;;
 
-import { OpSequencerComponent } from &#x27;./op-sequencer/op-sequencer.component&#x27;;
+import { OpSequencerComponent } from &#x27;./sequencer/sequencer.component&#x27;;
 import { WeavingStateComponent } from &#x27;./weaving-state/weaving-state.component&#x27;;
 
 import { Draft } from &#x27;../core/model/datatypes&#x27;;
@@ -850,8 +922,16 @@ export class PlayerComponent implements OnInit {
       // console.log(op.name);
       icons.addSvgIcon(&#x27;op-&#x27;+op.name, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/&#x27;+op.name.replaceAll(&quot; &quot;, &quot;-&quot;) + &quot;.svg&quot;));
     }
-    // icons.addSvgIcon(&#x27;op-random&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/random.svg&#x27;));
-    // icons.addSvgIcon(&#x27;op-rotate&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/rotate.svg&#x27;));
+
+    icons.addSvgIcon(&#x27;op-chain&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/chain.svg&#x27;));
+    icons.addSvgIcon(&#x27;op-custom&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/custom.svg&#x27;));
+    
+    icons.addSvgIcon(&#x27;op-forward&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/forward.svg&#x27;));
+    icons.addSvgIcon(&#x27;op-next&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/next.svg&#x27;));
+    icons.addSvgIcon(&#x27;op-previous&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/previous.svg&#x27;));
+    icons.addSvgIcon(&#x27;op-refresh&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/refresh.svg&#x27;));
+    icons.addSvgIcon(&#x27;op-reverse&#x27;, sanitizer.bypassSecurityTrustResourceUrl(&#x27;assets/op_icons/reverse.svg&#x27;));
+
     console.log(icons);
   }
 
@@ -861,15 +941,9 @@ export class PlayerComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(&quot;ng after view init, pedals: &quot;, this.pls.pedals);
-    // const startPattern &#x3D; this.oss.getOp(&#x27;tabby&#x27;);
-    // startPattern.perform([]).then((result) &#x3D;&gt; {
-    //   this.pls.setDraft(result[0]);
-    //   this.drawDraft();
-    // });
     this.ownContainer &#x3D; document.querySelector(&quot;#player-container &gt; .mat-expansion-panel&quot;);
     this.mixerContainer &#x3D; document.querySelector(&#x27;app-mixer &gt; mat-drawer-container&#x27;);
-    console.log(&quot;init w/ element refs &quot;, this.ownContainer, this.mixerContainer);
+    // console.log(&quot;init w/ element refs &quot;, this.ownContainer, this.mixerContainer);
     // this.draftCanvas &#x3D; &lt;HTMLCanvasElement&gt; document.getElementById(&#x27;active-draft-canvas&#x27;);
     // this.cx &#x3D; this.draftCanvas.getContext(&quot;2d&quot;);
     // this.drawDraft(); //force call here because it likely didn&#x27;t render previously. 
@@ -887,6 +961,12 @@ export class PlayerComponent implements OnInit {
       // this.resizeContainer();
     });
 
+    window.addEventListener(&#x27;keydown&#x27;, function(e) {
+      if(e.key &#x3D;&#x3D; &#x27; &#x27; &amp;&amp; e.target &#x3D;&#x3D; document.body) {
+        e.preventDefault();
+        console.log(&quot;no scrolling!&quot;);
+      }
+    });
   }
 
   resizeContainer() {
@@ -911,6 +991,13 @@ export class PlayerComponent implements OnInit {
     // this.resizeContainer();
     this.playerOpen.emit(this.open);
   }
+
+  toggleWeaving(state: boolean) {
+    console.log(&quot;weaving state toggle &quot;, state);
+    if (state) {
+      this.op_sequencer.closeMenus();
+    }
+  }
 }
   
 </code></pre>
@@ -933,15 +1020,15 @@ export class PlayerComponent implements OnInit {
     &lt;div id&#x3D;&quot;player-content&quot; class&#x3D;&quot;player&quot;&gt;
 
       &lt;div class&#x3D;&quot;first-row&quot;&gt;
-        &lt;app-weaving-state&gt;&lt;/app-weaving-state&gt;
-        &lt;app-op-sequencer&gt;&lt;/app-op-sequencer&gt;
+        &lt;app-weaving-state 
+          (isWeaving)&#x3D;&quot;toggleWeaving($event)&quot;
+        &gt;&lt;/app-weaving-state&gt;
+        &lt;app-sequencer
+          [isWeaving]&#x3D;&quot;pls.weaving&quot;
+        &gt;&lt;/app-sequencer&gt;
       &lt;/div&gt;
       
       &lt;div class&#x3D;&quot;break&quot;&gt;&lt;/div&gt;
-
-      &lt;div class&#x3D;&quot;second-row&quot;&gt;
-        &lt;app-virtual-pedals&gt;&lt;/app-virtual-pedals&gt;
-      &lt;/div&gt;
       
 
     &lt;/div&gt;
@@ -994,7 +1081,6 @@ export class PlayerComponent implements OnInit {
   border-width: 5px;
   color: blue;
 }
-
 
 .mat-button {
   background-color: #ff4081;
@@ -1099,8 +1185,8 @@ $op-icons               : (
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><mat-accordion id="player-container">  <mat-expansion-panel    [expanded] = "open"    (opened) = "toggleOpen(true)"    (closed) = "toggleOpen(false)"    (afterCollapse)="resizeContainer()"    (afterExpand)="resizeContainer()">    <mat-expansion-panel-header>      <mat-panel-title>        {{ open? \'Close\' : \'Open\'}} Player      </mat-panel-title>    </mat-expansion-panel-header>    <div id="player-content" class="player">      <div class="first-row">        <app-weaving-state></app-weaving-state>        <app-op-sequencer></app-op-sequencer>      </div>            <div class="break"></div>      <div class="second-row">        <app-virtual-pedals></app-virtual-pedals>      </div>          </div>          </mat-expansion-panel></mat-accordion></div>'
-    var COMPONENTS = [{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-op-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+        var COMPONENT_TEMPLATE = '<div><mat-accordion id="player-container">  <mat-expansion-panel    [expanded] = "open"    (opened) = "toggleOpen(true)"    (closed) = "toggleOpen(false)"    (afterCollapse)="resizeContainer()"    (afterExpand)="resizeContainer()">    <mat-expansion-panel-header>      <mat-panel-title>        {{ open? \'Close\' : \'Open\'}} Player      </mat-panel-title>    </mat-expansion-panel-header>    <div id="player-content" class="player">      <div class="first-row">        <app-weaving-state           (isWeaving)="toggleWeaving($event)"        ></app-weaving-state>        <app-sequencer          [isWeaving]="pls.weaving"        ></app-sequencer>      </div>            <div class="break"></div>          </div>          </mat-expansion-panel></mat-accordion></div>'
+    var COMPONENTS = [{'name': 'ChainOpMenuComponent', 'selector': 'app-menu-chain'},{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OpButtonComponent', 'selector': 'app-op-button'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PedalComponent', 'selector': 'app-pedal'},{'name': 'PedalsComponent', 'selector': 'app-pedals'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SingleOpMenuComponent', 'selector': 'app-menu-single'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
     var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
     var ACTUAL_COMPONENT = {'name': 'PlayerComponent'};
 </script>

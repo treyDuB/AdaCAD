@@ -5,19 +5,18 @@
 import utilInstance from "../../core/model/util";
 import { Draft } from "../../core/model/datatypes";
 import { wefts } from "../../core/model/drafts";
-import { OpInput, TreeOperation as TreeOp, SingleInlet,
+import { 
   BaseOp as Op, BuildableOperation as GenericOp, 
   Seed, Pipe, AllRequired, DraftsOptional, 
-  getDefaultParams, ParamValue,
-  Params, NumParam, OperationParam, Operation
+  ParamValue, NumParam, OperationParam
 } from "../../mixer/model/operation";
-import { ChainOp } from "./chainop";
 import { PlayerState, initState, copyState } from "./state";
 
 import { cloneDeep } from "lodash";
 
 /** classifies operations in the player */
 export type PlayerOpClassifier = GenericOp["classifier"]["type"] | 'prog' | 'chain' | 'struct';
+
 /** the thing that calls an operation's perform */
 type PerformTrigger = 'pedal' | 'seq' | 'none';
 
@@ -41,8 +40,11 @@ export interface CompoundPerformable extends Performable {
   insertOpAt: (o: Performable, x: number) => any;
 }
 
-
-/** Mixer-like parameterized operations. Each operation's base can be loaded into multiple instances with unique parameters. */
+/** 
+ * Mixer-like parameterized operations. Each operation's base 
+ * can be loaded into multiple instances with unique 
+ * parameter values. 
+ */
 export interface SingleOpTemplate extends Performable {
   id: number,
   classifier: PlayerOpClassifier,
@@ -51,6 +53,9 @@ export interface SingleOpTemplate extends Performable {
   params: Array<OperationParam>,
 }
 
+/**
+ * 
+ */
 export interface CustomStructOp extends Performable {
   id: number,
   classifier: 'struct',
@@ -61,8 +66,18 @@ export interface CustomStructOp extends Performable {
   custom_check: number,
 }
 
-export type OpTemplate = SingleOpTemplate | CustomStructOp;
+/** 
+ * OpTemplates are the base versions of any operations that 
+ * are mapped in the Draft Player (added to sequencer or 
+ * paired with pedals) 
+ */
+export type OpTemplate = SingleOpTemplate | CustomStructOp & { trigger: never };
 
+/**
+ * OpInstances are copies of an OpTemplate that keep an 
+ * independent set of parameter values, and call the 
+ * template's perform function using these values.
+ */
 export interface BaseOpInstance extends Performable {
   id: number,
   name: string,
@@ -72,7 +87,7 @@ export interface BaseOpInstance extends Performable {
   params: Array<OperationParam>,
 }
 
-/** A single instance of an operation and its parameters. */
+/** An instance of a single operation and its parameters. */
 export interface SingleOpInstance extends BaseOpInstance {
   id: number,
   name: string,
@@ -80,6 +95,7 @@ export interface SingleOpInstance extends BaseOpInstance {
   perform: SingleOpTemplate["perform"],
 }
 
+/** An instance of a custom structure operation */
 export interface StructOpInstance extends BaseOpInstance {
   id: number,
   classifier: 'struct',
@@ -87,10 +103,14 @@ export interface StructOpInstance extends BaseOpInstance {
   perform: CustomStructOp["perform"],
 }
 
-// export type SingleOp = SingleOpInstance;
 export type OpInstance = SingleOpInstance | StructOpInstance | BaseOpInstance;
 
-export function newOpInstance(base: SingleOpTemplate | CustomStructOp): OpInstance {
+/**
+ * Helper function to generate an instance of an OpTemplate
+ * @param base 
+ * @returns instance of the OpTemplate
+ */
+export function newOpInstance(base: OpTemplate): OpInstance {
   const inst = {
     id: utilInstance.generateId(8),
     name: base.name,
@@ -98,7 +118,7 @@ export function newOpInstance(base: SingleOpTemplate | CustomStructOp): OpInstan
     template: base, 
     params: cloneDeep(base.params),
     perform: (init: PlayerState) => { 
-      console.log(inst.params);
+      // console.log(inst.params);
       return inst.template.perform(init, getParamVals(inst.params)); 
     }
   };

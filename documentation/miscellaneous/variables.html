@@ -61,6 +61,9 @@
                 <td class="col-md-4">
                     <ul class="index-list">
                         <li>
+                            <a href="#appendBlankCol" title="src/app/core/model/drafts.ts" ><b>appendBlankCol</b>&nbsp;&nbsp;&nbsp;(src/.../drafts.ts)</a>
+                        </li>
+                        <li>
                             <a href="#apply_mats" title="src/app/mixer/model/op_definitions.ts" ><b>apply_mats</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
                         </li>
                         <li>
@@ -110,6 +113,9 @@
                         </li>
                         <li>
                             <a href="#crop" title="src/app/mixer/model/op_definitions.ts" ><b>crop</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#defaultPerform" title="src/app/player/model/playerop.ts" ><b>defaultPerform</b>&nbsp;&nbsp;&nbsp;(src/.../playerop.ts)</a>
                         </li>
                         <li>
                             <a href="#deleteDrawdownCol" title="src/app/core/model/drafts.ts" ><b>deleteDrawdownCol</b>&nbsp;&nbsp;&nbsp;(src/.../drafts.ts)</a>
@@ -169,7 +175,7 @@
                             <a href="#flipy" title="src/app/mixer/model/op_definitions.ts" ><b>flipy</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
                         </li>
                         <li>
-                            <a href="#forward" title="src/app/player/model/op_mappings.ts" ><b>forward</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#forward" title="src/app/player/model/playerop.ts" ><b>forward</b>&nbsp;&nbsp;&nbsp;(src/.../playerop.ts)</a>
                         </li>
                         <li>
                             <a href="#frame_utils" title="src/app/core/model/looms.ts" ><b>frame_utils</b>&nbsp;&nbsp;&nbsp;(src/.../looms.ts)</a>
@@ -373,7 +379,7 @@
                             <a href="#rect" title="src/app/mixer/model/op_definitions.ts" ><b>rect</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
                         </li>
                         <li>
-                            <a href="#refresh" title="src/app/player/model/op_mappings.ts" ><b>refresh</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#refresh" title="src/app/player/model/playerop.ts" ><b>refresh</b>&nbsp;&nbsp;&nbsp;(src/.../playerop.ts)</a>
                         </li>
                         <li>
                             <a href="#replicate" title="src/app/mixer/model/op_definitions.ts" ><b>replicate</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
@@ -382,7 +388,7 @@
                             <a href="#resize" title="src/app/mixer/model/op_definitions.ts" ><b>resize</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
                         </li>
                         <li>
-                            <a href="#reverse" title="src/app/player/model/op_mappings.ts" ><b>reverse</b>&nbsp;&nbsp;&nbsp;(src/.../op_mappings.ts)</a>
+                            <a href="#reverse" title="src/app/player/model/playerop.ts" ><b>reverse</b>&nbsp;&nbsp;&nbsp;(src/.../playerop.ts)</a>
                         </li>
                         <li>
                             <a href="#rib" title="src/app/mixer/model/op_definitions.ts" ><b>rib</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
@@ -496,6 +502,9 @@
                             <a href="#utilInstance" title="src/app/core/model/util.ts" ><b>utilInstance</b>&nbsp;&nbsp;&nbsp;(src/.../util.ts)</a>
                         </li>
                         <li>
+                            <a href="#warps" title="src/app/core/model/drafts.ts" ><b>warps</b>&nbsp;&nbsp;&nbsp;(src/.../drafts.ts)</a>
+                        </li>
+                        <li>
                             <a href="#" title="src/app/mixer/model/op_definitions.ts" ><b></b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
                         </li>
                         <li>
@@ -503,9 +512,6 @@
                         </li>
                         <li>
                             <a href="#waffle" title="src/app/mixer/model/op_definitions.ts" ><b>waffle</b>&nbsp;&nbsp;&nbsp;(src/.../op_definitions.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#warps" title="src/app/core/model/drafts.ts" ><b>warps</b>&nbsp;&nbsp;&nbsp;(src/.../drafts.ts)</a>
                         </li>
                         <li>
                             <a href="#wefts" title="src/app/core/model/drafts.ts" ><b>wefts</b>&nbsp;&nbsp;&nbsp;(src/.../drafts.ts)</a>
@@ -517,6 +523,1206 @@
     </table>
 </section>
 
+    <h3>src/app/core/model/drafts.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="appendBlankCol"></a>
+                    <span class="name">
+                        <span ><b>appendBlankCol</b></span>
+                        <a href="#appendBlankCol"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown) : Drawdown &#x3D;&gt; {
+    for (var i &#x3D; 0; i &lt; wefts(d); i++) {
+      d[i].push(new Cell(null));
+    }
+    return d;
+  }</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyMask"></a>
+                    <span class="name">
+                        <span ><b>applyMask</b></span>
+                        <a href="#applyMask"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(mask: Drawdown, pattern: Drawdown) : Drawdown &#x3D;&gt;  {
+    
+    const res &#x3D; createBlankDrawdown(wefts(mask), warps(mask));
+    for(let i &#x3D; 0; i &lt; wefts(mask); i++){
+      for(let j &#x3D; 0; j &lt; warps(mask); j++){
+        if(mask[i][j].getHeddle()){
+          const set_to &#x3D; pattern[i%wefts(pattern)][j%warps(pattern)].getHeddle();
+          res[i][j].setHeddle(set_to);
+        }
+        
+      }
+    } 
+    return res;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>applys a pattern only to regions where the input draft has true heddles</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createBlankDrawdown"></a>
+                    <span class="name">
+                        <span ><b>createBlankDrawdown</b></span>
+                        <a href="#createBlankDrawdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(wefts: number, warps: number) : Drawdown &#x3D;&gt; {
+    const drawdown: Drawdown &#x3D; [];
+    for(let i &#x3D; 0; i &lt; wefts; i++){
+      drawdown.push([]);
+      for(let j &#x3D; 0; j &lt; warps; j++){
+        drawdown[i].push(new Cell(false));
+      }
+    } 
+    return drawdown;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>creates an empty drawdown of a given size</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createDraft"></a>
+                    <span class="name">
+                        <span ><b>createDraft</b></span>
+                        <a href="#createDraft"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(
+  pattern: Drawdown,
+  gen_name: string,
+  ud_name: string,
+  rowShuttleMapping: Array&lt;any&gt;,
+  rowSystemMapping: Array&lt;any&gt;,
+  colShuttleMapping: Array&lt;any&gt;,
+  colSystemMapping: Array&lt;any&gt;
+  ) : Draft &#x3D;&gt; {
+
+    const d: Draft &#x3D; {
+      id: utilInstance.generateId(8),
+      drawdown: pattern.slice(),
+      gen_name: gen_name,
+      ud_name: ud_name, 
+      rowShuttleMapping: rowShuttleMapping.slice(),
+      rowSystemMapping: rowSystemMapping.slice(),
+      colShuttleMapping: colShuttleMapping.slice(),
+      colSystemMapping: colSystemMapping.slice(),
+    }
+
+    return d;
+
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>generates a new draft from the paramters specified.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteDrawdownCol"></a>
+                    <span class="name">
+                        <span ><b>deleteDrawdownCol</b></span>
+                        <a href="#deleteDrawdownCol"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown, j: number) : Drawdown &#x3D;&gt; {
+
+    for(var ndx &#x3D; 0; ndx &lt; wefts(d); ndx++){
+      d[ndx].splice(j, 1);
+    }
+    return d;
+
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>delete a column from the drawdown at a given location</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteDrawdownRow"></a>
+                    <span class="name">
+                        <span ><b>deleteDrawdownRow</b></span>
+                        <a href="#deleteDrawdownRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d:Drawdown, i: number) : Drawdown &#x3D;&gt; {
+      try{
+        d.splice(i, 1);
+      }catch(e){
+        console.error(e);
+      }
+      return d;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>deletes a row from the drawdown at the specified weft location</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteMappingCol"></a>
+                    <span class="name">
+                        <span ><b>deleteMappingCol</b></span>
+                        <a href="#deleteMappingCol"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(m: Array&lt;number&gt;, j: number) : Array&lt;number&gt; &#x3D;&gt; {
+    m.splice(j, 1);
+    return m;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>deletes a value into the col system/shuttle mapping at a particular location</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteMappingRow"></a>
+                    <span class="name">
+                        <span ><b>deleteMappingRow</b></span>
+                        <a href="#deleteMappingRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(m:Array&lt;number&gt;, i: number) : Array&lt;number&gt; &#x3D;&gt; {
+    try{
+      m.splice(i, 1);
+    }catch(e){
+      console.error(e);
+    }
+    return m;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>deletes a row from a row system/shuttle mapping at the specified weft location</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="flipDraft"></a>
+                    <span class="name">
+                        <span ><b>flipDraft</b></span>
+                        <a href="#flipDraft"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Draft, horiz: boolean, vert: boolean) : Promise&lt;Draft&gt; &#x3D;&gt; {
+  console.log(&quot;flip draft call input: &quot;, d);
+  const draft &#x3D; initDraftWithParams(
+    {id: d.id, 
+    gen_name: d.gen_name,
+    wefts: wefts(d.drawdown),
+    warps: warps(d.drawdown),
+    ud_name: d.ud_name,
+    colShuttleMapping: d.colShuttleMapping,
+    colSystemMapping: d.colSystemMapping});
+    draft.drawdown &#x3D; createBlankDrawdown(wefts(d.drawdown), warps(d.drawdown));
+
+  console.log(&quot;starting &quot;, draft);
+
+  for(let i &#x3D; 0; i &lt; wefts(d.drawdown); i++){
+    let flipped_i &#x3D; i;
+    if(vert) flipped_i &#x3D; wefts(d.drawdown) -1 -i;
+    for(let j &#x3D; 0; j &lt; warps(d.drawdown); j++){
+      let flipped_j &#x3D; j;
+      if(horiz) flipped_j &#x3D; warps(d.drawdown) -1 -j;
+      draft.drawdown[i][j].setHeddle(d.drawdown[flipped_i][flipped_j].getHeddle()); 
+    }
+
+    draft.rowShuttleMapping[i] &#x3D; d.rowShuttleMapping[flipped_i];
+    draft.rowSystemMapping[i] &#x3D; d.rowSystemMapping[flipped_i];
+   }
+
+   if(horiz){
+    
+    for(let j &#x3D; 0; j &lt; warps(d.drawdown); j++){
+      let flipped_j &#x3D; warps(d.drawdown) -1 -j;
+      draft.colShuttleMapping[j] &#x3D; d.colShuttleMapping[flipped_j];
+      draft.colSystemMapping[j] &#x3D; d.colSystemMapping[flipped_j];
+    }
+  }
+
+
+  console.log(&quot;flipped draft id: &quot;, draft.id);
+  return Promise.resolve(draft);
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>takes a draft as input, and flips the order of the rows
+used to ensure mixer calculations are oriented from bottom left</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="flipDrawdown"></a>
+                    <span class="name">
+                        <span ><b>flipDrawdown</b></span>
+                        <a href="#flipDrawdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(drawdown: Drawdown, horiz: boolean) : Drawdown &#x3D;&gt;  {
+
+    const flip &#x3D; createBlankDrawdown(wefts(drawdown), warps(drawdown));
+    for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
+      for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
+          let set_to &#x3D; false;
+          if(horiz)  set_to &#x3D; drawdown[i][warps(drawdown)-1-j].getHeddle();
+          else set_to &#x3D; drawdown[wefts(drawdown)-1 - i][j].getHeddle();
+          flip[i][j].setHeddle(set_to);
+      }
+    } 
+    return flip;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>flips the drawdown horizontally or vertically. This is different than flip draft because it only 
+flippes teh drawdown, not any other associated information</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateMappingFromPattern"></a>
+                    <span class="name">
+                        <span ><b>generateMappingFromPattern</b></span>
+                        <a href="#generateMappingFromPattern"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(drawdown: Drawdown, pattern: Array&lt;number&gt;, type: string, origin: number) : Array&lt;any&gt; &#x3D;&gt; {
+
+    const mapping: Array&lt;number&gt; &#x3D; [];
+    if(type &#x3D;&#x3D; &#x27;row&#x27;){
+
+        if(origin &#x3D;&#x3D; 1 || origin &#x3D;&#x3D; 2) pattern &#x3D; pattern.slice().reverse();
+
+        for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
+          mapping.push(pattern[i%pattern.length]);
+        }
+
+    }else{
+
+        if(origin &#x3D;&#x3D; 0 || origin &#x3D;&#x3D; 1) pattern &#x3D; pattern.slice().reverse();
+
+        for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
+          mapping.push(pattern[j%pattern.length]);
+        }
+      
+    }
+
+    return mapping.slice();
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>generates a system or shuttle mapping from an input pattern based on the input draft</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDraftName"></a>
+                    <span class="name">
+                        <span ><b>getDraftName</b></span>
+                        <a href="#getDraftName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(draft: Draft) : string &#x3D;&gt; {
+  if(draft &#x3D;&#x3D;&#x3D; null || draft &#x3D;&#x3D;&#x3D; undefined) return &quot;&quot;; 
+  if(draft.ud_name &#x3D;&#x3D; undefined){
+    if(draft.gen_name &#x3D;&#x3D; undefined) return &#x27;&#x27;;
+    else return draft.gen_name;
+  }  
+
+  if(draft.gen_name &#x3D;&#x3D; undefined){
+    if(draft.ud_name &#x3D;&#x3D; undefined) return &#x27;&#x27;;
+    else return draft.ud_name;
+  }
+
+  return (draft.ud_name &#x3D;&#x3D;&#x3D; &quot;&quot;) ?  draft.gen_name : draft.ud_name; 
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>gets the name of the draft. If it has a user defined name, it returns that, otherwise, it returns the generated name</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getHeddle"></a>
+                    <span class="name">
+                        <span ><b>getHeddle</b></span>
+                        <a href="#getHeddle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown, i: number, j: number) : boolean &#x3D;&gt; {
+    if(i &gt; wefts(d) || j &gt; warps(d)) return null;
+    return d[i][j].getHeddle();
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>get the value of the heddle at a given location</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasCell"></a>
+                    <span class="name">
+                        <span ><b>hasCell</b></span>
+                        <a href="#hasCell"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown, i:number, j:number) : boolean &#x3D;&gt;{
+    if(i &lt; 0 || i &gt;&#x3D; wefts(d)) return false;
+    if(j &lt; 0 || j &gt;&#x3D; warps(d)) return false;
+    return true;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>check if the giver interlacement within the size of the draft</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initDraft"></a>
+                    <span class="name">
+                        <span ><b>initDraft</b></span>
+                        <a href="#initDraft"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() : Draft &#x3D;&gt; {
+  const d: Draft &#x3D; {
+    id: utilInstance.generateId(8),
+    gen_name: &#x27;draft&#x27;,
+    ud_name: &quot;&quot;,
+    drawdown: [],
+    rowShuttleMapping: [],
+    rowSystemMapping: [],
+    colShuttleMapping: [],
+    colSystemMapping: []
+
+  };
+  console.log(&quot;initiated draft id: &quot;, d.id);
+  return d;
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>generates an empty draft with a unique id</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initDraftWithParams"></a>
+                    <span class="name">
+                        <span ><b>initDraftWithParams</b></span>
+                        <a href="#initDraftWithParams"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(params: any) : Draft &#x3D;&gt; {
+  const d: Draft &#x3D; {
+    id: utilInstance.generateId(8),
+    gen_name: &#x27;draft&#x27;,
+    ud_name: &quot;&quot;,
+    drawdown: [],
+    rowShuttleMapping: [],
+    rowSystemMapping: [],
+    colShuttleMapping: [],
+    colSystemMapping: []
+
+  };
+
+  console.log(&quot;generated draft id: &quot;, d.id);
+
+
+  if(params.id !&#x3D;&#x3D; undefined ) d.id &#x3D; params.id;
+  if(params.gen_name !&#x3D;&#x3D; undefined ) d.gen_name &#x3D; params.gen_name;
+  if(params.ud_name !&#x3D;&#x3D; undefined ) d.ud_name &#x3D; params.ud_name;
+ 
+  //handle common error
+  if(params.pattern !&#x3D;&#x3D; undefined) params.drawdown &#x3D; params.pattern;
+  //start with empty draft 
+
+  if(params.wefts &#x3D;&#x3D;&#x3D; undefined ){
+    if(params.drawdown &#x3D;&#x3D; undefined) params.wefts &#x3D; 1;
+    else params.wefts &#x3D; wefts(params.drawdown);
+  }
+
+  if(params.warps &#x3D;&#x3D;&#x3D; undefined){
+    if(params.drawdown &#x3D;&#x3D; undefined)  params.warps &#x3D; 1;
+    else params.warps &#x3D; warps(params.drawdown);
+  } 
+ 
+  for(let i &#x3D; 0; i &lt; params.wefts; i++){
+    d.drawdown.push([]);
+    d.rowSystemMapping.push(0);
+    d.rowShuttleMapping.push(1);
+    for(let j &#x3D; 0; j &lt; params.warps; j++){
+      d.drawdown[i][j] &#x3D; new Cell(false);
+    }
+  }
+
+  for(let j &#x3D; 0; j &lt; params.warps; j++){
+    d.colSystemMapping.push(0);
+    d.colShuttleMapping.push(0);
+  }
+
+  if(params.drawdown !&#x3D;&#x3D; undefined){
+    d.drawdown.forEach((row, i) &#x3D;&gt; {
+      row.forEach((cell, j) &#x3D;&gt; {
+       cell.setHeddle(params.drawdown[i%wefts(params.drawdown)][j%warps(params.drawdown)].getHeddle());
+      })
+    })
+  }
+
+  if(params.rowShuttleMapping !&#x3D;&#x3D; undefined){
+    for(let i &#x3D; 0; i &lt; wefts(d.drawdown); i++){
+      d.rowShuttleMapping[i] &#x3D; params.rowShuttleMapping[i%params.rowShuttleMapping.length];
+    }
+  }
+
+  if(params.rowSystemMapping !&#x3D;&#x3D; undefined){
+    for(let i &#x3D; 0; i &lt; wefts(d.drawdown); i++){
+      d.rowSystemMapping[i] &#x3D; params.rowSystemMapping[i%params.rowSystemMapping.length];
+    }
+  }
+
+  if(params.colShuttleMapping !&#x3D;&#x3D; undefined){
+    for(let i &#x3D; 0; i &lt; warps(d.drawdown); i++){
+      d.colShuttleMapping[i] &#x3D; params.colShuttleMapping[i%params.colShuttleMapping.length];
+    }
+  }
+
+  if(params.colSystemMapping !&#x3D;&#x3D; undefined){
+    for(let i &#x3D; 0; i &lt; warps(d.drawdown); i++){
+      d.colSystemMapping[i] &#x3D; params.colSystemMapping[i%params.colSystemMapping.length];
+    }
+  }
+
+  console.log(&quot;finished draft id: &quot;, d.id);
+
+  return d;
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>creates a draft based on the params provided.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insertDrawdownCol"></a>
+                    <span class="name">
+                        <span ><b>insertDrawdownCol</b></span>
+                        <a href="#insertDrawdownCol"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown, j: number, col: Array&lt;Cell&gt;) : Drawdown &#x3D;&gt; {
+    
+    const w &#x3D; warps(d);
+
+    if(j &#x3D;&#x3D;&#x3D; null) j &#x3D;0;
+
+    if(col &#x3D;&#x3D; null){
+      col &#x3D; [];
+      for(let i &#x3D; 0; i &lt; wefts(d); i++){
+        col.push(new Cell(false));
+      }
+    }
+    for (var ndx &#x3D; 0; ndx &lt; wefts(d); ndx++) {
+      d[ndx].splice(j, 0, new Cell(col[ndx].getHeddle()));
+    }
+    return d;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>inserts a column into the drawdown</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insertDrawdownRow"></a>
+                    <span class="name">
+                        <span ><b>insertDrawdownRow</b></span>
+                        <a href="#insertDrawdownRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown, i: number, row: Array&lt;Cell&gt;) : Drawdown &#x3D;&gt; {
+    i &#x3D; i+1;
+
+    if(row &#x3D;&#x3D;&#x3D; null){
+      row &#x3D; [];
+      for (var j &#x3D; 0; j &lt; warps(d); j++) {
+        row.push(new Cell(false));
+      }
+    }
+    if(row.length !&#x3D;&#x3D; warps(d)) console.error(&quot;inserting row of incorrect length into drawdown&quot;);
+   
+    try{
+      d.splice(i,0,row);
+    }catch(e){
+      console.error(e);
+    }
+    return d;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>I DON&quot;T THINK THIS FUNCTION WORKS OR IS BEING USED
+removes any boundary rows from the input draft that are unset</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insertMappingCol"></a>
+                    <span class="name">
+                        <span ><b>insertMappingCol</b></span>
+                        <a href="#insertMappingCol"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(m: Array&lt;number&gt;, j: number, col: number) : Array&lt;number&gt; &#x3D;&gt; {
+    m.splice(j,0, col);
+    return m;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>inserts a value into the col system/shuttle mapping at a particular location</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insertMappingRow"></a>
+                    <span class="name">
+                        <span ><b>insertMappingRow</b></span>
+                        <a href="#insertMappingRow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(m: Array&lt;number&gt;, i: number, val: number) : Array&lt;number&gt; &#x3D;&gt; {
+    i &#x3D; i+1;
+    try{
+      m.splice(i,0,val);
+    }catch(e){
+      console.error(e);
+    }
+    return m;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>inserts a new value into the row system/shuttle map</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="invertDrawdown"></a>
+                    <span class="name">
+                        <span ><b>invertDrawdown</b></span>
+                        <a href="#invertDrawdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(drawdown: Drawdown) : Drawdown &#x3D;&gt;  {
+    
+    const inverted &#x3D; drawdown.slice();
+    for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
+      for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
+        if(drawdown[i][j].isSet()){
+          const set_to &#x3D; !drawdown[i][j].getHeddle();
+          inverted[i][j].setHeddle(set_to);
+        }
+        
+      }
+    } 
+    return inverted;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>inverts the drawdown (e.g. sets true cells to false and vice versa)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSet"></a>
+                    <span class="name">
+                        <span ><b>isSet</b></span>
+                        <a href="#isSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown, i:number, j:number) : boolean &#x3D;&gt; {
+    if ( i &gt; -1 &amp;&amp; i &lt; wefts(d) &amp;&amp; j &gt; -1 &amp;&amp; j &lt; warps(d)) {
+      return d[i][j].isSet();
+    } else {
+      return false;
+    }
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>checks if the cells in the provided drawdown is set or unset</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isUp"></a>
+                    <span class="name">
+                        <span ><b>isUp</b></span>
+                        <a href="#isUp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown, i:number, j:number) : boolean &#x3D;&gt;{
+    //console.log(&quot;is up&quot;, i, j, wefts(d), warps(d), d[i][j]);
+    if ( i &gt; -1 &amp;&amp; i &lt; wefts(d) &amp;&amp; j &gt; -1 &amp;&amp; j &lt; warps(d)) {
+      return d[i][j].isUp();
+    } else {
+      return false;
+    }
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>checks if the cells in the provided drawdown is up</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadDraftFromFile"></a>
+                    <span class="name">
+                        <span ><b>loadDraftFromFile</b></span>
+                        <a href="#loadDraftFromFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(data: any, flips: any, version: string) : Promise&lt;Draft&gt; &#x3D;&gt; {
+
+    const draft: Draft &#x3D; initDraft();
+    if(data.id !&#x3D;&#x3D; undefined) draft.id &#x3D; data.id;
+    draft.gen_name &#x3D; (data.gen_name &#x3D;&#x3D;&#x3D; undefined) ? &#x27;draft&#x27; : data.gen_name;
+    draft.ud_name &#x3D; (data.ud_name &#x3D;&#x3D;&#x3D; undefined) ? &#x27;&#x27; : data.ud_name;
+    
+    if(version &#x3D;&#x3D;&#x3D; undefined || version &#x3D;&#x3D;&#x3D; null || !utilInstance.sameOrNewerVersion(version, &#x27;3.4.5&#x27;)){
+      draft.drawdown &#x3D; parseSavedPattern(data.pattern);
+    }else{
+      draft.drawdown &#x3D; parseSavedPattern(data.drawdown);
+    }
+
+    draft.rowShuttleMapping &#x3D; (data.rowShuttleMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.rowShuttleMapping;
+    draft.rowSystemMapping &#x3D; (data.rowSystemMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.rowSystemMapping;
+    draft.colShuttleMapping &#x3D; (data.colShuttleMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.colShuttleMapping;;
+    draft.colSystemMapping&#x3D; (data.colSystemMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.colSystemMapping;;
+
+
+    return flipDraft(draft, flips.horiz, flips.vert)
+    .then(flipped &#x3D;&gt; {
+      return flipped;
+    })
+    
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>sets up the draft from the information saved in a .ada file</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseSavedPattern"></a>
+                    <span class="name">
+                        <span ><b>parseSavedPattern</b></span>
+                        <a href="#parseSavedPattern"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(pattern: Array&lt;Array&lt;boolean&gt;&gt;) : Drawdown &#x3D;&gt; {
+    const drawdown:Drawdown &#x3D; [];
+    if(pattern &#x3D;&#x3D;&#x3D; undefined) return [];
+
+    for(var i &#x3D; 0; i &lt; wefts(pattern); i++) {
+        drawdown.push([]);
+        for (var j &#x3D; 0; j &lt; warps(pattern); j++){
+          drawdown[i][j]&#x3D; new Cell(null);
+          drawdown[i][j].reloadCell(pattern[i][j]); //this takes a cell param and updates from there
+        }
+    }
+    return drawdown;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>converts the saved structure of a pattern into the format used in memory</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pasteIntoDrawdown"></a>
+                    <span class="name">
+                        <span ><b>pasteIntoDrawdown</b></span>
+                        <a href="#pasteIntoDrawdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(
+    drawdown: Drawdown, 
+    fill_pattern: Drawdown,
+    start_i: number,
+    start_j: number,
+    width: number,
+    height: number 
+
+  ) :  Drawdown &#x3D;&gt;  {
+
+
+    let rows &#x3D; wefts(fill_pattern);
+    let cols &#x3D; warps(fill_pattern);
+
+    //cycle through each visible row/column of the selection
+    for (var i &#x3D; 0; i &lt; height; i++ ) {
+      for (var j &#x3D; 0; j &lt; width; j++ ) {
+        try{
+          drawdown[start_i+i][start_j+j].setHeddle(fill_pattern[i % rows][j % cols].getHeddle());
+        }catch(e){
+          console.error(e);
+        }
+      }
+    }
+
+    return drawdown;
+
+   
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>pasts a second drawdown representing a pattern at the specified location and size</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setHeddle"></a>
+                    <span class="name">
+                        <span ><b>setHeddle</b></span>
+                        <a href="#setHeddle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d:Drawdown, i:number, j:number, bool:boolean) : Drawdown &#x3D;&gt; {
+      d[i][j].setHeddle(bool);
+      return d;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>sets the heddle at the specified location to the value provided</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="shiftDrawdown"></a>
+                    <span class="name">
+                        <span ><b>shiftDrawdown</b></span>
+                        <a href="#shiftDrawdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(drawdown: Drawdown, up: boolean, inc: number) : Drawdown &#x3D;&gt;  {
+
+      const shifted &#x3D; createBlankDrawdown(wefts(drawdown), warps(drawdown));
+      for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
+        for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
+            let set_to &#x3D; false;
+            if(up)  set_to &#x3D; drawdown[(i+inc)%wefts(drawdown)][j].getHeddle();
+            else set_to &#x3D; drawdown[i][(j+inc)%warps(drawdown)].getHeddle();
+            shifted[i][j].setHeddle(set_to);
+        }
+      } 
+      return shifted;
+    }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>shifts the drawdown up or left by the amount specified.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="warps"></a>
+                    <span class="name">
+                        <span ><b>warps</b></span>
+                        <a href="#warps"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown | Array&lt;Array&lt;any&gt;&gt;) :  number &#x3D;&gt; {
+    if(d &#x3D;&#x3D;&#x3D; null || d &#x3D;&#x3D; undefined) return 0;
+    if(d[0] &#x3D;&#x3D;&#x3D; undefined) return 0;
+    return d[0].length;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>calcualte the number of warps (cols) in a pattern</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="wefts"></a>
+                    <span class="name">
+                        <span ><b>wefts</b></span>
+                        <a href="#wefts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(d: Drawdown | Array&lt;Array&lt;any&gt;&gt;) :  number &#x3D;&gt; {
+    if(d &#x3D;&#x3D;&#x3D; null || d &#x3D;&#x3D; undefined) return 0;
+    return d.length;
+  }</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>calcualte the number of wefts (rows) in a pattern</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
     <h3>src/app/mixer/model/op_definitions.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -2663,26 +3869,29 @@
   old_names: [],
   dx: &#x27;generates a rib/cord/half-basket structure defined by the parameters&#x27;,
   params: &lt;Array&lt;NumParam&gt;&gt;[
-    {name: &#x27;unders&#x27;,
-    type: &#x27;number&#x27;,
-    min: 1,
-    max: 100,
-    value: 2,
-    dx: &#x27;number of weft unders in a pic&#x27;
+    {
+      name: &#x27;unders&#x27;,
+      type: &#x27;number&#x27;,
+      min: 1,
+      max: 100,
+      value: 2,
+      dx: &#x27;number of weft unders in a pic&#x27;
     },
-    {name: &#x27;overs&#x27;,
-    type: &#x27;number&#x27;,
-    min: 1,
-    max: 100,
-    value: 2,
-    dx: &#x27;number of weft overs in a pic&#x27;
+    {
+      name: &#x27;overs&#x27;,
+      type: &#x27;number&#x27;,
+      min: 1,
+      max: 100,
+      value: 2,
+      dx: &#x27;number of weft overs in a pic&#x27;
     },
-    {name: &#x27;repeats&#x27;,
-    type: &#x27;number&#x27;,
-    min: 1,
-    max: 100,
-    value: 1,
-    dx: &#x27;number of weft pics to repeat within the structure&#x27;
+    {
+      name: &#x27;repeats&#x27;,
+      type: &#x27;number&#x27;,
+      min: 1,
+      max: 100,
+      value: 1,
+      dx: &#x27;number of weft pics to repeat within the structure&#x27;
     }
   ],
   inlets: [{
@@ -3512,12 +4721,13 @@
     value: 1,
     dx: &#x27;the number of pics upon which the first tabby pic will be repeated&#x27;
     },
-    {name: &#x27;alt pics&#x27;,
-    type: &#x27;number&#x27;,
-    min: 0,
-    max: 100,
-    value: 1,
-    dx: &#x27;the number of pics upon which the repeat the alteranting pattern&#x27;
+    {
+      name: &#x27;alt pics&#x27;,
+      type: &#x27;number&#x27;,
+      min: 0,
+      max: 100,
+      value: 1,
+      dx: &#x27;the number of pics upon which the repeat the alteranting pattern&#x27;
     },
   ],
   perform: (params: Array&lt;number&gt;) &#x3D;&gt; {
@@ -4062,1181 +5272,6 @@
                     </td>
                 </tr>
 
-
-        </tbody>
-    </table>
-</section>
-    <h3>src/app/core/model/drafts.ts</h3>
-    <section>
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="applyMask"></a>
-                    <span class="name">
-                        <span ><b>applyMask</b></span>
-                        <a href="#applyMask"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(mask: Drawdown, pattern: Drawdown) : Drawdown &#x3D;&gt;  {
-    
-    const res &#x3D; createBlankDrawdown(wefts(mask), warps(mask));
-    for(let i &#x3D; 0; i &lt; wefts(mask); i++){
-      for(let j &#x3D; 0; j &lt; warps(mask); j++){
-        if(mask[i][j].getHeddle()){
-          const set_to &#x3D; pattern[i%wefts(pattern)][j%warps(pattern)].getHeddle();
-          res[i][j].setHeddle(set_to);
-        }
-        
-      }
-    } 
-    return res;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>applys a pattern only to regions where the input draft has true heddles</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="createBlankDrawdown"></a>
-                    <span class="name">
-                        <span ><b>createBlankDrawdown</b></span>
-                        <a href="#createBlankDrawdown"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(wefts: number, warps: number) : Drawdown &#x3D;&gt; {
-    const drawdown: Drawdown &#x3D; [];
-    for(let i &#x3D; 0; i &lt; wefts; i++){
-      drawdown.push([]);
-      for(let j &#x3D; 0; j &lt; warps; j++){
-        drawdown[i].push(new Cell(false));
-      }
-    } 
-    return drawdown;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>creates an empty drawdown of a given size</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="createDraft"></a>
-                    <span class="name">
-                        <span ><b>createDraft</b></span>
-                        <a href="#createDraft"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(
-  pattern: Drawdown,
-  gen_name: string,
-  ud_name: string,
-  rowShuttleMapping: Array&lt;any&gt;,
-  rowSystemMapping: Array&lt;any&gt;,
-  colShuttleMapping: Array&lt;any&gt;,
-  colSystemMapping: Array&lt;any&gt;
-  ) : Draft &#x3D;&gt; {
-
-    const d: Draft &#x3D; {
-      id: utilInstance.generateId(8),
-      drawdown: pattern.slice(),
-      gen_name: gen_name,
-      ud_name: ud_name, 
-      rowShuttleMapping: rowShuttleMapping.slice(),
-      rowSystemMapping: rowSystemMapping.slice(),
-      colShuttleMapping: colShuttleMapping.slice(),
-      colSystemMapping: colSystemMapping.slice(),
-    }
-
-    return d;
-
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>generates a new draft from the paramters specified.</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="deleteDrawdownCol"></a>
-                    <span class="name">
-                        <span ><b>deleteDrawdownCol</b></span>
-                        <a href="#deleteDrawdownCol"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown, j: number) : Drawdown &#x3D;&gt; {
-
-    for(var ndx &#x3D; 0; ndx &lt; wefts(d); ndx++){
-      d[ndx].splice(j, 1);
-    }
-    return d;
-
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>delete a column from the drawdown at a given location</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="deleteDrawdownRow"></a>
-                    <span class="name">
-                        <span ><b>deleteDrawdownRow</b></span>
-                        <a href="#deleteDrawdownRow"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d:Drawdown, i: number) : Drawdown &#x3D;&gt; {
-      try{
-        d.splice(i, 1);
-      }catch(e){
-        console.error(e);
-      }
-      return d;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>deletes a row from the drawdown at the specified weft location</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="deleteMappingCol"></a>
-                    <span class="name">
-                        <span ><b>deleteMappingCol</b></span>
-                        <a href="#deleteMappingCol"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(m: Array&lt;number&gt;, j: number) : Array&lt;number&gt; &#x3D;&gt; {
-    m.splice(j, 1);
-    return m;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>deletes a value into the col system/shuttle mapping at a particular location</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="deleteMappingRow"></a>
-                    <span class="name">
-                        <span ><b>deleteMappingRow</b></span>
-                        <a href="#deleteMappingRow"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(m:Array&lt;number&gt;, i: number) : Array&lt;number&gt; &#x3D;&gt; {
-    try{
-      m.splice(i, 1);
-    }catch(e){
-      console.error(e);
-    }
-    return m;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>deletes a row from a row system/shuttle mapping at the specified weft location</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="flipDraft"></a>
-                    <span class="name">
-                        <span ><b>flipDraft</b></span>
-                        <a href="#flipDraft"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Draft, horiz: boolean, vert: boolean) : Promise&lt;Draft&gt; &#x3D;&gt; {
-  console.log(&quot;flip draft call input: &quot;, d);
-  const draft &#x3D; initDraftWithParams(
-    {id: d.id, 
-    gen_name: d.gen_name,
-    wefts: wefts(d.drawdown),
-    warps: warps(d.drawdown),
-    ud_name: d.ud_name,
-    colShuttleMapping: d.colShuttleMapping,
-    colSystemMapping: d.colSystemMapping});
-    draft.drawdown &#x3D; createBlankDrawdown(wefts(d.drawdown), warps(d.drawdown));
-
-  console.log(&quot;starting &quot;, draft);
-
-  for(let i &#x3D; 0; i &lt; wefts(d.drawdown); i++){
-    let flipped_i &#x3D; i;
-    if(vert) flipped_i &#x3D; wefts(d.drawdown) -1 -i;
-    for(let j &#x3D; 0; j &lt; warps(d.drawdown); j++){
-      let flipped_j &#x3D; j;
-      if(horiz) flipped_j &#x3D; warps(d.drawdown) -1 -j;
-      draft.drawdown[i][j].setHeddle(d.drawdown[flipped_i][flipped_j].getHeddle()); 
-    }
-
-    draft.rowShuttleMapping[i] &#x3D; d.rowShuttleMapping[flipped_i];
-    draft.rowSystemMapping[i] &#x3D; d.rowSystemMapping[flipped_i];
-   }
-
-   if(horiz){
-    
-    for(let j &#x3D; 0; j &lt; warps(d.drawdown); j++){
-      let flipped_j &#x3D; warps(d.drawdown) -1 -j;
-      draft.colShuttleMapping[j] &#x3D; d.colShuttleMapping[flipped_j];
-      draft.colSystemMapping[j] &#x3D; d.colSystemMapping[flipped_j];
-    }
-  }
-
-
-  console.log(&quot;flipped draft id: &quot;, draft.id);
-  return Promise.resolve(draft);
-}</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>takes a draft as input, and flips the order of the rows
-used to ensure mixer calculations are oriented from bottom left</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="flipDrawdown"></a>
-                    <span class="name">
-                        <span ><b>flipDrawdown</b></span>
-                        <a href="#flipDrawdown"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(drawdown: Drawdown, horiz: boolean) : Drawdown &#x3D;&gt;  {
-
-    const flip &#x3D; createBlankDrawdown(wefts(drawdown), warps(drawdown));
-    for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
-      for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
-          let set_to &#x3D; false;
-          if(horiz)  set_to &#x3D; drawdown[i][warps(drawdown)-1-j].getHeddle();
-          else set_to &#x3D; drawdown[wefts(drawdown)-1 - i][j].getHeddle();
-          flip[i][j].setHeddle(set_to);
-      }
-    } 
-    return flip;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>flips the drawdown horizontally or vertically. This is different than flip draft because it only 
-flippes teh drawdown, not any other associated information</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="generateMappingFromPattern"></a>
-                    <span class="name">
-                        <span ><b>generateMappingFromPattern</b></span>
-                        <a href="#generateMappingFromPattern"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(drawdown: Drawdown, pattern: Array&lt;number&gt;, type: string, origin: number) : Array&lt;any&gt; &#x3D;&gt; {
-
-    const mapping: Array&lt;number&gt; &#x3D; [];
-    if(type &#x3D;&#x3D; &#x27;row&#x27;){
-
-        if(origin &#x3D;&#x3D; 1 || origin &#x3D;&#x3D; 2) pattern &#x3D; pattern.slice().reverse();
-
-        for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
-          mapping.push(pattern[i%pattern.length]);
-        }
-
-    }else{
-
-        if(origin &#x3D;&#x3D; 0 || origin &#x3D;&#x3D; 1) pattern &#x3D; pattern.slice().reverse();
-
-        for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
-          mapping.push(pattern[j%pattern.length]);
-        }
-      
-    }
-
-    return mapping.slice();
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>generates a system or shuttle mapping from an input pattern based on the input draft</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getDraftName"></a>
-                    <span class="name">
-                        <span ><b>getDraftName</b></span>
-                        <a href="#getDraftName"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(draft: Draft) : string &#x3D;&gt; {
-  if(draft &#x3D;&#x3D;&#x3D; null || draft &#x3D;&#x3D;&#x3D; undefined) return &quot;&quot;; 
-  if(draft.ud_name &#x3D;&#x3D; undefined){
-    if(draft.gen_name &#x3D;&#x3D; undefined) return &#x27;&#x27;;
-    else return draft.gen_name;
-  }  
-
-  if(draft.gen_name &#x3D;&#x3D; undefined){
-    if(draft.ud_name &#x3D;&#x3D; undefined) return &#x27;&#x27;;
-    else return draft.ud_name;
-  }
-
-  return (draft.ud_name &#x3D;&#x3D;&#x3D; &quot;&quot;) ?  draft.gen_name : draft.ud_name; 
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>gets the name of the draft. If it has a user defined name, it returns that, otherwise, it returns the generated name</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getHeddle"></a>
-                    <span class="name">
-                        <span ><b>getHeddle</b></span>
-                        <a href="#getHeddle"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown, i: number, j: number) : boolean &#x3D;&gt; {
-    if(i &gt; wefts(d) || j &gt; warps(d)) return null;
-    return d[i][j].getHeddle();
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>get the value of the heddle at a given location</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="hasCell"></a>
-                    <span class="name">
-                        <span ><b>hasCell</b></span>
-                        <a href="#hasCell"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown, i:number, j:number) : boolean &#x3D;&gt;{
-    if(i &lt; 0 || i &gt;&#x3D; wefts(d)) return false;
-    if(j &lt; 0 || j &gt;&#x3D; warps(d)) return false;
-    return true;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>check if the giver interlacement within the size of the draft</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="initDraft"></a>
-                    <span class="name">
-                        <span ><b>initDraft</b></span>
-                        <a href="#initDraft"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>() : Draft &#x3D;&gt; {
-  const d: Draft &#x3D; {
-    id: utilInstance.generateId(8),
-    gen_name: &#x27;draft&#x27;,
-    ud_name: &quot;&quot;,
-    drawdown: [],
-    rowShuttleMapping: [],
-    rowSystemMapping: [],
-    colShuttleMapping: [],
-    colSystemMapping: []
-
-  };
-  console.log(&quot;initiated draft id: &quot;, d.id);
-  return d;
-}</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>generates an empty draft with a unique id</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="initDraftWithParams"></a>
-                    <span class="name">
-                        <span ><b>initDraftWithParams</b></span>
-                        <a href="#initDraftWithParams"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(params: any) : Draft &#x3D;&gt; {
-  const d: Draft &#x3D; {
-    id: utilInstance.generateId(8),
-    gen_name: &#x27;draft&#x27;,
-    ud_name: &quot;&quot;,
-    drawdown: [],
-    rowShuttleMapping: [],
-    rowSystemMapping: [],
-    colShuttleMapping: [],
-    colSystemMapping: []
-
-  };
-
-  console.log(&quot;generated draft id: &quot;, d.id);
-
-
-  if(params.id !&#x3D;&#x3D; undefined ) d.id &#x3D; params.id;
-  if(params.gen_name !&#x3D;&#x3D; undefined ) d.gen_name &#x3D; params.gen_name;
-  if(params.ud_name !&#x3D;&#x3D; undefined ) d.ud_name &#x3D; params.ud_name;
- 
-  //handle common error
-  if(params.pattern !&#x3D;&#x3D; undefined) params.drawdown &#x3D; params.pattern;
-  //start with empty draft 
-
-  if(params.wefts &#x3D;&#x3D;&#x3D; undefined ){
-    if(params.drawdown &#x3D;&#x3D; undefined) params.wefts &#x3D; 1;
-    else params.wefts &#x3D; wefts(params.drawdown);
-  }
-
-  if(params.warps &#x3D;&#x3D;&#x3D; undefined){
-    if(params.drawdown &#x3D;&#x3D; undefined)  params.warps &#x3D; 1;
-    else params.warps &#x3D; warps(params.drawdown);
-  } 
- 
-  for(let i &#x3D; 0; i &lt; params.wefts; i++){
-    d.drawdown.push([]);
-    d.rowSystemMapping.push(0);
-    d.rowShuttleMapping.push(1);
-    for(let j &#x3D; 0; j &lt; params.warps; j++){
-      d.drawdown[i][j] &#x3D; new Cell(false);
-    }
-  }
-
-  for(let j &#x3D; 0; j &lt; params.warps; j++){
-    d.colSystemMapping.push(0);
-    d.colShuttleMapping.push(0);
-  }
-
-  if(params.drawdown !&#x3D;&#x3D; undefined){
-    d.drawdown.forEach((row, i) &#x3D;&gt; {
-      row.forEach((cell, j) &#x3D;&gt; {
-       cell.setHeddle(params.drawdown[i%wefts(params.drawdown)][j%warps(params.drawdown)].getHeddle());
-      })
-    })
-  }
-
-  if(params.rowShuttleMapping !&#x3D;&#x3D; undefined){
-    for(let i &#x3D; 0; i &lt; wefts(d.drawdown); i++){
-      d.rowShuttleMapping[i] &#x3D; params.rowShuttleMapping[i%params.rowShuttleMapping.length];
-    }
-  }
-
-  if(params.rowSystemMapping !&#x3D;&#x3D; undefined){
-    for(let i &#x3D; 0; i &lt; wefts(d.drawdown); i++){
-      d.rowSystemMapping[i] &#x3D; params.rowSystemMapping[i%params.rowSystemMapping.length];
-    }
-  }
-
-  if(params.colShuttleMapping !&#x3D;&#x3D; undefined){
-    for(let i &#x3D; 0; i &lt; warps(d.drawdown); i++){
-      d.colShuttleMapping[i] &#x3D; params.colShuttleMapping[i%params.colShuttleMapping.length];
-    }
-  }
-
-  if(params.colSystemMapping !&#x3D;&#x3D; undefined){
-    for(let i &#x3D; 0; i &lt; warps(d.drawdown); i++){
-      d.colSystemMapping[i] &#x3D; params.colSystemMapping[i%params.colSystemMapping.length];
-    }
-  }
-
-  console.log(&quot;finished draft id: &quot;, d.id);
-
-  return d;
-}</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>creates a draft based on the params provided.</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="insertDrawdownCol"></a>
-                    <span class="name">
-                        <span ><b>insertDrawdownCol</b></span>
-                        <a href="#insertDrawdownCol"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown, j: number, col: Array&lt;Cell&gt;) : Drawdown &#x3D;&gt; {
-    
-    const w &#x3D; warps(d);
-
-    if(j &#x3D;&#x3D;&#x3D; null) j &#x3D;0;
-
-    if(col &#x3D;&#x3D; null){
-      col &#x3D; [];
-      for(let i &#x3D; 0; i &lt; wefts(d); i++){
-        col.push(new Cell(false));
-      }
-    }
-    for (var ndx &#x3D; 0; ndx &lt; wefts(d); ndx++) {
-      d[ndx].splice(j, 0, new Cell(col[ndx].getHeddle()));
-    }
-    return d;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>inserts a column into the drawdown</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="insertDrawdownRow"></a>
-                    <span class="name">
-                        <span ><b>insertDrawdownRow</b></span>
-                        <a href="#insertDrawdownRow"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown, i: number, row: Array&lt;Cell&gt;) : Drawdown &#x3D;&gt; {
-    i &#x3D; i+1;
-
-    if(row &#x3D;&#x3D;&#x3D; null){
-      row &#x3D; [];
-      for (var j &#x3D; 0; j &lt; warps(d); j++) {
-        row.push(new Cell(false));
-      }
-    }
-    if(row.length !&#x3D;&#x3D; warps(d)) console.error(&quot;inserting row of incorrect length into drawdown&quot;);
-   
-    try{
-      d.splice(i,0,row);
-    }catch(e){
-      console.error(e);
-    }
-    return d;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>I DON&quot;T THINK THIS FUNCTION WORKS OR IS BEING USED
-removes any boundary rows from the input draft that are unset</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="insertMappingCol"></a>
-                    <span class="name">
-                        <span ><b>insertMappingCol</b></span>
-                        <a href="#insertMappingCol"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(m: Array&lt;number&gt;, j: number, col: number) : Array&lt;number&gt; &#x3D;&gt; {
-    m.splice(j,0, col);
-    return m;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>inserts a value into the col system/shuttle mapping at a particular location</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="insertMappingRow"></a>
-                    <span class="name">
-                        <span ><b>insertMappingRow</b></span>
-                        <a href="#insertMappingRow"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(m: Array&lt;number&gt;, i: number, val: number) : Array&lt;number&gt; &#x3D;&gt; {
-    i &#x3D; i+1;
-    try{
-      m.splice(i,0,val);
-    }catch(e){
-      console.error(e);
-    }
-    return m;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>inserts a new value into the row system/shuttle map</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="invertDrawdown"></a>
-                    <span class="name">
-                        <span ><b>invertDrawdown</b></span>
-                        <a href="#invertDrawdown"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(drawdown: Drawdown) : Drawdown &#x3D;&gt;  {
-    
-    const inverted &#x3D; drawdown.slice();
-    for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
-      for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
-        if(drawdown[i][j].isSet()){
-          const set_to &#x3D; !drawdown[i][j].getHeddle();
-          inverted[i][j].setHeddle(set_to);
-        }
-        
-      }
-    } 
-    return inverted;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>inverts the drawdown (e.g. sets true cells to false and vice versa)</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="isSet"></a>
-                    <span class="name">
-                        <span ><b>isSet</b></span>
-                        <a href="#isSet"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown, i:number, j:number) : boolean &#x3D;&gt; {
-    if ( i &gt; -1 &amp;&amp; i &lt; wefts(d) &amp;&amp; j &gt; -1 &amp;&amp; j &lt; warps(d)) {
-      return d[i][j].isSet();
-    } else {
-      return false;
-    }
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>checks if the cells in the provided drawdown is set or unset</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="isUp"></a>
-                    <span class="name">
-                        <span ><b>isUp</b></span>
-                        <a href="#isUp"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown, i:number, j:number) : boolean &#x3D;&gt;{
-    //console.log(&quot;is up&quot;, i, j, wefts(d), warps(d), d[i][j]);
-    if ( i &gt; -1 &amp;&amp; i &lt; wefts(d) &amp;&amp; j &gt; -1 &amp;&amp; j &lt; warps(d)) {
-      return d[i][j].isUp();
-    } else {
-      return false;
-    }
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>checks if the cells in the provided drawdown is up</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="loadDraftFromFile"></a>
-                    <span class="name">
-                        <span ><b>loadDraftFromFile</b></span>
-                        <a href="#loadDraftFromFile"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(data: any, flips: any, version: string) : Promise&lt;Draft&gt; &#x3D;&gt; {
-
-    const draft: Draft &#x3D; initDraft();
-    if(data.id !&#x3D;&#x3D; undefined) draft.id &#x3D; data.id;
-    draft.gen_name &#x3D; (data.gen_name &#x3D;&#x3D;&#x3D; undefined) ? &#x27;draft&#x27; : data.gen_name;
-    draft.ud_name &#x3D; (data.ud_name &#x3D;&#x3D;&#x3D; undefined) ? &#x27;&#x27; : data.ud_name;
-    
-    if(version &#x3D;&#x3D;&#x3D; undefined || version &#x3D;&#x3D;&#x3D; null || !utilInstance.sameOrNewerVersion(version, &#x27;3.4.5&#x27;)){
-      draft.drawdown &#x3D; parseSavedPattern(data.pattern);
-    }else{
-      draft.drawdown &#x3D; parseSavedPattern(data.drawdown);
-    }
-
-    draft.rowShuttleMapping &#x3D; (data.rowShuttleMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.rowShuttleMapping;
-    draft.rowSystemMapping &#x3D; (data.rowSystemMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.rowSystemMapping;
-    draft.colShuttleMapping &#x3D; (data.colShuttleMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.colShuttleMapping;;
-    draft.colSystemMapping&#x3D; (data.colSystemMapping &#x3D;&#x3D;&#x3D; undefined) ? [] : data.colSystemMapping;;
-
-
-    return flipDraft(draft, flips.horiz, flips.vert)
-    .then(flipped &#x3D;&gt; {
-      return flipped;
-    })
-    
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>sets up the draft from the information saved in a .ada file</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="parseSavedPattern"></a>
-                    <span class="name">
-                        <span ><b>parseSavedPattern</b></span>
-                        <a href="#parseSavedPattern"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(pattern: Array&lt;Array&lt;boolean&gt;&gt;) : Drawdown &#x3D;&gt; {
-    const drawdown:Drawdown &#x3D; [];
-    if(pattern &#x3D;&#x3D;&#x3D; undefined) return [];
-
-    for(var i &#x3D; 0; i &lt; wefts(pattern); i++) {
-        drawdown.push([]);
-        for (var j &#x3D; 0; j &lt; warps(pattern); j++){
-          drawdown[i][j]&#x3D; new Cell(null);
-          drawdown[i][j].reloadCell(pattern[i][j]); //this takes a cell param and updates from there
-        }
-    }
-    return drawdown;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>converts the saved structure of a pattern into the format used in memory</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="pasteIntoDrawdown"></a>
-                    <span class="name">
-                        <span ><b>pasteIntoDrawdown</b></span>
-                        <a href="#pasteIntoDrawdown"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(
-    drawdown: Drawdown, 
-    fill_pattern: Drawdown,
-    start_i: number,
-    start_j: number,
-    width: number,
-    height: number 
-
-  ) :  Drawdown &#x3D;&gt;  {
-
-
-    let rows &#x3D; wefts(fill_pattern);
-    let cols &#x3D; warps(fill_pattern);
-
-    //cycle through each visible row/column of the selection
-    for (var i &#x3D; 0; i &lt; height; i++ ) {
-      for (var j &#x3D; 0; j &lt; width; j++ ) {
-        try{
-          drawdown[start_i+i][start_j+j].setHeddle(fill_pattern[i % rows][j % cols].getHeddle());
-        }catch(e){
-          console.error(e);
-        }
-      }
-    }
-
-    return drawdown;
-
-   
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>pasts a second drawdown representing a pattern at the specified location and size</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="setHeddle"></a>
-                    <span class="name">
-                        <span ><b>setHeddle</b></span>
-                        <a href="#setHeddle"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d:Drawdown, i:number, j:number, bool:boolean) : Drawdown &#x3D;&gt; {
-      d[i][j].setHeddle(bool);
-      return d;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>sets the heddle at the specified location to the value provided</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="shiftDrawdown"></a>
-                    <span class="name">
-                        <span ><b>shiftDrawdown</b></span>
-                        <a href="#shiftDrawdown"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(drawdown: Drawdown, up: boolean, inc: number) : Drawdown &#x3D;&gt;  {
-
-      const shifted &#x3D; createBlankDrawdown(wefts(drawdown), warps(drawdown));
-      for(let i &#x3D; 0; i &lt; wefts(drawdown); i++){
-        for(let j &#x3D; 0; j &lt; warps(drawdown); j++){
-            let set_to &#x3D; false;
-            if(up)  set_to &#x3D; drawdown[(i+inc)%wefts(drawdown)][j].getHeddle();
-            else set_to &#x3D; drawdown[i][(j+inc)%warps(drawdown)].getHeddle();
-            shifted[i][j].setHeddle(set_to);
-        }
-      } 
-      return shifted;
-    }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>shifts the drawdown up or left by the amount specified.</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="warps"></a>
-                    <span class="name">
-                        <span ><b>warps</b></span>
-                        <a href="#warps"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown | Array&lt;Array&lt;any&gt;&gt;) :  number &#x3D;&gt; {
-    if(d &#x3D;&#x3D;&#x3D; null || d &#x3D;&#x3D; undefined) return 0;
-    if(d[0] &#x3D;&#x3D;&#x3D; undefined) return 0;
-    return d[0].length;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>calcualte the number of warps (cols) in a pattern</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="wefts"></a>
-                    <span class="name">
-                        <span ><b>wefts</b></span>
-                        <a href="#wefts"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(d: Drawdown | Array&lt;Array&lt;any&gt;&gt;) :  number &#x3D;&gt; {
-    if(d &#x3D;&#x3D;&#x3D; null || d &#x3D;&#x3D; undefined) return 0;
-    return d.length;
-  }</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>calcualte the number of wefts (rows) in a pattern</p>
-</div>
-                </td>
-            </tr>
 
         </tbody>
     </table>
@@ -7862,6 +7897,160 @@ number of input and output Drafts. Classifies Operations.</p>
         </tbody>
     </table>
 </section>
+    <h3>src/app/player/model/playerop.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="defaultPerform"></a>
+                    <span class="name">
+                        <span ><b>defaultPerform</b></span>
+                        <a href="#defaultPerform"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(init: PlayerState) &#x3D;&gt; { 
+  let res &#x3D; copyState(init);
+  return Promise.resolve(res);
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>The &quot;do nothing&quot; perform</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="forward"></a>
+                    <span class="name">
+                        <span ><b>forward</b></span>
+                        <a href="#forward"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SingleOpTemplate.html" target="_self" >SingleOpTemplate</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  id: -1,
+  name: &#x27;forward&#x27;,
+  classifier: &#x27;prog&#x27;,
+  params: &lt;Array&lt;NumParam&gt;&gt; [{
+    name: &#x27;step size&#x27;,
+    dx: &#x27;the number of rows to move forward&#x27;,
+    type: &#x27;number&#x27;,
+    min: 1,
+    max: 100,
+    value: 1,
+  }],
+  perform: (init: PlayerState) &#x3D;&gt; { 
+    let res &#x3D; copyState(init);
+    res.row &#x3D; (init.row+1) % wefts(init.draft.drawdown);
+    res.pedal &#x3D; &#x27;forward&#x27;;
+    if (res.weaving) res.numPicks++;
+    return Promise.resolve(res); 
+  }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="refresh"></a>
+                    <span class="name">
+                        <span ><b>refresh</b></span>
+                        <a href="#refresh"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SingleOpTemplate.html" target="_self" >SingleOpTemplate</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  id: -1,
+  name: &#x27;refresh&#x27;,
+  classifier: &#x27;prog&#x27;,
+  params: [],
+  perform: defaultPerform,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reverse"></a>
+                    <span class="name">
+                        <span ><b>reverse</b></span>
+                        <a href="#reverse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SingleOpTemplate.html" target="_self" >SingleOpTemplate</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  id: -1,
+  name: &#x27;reverse&#x27;,
+  classifier: &#x27;prog&#x27;,
+  params: &lt;Array&lt;NumParam&gt;&gt; [{
+    name: &#x27;step size&#x27;,
+    dx: &#x27;the number of rows to move backward&#x27;,
+    type: &#x27;number&#x27;,
+    min: 1,
+    max: 100,
+    value: 1,
+  }],
+  perform: (init: PlayerState) &#x3D;&gt; { 
+    let res &#x3D; copyState(init);
+    res.row &#x3D; (init.row+wefts(init.draft.drawdown)-1) % wefts(init.draft.drawdown);
+    res.pedal &#x3D; &#x27;reverse&#x27;;
+    if (res.weaving) res.numPicks++;
+    return Promise.resolve(res);
+  }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
     <h3>src/app/core/model/draft2wif.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -7914,115 +8103,6 @@ number of input and output Drafts. Classifies Operations.</p>
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>false</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-</section>
-    <h3>src/app/player/model/op_mappings.ts</h3>
-    <section>
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="forward"></a>
-                    <span class="name">
-                        <span ><b>forward</b></span>
-                        <a href="#forward"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/PlayerOp.html" target="_self" >PlayerOp</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>{
-  name: &#x27;forward&#x27;,
-  classifier: &#x27;prog&#x27;,
-  perform: (init: PlayerState) &#x3D;&gt; { 
-    let res &#x3D; copyState(init);
-    res.row &#x3D; (init.row+1) % wefts(init.draft.drawdown);
-    res.pedal &#x3D; &#x27;forward&#x27;;
-    if (res.weaving) res.numPicks++;
-    return Promise.resolve(res); 
-  }
-}</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="refresh"></a>
-                    <span class="name">
-                        <span ><b>refresh</b></span>
-                        <a href="#refresh"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/PlayerOp.html" target="_self" >PlayerOp</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>{
-  name: &#x27;refresh&#x27;,
-  classifier: &#x27;prog&#x27;,
-  perform: (init: PlayerState) &#x3D;&gt; { 
-    let res &#x3D; copyState(init);
-    if (res.weaving) res.numPicks++;
-    return Promise.resolve(res);
-  }
-}</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="reverse"></a>
-                    <span class="name">
-                        <span ><b>reverse</b></span>
-                        <a href="#reverse"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/PlayerOp.html" target="_self" >PlayerOp</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>{
-  name: &#x27;reverse&#x27;,
-  classifier: &#x27;prog&#x27;,
-  perform: (init: PlayerState) &#x3D;&gt; { 
-    let res &#x3D; copyState(init);
-    res.row &#x3D; (init.row+wefts(init.draft.drawdown)-1) % wefts(init.draft.drawdown);
-    res.pedal &#x3D; &#x27;reverse&#x27;;
-    if (res.weaving) res.numPicks++;
-    return Promise.resolve(res);
-  }
-}</code>
                     </td>
                 </tr>
 

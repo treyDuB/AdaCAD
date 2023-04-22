@@ -12,7 +12,7 @@ import utilInstance from "../../core/model/util";
  * Op chain:
  * - 1 pedal, multiple operations in a chain (array)
  * - if pedal, perform() each Op in sequence
- * @param ops   array of Op ID numbers to execute in order
+ * @param ops   array of OpInstances to execute in order
  */
 export class ChainOp implements CompoundPerformable, BaseOpInstance {
   id: number;

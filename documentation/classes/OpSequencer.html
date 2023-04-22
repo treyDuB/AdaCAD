@@ -62,7 +62,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/app/player/model/sequencer.ts</code>
+            <code>src/app/player/provider/sequencer.service.ts</code>
         </p>
 
 
@@ -85,7 +85,7 @@ multiple operations in a circular queue</li>
                 <h3>Implements</h3>
             </p>
             <p class="comment">
-                            <code><a href="../interfaces/PedalEvent.html" target="_self" >PedalEvent</a></code>
+                            <code><a href="../interfaces/CompoundPerformable.html" target="_self" >CompoundPerformable</a></code>
             </p>
 
 
@@ -106,6 +106,9 @@ multiple operations in a circular queue</li>
                             </li>
                             <li>
                                 <a href="#name" >name</a>
+                            </li>
+                            <li>
+                                <a href="#onChangePosition" >onChangePosition</a>
                             </li>
                             <li>
                                 <a href="#ops" >ops</a>
@@ -145,16 +148,13 @@ multiple operations in a circular queue</li>
                                 <a href="#hasPedal" >hasPedal</a>
                             </li>
                             <li>
+                                <a href="#insertOpAt" >insertOpAt</a>
+                            </li>
+                            <li>
                                 <a href="#mapPedal" >mapPedal</a>
                             </li>
                             <li>
-                                <a href="#nextOp" >nextOp</a>
-                            </li>
-                            <li>
                                 <a href="#perform" >perform</a>
-                            </li>
-                            <li>
-                                <a href="#prevOp" >prevOp</a>
                             </li>
                             <li>
                                 <a href="#removeOp" >removeOp</a>
@@ -175,6 +175,9 @@ multiple operations in a circular queue</li>
                     <tr>
                         <td class="col-md-4">
                             <ul class="index-list">
+                                <li>
+                                    <a href="#pos" >pos</a>
+                                </li>
                                 <li>
                                     <a href="#isMapped" >isMapped</a>
                                 </li>
@@ -197,12 +200,12 @@ multiple operations in a circular queue</li>
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(pedals?: Array<number>, ops?: <a href="../s/layer.html" target="_self">Array&lt;PlayerOp | ChainOp&gt;</a>)</code>
+<code>constructor(pedals?: Array<number>, ops?: <a href="../undefineds/SequencerOp.html" target="_self">Array&lt;SequencerOp&gt;</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/player/model/sequencer.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/player/provider/sequencer.service.ts:39</a></div>
                             </td>
                         </tr>
 
@@ -239,7 +242,7 @@ Sequencer.</p>
                                                         <td>ops</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/variables.html#layer" target="_self" >Array&lt;PlayerOp | ChainOp&gt;</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#SequencerOp" target="_self" >Array&lt;SequencerOp&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -285,7 +288,7 @@ Sequencer.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/player/model/sequencer.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/player/provider/sequencer.service.ts:27</a></div>
                         </td>
                     </tr>
 
@@ -311,7 +314,32 @@ Sequencer.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/app/player/model/sequencer.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/player/provider/sequencer.service.ts:23</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onChangePosition"></a>
+                    <span class="name">
+                        <span ><b>onChangePosition</b></span>
+                        <a href="#onChangePosition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new EventEmitter &lt;number&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/player/provider/sequencer.service.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -331,7 +359,7 @@ Sequencer.</p>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../miscellaneous/variables.html#layer" target="_self" >Array&lt;PlayerOp | ChainOp&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#SequencerOp" target="_self" >Array&lt;SequencerOp&gt;</a></code>
 
                     </td>
                 </tr>
@@ -342,7 +370,7 @@ Sequencer.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/player/model/sequencer.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/player/provider/sequencer.service.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -373,7 +401,7 @@ Sequencer.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/app/player/model/sequencer.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/player/provider/sequencer.service.ts:26</a></div>
                         </td>
                     </tr>
 
@@ -404,7 +432,7 @@ Sequencer.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/app/player/model/sequencer.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/player/provider/sequencer.service.ts:24</a></div>
                         </td>
                     </tr>
 
@@ -436,7 +464,7 @@ Sequencer.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/app/player/model/sequencer.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/player/provider/sequencer.service.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -467,7 +495,7 @@ Sequencer.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/player/model/sequencer.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/player/provider/sequencer.service.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -494,21 +522,23 @@ Sequencer.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>addOp(o: <a href="../s/layer.html" target="_self">PlayerOp | ChainOp</a>)</code>
+<code>addOp(o: <a href="../undefineds/SequencerOp.html" target="_self">SequencerOp</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="89"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:89</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="117"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:117</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Adds an operation to the end of the sequencer</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -525,7 +555,7 @@ Sequencer.</p>
                                 <tr>
                                     <td>o</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#layer" target="_self" >PlayerOp | ChainOp</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#SequencerOp" target="_self" >SequencerOp</a></code>
                                     </td>
 
                                     <td>
@@ -570,14 +600,16 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="101"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:101</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="132"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:132</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Deletes the operation at position x and returns the removed operation.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -609,7 +641,7 @@ Sequencer.</p>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -639,8 +671,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="69"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:69</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="90"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:90</a></div>
                 </td>
             </tr>
 
@@ -692,6 +724,87 @@ Sequencer.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="insertOpAt"></a>
+                    <span class="name">
+                        <span ><b>insertOpAt</b></span>
+                        <a href="#insertOpAt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>insertOpAt(op: <a href="../undefineds/SequencerOp.html" target="_self">SequencerOp</a>, x: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="139"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:139</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>op</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#SequencerOp" target="_self" >SequencerOp</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>x</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="mapPedal"></a>
                     <span class="name">
                         <span ><b>mapPedal</b></span>
@@ -708,8 +821,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="77"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:77</a></div>
                 </td>
             </tr>
 
@@ -773,43 +886,6 @@ Sequencer.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="nextOp"></a>
-                    <span class="name">
-                        <span ><b>nextOp</b></span>
-                        <a href="#nextOp"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>nextOp()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:74</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="perform"></a>
                     <span class="name">
                         <span ><b>perform</b></span>
@@ -826,8 +902,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="106"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:106</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="95"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:95</a></div>
                 </td>
             </tr>
 
@@ -891,43 +967,6 @@ Sequencer.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="prevOp"></a>
-                    <span class="name">
-                        <span ><b>prevOp</b></span>
-                        <a href="#prevOp"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>prevOp()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="81"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:81</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="removeOp"></a>
                     <span class="name">
                         <span ><b>removeOp</b></span>
@@ -944,14 +983,16 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="95"
-                            class="link-to-prism">src/app/player/model/sequencer.ts:95</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:125</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Removes the last operation in the sequencer</p>
+</div>
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
@@ -975,6 +1016,75 @@ Sequencer.</p>
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="pos"></a>
+                        <span class="name"><b>pos</b><a href="#pos"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>pos()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/player/provider/sequencer.service.ts:33</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>pos(x: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/player/provider/sequencer.service.ts:35</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>x</td>
+                                                    
+                                                            <td>
+                                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="isMapped"></a>
                         <span class="name"><b>isMapped</b><a href="#isMapped"><span class="icon ion-ios-link"></span></a></span>
                     </td>
@@ -987,7 +1097,7 @@ Sequencer.</p>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/player/model/sequencer.ts:42</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/player/provider/sequencer.service.ts:63</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -1016,7 +1126,7 @@ Sequencer.</p>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/player/model/sequencer.ts:47</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/player/provider/sequencer.service.ts:68</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -1045,7 +1155,7 @@ Sequencer.</p>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/player/model/sequencer.ts:51</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/player/provider/sequencer.service.ts:72</a></div>
                                 </td>
                             </tr>
 
@@ -1056,8 +1166,19 @@ Sequencer.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PedalEvent, PlayerOp, ChainOp, forward } from &quot;./op_mappings&quot;;
-import { PlayerState, copyState } from &quot;./state&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, EventEmitter } from &#x27;@angular/core&#x27;;
+import { 
+  Performable, CompoundPerformable, OpTemplate,
+  OpInstance as SingleOp, forward, refresh, CustomStructOp
+} from &#x27;../model/playerop&#x27;;
+import { ChainOp } from &#x27;../model/chainop&#x27;;
+import { PlayerState, copyState } from &#x27;../model/state&#x27;;
+// import { PlayerService } from &#x27;../player.service&#x27;;
+import { PedalsService } from &#x27;./pedals.service&#x27;;
+import { MappingsService } from &#x27;./mappings.service&#x27;;
+
+export type SequencerOp &#x3D; ChainOp | SingleOp;
+type OpInstanceID &#x3D; number;
 
 /**
  * Sequencer:
@@ -1066,14 +1187,24 @@ import { PlayerState, copyState } from &quot;./state&quot;;
  *  - 1 &quot;progress&quot; pedal (forward)
  *  - if select pedal, go to next/previous operation in Sequencer
  */
- export class OpSequencer implements PedalEvent {
+ export class OpSequencer implements CompoundPerformable {
   name: string;
   p_select_a: number &#x3D; -1;
   p_select_b?: number &#x3D; -1;
   p_prog: number &#x3D; -1;
   _pos: number &#x3D; -1;
-  ops: Array&lt;PlayerOp | ChainOp&gt; &#x3D; [];
+  ops: Array&lt;SequencerOp&gt; &#x3D; [];
   selecting: boolean &#x3D; false;
+
+  onChangePosition &#x3D; new EventEmitter &lt;number&gt;();
+
+  get pos() { return this._pos; }
+
+  set pos(x: number) {
+    this._pos &#x3D; x;
+    // console.log(&quot;new seq position &quot;, this.pos);
+    this.onChangePosition.emit(this._pos);
+  }
 
   /** 
    * @constructor Provide an array of pedals to initialize the 
@@ -1081,7 +1212,7 @@ import { PlayerState, copyState } from &quot;./state&quot;;
    * pedal. Optionally, provide an array of Ops to load onto the
    * Sequencer.
    */
-  constructor(pedals?: Array&lt;number&gt;, ops?: Array&lt;PlayerOp | ChainOp&gt;) {
+  constructor(pedals?: Array&lt;number&gt;, ops?: Array&lt;SequencerOp&gt;) {
     this.name &#x3D; &quot;sequencer&quot;;
     if (pedals) {
       this.p_prog &#x3D; pedals[0];
@@ -1098,7 +1229,7 @@ import { PlayerState, copyState } from &quot;./state&quot;;
 
   /** @method isMapped whether any pedals are mapped to the sequencer */
   get isMapped() {
-    return !(this.p_prog &gt;&#x3D; 0 &amp;&amp; this.p_select_a &gt;&#x3D; 0 &amp;&amp; this.p_select_b &gt;&#x3D; 0);
+    return !(this.p_prog &gt;&#x3D; 0 &amp;&amp; this.p_select_a &gt;&#x3D; 0 &amp;&amp; (&lt;number&gt; this.p_select_b) &gt;&#x3D; 0);
   }
 
   /** @method readyToWeave progress pedal and at least one select pedal mapped */
@@ -1106,9 +1237,9 @@ import { PlayerState, copyState } from &quot;./state&quot;;
     return (this.p_prog &gt;&#x3D; 0 &amp;&amp; this.p_select_a &gt;&#x3D; 0);
   }
 
-  get current(): PlayerOp | ChainOp | null {
-    if (this._pos &#x3D;&#x3D; -1) return null;
-    return this.ops[this._pos];
+  get current(): Performable {
+    if (this.pos &#x3D;&#x3D; -1) return refresh;
+    return this.ops[this.pos];
   }
 
   mapPedal(id: number, role: &#x27;fwd&#x27; | &#x27;sel-next&#x27; | &#x27;sel-back&#x27;) {
@@ -1129,75 +1260,204 @@ import { PlayerState, copyState } from &quot;./state&quot;;
     else return false;
   }
 
-  nextOp() {
-    if (this.ops.length &gt; 0) {
-      this._pos &#x3D; (this._pos + 1) % this.ops.length;
-      return this.current;
-    }
-  }
-
-  prevOp() {
-    if (this.ops.length &gt; 0) {
-      if (this._pos &lt; 0) { this._pos &#x3D; this.ops.length - 1; }
-      else { this._pos &#x3D; (this._pos - 1) % this.ops.length; }
-      return this.current;
-    }
-  }
-
-  addOp(o: PlayerOp | ChainOp) {
-    this.ops.push(o);
-    // if (this._pos &lt; 0) this._pos &#x3D; 0;
-    return this.ops.length - 1;
-  }
-
-  removeOp() {
-    this.ops.pop();
-    if (this.ops.length &#x3D;&#x3D; 0) this._pos &#x3D; -1;
-    if (this._pos &#x3D;&#x3D; this.ops.length) this._pos--;
-  }
-
-  delOpAt(x: number) {
-    this.ops.splice(x, 1);
-    if (this.ops.length &#x3D;&#x3D; 0) this._pos &#x3D; -1;
-  }
-
   perform(init: PlayerState, n: number): Promise&lt;PlayerState&gt; {
-    console.log(&#x27;sequencer perform&#x27;);
+    // console.log(&#x27;sequencer perform&#x27;);
     let res &#x3D; copyState(init);
     if (n &#x3D;&#x3D; this.p_prog) {
-      // console.log(&quot;forward in sequencer draft&quot;);
-      // if prev step was one of the selects, this row gets sent
       res.weaving &#x3D; true;
-      // if (this.ops.length &gt; 0) {
-      //   // this.selecting &#x3D; false; // unset because we&#x27;ve confirmed the selection
-      //   return this.current.perform(res);
-      // } else {
-        return forward.perform(res);
-      // }
+      return forward.perform(res);
     } else {
       res.weaving &#x3D; false;
-      // this.selecting &#x3D; true;
       if (this.ops.length &gt; 0) {
         if (n &#x3D;&#x3D; this.p_select_a) {
-          this._pos &#x3D; (this._pos + 1) % this.ops.length;
+          this.pos &#x3D; (this.pos + 1) % this.ops.length;
         } else if (n &#x3D;&#x3D; this.p_select_b) {
-          this._pos &#x3D; (this._pos - 1) % this.ops.length;
+          this.pos &#x3D; (this.pos + this.ops.length - 1) % this.ops.length;
         }
-        console.log(this._pos);
-        console.log(this.current);
         return this.current.perform(res);
       } else {
         return Promise.resolve(res); // we really can&#x27;t do anything without any operations on the sequencer
       }
     }
   }
+
+  /** Adds an operation to the end of the sequencer */
+  addOp(o: SequencerOp) {
+    this.ops.push(o);
+    // if (this.pos &lt; 0) this.pos &#x3D; 0;
+    // console.log(o);
+    return this.ops.length - 1;
+  }
+
+  /** Removes the last operation in the sequencer */
+  removeOp() {
+    this.ops.pop();
+    if (this.ops.length &#x3D;&#x3D; 0) this.pos &#x3D; -1;
+    if (this.pos &#x3D;&#x3D; this.ops.length) this.pos--;
+  }
+
+  /** Deletes the operation at position x and returns the removed operation. */
+  delOpAt(x: number) {
+    let rem &#x3D; this.ops.splice(x, 1)[0];
+    if (this.ops.length &#x3D;&#x3D; 0) this.pos &#x3D; -1;
+    if (this.pos &gt;&#x3D; x) { this.pos--; }
+    return rem;
+  }
+
+  insertOpAt(op: SequencerOp, x: number) {
+    let arr: Array&lt;any&gt;;
+    if (x &gt; -1) {
+      if (x &#x3D;&#x3D; 0) {
+        this.ops.unshift(op);
+      } else if (x &lt; this.ops.length) {
+        arr &#x3D; this.ops.splice(x);
+        console.log(arr);
+        this.ops.push(op);
+        this.ops &#x3D; this.ops.concat(arr);
+      } else {
+        this.ops.push(op);
+      }
+    }
+
+    if (this.pos &gt;&#x3D; x) { this.pos++; }
+  }
 }
 
-export function makeOpSequencer(conf: number &#x3D; 0, sel_fwd: number &#x3D; 1, sel_back?: number, start_ops?: Array&lt;PlayerOp | ChainOp&gt;) {
+export function makeOpSequencer(conf: number &#x3D; 0, sel_fwd: number &#x3D; 1, sel_back?: number, start_ops?: Array&lt;SequencerOp&gt;) {
   let pedals &#x3D; [conf, sel_fwd];
   if (sel_back) pedals.push(sel_back);
   if (start_ops) return new OpSequencer(pedals, start_ops);
   return new OpSequencer(pedals);
+}
+
+/** 
+ * I separated the sequencer into a generic object class
+ * AND an Angular service that extends the class. Hopefully
+ * that isn&#x27;t clunky, but it does let me separate methods
+ * that are useful to call in the HTML, from the methods
+ * that are less often called in HTML
+ * 
+ * The SequencerService is in charge of tracking what 
+ * operations are in the Sequencer, and where the 
+ * position tracker is pointing. For what the actual 
+ * operations are, the Sequencer&#x27;s perform function 
+ * updates position, then calls the Mapping service 
+ * to perform the actual operation.
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class SequencerService extends OpSequencer {
+  // seq_array: OpSequencer;
+  selecting: boolean &#x3D; false;
+  // chains: Array&lt;ChainIndex&gt; &#x3D; []; // a number pointing to index in sequencer ops
+
+  get active() { return (this.readyToWeave ? true : false); }
+  get chains() { return this.map.chains; }
+  get lastOpIndex() { return this.ops.length - 1;}
+
+  constructor(
+    public pedals: PedalsService,
+    public map: MappingsService
+  ) {
+    super();
+  }
+
+  mapPedals(fwd_pedal: number, select_pedal_a: number, select_pedal_b?: number) {
+    this.mapPedal(fwd_pedal, &#x27;fwd&#x27;);
+    this.mapPedal(select_pedal_a, &#x27;sel-next&#x27;);
+    if (select_pedal_b) {
+      this.mapPedal(select_pedal_b, &#x27;sel-back&#x27;);
+    }
+  }
+
+  nextOp() {
+    if (this.ops.length &gt; 0) {
+      if (this.pos &lt; 0) { this.pos &#x3D; 0; }
+      else { this.pos &#x3D; (this.pos + 1) % this.ops.length; }
+      console.log(this.current);
+      return this.current;
+    }
+  }
+
+  prevOp() {
+    if (this.ops.length &gt; 0) {
+      if (this.pos &lt; 0) { this.pos &#x3D; this.ops.length - 1; }
+      else { this.pos &#x3D; (this.pos - 1) % this.ops.length; }
+      return this.current;
+    }
+  }
+
+  /** Moves the operation at position &#x60;a&#x60; to position &#x60;b&#x60; in the sequencer order. */
+  moveOpTo(a: number, b: number) {
+    if (this.ops[a] &amp;&amp; this.ops[b] &amp;&amp; a !&#x3D; b) {
+      if (a &gt; b) {
+        this.insertOpAt(this.ops[a], b);
+        this.delOpAt(a+1);
+      } else {
+        this.insertOpAt(this.ops[a], b+1);
+        this.delOpAt(a);
+      }
+      if (this.pos &#x3D;&#x3D; a) { this.pos &#x3D; b; }
+      if (this.pos &#x3D;&#x3D; b) { this.pos++; }
+    }
+  }
+
+  /** Shifts the operation at position &#x60;x&#x60; to an adjacent position by swapping places with its neighbor. If &#x60;dir &#x3D; true&#x60;, operation swaps with its right neighbor. If &#x60;dir &#x3D; false&#x60;, operation swaps with its left neighbor. */
+  shiftOp(x: number, dir: boolean): boolean {
+    console.log(&quot;moving op &quot; + x + &quot; in dir &quot; + dir);
+    let shift &#x3D; dir? 1 : -1;
+    if ((x&#x3D;&#x3D;0 &amp;&amp; shift &lt; 0) || (x&#x3D;&#x3D;this.lastOpIndex &amp;&amp; shift &gt; 0)) { 
+      console.log(&quot;can&#x27;t move out of bounds&quot;);
+      return false;
+    } else { 
+      this.moveOpTo(x, x+shift); 
+      return true;
+    }
+  }
+
+  /** Add a single operation to the end of the sequencer. */
+  addSingleOp(o: OpTemplate): SingleOp {
+    // console.log(this.map);
+    // console.log(o);
+    const inst &#x3D; this.map.createOpInstance(o);
+    this.addOp(inst);
+    return inst;
+  }
+
+  /** Add a new chain operation to the sequencer. */
+  addChainOp(o: OpTemplate): ChainOp { 
+    const ch &#x3D; this.map.createChainOp(o);
+    this.addOp(ch);
+    return ch;
+    // let ch &#x3D; ChainOp.fromSingleOp(o);
+    // ch.id &#x3D; this.map.chains.length;
+    // this.chains.push({id: ch.id, pos: this.addOp(ch)});
+    // this.map.chains.push(ch);
+  }
+
+  /** Add a single operation onto an existing chain op in the sequencer. */
+  addToChain(ch_id: number, o: SingleOp) {
+    const ch &#x3D; this.map.getChain(ch_id);
+    // const ch &#x3D; this.ops[this.chains[ch_id].pos] as ChainOp;
+    ch.addOp(o);
+    console.log(this.ops);
+  }
+
+  updateParams(op_id: number, param_id: number, value: number | boolean) {
+    this.map.updateInstanceParams(op_id, param_id, value);
+  }
+    
+  findOp(id: number) {
+    return this.ops.findIndex((el) &#x3D;&gt; el.id &#x3D;&#x3D; id);
+  }
+
+  removeOpById(id: number) {
+    console.log(&quot;removing op id: &quot;, id);
+    this.ops &#x3D; this.ops.filter((el) &#x3D;&gt; el.id !&#x3D; id);
+    this.map.deleteInstance(id);
+  }
+
 }
 </code></pre>
     </div>
