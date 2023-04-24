@@ -62,15 +62,16 @@
                 class="sub-menu-button">
                   Add Chain to Sequencer
                 </button> 
-                
-                Pair with Pedal
-                <ng-container *ngFor="let p of map.availablePedals">
-                  <button
-                    (click) = "map.pair(p, op.name)"
-                  >
-                  {{ p }}
-                  </button>
-                </ng-container>
+                <ng-container *ngIf="map.availablePedals.length > 0">
+                  Pair with Pedal
+                  <ng-container *ngFor="let p of map.availablePedals">
+                    <button
+                      (click) = "map.pair(p, op.name)"
+                    >
+                    {{ p }}
+                    </button>
+                  </ng-container>
+                </ng-container>     
                 
               </div>
             </mat-menu>
