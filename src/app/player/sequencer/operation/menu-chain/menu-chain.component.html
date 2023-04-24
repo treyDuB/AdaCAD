@@ -1,27 +1,29 @@
 <mat-menu #seqChainMenu="matMenu">
   <div class="sub-menu">
-    <button mat-stroked-menu-item
-      class="sub-menu-button"
-      (click) ="seq.shiftOp(index, false)">
-      Shift Left
-    </button>
+    <div class="sub-menu-lr">
+      <button mat-stroked-menu-item
+        class="sub-menu-button"
+        (click) ="seq.shiftOp(index, false)">
+        Shift Left
+      </button>
 
-    <button mat-stroked-menu-item
-      class="sub-menu-button"
-      (click) ="seq.shiftOp(index, true)">
-      Shift Right
-    </button>
+      <button mat-stroked-menu-item
+        class="sub-menu-button"
+        (click) ="seq.shiftOp(index, true)">
+        Shift Right
+      </button>
+    </div>
     
     <button mat-stroked-menu-item
       class="sub-menu-button"
       (click) ="seq.delOpAt(index)">
-      Delete
+      Remove Chain
     </button>
 
     <button mat-stroked-menu-item
       [matMenuTriggerFor]="chainEdit"
-      class="sub-menu-button"
-      (click)="$event.stopPropagation();">
+      (click)="$event.stopPropagation();"
+      class="sub-menu-button">
       Edit Chain
     </button>
 
@@ -32,11 +34,8 @@
             [seq_id] = i
             [op] = o
             (onOperationParamChange) = "seq.updateParams(o.id, i, param.value)"
+            (click)="$event.stopPropagation();"
           ></app-operation>
-          <!-- <button mat-stroked-menu-item
-          >
-          Chain {{ch.id}}
-          </button> -->
         </ng-container>
       </div>
     </mat-menu>

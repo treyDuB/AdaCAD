@@ -6,6 +6,12 @@ app-pedal {
   display: inline-flex;
 }
 
+.pedal-array {
+  display: flex;
+  flex-flow: row;
+  margin-right: 10px;
+}
+
 .physical {
   padding: 6px;
   outline: #353535;
@@ -20,15 +26,8 @@ app-pedal {
   outline-width: 2pt;
 }
 
-.player-field-header {
-  max-width: 1300px;
-  padding: 14px;
-  margin: unset;
-  background: #3f51b5;
-  color: #ffffff;
-}
-
 .pedal-field-header {
+  font-size: 20px;
   padding-top: 10px;
   margin: unset;
   margin-bottom: 5px;
@@ -46,10 +45,4 @@ app-pedal {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.pedal-array {
-  display: flex;
-  flex-direction: row;
-  margin-right: 10px;
 }

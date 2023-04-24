@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1em 1em 0 1em;
+  padding: 1em;
 }
 
 .sub-menu-top{
@@ -16,14 +16,6 @@
   flex-grow: 1;
 }
 
-.sub-menu-rest{
-  display:flex;
-  flex-direction: column;
-  padding-top: 1em;
-  max-width: 140px;
-  font-size: 14px;
-}
-
 .sub-menu-button{
   padding: 0.3em;
   display: flex;
@@ -35,5 +27,5 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1em;
+  padding: 0.5em;
 }
