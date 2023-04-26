@@ -4584,18 +4584,14 @@ export class OperationService {
             const h = wefts(draft.drawdown);
             cell.setHeddle(draft.drawdown[within_draft_row%w][within_draft_col%h].getHeddle()); 
 
-
           });
         });
-        
 
         this.transferSystemsAndShuttles(output,all_drafts,parent_input.params, 'first');
         output.gen_name = this.formatName(all_drafts, "chaos");
       
         return Promise.resolve([output]);
-      
       }
-          
     }
 
     const erase_blank: Operation = {
@@ -4615,7 +4611,7 @@ export class OperationService {
         const parent_input = op_inputs.find(el => el.op_name === "erase blank rows");
         const child_input = op_inputs.find(el => el.op_name === "child");
         
-        if(child_input === undefined) return Promise.resolve([]);
+        if (child_input === undefined) return Promise.resolve([]);
 
         const rows_out =child_input.drafts[0].drawdown.reduce((acc, el, ndx) => {
           if(!utilInstance.hasOnlyUnset(el)) acc++;
@@ -4625,7 +4621,7 @@ export class OperationService {
         const out =initDraftWithParams({wefts: rows_out, warps: warps(child_input.drafts[0].drawdown), colShuttleMapping:child_input.drafts[0].colShuttleMapping, colSystemMapping:child_input.drafts[0].colSystemMapping});
         let ndx = 0;
         child_input.drafts[0].drawdown.forEach((row, i) => {
-          if(!utilInstance.hasOnlyUnset(row)){
+          if (!utilInstance.hasOnlyUnset(row)) {
             row.forEach((cell, j) => {
               out.drawdown[ndx][j].setHeddle(cell.getHeddle()); 
             });
@@ -4644,16 +4640,16 @@ export class OperationService {
     const jointop: Operation = {
       name: 'join top',
       displayname: 'join top',
-      old_names:[],
-      dx: 'attachesop_input.drafts toether into one draft in a column orientation',
-      params: [ 
-        <BoolParam>{name: 'repeat',
+      old_names: [],
+      dx: 'attaches op_input.drafts toether into one draft in a column orientation',
+      params: [<BoolParam>{
+        name: 'repeat',
         type: 'boolean',
         falsestate: 'do not repeat inputs to match size',
         truestate: 'repeat inputs to match size',
         value: 1,
         dx: "controls if the inputs are repeated along the width so they repeat in even intervals"
-    }],
+      }],
       inlets: [{
         name: 'drafts', 
         type: 'static',
@@ -4692,8 +4688,7 @@ export class OperationService {
         if(factor_in_repeats === 1) total_warps = utilInstance.lcm(all_warps);
         else  total_warps = utilInstance.getMaxWarps(all_drafts);
 
-
-        const d: Draft =initDraftWithParams(
+        const d: Draft = initDraftWithParams(
           {warps: total_warps, 
           wefts: total_wefts,
           colSystemMapping: warp_mapping.colSystemMapping,
@@ -4722,14 +4717,11 @@ export class OperationService {
 
           })
 
-
-
         d.gen_name = this.formatName(child_input.drafts, "top");
         return Promise.resolve([d]);
         
       }
     }
-
 
     const joinleft: Operation = {
       name: 'join left',

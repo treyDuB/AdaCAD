@@ -407,6 +407,12 @@ export class PedalsComponent implements OnInit {
   display: inline-flex;
 }
 
+.pedal-array {
+  display: flex;
+  flex-flow: row;
+  margin-right: 10px;
+}
+
 .physical {
   padding: 6px;
   outline: #353535;
@@ -421,15 +427,8 @@ export class PedalsComponent implements OnInit {
   outline-width: 2pt;
 }
 
-.player-field-header {
-  max-width: 1300px;
-  padding: 14px;
-  margin: unset;
-  background: #3f51b5;
-  color: #ffffff;
-}
-
 .pedal-field-header {
+  font-size: 20px;
   padding-top: 10px;
   margin: unset;
   margin-bottom: 5px;
@@ -447,12 +446,6 @@ export class PedalsComponent implements OnInit {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.pedal-array {
-  display: flex;
-  flex-direction: row;
-  margin-right: 10px;
 }</code></pre>
     </div>
 
@@ -482,8 +475,8 @@ export class PedalsComponent implements OnInit {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><h2 class="pedal-field-header">Pedals</h2><div id="pedals-list" class="loom-field pedals-container">  <div class="pedal-array pedals-field physical" #physPedals>    <ng-container *ngFor="let p of pds.p_pedals">      <app-pedal        class="physical-pedal"        [pedal] = p        [mapped] = "map.getMapByID(p.id)"        [physical] = "true"      ></app-pedal>    </ng-container>  </div>  <div class="pedal-array pedals-field virtual" #virtPedals>    <ng-container *ngFor="let p of pds.v_pedals">      <app-pedal        class="virtual-pedal"        [pedal] = p        [mapped] = "map.getMapByID(p.id)"        [physical] = "false"      ></app-pedal>    </ng-container>  </div>  <app-virtual-pedals></app-virtual-pedals></div></div>'
-    var COMPONENTS = [{'name': 'ChainOpMenuComponent', 'selector': 'app-menu-chain'},{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OpButtonComponent', 'selector': 'app-op-button'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PedalComponent', 'selector': 'app-pedal'},{'name': 'PedalsComponent', 'selector': 'app-pedals'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SingleOpMenuComponent', 'selector': 'app-menu-single'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
-    var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
+    var COMPONENTS = [{'name': 'ChainOpMenuComponent', 'selector': 'app-menu-chain'},{'name': 'OpButtonComponent', 'selector': 'app-op-button'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpSequencerComponent', 'selector': 'app-sequencer'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PedalComponent', 'selector': 'app-pedal'},{'name': 'PedalsComponent', 'selector': 'app-pedals'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SingleOpMenuComponent', 'selector': 'app-menu-single'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'PedalsComponent'};
 </script>
 <script src="../js/tree.js"></script>

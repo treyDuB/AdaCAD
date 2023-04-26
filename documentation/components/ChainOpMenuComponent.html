@@ -421,28 +421,30 @@ export class ChainOpMenuComponent implements OnInit {
     <div class="tab-pane fade " id="c-templateData">
         <pre class="line-numbers"><code class="language-html">&lt;mat-menu #seqChainMenu&#x3D;&quot;matMenu&quot;&gt;
   &lt;div class&#x3D;&quot;sub-menu&quot;&gt;
-    &lt;button mat-stroked-menu-item
-      class&#x3D;&quot;sub-menu-button&quot;
-      (click) &#x3D;&quot;seq.shiftOp(index, false)&quot;&gt;
-      Shift Left
-    &lt;/button&gt;
+    &lt;div class&#x3D;&quot;sub-menu-lr&quot;&gt;
+      &lt;button mat-stroked-menu-item
+        class&#x3D;&quot;sub-menu-button&quot;
+        (click) &#x3D;&quot;seq.shiftOp(index, false)&quot;&gt;
+        Shift Left
+      &lt;/button&gt;
 
-    &lt;button mat-stroked-menu-item
-      class&#x3D;&quot;sub-menu-button&quot;
-      (click) &#x3D;&quot;seq.shiftOp(index, true)&quot;&gt;
-      Shift Right
-    &lt;/button&gt;
+      &lt;button mat-stroked-menu-item
+        class&#x3D;&quot;sub-menu-button&quot;
+        (click) &#x3D;&quot;seq.shiftOp(index, true)&quot;&gt;
+        Shift Right
+      &lt;/button&gt;
+    &lt;/div&gt;
     
     &lt;button mat-stroked-menu-item
       class&#x3D;&quot;sub-menu-button&quot;
       (click) &#x3D;&quot;seq.delOpAt(index)&quot;&gt;
-      Delete
+      Remove Chain
     &lt;/button&gt;
 
     &lt;button mat-stroked-menu-item
       [matMenuTriggerFor]&#x3D;&quot;chainEdit&quot;
-      class&#x3D;&quot;sub-menu-button&quot;
-      (click)&#x3D;&quot;$event.stopPropagation();&quot;&gt;
+      (click)&#x3D;&quot;$event.stopPropagation();&quot;
+      class&#x3D;&quot;sub-menu-button&quot;&gt;
       Edit Chain
     &lt;/button&gt;
 
@@ -453,11 +455,8 @@ export class ChainOpMenuComponent implements OnInit {
             [seq_id] &#x3D; i
             [op] &#x3D; o
             (onOperationParamChange) &#x3D; &quot;seq.updateParams(o.id, i, param.value)&quot;
+            (click)&#x3D;&quot;$event.stopPropagation();&quot;
           &gt;&lt;/app-operation&gt;
-          &lt;!-- &lt;button mat-stroked-menu-item
-          &gt;
-          Chain {{ch.id}}
-          &lt;/button&gt; --&gt;
         &lt;/ng-container&gt;
       &lt;/div&gt;
     &lt;/mat-menu&gt;
@@ -473,7 +472,7 @@ export class ChainOpMenuComponent implements OnInit {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1em 1em 0 1em;
+  padding: 1em;
 }
 
 .sub-menu-top{
@@ -487,14 +486,6 @@ export class ChainOpMenuComponent implements OnInit {
   flex-grow: 1;
 }
 
-.sub-menu-rest{
-  display:flex;
-  flex-direction: column;
-  padding-top: 1em;
-  max-width: 140px;
-  font-size: 14px;
-}
-
 .sub-menu-button{
   padding: 0.3em;
   display: flex;
@@ -506,7 +497,7 @@ export class ChainOpMenuComponent implements OnInit {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1em;
+  padding: 0.5em;
 }</code></pre>
     </div>
 
@@ -535,9 +526,9 @@ export class ChainOpMenuComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><mat-menu #seqChainMenu="matMenu">  <div class="sub-menu">    <button mat-stroked-menu-item      class="sub-menu-button"      (click) ="seq.shiftOp(index, false)">      Shift Left    </button>    <button mat-stroked-menu-item      class="sub-menu-button"      (click) ="seq.shiftOp(index, true)">      Shift Right    </button>        <button mat-stroked-menu-item      class="sub-menu-button"      (click) ="seq.delOpAt(index)">      Delete    </button>    <button mat-stroked-menu-item      [matMenuTriggerFor]="chainEdit"      class="sub-menu-button"      (click)="$event.stopPropagation();">      Edit Chain    </button>    <mat-menu #chainEdit="matMenu">      <div class="sub-menu-chain">        <ng-container *ngFor="let o of op.ops; index as i">          <app-operation            [seq_id] = i            [op] = o            (onOperationParamChange) = "seq.updateParams(o.id, i, param.value)"          ></app-operation>          <!-- <button mat-stroked-menu-item          >          Chain {{ch.id}}          </button> -->        </ng-container>      </div>    </mat-menu>  </div></mat-menu></div>'
-    var COMPONENTS = [{'name': 'ChainOpMenuComponent', 'selector': 'app-menu-chain'},{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OpButtonComponent', 'selector': 'app-op-button'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PedalComponent', 'selector': 'app-pedal'},{'name': 'PedalsComponent', 'selector': 'app-pedals'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SingleOpMenuComponent', 'selector': 'app-menu-single'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
-    var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
+        var COMPONENT_TEMPLATE = '<div><mat-menu #seqChainMenu="matMenu">  <div class="sub-menu">    <div class="sub-menu-lr">      <button mat-stroked-menu-item        class="sub-menu-button"        (click) ="seq.shiftOp(index, false)">        Shift Left      </button>      <button mat-stroked-menu-item        class="sub-menu-button"        (click) ="seq.shiftOp(index, true)">        Shift Right      </button>    </div>        <button mat-stroked-menu-item      class="sub-menu-button"      (click) ="seq.delOpAt(index)">      Remove Chain    </button>    <button mat-stroked-menu-item      [matMenuTriggerFor]="chainEdit"      (click)="$event.stopPropagation();"      class="sub-menu-button">      Edit Chain    </button>    <mat-menu #chainEdit="matMenu">      <div class="sub-menu-chain">        <ng-container *ngFor="let o of op.ops; index as i">          <app-operation            [seq_id] = i            [op] = o            (onOperationParamChange) = "seq.updateParams(o.id, i, param.value)"            (click)="$event.stopPropagation();"          ></app-operation>        </ng-container>      </div>    </mat-menu>  </div></mat-menu></div>'
+    var COMPONENTS = [{'name': 'ChainOpMenuComponent', 'selector': 'app-menu-chain'},{'name': 'OpButtonComponent', 'selector': 'app-op-button'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpSequencerComponent', 'selector': 'app-sequencer'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PedalComponent', 'selector': 'app-pedal'},{'name': 'PedalsComponent', 'selector': 'app-pedals'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SingleOpMenuComponent', 'selector': 'app-menu-single'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'ChainOpMenuComponent'};
 </script>
 <script src="../js/tree.js"></script>

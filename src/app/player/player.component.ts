@@ -16,10 +16,12 @@ import { wefts, warps, isUp, isSet } from '../core/model/drafts';
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
+  /** Accesses weaving state component */
   @ViewChild(WeavingStateComponent) weaving_state;
+  /** Accesses sequencer component */
   @ViewChild(OpSequencerComponent) op_sequencer;
 
-  @Input()  default_cell: number;
+  @Input() default_cell: number;
   @Input('draft') active_draft: Draft;
 
   @Output('player-open') playerOpen = new EventEmitter<boolean>();
@@ -35,9 +37,13 @@ export class PlayerComponent implements OnInit {
   // private _active_draft: Draft = null;
 
   open: boolean = true;
+
+  /** references to HTML element containers for resizing self */
   ownContainer: HTMLElement;
+  /** reference to Mixer component's container */
   mixerContainer: HTMLElement;
   
+  /** @constructs PlayerComponent */
   constructor(
     public pls: PlayerService,
     public icons: MatIconRegistry,
@@ -110,8 +116,10 @@ export class PlayerComponent implements OnInit {
     }
   }
 
+  /** Render the player state in playback */
   drawPlayback() { this.weaving_state.drawPlayback(); }
 
+  /** Open/close the player */
   toggleOpen(state: boolean) {
     console.log("toggling");
     this.open = state;
@@ -119,6 +127,7 @@ export class PlayerComponent implements OnInit {
     this.playerOpen.emit(this.open);
   }
 
+  /** Start/stop weaving; close any menus that are open if you start weaving */
   toggleWeaving(state: boolean) {
     console.log("weaving state toggle ", state);
     if (state) {

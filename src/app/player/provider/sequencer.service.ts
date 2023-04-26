@@ -87,6 +87,7 @@ type OpInstanceID = number;
     }
   }
 
+  /** Whether or not pedal `n` has been mapped to this OpSequencer. */
   hasPedal(n: number): boolean {
     if (this.p_prog == n || this.p_select_a == n || this.p_select_b == n) return true;
     else return false;
@@ -136,6 +137,7 @@ type OpInstanceID = number;
     return rem;
   }
 
+  /** Inserts operation at position `x` in the sequencer */
   insertOpAt(op: SequencerOp, x: number) {
     let arr: Array<any>;
     if (x > -1) {
@@ -155,6 +157,7 @@ type OpInstanceID = number;
   }
 }
 
+/** helper function to make a new sequencer */
 export function makeOpSequencer(conf: number = 0, sel_fwd: number = 1, sel_back?: number, start_ops?: Array<SequencerOp>) {
   let pedals = [conf, sel_fwd];
   if (sel_back) pedals.push(sel_back);
@@ -184,10 +187,14 @@ export class SequencerService extends OpSequencer {
   selecting: boolean = false;
   // chains: Array<ChainIndex> = []; // a number pointing to index in sequencer ops
 
+  /** Whether the sequencer is active */
   get active() { return (this.readyToWeave ? true : false); }
+  /** The chains added to the sequencer */
   get chains() { return this.map.chains; }
+  /** Convenience getter for the last index */
   get lastOpIndex() { return this.ops.length - 1;}
 
+  /** @constructor */
   constructor(
     public pedals: PedalsService,
     public map: MappingsService
@@ -195,6 +202,7 @@ export class SequencerService extends OpSequencer {
     super();
   }
 
+  /** Associates given pedals with certain roles in the sequencer. */
   mapPedals(fwd_pedal: number, select_pedal_a: number, select_pedal_b?: number) {
     this.mapPedal(fwd_pedal, 'fwd');
     this.mapPedal(select_pedal_a, 'sel-next');
@@ -276,14 +284,22 @@ export class SequencerService extends OpSequencer {
     console.log(this.ops);
   }
 
+  /**
+   * Update a parameter within an OpInstance.
+   * @param op_id ID number of the operation instance being updated
+   * @param param_id The ID of the parameter within the operation (index in params array)
+   * @param value The new value of the parameter
+   */
   updateParams(op_id: number, param_id: number, value: number | boolean) {
     this.map.updateInstanceParams(op_id, param_id, value);
   }
     
+  /** Returns the index of the operation whose ID matches `id`. */
   findOp(id: number) {
     return this.ops.findIndex((el) => el.id == id);
   }
-
+ 
+  /** Removes operation from sequencer and deletes the instance. */
   removeOpById(id: number) {
     console.log("removing op id: ", id);
     this.ops = this.ops.filter((el) => el.id != id);

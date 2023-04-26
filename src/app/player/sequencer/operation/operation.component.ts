@@ -9,9 +9,13 @@ import { ChainOpMenuComponent } from './menu-chain/menu-chain.component';
 
 /** events that an OperationComponent can emit */
 export type OpComponentEvent = {
-  id: number, /** ID of the op instance */
+  /** ID of the op instance */
+  id: number, 
+  /** May also emit a parameter identifier */
   param?: any,
+  /** May also emit a parameter value */
   val?: any,
+  /** May also emit a direction for shifting/moving */
   dir?: boolean
 }
 
@@ -39,26 +43,26 @@ export class OperationComponent implements OnInit, OnDestroy {
   @Output() onDuplicateOp = new EventEmitter <OpComponentEvent>();
   @Output() onShiftOp = new EventEmitter <OpComponentEvent>(); 
 
+  /** @ignore */
   constructor(
     public seq: SequencerService
-  ) { 
-  }
+  ) {}
 
-  ngOnInit(): void {
-  }
+  /** @ignore */
+  ngOnInit(): void {}
 
+  /** Load this operation's menu depending on if it's a chain or not. */
   ngAfterViewInit(): void {
     this.menu = (this.op.classifier == 'chain') ? this.chainMenu.menu : this.singleMenu.menu;
   }
 
-  ngOnDestroy(): void {
-    
-  }
+  /** @ignore */
+  ngOnDestroy(): void {}
 
   /**
    * called from the child parameter when a value has changed, this functin then updates the inlets
-   * @param id an object containing the id of hte parameter that has changed
-   * @param value 
+   * @param id an object containing the id of the parameter that has changed
+   * @param value the value as a string (number or boolean, parse it)
    */
   updateParam(id: string, value: string){
     console.log("param updated", id, value);

@@ -529,8 +529,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="117"
-                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:117</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:118</a></div>
                 </td>
             </tr>
 
@@ -600,8 +600,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="132"
-                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:132</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="133"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:133</a></div>
                 </td>
             </tr>
 
@@ -671,14 +671,16 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="90"
-                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:90</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:91</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Whether or not pedal <code>n</code> has been mapped to this OpSequencer.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -740,14 +742,16 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="139"
-                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:139</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="141"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:141</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Inserts operation at position <code>x</code> in the sequencer</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -902,8 +906,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="95"
-                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:95</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="96"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:96</a></div>
                 </td>
             </tr>
 
@@ -983,8 +987,8 @@ Sequencer.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="125"
-                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:125</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">src/app/player/provider/sequencer.service.ts:126</a></div>
                 </td>
             </tr>
 
@@ -1255,6 +1259,7 @@ type OpInstanceID &#x3D; number;
     }
   }
 
+  /** Whether or not pedal &#x60;n&#x60; has been mapped to this OpSequencer. */
   hasPedal(n: number): boolean {
     if (this.p_prog &#x3D;&#x3D; n || this.p_select_a &#x3D;&#x3D; n || this.p_select_b &#x3D;&#x3D; n) return true;
     else return false;
@@ -1304,6 +1309,7 @@ type OpInstanceID &#x3D; number;
     return rem;
   }
 
+  /** Inserts operation at position &#x60;x&#x60; in the sequencer */
   insertOpAt(op: SequencerOp, x: number) {
     let arr: Array&lt;any&gt;;
     if (x &gt; -1) {
@@ -1323,6 +1329,7 @@ type OpInstanceID &#x3D; number;
   }
 }
 
+/** helper function to make a new sequencer */
 export function makeOpSequencer(conf: number &#x3D; 0, sel_fwd: number &#x3D; 1, sel_back?: number, start_ops?: Array&lt;SequencerOp&gt;) {
   let pedals &#x3D; [conf, sel_fwd];
   if (sel_back) pedals.push(sel_back);
@@ -1352,10 +1359,14 @@ export class SequencerService extends OpSequencer {
   selecting: boolean &#x3D; false;
   // chains: Array&lt;ChainIndex&gt; &#x3D; []; // a number pointing to index in sequencer ops
 
+  /** Whether the sequencer is active */
   get active() { return (this.readyToWeave ? true : false); }
+  /** The chains added to the sequencer */
   get chains() { return this.map.chains; }
+  /** Convenience getter for the last index */
   get lastOpIndex() { return this.ops.length - 1;}
 
+  /** @constructor */
   constructor(
     public pedals: PedalsService,
     public map: MappingsService
@@ -1363,6 +1374,7 @@ export class SequencerService extends OpSequencer {
     super();
   }
 
+  /** Associates given pedals with certain roles in the sequencer. */
   mapPedals(fwd_pedal: number, select_pedal_a: number, select_pedal_b?: number) {
     this.mapPedal(fwd_pedal, &#x27;fwd&#x27;);
     this.mapPedal(select_pedal_a, &#x27;sel-next&#x27;);
@@ -1444,14 +1456,22 @@ export class SequencerService extends OpSequencer {
     console.log(this.ops);
   }
 
+  /**
+   * Update a parameter within an OpInstance.
+   * @param op_id ID number of the operation instance being updated
+   * @param param_id The ID of the parameter within the operation (index in params array)
+   * @param value The new value of the parameter
+   */
   updateParams(op_id: number, param_id: number, value: number | boolean) {
     this.map.updateInstanceParams(op_id, param_id, value);
   }
     
+  /** Returns the index of the operation whose ID matches &#x60;id&#x60;. */
   findOp(id: number) {
     return this.ops.findIndex((el) &#x3D;&gt; el.id &#x3D;&#x3D; id);
   }
-
+ 
+  /** Removes operation from sequencer and deletes the instance. */
   removeOpById(id: number) {
     console.log(&quot;removing op id: &quot;, id);
     this.ops &#x3D; this.ops.filter((el) &#x3D;&gt; el.id !&#x3D; id);

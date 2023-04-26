@@ -1293,16 +1293,23 @@ export class OpSequencerComponent implements OnInit {
                 class&#x3D;&quot;sub-menu-button&quot;&gt;
                   Add Chain to Sequencer
                 &lt;/button&gt; 
-                
-                Pair with Pedal
-                &lt;ng-container *ngFor&#x3D;&quot;let p of map.availablePedals&quot;&gt;
-                  &lt;button
-                    (click) &#x3D; &quot;map.pair(p, op.name)&quot;
-                  &gt;
-                  {{ p }}
-                  &lt;/button&gt;
-                &lt;/ng-container&gt;
-                
+
+                &lt;div class&#x3D;&quot;sub-menu-rest&quot;&gt;
+                  &lt;ng-container *ngIf&#x3D;&quot;map.availablePedals.length &gt; 0&quot;&gt;
+                    Pair with Pedal
+                    &lt;div class&#x3D;&quot;sub-menu-pairs&quot;&gt;
+                      &lt;ng-container *ngFor&#x3D;&quot;let p of map.availablePedals&quot;&gt;
+                        &lt;button
+                          (click) &#x3D; &quot;map.pair(p, op.name)&quot;
+                          class&#x3D; &quot;sub-menu-pair-button&quot;
+                        &gt;
+                        {{ p }}
+                        &lt;/button&gt;
+                      &lt;/ng-container&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-container&gt; 
+                &lt;/div&gt;
+                    
               &lt;/div&gt;
             &lt;/mat-menu&gt;
           &lt;/ng-container&gt;
@@ -1373,16 +1380,22 @@ export class OpSequencerComponent implements OnInit {
                   &lt;/div&gt;
                 &lt;/mat-menu&gt;     
                 
-                &lt;ng-container *ngIf&#x3D;&quot;map.availablePedals.length &gt; 0&quot;&gt;
-                  Pair with Pedal
-                  &lt;ng-container *ngFor&#x3D;&quot;let p of map.availablePedals&quot;&gt;
-                    &lt;button
-                      (click) &#x3D; &quot;map.pair(p, op.name)&quot;
-                    &gt;
-                    {{ p }}
-                    &lt;/button&gt;
-                  &lt;/ng-container&gt;
-                &lt;/ng-container&gt;
+                &lt;div class&#x3D;&quot;sub-menu-rest&quot;&gt;
+                  &lt;ng-container *ngIf&#x3D;&quot;map.availablePedals.length &gt; 0&quot;&gt;
+                    Pair with Pedal
+                    &lt;div class&#x3D;&quot;sub-menu-pairs&quot;&gt;
+                      &lt;ng-container *ngFor&#x3D;&quot;let p of map.availablePedals&quot;&gt;
+                        &lt;button
+                          (click) &#x3D; &quot;map.pair(p, op.name)&quot;
+                          class&#x3D; &quot;sub-menu-pair-button&quot;
+                        &gt;
+                        {{ p }}
+                        &lt;/button&gt;
+                      &lt;/ng-container&gt;
+                    &lt;/div&gt;
+                  &lt;/ng-container&gt; 
+                &lt;/div&gt;
+                
               &lt;/div&gt;
             &lt;/mat-menu&gt;
           &lt;/ng-container&gt;
@@ -1474,7 +1487,25 @@ export class OpSequencerComponent implements OnInit {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1em;
+  padding: 1em 1em 0.5em 1em;
+  text-align: left;
+  font-size: 14px;
+}
+
+.sub-menu-rest{
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5em;
+}
+
+.sub-menu-pairs{
+  display: flex;
+  flex-direction: row;
+}
+
+.sub-menu-pair-button{
+  display: flex;
+  flex: 1;
 }
 
 .sub-menu-button{
@@ -1615,9 +1646,9 @@ export class OpSequencerComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="second-row">    <div id="sequencer-container" class="sequencer-block">    <h2 class="player-field-header">Operation Sequencer </h2>    <div class="operation-sequence">      <ng-container *ngFor="let o of seq.ops; index as i">        <app-operation          [seq_id] = i          [op] = o          [is_selected] = "seq.pos == i"          (onOperationParamChange) = "paramUpdated($event)"          (onDeleteOp) = "opDeleted($event)"          (onShiftOp) = "opShifted($event, i)"        ></app-operation>      </ng-container>    </div>  </div>    <div class = "op-block">    <mat-expansion-panel id ="operations-menu-s" class="op-menu-block" #opMenuS>      <mat-expansion-panel-header id ="operations-header-structure" class="op-header-s">        <mat-panel-title>          Structure Operations        </mat-panel-title>      </mat-expansion-panel-header>              <ng-container *ngFor="let class of pls.draftClassificationS">        <div id="op-container" class="op-field">          <h3>{{class.category}}</h3>          <p> {{class.dx}}</p>          <ng-container *ngFor="let op of class.ops">                       <button               mat-stroked-button              [matTooltip] = op.dx              matTooltipClass= "visibleTooltip"               [name] = op.name               [matMenuTriggerFor]="opMenu"            >            <div class="op-field-info">              <div *ngIf="class.category_id == 1; else notCustom" class="op-field-info-custom">                <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>              </div>              <ng-template #notCustom>                <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="icon for {{op.name}} operation"></mat-icon>              </ng-template>              <div>{{op.name}}</div>            </div>            </button>             <mat-menu #opMenu="matMenu">              <div class="sub-menu">                <button mat-stroked-menu-item                (click) ="addSingleOp(op)"                class="sub-menu-button">                  Add to Sequencer                </button>                <button mat-stroked-menu-item                (click) ="addChainOp(op)"                class="sub-menu-button">                  Add Chain to Sequencer                </button>                                 Pair with Pedal                <ng-container *ngFor="let p of map.availablePedals">                  <button                    (click) = "map.pair(p, op.name)"                  >                  {{ p }}                  </button>                </ng-container>                              </div>            </mat-menu>          </ng-container>        </div>      </ng-container>    </mat-expansion-panel>  </div>  <div class = "op-block">    <mat-expansion-panel id ="operations-menu-t" class="op-menu-block" #opMenuT>      <mat-expansion-panel-header id ="operations-header-transformations" class="op-header-t">        <mat-panel-title>          Transformation Operations        </mat-panel-title>      </mat-expansion-panel-header>              <ng-container *ngFor="let class of pls.draftClassificationT">        <div id="op-container" class="op-field">          <h3>{{class.category}}</h3>          <p> {{class.dx}}</p>          <ng-container *ngFor="let op of class.ops">                        <button               mat-stroked-button              [matTooltip] = op.dx              matTooltipClass= "visibleTooltip"               [name] = op.name               [matMenuTriggerFor]="opMenu"            >            <div class="op-field-info">              <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="icon for {{op.name}} operation"></mat-icon>              <div>{{op.name}}</div>            </div>            </button>             <mat-menu #opMenu="matMenu">              <div class="sub-menu">                <button mat-stroked-menu-item                (click) ="addSingleOp(op)"                class="sub-menu-button">                  Add to Sequencer                </button>                <button mat-stroked-menu-item                (click) ="addChainOp(op)"                class="sub-menu-button">                  Add Chain to Sequencer                </button>                <ng-container *ngIf="seq.chains != 0">                  <button mat-stroked-menu-item                  [matMenuTriggerFor]="opChains"                  (click)="$event.stopPropagation();"                  class="sub-menu-button">                  Add to Existing Chain                  </button>                </ng-container>                                <mat-menu #opChains="matMenu">                  <div class="sub-menu-chain">                    <ng-container *ngFor="let ch of seq.chains">                      <button mat-stroked-menu-item                      (click) ="seq.addToChain(ch.id, op)">                      Chain {{ch.id}}                      </button>                    </ng-container>                  </div>                </mat-menu>                                     <ng-container *ngIf="map.availablePedals.length > 0">                  Pair with Pedal                  <ng-container *ngFor="let p of map.availablePedals">                    <button                      (click) = "map.pair(p, op.name)"                    >                    {{ p }}                    </button>                  </ng-container>                </ng-container>              </div>            </mat-menu>          </ng-container>        </div>      </ng-container>    </mat-expansion-panel>  </div></div></div>'
-    var COMPONENTS = [{'name': 'ChainOpMenuComponent', 'selector': 'app-menu-chain'},{'name': 'ConnectionComponent', 'selector': 'app-connection'},{'name': 'DraftdetailComponent', 'selector': 'app-draftdetail'},{'name': 'ImageComponent', 'selector': 'app-image'},{'name': 'InletComponent', 'selector': 'app-inlet'},{'name': 'MixerComponent', 'selector': 'app-mixer'},{'name': 'MixerViewComponent', 'selector': 'app-mixerview'},{'name': 'NoteComponent', 'selector': 'app-note'},{'name': 'OpButtonComponent', 'selector': 'app-op-button'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpHelpModal', 'selector': 'app-ophelp'},{'name': 'OpsComponent', 'selector': 'app-ops'},{'name': 'OpSequencerComponent', 'selector': 'app-sequencer'},{'name': 'PaletteComponent', 'selector': 'app-palette'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PedalComponent', 'selector': 'app-pedal'},{'name': 'PedalsComponent', 'selector': 'app-pedals'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SingleOpMenuComponent', 'selector': 'app-menu-single'},{'name': 'SnackbarComponent', 'selector': 'app-snackbar'},{'name': 'SubdraftComponent', 'selector': 'app-subdraft'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
-    var DIRECTIVES = [{'name': 'MarqueeComponent', 'selector': 'app-marquee'},{'name': 'SelectionComponent', 'selector': 'app-selection'}];
+        var COMPONENT_TEMPLATE = '<div><div class="second-row">    <div id="sequencer-container" class="sequencer-block">    <h2 class="player-field-header">Operation Sequencer </h2>    <div class="operation-sequence">      <ng-container *ngFor="let o of seq.ops; index as i">        <app-operation          [seq_id] = i          [op] = o          [is_selected] = "seq.pos == i"          (onOperationParamChange) = "paramUpdated($event)"          (onDeleteOp) = "opDeleted($event)"          (onShiftOp) = "opShifted($event, i)"        ></app-operation>      </ng-container>    </div>  </div>    <div class = "op-block">    <mat-expansion-panel id ="operations-menu-s" class="op-menu-block" #opMenuS>      <mat-expansion-panel-header id ="operations-header-structure" class="op-header-s">        <mat-panel-title>          Structure Operations        </mat-panel-title>      </mat-expansion-panel-header>              <ng-container *ngFor="let class of pls.draftClassificationS">        <div id="op-container" class="op-field">          <h3>{{class.category}}</h3>          <p> {{class.dx}}</p>          <ng-container *ngFor="let op of class.ops">                       <button               mat-stroked-button              [matTooltip] = op.dx              matTooltipClass= "visibleTooltip"               [name] = op.name               [matMenuTriggerFor]="opMenu"            >            <div class="op-field-info">              <div *ngIf="class.category_id == 1; else notCustom" class="op-field-info-custom">                <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>              </div>              <ng-template #notCustom>                <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="icon for {{op.name}} operation"></mat-icon>              </ng-template>              <div>{{op.name}}</div>            </div>            </button>             <mat-menu #opMenu="matMenu">              <div class="sub-menu">                <button mat-stroked-menu-item                (click) ="addSingleOp(op)"                class="sub-menu-button">                  Add to Sequencer                </button>                <button mat-stroked-menu-item                (click) ="addChainOp(op)"                class="sub-menu-button">                  Add Chain to Sequencer                </button>                 <div class="sub-menu-rest">                  <ng-container *ngIf="map.availablePedals.length > 0">                    Pair with Pedal                    <div class="sub-menu-pairs">                      <ng-container *ngFor="let p of map.availablePedals">                        <button                          (click) = "map.pair(p, op.name)"                          class= "sub-menu-pair-button"                        >                        {{ p }}                        </button>                      </ng-container>                    </div>                  </ng-container>                 </div>                                  </div>            </mat-menu>          </ng-container>        </div>      </ng-container>    </mat-expansion-panel>  </div>  <div class = "op-block">    <mat-expansion-panel id ="operations-menu-t" class="op-menu-block" #opMenuT>      <mat-expansion-panel-header id ="operations-header-transformations" class="op-header-t">        <mat-panel-title>          Transformation Operations        </mat-panel-title>      </mat-expansion-panel-header>              <ng-container *ngFor="let class of pls.draftClassificationT">        <div id="op-container" class="op-field">          <h3>{{class.category}}</h3>          <p> {{class.dx}}</p>          <ng-container *ngFor="let op of class.ops">                        <button               mat-stroked-button              [matTooltip] = op.dx              matTooltipClass= "visibleTooltip"               [name] = op.name               [matMenuTriggerFor]="opMenu"            >            <div class="op-field-info">              <mat-icon svgIcon="op-{{op.name}}" aria-hidden="false" aria-label="icon for {{op.name}} operation"></mat-icon>              <div>{{op.name}}</div>            </div>            </button>             <mat-menu #opMenu="matMenu">              <div class="sub-menu">                <button mat-stroked-menu-item                (click) ="addSingleOp(op)"                class="sub-menu-button">                  Add to Sequencer                </button>                <button mat-stroked-menu-item                (click) ="addChainOp(op)"                class="sub-menu-button">                  Add Chain to Sequencer                </button>                <ng-container *ngIf="seq.chains != 0">                  <button mat-stroked-menu-item                  [matMenuTriggerFor]="opChains"                  (click)="$event.stopPropagation();"                  class="sub-menu-button">                  Add to Existing Chain                  </button>                </ng-container>                                <mat-menu #opChains="matMenu">                  <div class="sub-menu-chain">                    <ng-container *ngFor="let ch of seq.chains">                      <button mat-stroked-menu-item                      (click) ="seq.addToChain(ch.id, op)">                      Chain {{ch.id}}                      </button>                    </ng-container>                  </div>                </mat-menu>                                     <div class="sub-menu-rest">                  <ng-container *ngIf="map.availablePedals.length > 0">                    Pair with Pedal                    <div class="sub-menu-pairs">                      <ng-container *ngFor="let p of map.availablePedals">                        <button                          (click) = "map.pair(p, op.name)"                          class= "sub-menu-pair-button"                        >                        {{ p }}                        </button>                      </ng-container>                    </div>                  </ng-container>                 </div>                              </div>            </mat-menu>          </ng-container>        </div>      </ng-container>    </mat-expansion-panel>  </div></div></div>'
+    var COMPONENTS = [{'name': 'ChainOpMenuComponent', 'selector': 'app-menu-chain'},{'name': 'OpButtonComponent', 'selector': 'app-op-button'},{'name': 'OperationComponent', 'selector': 'app-operation'},{'name': 'OpSequencerComponent', 'selector': 'app-sequencer'},{'name': 'ParameterComponent', 'selector': 'app-parameter'},{'name': 'PedalComponent', 'selector': 'app-pedal'},{'name': 'PedalsComponent', 'selector': 'app-pedals'},{'name': 'PlaybackComponent', 'selector': 'app-playback'},{'name': 'PlayerComponent', 'selector': 'app-player'},{'name': 'SingleOpMenuComponent', 'selector': 'app-menu-single'},{'name': 'VirtualPedalsComponent', 'selector': 'app-virtual-pedals'},{'name': 'WeavingStateComponent', 'selector': 'app-weaving-state'}];
+    var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'OpSequencerComponent'};
 </script>
 <script src="../js/tree.js"></script>

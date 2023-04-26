@@ -274,8 +274,12 @@ export type PlayerOpClassifier &#x3D; GenericOp[&quot;classifier&quot;][&quot;ty
 /** the thing that calls an operation&#x27;s perform */
 type PerformTrigger &#x3D; &#x27;pedal&#x27; | &#x27;seq&#x27; | &#x27;none&#x27;;
 
-/** &#x60;Performable&#x60; means anything that runs a &#x60;perform&#x60; function to generate a Draft. */
+/** 
+ * &#x60;Performable&#x60; means anything that runs a &#x60;perform&#x60; function to generate a Draft. 
+ * @method &#x60;perform&#x60; The function that generates a Draft
+ */
 export interface Performable { 
+  /** Function that takes an initla PlayerState and returns a resulting PlayerState */
   perform: (init: PlayerState, ...args) &#x3D;&gt; Promise&lt;PlayerState&gt;; 
 }
 
@@ -285,12 +289,28 @@ export const defaultPerform &#x3D; (init: PlayerState) &#x3D;&gt; {
   return Promise.resolve(res);
 }
 
-/** A Performable whose effect is determined by the combination of other perform functions. */
+/** 
+ * A Performable whose effect is determined by the combination of other perform functions. 
+ * @property {Array&lt;Performable&gt;} &#x60;ops&#x60; An array of Performables to execute in order.
+ * @method &#x60;addOp&#x60; Add a Performable to the end of the array
+ * @method &#x60;removeOp&#x60; Remove a Performable from the end of the array
+ * @method &#x60;delOpAt&#x60;
+ * @method &#x60;insertOpAt&#x60;
+ */
 export interface CompoundPerformable extends Performable {
+  /** An array of Performables to execute in order. */
   ops: Array&lt;Performable&gt;;
+  /** Add a Performable to the end of the &#x60;ops&#x60; array */
   addOp: (o: Performable) &#x3D;&gt; any;
+  /** Remove a Performable from the end of the &#x60;ops&#x60; array */
   removeOp: () &#x3D;&gt; any;
+  /** Delete the Performable at position &#x60;x&#x60; */
   delOpAt: (x: number) &#x3D;&gt; any;
+  /** 
+   * Insert a Performable at position &#x60;x&#x60; 
+   * @param o The Performable
+   * @param x Position/index
+   */
   insertOpAt: (o: Performable, x: number) &#x3D;&gt; any;
 }
 
@@ -308,7 +328,7 @@ export interface SingleOpTemplate extends Performable {
 }
 
 /**
- * 
+ * An operation created from a Draft loaded from the Mixer
  */
 export interface CustomStructOp extends Performable {
   id: number,
@@ -333,11 +353,17 @@ export type OpTemplate &#x3D; SingleOpTemplate | CustomStructOp &amp; { trigger:
  * template&#x27;s perform function using these values.
  */
 export interface BaseOpInstance extends Performable {
+  /** A generated unique ID number */
   id: number,
+  /** Name of the operation (matches template) */
   name: string,
+  /** See {@link PlayerOpClassifier} */
   classifier: OpTemplate[&#x27;classifier&#x27;],
+  /** What calls the operation&#x27;s &#x60;perform&#x60; method. */
   trigger?: PerformTrigger,
+  /** Template for this instance */
   template?: Performable,
+  /** Parameters of this oepration  */
   params: Array&lt;OperationParam&gt;,
 }
 
@@ -357,11 +383,12 @@ export interface StructOpInstance extends BaseOpInstance {
   perform: CustomStructOp[&quot;perform&quot;],
 }
 
+/** union of op instance types */
 export type OpInstance &#x3D; SingleOpInstance | StructOpInstance | BaseOpInstance;
 
 /**
  * Helper function to generate an instance of an OpTemplate
- * @param base 
+ * @param {OpTemplate} base 
  * @returns instance of the OpTemplate
  */
 export function newOpInstance(base: OpTemplate): OpInstance {
@@ -379,6 +406,7 @@ export function newOpInstance(base: OpTemplate): OpInstance {
   return inst;
 }
 
+/** @function getParamVals Helper function to turn an array of OperationParams into an array of their values */
 export function getParamVals(params: Array&lt;OperationParam&gt;): Array&lt;ParamValue&gt; {
   if (!params || params.length &#x3D;&#x3D; 0) {
     return [] as Array&lt;ParamValue&gt;;
@@ -386,7 +414,7 @@ export function getParamVals(params: Array&lt;OperationParam&gt;): Array&lt;Para
   return params.map((el) &#x3D;&gt; el.value);
 }
 
-/** @const forward a player-specific function to progress through the draft */
+/** A player-specific function to progress through the draft */
 export const forward: SingleOpTemplate &#x3D; {
   id: -1,
   name: &#x27;forward&#x27;,
@@ -408,7 +436,7 @@ export const forward: SingleOpTemplate &#x3D; {
   }
 }
 
-/** @const refresh a player-specific function to progress through the draft (re-sends the row to give more time) */
+/** A player-specific function to progress through the draft (re-sends the row to give more time) */
 export const refresh: SingleOpTemplate &#x3D; {
   id: -1,
   name: &#x27;refresh&#x27;,
@@ -417,7 +445,7 @@ export const refresh: SingleOpTemplate &#x3D; {
   perform: defaultPerform,
 }
 
-/** @const reverse a player-specific function to progress backwards through the draft */
+/** A player-specific function to progress backwards through the draft */
 export const reverse: SingleOpTemplate &#x3D; {
   id: -1,
   name: &#x27;reverse&#x27;,
@@ -439,8 +467,10 @@ export const reverse: SingleOpTemplate &#x3D; {
   }
 }
 
+/** Player-specific operations representing progress within a Draft. */
 export type ProgressOp &#x3D; OpTemplate | OpInstance &amp; { name: &#x27;forward&#x27; | &#x27;refresh&#x27; | &#x27;reverse&#x27; };
 
+/** Function that converts a general AdaCAD operation to a Player operation. */
 export function playerOpFrom(op: GenericOp, params?: Array&lt;ParamValue&gt;) {
   let player_params &#x3D; cloneDeep(op.params);
   if (params) {
@@ -481,9 +511,6 @@ export function playerOpFrom(op: GenericOp, params?: Array&lt;ParamValue&gt;) {
   
   return p;
 }
-
-export type PlayerOp &#x3D; OpTemplate;
-
 
 </code></pre>
     </div>
