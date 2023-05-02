@@ -6,20 +6,20 @@ app-pedal {
   display: inline-flex;
 }
 
-.pedal-array {
+.pedal-array-physical {
   display: flex;
-  flex-flow: row;
+  flex-flow: row wrap;
   margin-right: 10px;
-}
-
-.physical {
   padding: 6px;
   outline: #353535;
   outline-style: solid;
   outline-width: 2pt;
 }
 
-.virtual {
+.pedal-array-virtual {
+  display: flex;
+  flex-flow: row wrap;
+  margin-right: 10px;
   padding: 6px;
   outline:#ff4081;
   outline-style: solid;
@@ -28,21 +28,8 @@ app-pedal {
 
 .pedal-field-header {
   font-size: 20px;
-  padding-top: 10px;
+  padding: 15px 0px 10px;
   margin: unset;
   margin-bottom: 5px;
   color: #0a0000;
-}
-
-.pedal-box {
-  background-color: #bbc5ff;
-  margin-right: 10px;
-  margin-left: 10px;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  column-gap: 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }

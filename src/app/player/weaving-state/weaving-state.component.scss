@@ -8,8 +8,7 @@
 .loom-info{
   display: flex;
   flex-flow: column nowrap;
-  max-width: 455px;
-  min-width: 455px;
+  width: 455px;
 }
 
 .draft-block{
@@ -22,7 +21,7 @@
 
 .draft-scroll{
   max-width: 1300px;
-  max-height: 375px;
+  height: 375px;
   overflow: scroll;
 }
 
