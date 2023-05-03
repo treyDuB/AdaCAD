@@ -1,8 +1,8 @@
 
 <h2 class="pedal-field-header">Pedals</h2>
-<div id="pedals-list" class="loom-field pedals-container">
+<div id="pedals-list" class="pedals-container">
 
-  <div class="pedal-array pedals-field physical" #physPedals>
+  <div class="pedal-array-physical">
     <ng-container *ngFor="let p of pds.p_pedals">
       <app-pedal
         class="physical-pedal"
@@ -13,7 +13,7 @@
     </ng-container>
   </div>
 
-  <div class="pedal-array pedals-field virtual" #virtPedals>
+  <div class="pedal-array-virtual">
     <ng-container *ngFor="let p of pds.v_pedals">
       <app-pedal
         class="virtual-pedal"
