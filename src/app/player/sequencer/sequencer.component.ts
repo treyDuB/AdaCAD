@@ -76,8 +76,8 @@ export class OpSequencerComponent implements OnInit {
     this.seq.shiftOp(x, obj.dir)
   }
 
-  paramUpdated(id: any, param: any, val: any) {
-    this.map.updateInstanceParams(id, param, val);
-  }
+  // paramUpdated(id: any, param: any, val: any) {
+  //   this.map.updateInstanceParams(id, param, val);
+  // }
   
 }

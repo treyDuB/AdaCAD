@@ -33,7 +33,6 @@
           <app-operation
             [seq_id] = i
             [op] = o
-            (onOperationParamChange) = "seq.updateParams(o.id, i, param.value)"
             (click)="$event.stopPropagation();"
           ></app-operation>
         </ng-container>

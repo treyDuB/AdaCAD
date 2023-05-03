@@ -165,6 +165,7 @@ export class MappingsService extends Array<PedalAction> {
   }
 
   updateInstanceParams(op_id: number, param_id: number, value: number | boolean) {
+    console.log(op_id, param_id, value);
     const op = this.getInstanceById(op_id);
     op.params[param_id].value = value;
   }

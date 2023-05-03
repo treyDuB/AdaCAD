@@ -25,7 +25,10 @@ export class SingleOpMenuComponent implements OnInit {
 
   updateParam(param_id: number, value: any) {
     // console.log(value);
-    let val = (value) ? 1 : 0;
+    let val: number;
+    if (this.op.params[param_id].type === 'boolean') {
+      val = (value) ? 1 : 0;
+    } else { val = value; }
     this.seq.updateParams(this.op.id, param_id, val);
   }
 }
