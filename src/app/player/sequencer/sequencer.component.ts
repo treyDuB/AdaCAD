@@ -55,7 +55,8 @@ export class OpSequencerComponent implements OnInit {
   addSingleOp(op: MenuOp) {
     // console.log(this.map);
     const inst = this.seq.addSingleOp(op);
-    // console.log(inst);
+    console.log(inst);
+    console.log(this.map);
   }
 
   findOpIndex(id: number) {
@@ -75,8 +76,8 @@ export class OpSequencerComponent implements OnInit {
     this.seq.shiftOp(x, obj.dir)
   }
 
-  paramUpdated(obj: any) {
-    this.map.updateInstanceParams(obj.id, obj.param, obj.val);
+  paramUpdated(id: any, param: any, val: any) {
+    this.map.updateInstanceParams(id, param, val);
   }
   
 }

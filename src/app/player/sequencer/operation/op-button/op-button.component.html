@@ -13,7 +13,7 @@
   <div *ngSwitchCase = "'struct'">
     <button 
       [name] = name
-      class="selected-operation-box"  
+      [ngClass] = "selected ? 'selected-operation-box' : 'operation-box' "  
       [matMenuTriggerFor]="seqMenu"
     >
       <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>

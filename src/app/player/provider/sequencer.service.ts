@@ -270,10 +270,6 @@ export class SequencerService extends OpSequencer {
     const ch = this.map.createChainOp(o);
     this.addOp(ch);
     return ch;
-    // let ch = ChainOp.fromSingleOp(o);
-    // ch.id = this.map.chains.length;
-    // this.chains.push({id: ch.id, pos: this.addOp(ch)});
-    // this.map.chains.push(ch);
   }
 
   /** Add a single operation onto an existing chain op in the sequencer. */
@@ -291,6 +287,8 @@ export class SequencerService extends OpSequencer {
    * @param value The new value of the parameter
    */
   updateParams(op_id: number, param_id: number, value: number | boolean) {
+    // console.log(value);
+    // console.log("updating op " + op_id + " at param " + param_id + " to val " + value);
     this.map.updateInstanceParams(op_id, param_id, value);
   }
     
@@ -301,7 +299,7 @@ export class SequencerService extends OpSequencer {
  
   /** Removes operation from sequencer and deletes the instance. */
   removeOpById(id: number) {
-    console.log("removing op id: ", id);
+    // console.log("removing op id: ", id);
     this.ops = this.ops.filter((el) => el.id != id);
     this.map.deleteInstance(id);
   }

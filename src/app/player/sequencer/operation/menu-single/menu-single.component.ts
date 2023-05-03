@@ -22,4 +22,10 @@ export class SingleOpMenuComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  updateParam(param_id: number, value: any) {
+    // console.log(value);
+    let val = (value) ? 1 : 0;
+    this.seq.updateParams(this.op.id, param_id, val);
+  }
 }

@@ -3,10 +3,10 @@ import { EventEmitter } from 'events';
 import utilInstance from '../core/model/util';
 import { warps, wefts, flipDraft, initDraftWithParams } from '../core/model/drafts';
 import { Draft } from '../core/model/datatypes';
-import { BuildableOperation as GenericOp, OpInput, NumParam
+import { BuildableOperation as GenericOp, NumParam
 } from '../mixer/model/operation';
 import * as defs from '../mixer/model/op_definitions';
-import { PlayerOp, OpTemplate as MenuOp, playerOpFrom, forward, refresh, reverse, SingleOpTemplate, CustomStructOp
+import { OpTemplate as MenuOp, playerOpFrom, forward, refresh, reverse, SingleOpTemplate, CustomStructOp
 } from './model/playerop';
 import { PlayerState, WeavingPick, copyState } from './model/state';
 import { MappingsService } from './provider/mappings.service';
@@ -19,7 +19,7 @@ export interface DraftOperationClassification {
   category_id: number,
   category: string,
   dx: string,
-  ops: Array<PlayerOp> 
+  ops: Array<MenuOp> 
  }
 
 interface LoomConfig {

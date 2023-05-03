@@ -24,7 +24,7 @@
     
     <div class="sub-menu-rest">
       <ng-container *ngFor="let param of op.params; let i = index">
-        <ng-container  *ngIf="param.type === 'number' || param.type === 'boolean'">
+        <ng-container  *ngIf="param.type === 'number'">
           <mat-form-field
           (click)="$event.stopPropagation();">
             <mat-label class="param-name">{{param.name}}</mat-label>
@@ -32,15 +32,30 @@
               matInput
               id = "param-{{op.id}}-{{i}}"
               [matTooltip] = param.dx
+              
               type = "number"
               [name]= param.name
               [min]= param.min
               [max]= param.max
               [(value)] = param.value
-              (change)="seq.updateParams(op.id, i, param.value)"
+              (change)="updateParam(i, $event.target.value)"
               step = 1
             >
+            <!-- 
+              [formControl] = "fc"
+              (change)="seq.updateParams(op.id, i, param.value)" -->
           </mat-form-field>
+        </ng-container>
+        <ng-container *ngIf="param.type === 'boolean'">
+          <div class="mat-form-field">
+            <mat-slide-toggle
+              [matTooltip]=param.dx
+              (change)= "updateParam(i, $event.checked)"          (click)="$event.stopPropagation();"
+              > 
+              <span *ngIf="param.value==1">{{param.truestate}}</span>
+              <span *ngIf="param.value==0">{{param.falsestate}}</span> 
+            </mat-slide-toggle>
+          </div>
         </ng-container>
       </ng-container>  
     </div>
