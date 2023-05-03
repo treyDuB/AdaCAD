@@ -20,6 +20,7 @@ export class WeavingStateComponent implements OnInit {
 
   @Input()  default_cell: number;
   @Input('draft') active_draft: Draft;
+  tiling: boolean = true;
 
   @Output() isWeaving = new EventEmitter<boolean>();
 
@@ -62,14 +63,9 @@ export class WeavingStateComponent implements OnInit {
     this.isWeaving.emit(this.pls.weaving);
   }
 
-  test(){
-    console.log(this.map);
-    return this.map;
-  }
-
   /**
    * COPIED FROM palette/subdraft
-   * draw whetever is stored in the this.pls.draft object to the screen
+   * draw whetever is stored in the this.pbs object to the screen
    * @method
    * @returns void
    */
@@ -86,12 +82,21 @@ export class WeavingStateComponent implements OnInit {
       this.draftCanvas.height = 0;
     } else {
       this.draft_set = true;
-      this.draftCanvas.width = (playback.max_width+2) * this.default_cell;
-      this.draftCanvas.height = (playback.previewHeight + playback.historyHeight) * this.default_cell;
+
+      let canvasCols = (this.tiling) ? this.pls.loom.warps : playback.max_width;
+      let canvasRows = playback.previewHeight + playback.historyHeight;
+
+      this.draftCanvas.width = (canvasCols+2) * this.default_cell;
+      this.draftCanvas.height = canvasRows * this.default_cell;
 
       for (let i = 0; i < wefts(preview); i++) {
         for (let j = 0; j < warps(preview); j++) {
           this.drawPreviewCell(this.default_cell, i, j, flipY);
+        }
+        if (this.tiling) {
+          for (let j = warps(preview); j < canvasCols; j++) {
+            this.drawPreviewCell(this.default_cell, i, j, flipY, true);
+          } 
         }
         if (i == 0) {
           this.drawProgressBar(this.default_cell, i, warps(this.pls.draft.drawdown), flipY);
@@ -101,6 +106,11 @@ export class WeavingStateComponent implements OnInit {
       for (let i = 0; i < wefts(history); i++) {
         for (let j = 0; j < warps(history); j++) {
           this.drawHistoryCell(this.default_cell, i, j, flipY);
+        }
+        if (this.tiling) {
+          for (let j = this.pbs.width_history[i]; j < canvasCols; j++) {
+            this.drawHistoryCell(this.default_cell, i, j, flipY, true);
+          } 
         }
       }
     }
@@ -113,21 +123,22 @@ export class WeavingStateComponent implements OnInit {
    * @param j y coord
    * @param flipY whether or not to flip vertically
    */
-  drawPreviewCell(cell_size: number, i: number, j: number, flipY: boolean = true){
+  drawPreviewCell(cell_size: number, i: number, j: number, flipY: boolean = true, trans: boolean = false){
     const preview = this.pbs.preview.drawdown;
-    let is_up = isUp(preview, i,j);
-    let is_set = isSet(preview, i, j);
+    let col = (trans) ? j%warps(preview) : j;
+    let is_up = isUp(preview, i, col);
+    let is_set = isSet(preview, i, col);
     let color = "#ffffff"
     if (is_set) {
       if(this.ink === 'unset' && is_up){
         this.cx.fillStyle = "#999999"; 
       }else{
         if (is_up) {
-          color = '#000000'; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
-        }else if (i == 0) { // highlight current row in yellow
-          color = '#ffff00'; //usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) :
+          color = (trans) ? '#999999' : '#000000';
+        } else if (i == 0) { // highlight current row in yellow
+          color = '#ffff00';
         } else {
-          color = '#ffffff'; // usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : 
+          color = '#ffffff'; 
         }
         this.cx.fillStyle = color;
       }
@@ -148,32 +159,29 @@ export class WeavingStateComponent implements OnInit {
     this.cx.fillRect((width+1)*cell_size, y*cell_size, cell_size, cell_size);
   }
 
-  drawHistoryCell(cell_size: number, i: number, j: number, flipY: boolean = true) {
+  drawHistoryCell(cell_size: number, i: number, j: number, flipY: boolean = true, trans: boolean = false) {
     const playback = this.pbs;
     const preview = playback.preview.drawdown;
     const history = playback.history.drawdown;
 
-    let is_up = isUp(history, i, j);
-    let is_set = isSet(history, i, j);
+    let col = (trans) ? j%playback.width_history[i] : j;
+    let is_up = isUp(history, i, col);
+    let is_set = isSet(history, i, col);
     let color = "#ffffff"
     if (is_set) {
       if(this.ink === 'unset' && is_up){
         this.cx.fillStyle = "#999999"; 
       } else {
         if (is_up) {
-          color = '#999999'; //usecolor ? this.ms.getColor(this.pls.draft.getWarpShuttleId(j)) : 
+          color = (trans) ? '#cccccc' : '#999999'; 
         } else {
-          color = '#ffffff'; // usecolor ? this.ms.getColor(this.pls.draft.getWeftShuttleId(i)) : 
+          color = '#ffffff';
         }
         this.cx.fillStyle = color;
       }
       let y = flipY ? wefts(preview) + i : wefts(history)-1-i;
       this.cx.fillRect((j+1)*cell_size, y*cell_size, cell_size, cell_size);
-    } 
-    // else {
-    //   this.cx.fillStyle =  '#0000000d';
-    // }
-    
+    }     
   }
 }
 

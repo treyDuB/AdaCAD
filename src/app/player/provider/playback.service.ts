@@ -41,6 +41,11 @@ export class PlaybackService {
    */
   max_width: number;
 
+  /**
+   * @property {Array<number>} width_history
+   */
+  width_history: Array<number> = [];
+
   get current(): Draft { return this.state.draft} /** The active draft. */
 
   /** TRUE if there is no active draft set. */
@@ -102,6 +107,8 @@ export class PlaybackService {
       }
     }
     history.unshift(logRow); 
-    console.log(this.history.drawdown);
+    this.width_history.unshift(warps(s.draft.drawdown));
+    // console.log(this.history.drawdown);
+    console.log(this.width_history);
   }
 }
