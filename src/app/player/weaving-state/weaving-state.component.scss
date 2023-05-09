@@ -1,5 +1,4 @@
 .first-row { 
-  flex-wrap: wrap;
   display: flex;
   align-items: flex-start;
   flex-basis: 100%;
@@ -8,7 +7,7 @@
 .loom-info{
   display: flex;
   flex-flow: column nowrap;
-  width: 455px;
+  width: 430px;
 }
 
 .draft-block{
@@ -16,17 +15,17 @@
   flex-flow: column nowrap;
   height: inherit; 
   flex: 1;
-  max-width: 1300px;
+  max-width: 1150px;
 }
 
 .draft-scroll{
-  max-width: 1300px;
+  max-width: 1150px;
   height: 375px;
   overflow: scroll;
 }
 
 .player-field-header {
-  max-width: 1300px;
+  max-width: 1150px;
   padding: 14px;
   margin: unset;
   background: #3f51b5;
