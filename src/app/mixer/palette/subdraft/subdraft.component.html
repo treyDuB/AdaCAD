@@ -19,6 +19,8 @@ class="subdraft-parent-container selectable-{{!disable_drag}}"
 
 	<div id="scale-{{id}}" class="subdraft-container" >
 
+	
+
 		<div class="bottom-opts">
 
 			<div id="subdraft-details"> 
@@ -29,6 +31,10 @@ class="subdraft-parent-container selectable-{{!disable_drag}}"
 				matTooltip ="View Draft Details"
 				(click)="finetune()">
 				</button>
+
+				
+				
+
 
 				<button mat-icon-button
 				class="is-small fa-solid"
@@ -112,6 +118,17 @@ class="subdraft-parent-container selectable-{{!disable_drag}}"
 			[name]="delete"
 			(click)="designActionChange('delete')">
 			</button>
+
+			<div *ngIf="comms.has_active_loom" class="player">
+				<input type="number" color="accent" [(ngModel)]="pick_num" placeholder="pick_num">
+	
+	
+				<button mat-icon-button
+				class="fa-solid fa-paper-plane"
+				matTooltip ="send Pick"
+				(click)="sendPick(pick_num)">
+				</button>
+			</div>
 		</div>
 
 

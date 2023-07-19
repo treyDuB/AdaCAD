@@ -18,7 +18,6 @@ export class ConnectloomComponent {
   }
 
   removeLoomConnection(){
-    console.log('REMOVING CONNECTION')
     this.comms.removeLoomConnection();
 
   }
@@ -27,9 +26,7 @@ export class ConnectloomComponent {
     this.comms.renameLoom(this.comms.loom_name)
   }
 
-  ngOnDestroy(){
-    this.comms.removeLoomConnection();
-  }
+ 
 
 
 

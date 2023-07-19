@@ -24,7 +24,7 @@
 
         <mat-form-field class="example-full-width" class="filename">
             <mat-label>Number of Ends</mat-label>
-           <input matInput color="accent" [(ngModel)]="comms.pick_size" placeholder="pick size">
+           <input type="number" matInput color="accent" [(ngModel)]="comms.pick_size" placeholder="pick size">
           </mat-form-field>
 
           <mat-form-field class="example-full-width" class="filename">
@@ -32,3 +32,13 @@
            <input matInput color="accent" [(ngModel)]="comms.loom_name" (change)="updateDB()">
           </mat-form-field>
     </div>
+
+    <h2>Print Log</h2>
+    <ul>
+    <div  *ngFor="let pick of comms.log">
+        <li>
+            {{pick}}
+        </li>
+    </div>
+    </ul>
+    

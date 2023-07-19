@@ -3,6 +3,7 @@ import { Auth, authState, getAuth } from '@angular/fire/auth';
 import { Subject } from 'rxjs';
 import { getDatabase, ref as fbref, set as fbset, query, ref, get as fbget, remove, update, onValue } from '@angular/fire/database';
 import utilInstance from '../model/util';
+import { promise } from 'protractor';
 
 
 //LOOM ON
@@ -21,6 +22,7 @@ export class SendpickService {
   pick_size = 100;
   loom_name = '';
   has_active_loom = false;
+  log:Array<string> = [];
 
 
 
@@ -61,8 +63,11 @@ export class SendpickService {
     const db = getDatabase();
     update(fbref(db, `looms/`+this.loom_id),db_obj).then(success => {
       this.has_active_loom = true;
+      this.log = [];
     }).catch(error => {
       this.has_active_loom = false;
+      this.log = [];
+
     });
 
   }
@@ -103,21 +108,24 @@ export class SendpickService {
 
 
   /**
-   * a unique for the loom instance. 
+   * a unique for the loom instance
    * @param loom_id 
    * @param pickdata 
    */
-  sendPickData(pickdata: string){
+  sendPickData(pickdata: string): Promise<any>{
 
     //push to firebase
       const db = getDatabase();
       const ref = fbref(db, 'looms/'+this.loom_id);
-      update(ref,{pickdata: pickdata})
+      return update(ref,{pickdata: pickdata})
       .then(success => {
-       console.log("Pick sent");
+       this.log.push(pickdata);
+       return Promise.resolve(true);
       })
       .catch(err => {
         console.error(err);
+       return  Promise.resolve(false);
+
       })
     
 

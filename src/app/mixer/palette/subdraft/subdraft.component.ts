@@ -13,6 +13,8 @@ import { LayersService } from '../../provider/layers.service';
 import { MultiselectService } from '../../provider/multiselect.service';
 import { ViewportService } from '../../provider/viewport.service';
 import { OperationComponent } from '../operation/operation.component';
+import { SendpickService } from '../../../core/provider/sendpick.service';
+import { Sequence } from '../../../core/model/sequence';
 
 
 
@@ -92,6 +94,9 @@ export class SubdraftComponent implements OnInit {
 
   parent_id: number = -1;
 
+  pick_num: number = 0;
+  show_pick: boolean = false;
+
   /**
   * flag to tell if this is in a mode where it is looking foor a connectino
   */
@@ -148,6 +153,7 @@ export class SubdraftComponent implements OnInit {
     private viewport: ViewportService,
     private dialog: MatDialog,
     public ws: WorkspaceService,
+    public comms:SendpickService,
     private multiselect: MultiselectService) { 
 
       this.zndx = layer.createLayer();
@@ -215,6 +221,33 @@ export class SubdraftComponent implements OnInit {
   nameFocusOut(){
     this.onNameChange.emit(this.id);
     const scale = document.getElementById('scale-'+this.id);
+  }
+
+  sendPick(ndx: number){
+    console.log("SENDING PICK ", ndx)
+    const draft = this.tree.getDraft(this.id);
+    if(ndx < 0) ndx = 0;
+    if(ndx > wefts(draft.drawdown)) ndx = ndx % wefts(draft.drawdown);
+
+    let rowSeq = new Sequence.OneD().import( draft.drawdown[ndx]).resize(this.comms.pick_size);
+   
+    let seq_num: string = rowSeq.val().reduce((acc, el)=> {
+      if(el == 0) acc = acc.concat('0')
+      if(el == 1) acc = acc.concat('1')
+      if(el == 2) acc = acc.concat('0')
+      return acc;
+    }, '');
+    
+
+    this.comms.sendPickData(seq_num).then(response => {
+      if(response){
+        this.redrawExistingDraft();
+        this.show_pick = true;
+      }else{
+        this.show_pick = false;
+
+      }
+    })
   }
 
 
@@ -595,6 +628,14 @@ export class SubdraftComponent implements OnInit {
     this.draft_cx.fillRect(j*cell_size, i*cell_size, cell_size, cell_size);
   }
 
+  async drawPickSent(cell_size:number, i:number, warps: number){
+
+    let color = "#ff3860"
+    this.draft_cx.strokeStyle = color;
+    this.draft_cx.lineWidth = 1;
+    this.draft_cx.strokeRect(0, i*cell_size, cell_size*warps, cell_size);
+  }
+
   redrawExistingDraft(){
     this.drawDraft(this.draft);
   }
@@ -730,6 +771,12 @@ export class SubdraftComponent implements OnInit {
           }
         
         this.tree.setDraftClean(this.id);
+
+        if(this.comms.has_active_loom && this.show_pick){
+          console.log("DRAWING PICK SEND")
+          this.drawPickSent(cell_size, this.pick_num, warps(draft.drawdown));
+        }
+
         return Promise.resolve("complete");
       })
 
