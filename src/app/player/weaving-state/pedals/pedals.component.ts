@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Pedal, PedalsService } from '../../provider/pedals.service';
-import { MappingsService } from '../../provider/mappings.service';
+// import { MappingsService } from '../../provider/mappings.service';
 
 @Component({
   selector: 'app-pedals',
@@ -11,7 +11,7 @@ export class PedalsComponent implements OnInit {
 
   constructor(
     public pds: PedalsService,
-    public map: MappingsService
+    // public map: MappingsService
   ) { }
 
   ngOnInit(): void {

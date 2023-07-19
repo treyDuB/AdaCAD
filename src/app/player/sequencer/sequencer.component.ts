@@ -1,83 +1,83 @@
-import { Component, OnInit, ViewChild, Input, ViewContainerRef, ViewRef } from '@angular/core';
-import { MatExpansionPanel } from '@angular/material/expansion';
-import { Subscription } from 'rxjs';
+// import { Component, OnInit, ViewChild, Input, ViewContainerRef, ViewRef } from '@angular/core';
+// import { MatExpansionPanel } from '@angular/material/expansion';
+// import { Subscription } from 'rxjs';
 
-import { OperationComponent, OpComponentEvent } from './operation/operation.component';
+// import { OperationComponent, OpComponentEvent } from './operation/operation.component';
 
-import { MappingsService } from '../provider/mappings.service';
-import { PlayerService } from '../player.service';
-import { PedalsService } from '../provider/pedals.service';
-import { SequencerOp, SequencerService } from '../provider/sequencer.service';
-import { OpTemplate as MenuOp, OpInstance as SingleOp } from '../model/playerop';
-import { ChainOp } from '../model/chainop';
+// import { MappingsService } from '../provider/mappings.service';
+// import { PlayerService } from '../player.service';
+// import { PedalsService } from '../provider/pedals.service';
+// import { SequencerOp, SequencerService } from '../provider/sequencer.service';
+// import { OpTemplate as MenuOp, OpInstance as SingleOp } from '../model/playerop';
+// import { ChainOp } from '../model/chainop';
  
-interface SequencerRef {
-  id: number,
-  ref: ViewRef,
-  comp: OperationComponent,
-  inst: SequencerOp,
-}
+// interface SequencerRef {
+//   id: number,
+//   ref: ViewRef,
+//   comp: OperationComponent,
+//   inst: SequencerOp,
+// }
 
-/** The OpSequencer component is analogous to the Mixer's Palette component since it hosts dynamically loaded Operation components */
-@Component({
-  selector: 'app-sequencer',
-  templateUrl: './sequencer.component.html',
-  styleUrls: ['./sequencer.component.scss']
-})
-export class OpSequencerComponent implements OnInit {
-  @ViewChild('opMenuS') op_menu_s: MatExpansionPanel;
-  @ViewChild('opMenuT') op_menu_t: MatExpansionPanel;
+// /** The OpSequencer component is analogous to the Mixer's Palette component since it hosts dynamically loaded Operation components */
+// @Component({
+//   selector: 'app-sequencer',
+//   templateUrl: './sequencer.component.html',
+//   styleUrls: ['./sequencer.component.scss']
+// })
+// export class OpSequencerComponent implements OnInit {
+//   @ViewChild('opMenuS') op_menu_s: MatExpansionPanel;
+//   @ViewChild('opMenuT') op_menu_t: MatExpansionPanel;
 
-  @Input() isWeaving: boolean;
+//   @Input() isWeaving: boolean;
 
-  constructor(
-    public pls: PlayerService,
-    public pds: PedalsService,
-    public seq: SequencerService,
-    public map: MappingsService,
-  ) { }
+//   constructor(
+//     public pls: PlayerService,
+//     public pds: PedalsService,
+//     public seq: SequencerService,
+//     public map: MappingsService,
+//   ) { }
 
-  ngOnInit(): void {
-  }
+//   ngOnInit(): void {
+//   }
 
-  ngAfterViewInit() {
-  }
+//   ngAfterViewInit() {
+//   }
 
-  closeMenus() {
-    this.op_menu_s.close();
-    this.op_menu_t.close();
-  }
+//   closeMenus() {
+//     this.op_menu_s.close();
+//     this.op_menu_t.close();
+//   }
 
-  addChainOp(op: MenuOp) {
-    const inst = this.seq.addChainOp(op);
-  }
+//   addChainOp(op: MenuOp) {
+//     const inst = this.seq.addChainOp(op);
+//   }
 
-  addSingleOp(op: MenuOp) {
-    // console.log(this.map);
-    const inst = this.seq.addSingleOp(op);
-    console.log(inst);
-    console.log(this.map);
-  }
+//   addSingleOp(op: MenuOp) {
+//     // console.log(this.map);
+//     const inst = this.seq.addSingleOp(op);
+//     console.log(inst);
+//     console.log(this.map);
+//   }
 
-  findOpIndex(id: number) {
-    return this.seq.ops.findIndex((el) => el.id == id);
-  }
+//   findOpIndex(id: number) {
+//     return this.seq.ops.findIndex((el) => el.id == id);
+//   }
 
-  // callbacks for OperationComponent output events
-  // NAMING CONVENTION (following mixer) parent component's methods are in past tense
-  opDeleted(obj: OpComponentEvent) {
-    this.seq.removeOpById(obj.id)
-    this.map.deleteInstance(obj.id);
-  }
+//   // callbacks for OperationComponent output events
+//   // NAMING CONVENTION (following mixer) parent component's methods are in past tense
+//   opDeleted(obj: OpComponentEvent) {
+//     this.seq.removeOpById(obj.id)
+//     this.map.deleteInstance(obj.id);
+//   }
 
-  opDuplicated(obj: OpComponentEvent) {  }
+//   opDuplicated(obj: OpComponentEvent) {  }
 
-  opShifted(obj: OpComponentEvent, x: number) {
-    this.seq.shiftOp(x, obj.dir)
-  }
+//   opShifted(obj: OpComponentEvent, x: number) {
+//     this.seq.shiftOp(x, obj.dir)
+//   }
 
-  // paramUpdated(id: any, param: any, val: any) {
-  //   this.map.updateInstanceParams(id, param, val);
-  // }
+//   // paramUpdated(id: any, param: any, val: any) {
+//   //   this.map.updateInstanceParams(id, param, val);
+//   // }
   
-}
+// }

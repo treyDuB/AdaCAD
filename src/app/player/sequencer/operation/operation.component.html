@@ -1,12 +1,12 @@
 <div class="operation-container">
-  <app-op-button
+  <!-- <app-op-button
     [selected] = "is_selected"
     [name] = "op.name"
     [classifier] = "op.classifier"
     [matMenuTriggerFor] = "menu"
-  ></app-op-button>
+  ></app-op-button> -->
 
-  <ng-container *ngIf = "op.classifier == 'chain'; else chainTemplate">
+  <!-- <ng-container *ngIf = "op.classifier == 'chain'; else chainTemplate">
     <app-menu-chain #seqChainMenu
     [op] = op
     [index] = seq_id
@@ -18,5 +18,5 @@
       [op] = op
       [index] = seq_id
     ></app-menu-single>
-  </ng-template>
+  </ng-template> -->
 </div>  

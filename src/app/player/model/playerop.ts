@@ -3,19 +3,14 @@
  */
 
 import utilInstance from "../../core/model/util";
-import { Draft } from "../../core/model/datatypes";
 import { wefts } from "../../core/model/drafts";
-import { 
-  BaseOp as Op, BuildableOperation as GenericOp, 
-  Seed, Pipe, AllRequired, DraftsOptional, 
-  ParamValue, NumParam, OperationParam
-} from "../../mixer/model/operation";
-import { PlayerState, initState, copyState } from "./state";
+import { PlayerState, copyState } from "./state";
 
 import { cloneDeep } from "lodash";
+import { NumParam, OperationParam } from "src/app/core/model/datatypes";
 
 /** classifies operations in the player */
-export type PlayerOpClassifier = GenericOp["classifier"]["type"] | 'prog' | 'chain' | 'struct';
+// export type PlayerOpClassifier = GenericOp["classifier"]["type"] | 'prog' | 'chain' | 'struct';
 
 /** the thing that calls an operation's perform */
 type PerformTrigger = 'pedal' | 'seq' | 'none';
@@ -67,7 +62,7 @@ export interface CompoundPerformable extends Performable {
  */
 export interface SingleOpTemplate extends Performable {
   id: number,
-  classifier: PlayerOpClassifier,
+  // classifier: PlayerOpClassifier,
   name: string,
   dx?: string,
   params: Array<OperationParam>,
@@ -104,7 +99,7 @@ export interface BaseOpInstance extends Performable {
   /** Name of the operation (matches template) */
   name: string,
   /** See {@link PlayerOpClassifier} */
-  classifier: OpTemplate['classifier'],
+  // classifier: OpTemplate['classifier'],
   /** What calls the operation's `perform` method. */
   trigger?: PerformTrigger,
   /** Template for this instance */
@@ -137,34 +132,34 @@ export type OpInstance = SingleOpInstance | StructOpInstance | BaseOpInstance;
  * @param {OpTemplate} base 
  * @returns instance of the OpTemplate
  */
-export function newOpInstance(base: OpTemplate): OpInstance {
-  const inst = {
-    id: utilInstance.generateId(8),
-    name: base.name,
-    classifier: base.classifier,
-    template: base, 
-    params: cloneDeep(base.params),
-    perform: (init: PlayerState) => { 
-      // console.log(inst.params);
-      return inst.template.perform(init, getParamVals(inst.params)); 
-    }
-  };
-  return inst;
-}
+// export function newOpInstance(base: OpTemplate): OpInstance {
+//   const inst = {
+//     id: utilInstance.generateId(8),
+//     name: base.name,
+//     // classifier: base.classifier,
+//     template: base, 
+//     params: cloneDeep(base.params),
+//     perform: (init: PlayerState) => { 
+//       // console.log(inst.params);
+//       return inst.template.perform(init, getParamVals(inst.params)); 
+//     }
+//   };
+//   return inst;
+// }
 
 /** @function getParamVals Helper function to turn an array of OperationParams into an array of their values */
-export function getParamVals(params: Array<OperationParam>): Array<ParamValue> {
-  if (!params || params.length == 0) {
-    return [] as Array<ParamValue>;
-  }
-  return params.map((el) => el.value);
-}
+// export function getParamVals(params: Array<OperationParam>): Array<ParamValue> {
+//   if (!params || params.length == 0) {
+//     return [] as Array<ParamValue>;
+//   }
+//   return params.map((el) => el.value);
+// }
 
 /** A player-specific function to progress through the draft */
 export const forward: SingleOpTemplate = {
   id: -1,
   name: 'forward',
-  classifier: 'prog',
+  // classifier: 'prog',
   params: <Array<NumParam>> [{
     name: 'step size',
     dx: 'the number of rows to move forward',
@@ -186,7 +181,7 @@ export const forward: SingleOpTemplate = {
 export const refresh: SingleOpTemplate = {
   id: -1,
   name: 'refresh',
-  classifier: 'prog',
+  // classifier: 'prog',
   params: [],
   perform: defaultPerform,
 }
@@ -195,7 +190,7 @@ export const refresh: SingleOpTemplate = {
 export const reverse: SingleOpTemplate = {
   id: -1,
   name: 'reverse',
-  classifier: 'prog',
+  // classifier: 'prog',
   params: <Array<NumParam>> [{
     name: 'step size',
     dx: 'the number of rows to move backward',
@@ -217,44 +212,44 @@ export const reverse: SingleOpTemplate = {
 export type ProgressOp = OpTemplate | OpInstance & { name: 'forward' | 'refresh' | 'reverse' };
 
 /** Function that converts a general AdaCAD operation to a Player operation. */
-export function playerOpFrom(op: GenericOp, params?: Array<ParamValue>) {
-  let player_params = cloneDeep(op.params);
-  if (params) {
-    player_params.forEach((el, i) => {
-      el.value = params[i];
-    });
-  }
-  var p: SingleOpTemplate = {
-    id: -1, 
-    name: op.name,
-    classifier: op.classifier.type,
-    params: player_params,
-    dx: op.dx,
-    perform: defaultPerform,
-  }
+// export function playerOpFrom(op: GenericOp, params?: Array<ParamValue>) {
+//   let player_params = cloneDeep(op.params);
+//   if (params) {
+//     player_params.forEach((el, i) => {
+//       el.value = params[i];
+//     });
+//   }
+//   var p: SingleOpTemplate = {
+//     id: -1, 
+//     name: op.name,
+//     classifier: op.classifier.type,
+//     params: player_params,
+//     dx: op.dx,
+//     perform: defaultPerform,
+//   }
 
-  if (p.classifier === 'pipe') {
-    const pipeOp = op as Op<Pipe, AllRequired>;
-    p.perform = function(init: PlayerState, params?: Array<ParamValue>) {
-      let input_params = params ? params : getParamVals(op.params);
-      let res = copyState(init);
-      res.draft = pipeOp.perform(init.draft, input_params);
-      res.row = (init.row) % wefts(res.draft.drawdown);
-      res.pedal = op.name;
-      return Promise.resolve(res);
-    }
-  } else if (p.classifier === 'seed') {
-    const seedOp = op as Op<Seed, DraftsOptional>;
-    p.perform = function(init: PlayerState, params?: Array<ParamValue>) {
-      let input_params = params ? params : getParamVals(op.params);
-      let res = copyState(init);
-      res.draft = seedOp.perform(input_params);
-      res.row = (init.row) % wefts(res.draft.drawdown);
-      res.pedal = op.name;
-      return Promise.resolve(res);
-    }
-  }
+//   if (p.classifier === 'pipe') {
+//     const pipeOp = op as Op<Pipe, AllRequired>;
+//     p.perform = function(init: PlayerState, params?: Array<ParamValue>) {
+//       let input_params = params ? params : getParamVals(op.params);
+//       let res = copyState(init);
+//       res.draft = pipeOp.perform(init.draft, input_params);
+//       res.row = (init.row) % wefts(res.draft.drawdown);
+//       res.pedal = op.name;
+//       return Promise.resolve(res);
+//     }
+//   } else if (p.classifier === 'seed') {
+//     const seedOp = op as Op<Seed, DraftsOptional>;
+//     p.perform = function(init: PlayerState, params?: Array<ParamValue>) {
+//       let input_params = params ? params : getParamVals(op.params);
+//       let res = copyState(init);
+//       res.draft = seedOp.perform(input_params);
+//       res.row = (init.row) % wefts(res.draft.drawdown);
+//       res.pedal = op.name;
+//       return Promise.resolve(res);
+//     }
+//   }
   
-  return p;
-}
+//   return p;
+// }
 

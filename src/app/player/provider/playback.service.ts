@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Draft } from '../../core/model/datatypes';
-import { initDraft, warps, wefts, appendBlankCol } from '../../core/model/drafts';
+import { initDraft, initDraftFromDrawdown, warps, wefts } from '../../core/model/drafts';
 import { PlayerState, initState, copyState } from '../model/state';
 
-import { tabby } from '../../mixer/model/op_definitions';
+// import { tabby } from '../../mixer/model/op_definitions';
 import { max } from 'lodash';
-import { Cell } from '../../core/model/cell';
+import { Sequence } from '../../core/model/sequence';
+import { createCell } from '../../core/model/cell';
 
 /**
  * @class
@@ -68,7 +69,7 @@ export class PlaybackService {
     this.state = initState();
     this.prevStates = [];
 
-    this.state.draft = tabby.perform([1]);
+    this.state.draft = initDraftFromDrawdown([[createCell(false)]]);
     this.max_width = 2;
     this.updatePreview();
     console.log("playback service constructor done");
@@ -91,22 +92,27 @@ export class PlaybackService {
   }
 
   logHistory(s: PlayerState) {
-    let history = this.history.drawdown;
+   
+    let history = new Sequence.TwoD().import(this.history.drawdown)
     // do some resizing if needed, history needs to be a uniform width even if the pattern's width has changed
-    let diff = warps(s.draft.drawdown) - warps(history);
-    let logRow = Array.from(s.draft.drawdown[s.row]);
+    let diff = warps(s.draft.drawdown) - warps(this.history.drawdown);
+    let logRow:Sequence.OneD = new Sequence.OneD().import(s.draft.drawdown[s.row]);
+    
     if (diff > 0) {
       // new row is wider than history
       for (var i=0; i < diff; i++) {
-        history = appendBlankCol(history);
+        let col = new Sequence.OneD().pushMultiple(2, wefts(this.history.drawdown))
+        history = history.pushWarpSequence(col.val());
       }
     } else if (diff < 0) {
       // new row is narrower than history
+      let logRow:Sequence.OneD = new Sequence.OneD();
       for (var i=0; i < -diff; i++) {
-        logRow.push(new Cell(null));
+        logRow.push(2);
       }
     }
-    history.unshift(logRow); 
+    
+    history.unshiftWeftSequence(logRow.val()); 
     this.width_history.unshift(warps(s.draft.drawdown));
     // console.log(this.history.drawdown);
     console.log(this.width_history);

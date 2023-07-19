@@ -1,26 +1,26 @@
 import { Injectable} from '@angular/core';
 import { EventEmitter } from 'events';
 import utilInstance from '../core/model/util';
-import { warps, wefts, flipDraft, initDraftWithParams } from '../core/model/drafts';
-import { Draft } from '../core/model/datatypes';
-import { BuildableOperation as GenericOp, NumParam
-} from '../mixer/model/operation';
-import * as defs from '../mixer/model/op_definitions';
-import { OpTemplate as MenuOp, playerOpFrom, forward, refresh, reverse, SingleOpTemplate, CustomStructOp
-} from './model/playerop';
-import { PlayerState, WeavingPick, copyState } from './model/state';
+import { warps, wefts, flipDraft, initDraftWithParams, setHeddle } from '../core/model/drafts';
+import { Draft, Operation, OperationClassification } from '../core/model/datatypes';
+// import { OpTemplate as MenuOp, playerOpFrom, forward, refresh, reverse, SingleOpTemplate, CustomStructOp
+// } from './model/playerop';
+import { PlayerState, WeavingPick} from './model/state';
 import { MappingsService } from './provider/mappings.service';
 import { PedalsService, Pedal } from './provider/pedals.service';
-import { SequencerService } from './provider/sequencer.service';
+// import { SequencerService } from './provider/sequencer.service';
 import { PlaybackService } from './provider/playback.service';
-import { SequencerMapping } from './model/maptypes';
+// import { SequencerMapping } from './model/maptypes';
+import { getCellValue } from '../core/model/cell';
+import { OperationDescriptionsService } from '../core/provider/operation-descriptions.service';
+import { OperationService } from '../core/provider/operation.service';
 
-export interface DraftOperationClassification {
-  category_id: number,
-  category: string,
-  dx: string,
-  ops: Array<MenuOp> 
- }
+// export interface DraftOperationClassification {
+//   category_id: number,
+//   category: string,
+//   dx: string,
+//   ops: Array<MenuOp> 
+//  }
 
 interface LoomConfig {
   warps: number,
@@ -36,50 +36,56 @@ interface LoomConfig {
 export class PlayerService {
   loom: LoomConfig;
   redraw = new EventEmitter();
-  draftClassificationS: Array<DraftOperationClassification> = [];
-  draftClassificationT: Array<DraftOperationClassification> = [];
-
+  draftClassificationS: Array<OperationClassification> = [];
+  draftClassificationT: Array<OperationClassification> = [];
   constructor(
     public pedals: PedalsService,
     public mappings: MappingsService, 
     public seq: SequencerService,
     public playback: PlaybackService,   // has the Player state
+    public op_service:OperationService,
+    public op_desc_service: OperationDescriptionsService
     // private oss: OperationService
   ) {
 
     this.loom = { warps: 2640, draftTiling: true };
 
-    // load the draft progress ops
-    mappings.addMenuOperation(<MenuOp> forward);
-    mappings.addMenuOperation(<MenuOp> refresh);
-    mappings.addMenuOperation(<MenuOp> reverse);
 
-    function addOp(op: GenericOp, params?: Array<number | string>) {
-      let p_op = params ? playerOpFrom(op, params) : playerOpFrom(op);
-      mappings.addMenuOperation(p_op);
-      return p_op;
-    }
+
+
+    // load the draft progress ops
+    mappings.addMenuOperation(<Operation> forward);
+    mappings.addMenuOperation(<Operation> refresh);
+    mappings.addMenuOperation(<Operation> reverse);
+
+    // function addOp(op: Operation, params?: Array<number | string>) {
+    //   let p_op = params ? playerOpFrom(op, params) : playerOpFrom(op);
+    //   mappings.addMenuOperation(p_op);
+    //   return p_op;
+    // }
 
     // load ops from the main mixer
-    const tabby = addOp(defs.tabby);
-    const twill = addOp(defs.twill);
-    const satin = addOp(defs.satin);
-    const waffle = addOp(defs.waffle);
-    const basket = addOp(defs.basket);
-    const rib = addOp(defs.rib);
-    const random = addOp(defs.random);
-    const rotate = addOp(defs.rotate);
-    const invert = addOp(defs.invert);
-    const shiftx = addOp(defs.shiftx);
-    const shifty = addOp(defs.shifty);
-    const slope = addOp(defs.slope);
-    const flipx = addOp(defs.flipx);
-    const flipy = addOp(defs.flipy);
-    const symm = addOp(defs.makesymmetric);
-    const stretch = addOp(defs.stretch);
-    const bindweft = addOp(defs.bindweftfloats);
-    const bindwarp = addOp(defs.bindwarpfloats);
-    const tile = addOp(defs.tile);
+    // const tabby = addOp(this.op_service.getOp('tabby'));
+    // const twill = addOp(this.op_service.getOp('twill'));
+    // const satin = addOp(this.op_service.getOp('satin'));
+    // const waffle = addOp(defs.waffle);
+    // const basket = addOp(defs.basket);
+    // const rib = addOp(defs.rib);
+    // const random = addOp(defs.random);
+    // const rotate = addOp(defs.rotate);
+    // const invert = addOp(defs.invert);
+    // const shiftx = addOp(defs.shiftx);
+    // const shifty = addOp(defs.shifty);
+    // const slope = addOp(defs.slope);
+    // const flipx = addOp(defs.flipx);
+    // const flipy = addOp(defs.flipy);
+    // const symm = addOp(defs.makesymmetric);
+    // const stretch = addOp(defs.stretch);
+    // const bindweft = addOp(defs.bindweftfloats);
+    // const bindwarp = addOp(defs.bindwarpfloats);
+    // const tile = addOp(defs.tile);
+
+
     // : SingleOpBase = {
     //   name: defs.tile.name,
     //   classifier: 'pipe',
@@ -93,99 +99,8 @@ export class PlayerService {
     // }
     // mappings.addMenuOperation(tile);
 
-    const chaos: SingleOpTemplate = {
-      id: -1,
-      name: 'chaos',
-      classifier: 'pipe',
-      dx: 'tiles the input drafts, randomly selecting which draft to place at which position',
-      params: <Array<NumParam>>[
-        {
-          name: 'warp-repeats',
-          type: 'number',
-          min: 1,
-          max: 100,
-          value: 2,
-          dx: 'the number of times to repeat this time across the width'
-        }, {
-          name: 'weft-repeats',
-          type: 'number',
-          min: 1,
-          max: 100,
-          value: 2,
-          dx: 'the number of times to repeat this time across the length'
-        }
-      ],
-      perform: async (init: PlayerState) => {
-        const res = copyState(init);
-        const draft = res.draft;
-
-        const total_warps = warps(draft.drawdown);
-        // const total_warps = utilInstance.lcm(all_warps);
-        const total_wefts = wefts(draft.drawdown);
-        // const total_wefts = utilInstance.lcm(all_wefts);
-
-        const warp_repeats = <number> chaos.params[0].value;
-        const weft_repeats = <number> chaos.params[1].value;
-
-        const draft_indexing: Array<Array<Draft>> = [];
-        for(let i = 0; i < weft_repeats; i++){
-          draft_indexing.push([]);
-          for(let j = 0; j < warp_repeats; j++){
-            const x_flip = (Math.random() < 0.5) ? false: true; 
-            const y_flip = (Math.random() < 0.5) ? false: true; 
-            draft_indexing[i].push(await flipDraft(draft, x_flip, y_flip));
-          }
-        }
-
-        const width: number = warp_repeats*total_warps;
-        const height: number = weft_repeats*total_wefts;
-        const output: Draft = initDraftWithParams({warps: width, wefts: height});
-
-        output.drawdown.forEach((row, i) => {
-          let draft_index_row  = Math.floor(i / total_wefts);
-          let within_draft_row = i % total_wefts;
-          row.forEach((cell, j) => {
-            let draft_index_col  = Math.floor(j / total_warps);
-            let within_draft_col  = j % total_warps;
-
-            const draft = draft_indexing[draft_index_row][draft_index_col];
-
-            const w = warps(draft.drawdown);
-            const h = wefts(draft.drawdown);
-            cell.setHeddle(draft.drawdown[within_draft_row%w][within_draft_col%h].getHeddle()); 
-          });
-        });
-      
-        res.draft = output;
-        res.row = init.row % wefts(res.draft.drawdown);
-        res.pedal = chaos.name;
-        return Promise.resolve(res);
-      }
-    }
-    mappings.addMenuOperation(chaos);
-
-    this.draftClassificationS.push(
-      { category_id: 0,
-        category: 'structure',
-        dx: "0-1 input, 1 output, algorithmically generates weave structures based on parameters",
-        ops: [tabby, twill, satin, waffle, random]}
-    );
-
-    this.draftClassificationS.push(
-      { category_id: 1,
-        category: 'custom structure',
-        dx: "custom structures loaded from the Mixer",
-        ops: []
-      }
-    );
-
-    this.draftClassificationT.push(
-      { category_id: 2,
-        category: 'transformation',
-        dx: "1 input, 1 output, applies an operation to the input that transforms it in some way",
-        ops: [invert, flipx, flipy, shiftx, shifty, rotate, slope, stretch, symm, tile, chaos, bindwarp, bindweft]}
-    );
-
+    this.draftClassificationS = this.op_desc_service.getOpClassifications();
+   
     console.log(mappings.ops);
 
     // //test this
@@ -238,48 +153,52 @@ export class PlayerService {
   }
 
   hasCustomStructure(d: Draft): boolean {
-    let ops = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
-    console.log(ops);
-    if (ops.length == 0) return false;
-    return ops
-      .map((el) => { return (<CustomStructOp> el).struct_id == d.id})
-      .reduce((a, b) => { return a || b; });
+        //COMMENTED FOR COMPILING BY LAURA
+
+    // let ops = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
+    // console.log(ops);
+    // if (ops.length == 0) return false;
+    // return ops
+    //   .map((el) => { return (<CustomStructOp> el).struct_id == d.id})
+    //   .reduce((a, b) => { return a || b; });
+    return false;
   }
 
   setDraft(d: Draft) {
-    if (!this.hasCustomStructure(d)) {
-      console.log("a new structure!");
-      let structOps = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
-      let op = this.structureOpFromDraft(d);
-      structOps.push(op);
-      this.mappings.addMenuOperation(<MenuOp> op);
-    }
-    this.state.draft = d;
-    this.state.row = 0;
-    console.log("draft set ", this.state);
+    //COMMENTED FOR COMPILING BY LAURA
+    // if (!this.hasCustomStructure(d)) {
+    //   console.log("a new structure!");
+    //   let structOps = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
+    //   let op = this.structureOpFromDraft(d);
+    //   structOps.push(op);
+    //   this.mappings.addMenuOperation(<MenuOp> op);
+    // }
+    // this.state.draft = d;
+    // this.state.row = 0;
+    // console.log("draft set ", this.state);
   }
 
   /**
    * 
    * @param d the Draft to turn into a custom structure Operation
    */
-  structureOpFromDraft(d: Draft) {
-    let structOp: CustomStructOp = {
-      id: d.id,
-      name: d.gen_name,
-      struct_id: d.id,
-      params: [],
-      custom_check: 1,
-      classifier: 'struct',
-      perform: (init: PlayerState) => {
-        let res = copyState(init);
-        res.draft = d;
-        res.row = init.row % wefts(d.drawdown);
-        return Promise.resolve(res);
-      }
-    };
-    return structOp;
-  }
+  // structureOpFromDraft(d: Draft) {
+  //   let structOp: CustomStructOp = {
+  //     id: d.id,
+  //     name: d.gen_name,
+  //     struct_id: d.id,
+  //     params: [],
+  //     custom_check: 1,
+  //     classifier: 'struct',
+  //     perform: (init: PlayerState) => {
+  //       let res = copyState(init);
+  //       res.draft = d;
+  //       res.row = init.row % wefts(d.drawdown);
+  //       return Promise.resolve(res);
+  //     }
+  //   };
+  //   return structOp;
+  // }
 
   // e = op.name
   setPedalOp(e: string, p: Pedal) {
@@ -295,24 +214,24 @@ export class PlayerService {
     console.log('player service: pedal ', id);
     let mapped = this.mappings.getMapByID(id);
     console.log(mapped);
-    // console.log(this.mappings);
+    console.log(this.mappings);
     // console.log(this.seq);
-    if (mapped) {
-      let performer;
-      console.log('mapping exists for pedal');
-      if ((<SequencerMapping> mapped).role) { performer = this.seq; }
-      else performer = mapped;
-      performer.perform(this.state, id)
-      .then((state: PlayerState) => {
-        this.state = state;
-        // console.log(this.state);
-        this.redraw.emit('redraw');
-        if (this.state.weaving) {
-          console.log("draft player: sending row");
-          this.pedals.sendDraftRow(this.currentRow());
-        }
-      });
-    }
+    // if (mapped) {
+    //   let performer;
+    //   console.log('mapping exists for pedal');
+    //   if ((<SequencerMapping> mapped).role) { performer = this.seq; }
+    //   else performer = mapped;
+    //   performer.perform(this.state, id)
+    //   .then((state: PlayerState) => {
+    //     this.state = state;
+    //     // console.log(this.state);
+    //     this.redraw.emit('redraw');
+    //     if (this.state.weaving) {
+    //       console.log("draft player: sending row");
+    //       this.pedals.sendDraftRow(this.currentRow());
+    //     }
+    //   });
+    // }
   }
 
   currentRow() {

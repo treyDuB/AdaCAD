@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Pedal, PedalsService } from './pedals.service';
-import { SingleOpTemplate, OpTemplate as MenuOp,
-newOpInstance, OpInstance } from '../model/playerop';
-import { ChainOp } from '../model/chainop';
-import { SimplePairing, makeSimplePairing, ChainPairing, MappingShapes, PedalAction, makeMapping, SequencerMapping, SeqMapOptions} from '../model/maptypes';
+import { SingleOpTemplate, OpTemplate as MenuOp, OpInstance } from '../model/playerop';
+// import { ChainOp } from '../model/chainop';
+// import { SimplePairing, makeSimplePairing, ChainPairing, MappingShapes, PedalAction, makeMapping, SequencerMapping, SeqMapOptions} from '../model/maptypes';
 import { cloneDeep } from 'lodash';
+import { ChainPairing, makeSimplePairing, MappingShapes, PedalAction, SimplePairing } from '../model/maptypes';
+import { Operation } from 'src/app/core/model/datatypes';
+import { ChainOp } from '../model/chainop';
 
 type MappingIndex = {
   [m in keyof MappingShapes]: Array<PedalAction>;//Array<MappingShapes[m]>;
@@ -36,7 +38,7 @@ export class MappingsService extends Array<PedalAction> {
   // pedals: Array<Pedal>;
   ops: Array<MenuOp> = [];
   op_instances: Array<OpInstance> = [];
-  op_chains: Array<ChainOp> = [];
+  op_chains: Array<Operation> = [];
   // availPedals: Array<number>;
   
   /** where all of the actual OpPairing, OpChain, OpSequencer objects end up so they are only created once */
@@ -67,10 +69,10 @@ export class MappingsService extends Array<PedalAction> {
   }
 
   // register an operation from the Player to the options for mapping
-  addMenuOperation(o: MenuOp) {
-    o.id = this.ops.length;
-    this.ops.push(o);
-  }
+  // addMenuOperation(o: MenuOp) {
+  //   o.id = this.ops.length;
+  //   this.ops.push(o);
+  // }
 
   getMapByID(id: number) {
     for (let cat in this.index) {
@@ -84,18 +86,18 @@ export class MappingsService extends Array<PedalAction> {
   }
 
   mapToSequencer(id: number, opts: any) {
-    let m: SequencerMapping;
-    const newOpts = <SeqMapOptions> cloneDeep(opts);
-    if (opts.role == 'sel') {
-      m = makeMapping(id, newOpts, 'sequencer') as SequencerMapping;
-    } else {
-      let op = newOpInstance(this.getOp(opts.op_name));
-      newOpts.op = op;
-      console.log(newOpts);
-      m = makeMapping(id, newOpts, 'sequencer') as SequencerMapping;
-    }
+    // let m: SequencerMapping;
+    // const newOpts = <SeqMapOptions> cloneDeep(opts);
+    // if (opts.role == 'sel') {
+    //   m = makeMapping(id, newOpts, 'sequencer') as SequencerMapping;
+    // } else {
+    //   let op = newOpInstance(this.getOp(opts.op_name));
+    //   newOpts.op = op;
+    //   console.log(newOpts);
+    //   m = makeMapping(id, newOpts, 'sequencer') as SequencerMapping;
+    // }
     
-    this.index["sequencer"].push(m);
+    // this.index["sequencer"].push(m);
   }
 
   // setMap(p: number, m: PedalAction, type: string) {
@@ -149,9 +151,10 @@ export class MappingsService extends Array<PedalAction> {
 
   createOpInstance(op: MenuOp): OpInstance
   {
-    const newInstance = newOpInstance(<SingleOpTemplate> op)
-    this.op_instances.push(newInstance)
-    return newInstance;
+    // const newInstance = newOpInstance(<SingleOpTemplate> op)
+    // this.op_instances.push(newInstance)
+    // return newInstance;
+    return null;
   }
 
   getInstanceById(op_id: number) {
@@ -178,10 +181,11 @@ export class MappingsService extends Array<PedalAction> {
   }
 
   createChainOp(op: MenuOp): ChainOp {
-    let inst = this.createOpInstance(op);
-    const ch = ChainOp.fromSingleOp(inst, this.chains.length);
-    this.op_chains.push(ch);
-    return ch;
+    // let inst = this.createOpInstance(op);
+    // const ch = ChainOp.fromSingleOp(inst, this.chains.length);
+    // this.op_chains.push(ch);
+    // return ch;
+    return null
   }
 
   getChain(id: number) {

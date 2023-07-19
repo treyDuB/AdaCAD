@@ -4,10 +4,10 @@
  */ 
 
 import { PlayerState } from "./state";
-import { OpTemplate, OpInstance, CustomStructOp, ProgressOp, refresh, newOpInstance } from "./playerop";
+// import { OpTemplate, OpInstance, CustomStructOp, ProgressOp, refresh, newOpInstance } from "./playerop";
 import { ChainOp } from "./chainop";
 import { OpSequencer } from "../provider/sequencer.service";
-import { OperationParam } from "../../mixer/model/operation";
+import { Operation } from "src/app/core/model/datatypes";
 
 /** things that can happen in response to a pedal */
 export interface PedalTarget {
@@ -28,7 +28,6 @@ export type OpControlMode = 'run' | 'toggle' | 'redo';
 export type ParamControlMode = 'inc' | 'dec' | 'rand';
 
 /** operations that will show up as menu options for mapping */
-// export type MenuOp = SingleOpTemplate | CustomStructOp;
 // export type PairableOp = OpInstance | CustomStructOp;
 
 /** 
@@ -41,7 +40,7 @@ export type ParamControlMode = 'inc' | 'dec' | 'rand';
 export interface SimplePairing extends PedalTarget {
   pedal:  number,
   // name:   string, // name of the operation that matches icon name
-  op:     OpInstance,
+  op:     Operation,
   mode?:  OpControlMode,
 }
 
@@ -53,7 +52,7 @@ export interface ChainPairing extends PedalTarget {
 export interface SequencerProg extends PedalTarget {
   pedal: number,
   role: 'prog',
-  op: ProgressOp
+  op: Operation
 }
 
 export interface SequencerSelect extends PedalTarget {

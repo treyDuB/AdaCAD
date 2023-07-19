@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { SequencerService, SequencerOp } from '../../../provider/sequencer.service';
-import { ChainOp } from '../../../model/chainop';
+// import { SequencerService, SequencerOp } from '../../../provider/sequencer.service';
+// import { ChainOp } from '../../../model/chainop';
 import { MatMenu } from '@angular/material/menu';
 
 @Component({
@@ -11,11 +11,11 @@ import { MatMenu } from '@angular/material/menu';
 export class ChainOpMenuComponent implements OnInit {
   @ViewChild(MatMenu) menu;
 
-  @Input() op: ChainOp;
+  @Input() op: any;
   @Input() index: number;
 
   constructor(
-    public seq: SequencerService
+    // public seq: SequencerService
   ) { }
 
   ngOnInit(): void {

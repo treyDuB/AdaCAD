@@ -5,7 +5,7 @@ import { Draft } from '../../core/model/datatypes';
 import { wefts, warps, isUp, isSet } from '../../core/model/drafts';
 import { PedalsService } from '../provider/pedals.service';
 import { PlaybackService } from '../provider/playback.service';
-import { MappingsService } from '../provider/mappings.service';
+// import { MappingsService } from '../provider/mappings.service';
 
 /**
  * @class
@@ -34,7 +34,7 @@ export class WeavingStateComponent implements OnInit {
   constructor(
     public pls: PlayerService,
     public pds: PedalsService,
-    public map: MappingsService,
+    // public map: MappingsService,
     public pbs: PlaybackService
   ) { 
     this.default_cell = 10;

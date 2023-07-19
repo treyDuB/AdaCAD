@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { PedalAction } from '../../../model/maptypes';
+// import { PedalAction } from '../../../model/maptypes';
 import { Pedal, PedalsService } from '../../../provider/pedals.service';
 
 @Component({
@@ -11,7 +11,7 @@ export class PedalComponent implements OnInit {
   /** The pedal rendered by the component */
   @Input() pedal: Pedal;
   /** What the pedal is mapped to (if any) */
-  @Input() mapped: PedalAction;
+  @Input() mapped: any;
   
   @Input() physical: boolean;
 

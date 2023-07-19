@@ -1,4 +1,5 @@
 <mat-accordion id="player-container">
+ 
   <mat-expansion-panel
     [expanded] = "open"
     (opened) = "toggleOpen(true)"
@@ -18,9 +19,9 @@
           (isWeaving)="toggleWeaving($event)"
           
         ></app-weaving-state>
-        <app-sequencer
+        <!-- <app-sequencer
           [isWeaving]="pls.weaving"
-        ></app-sequencer>
+        ></app-sequencer> -->
       </div>
       
       <div class="break"></div>

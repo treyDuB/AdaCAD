@@ -2,8 +2,14 @@
   [name] = pedal.id
   class = "pedal-box"
   (click)="pds.togglePedal(pedal)"
-  [ngClass] = "physical ? 'physical' : 'virtual'"
 >
+
+<!-- <button 
+  [name] = pedal.id
+  class = "pedal-box"
+  (click)="pds.togglePedal(pedal)"
+  [ngClass] = "physical ? 'physical' : 'virtual'"
+> -->
   <ng-container *ngIf="mapped">
     <mat-icon svgIcon="op-{{ mapped.name }}" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
   </ng-container>
