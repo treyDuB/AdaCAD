@@ -1,49 +1,101 @@
 
 <!--TODO add z index support here-->
-<div class="note-container" 
+<div class="selectable-{{!disable_drag}}" 
+[cdkDragDisabled] = "disable_drag"
 cdkDrag
 [cdkDragFreeDragPosition]="bounds.topleft"
 (cdkDragMoved)="dragMove($event)">
 
 
-<div id="scalenote-{{note.id}}" class="subdraft-container">
+<div class="note-container" 
+[style.width.px]="note.width"
+[style.min-height.px]="note.height"
+[style.background]="note.color"
+id="scalenote-{{note.id}}">
 
 
-  <div class="subdraft-contents">
 
-    <div class="subdraft-details"> 
 
-        <button cdkDragHandle class="button is-small is-primary fas fa-arrows-alt">
-        </button>
-  
-  
+  <div class="note-opts"> 
+
+        <div class="align-left">
+        <div class="handle" cdkDragHandle>
+          <button mat-icon-button class="fa-solid fa-up-down-left-right"></button>
+        </div>
+      </div>
+        
+      <div class="align-right">
       <button 
-      matTooltip= "Delete"
-      class="button is-small is-primary fas fa-times"
-      [name]="delete"
-      (click)="delete(note.id)">
-      </button>
-    </div>
-
-    <div class="text-entry">
+          mat-icon-button
+          matTooltip= "Change Note Color"
+          (colorPickerChange) = 'colorChange($event)'  
+          class="fa-solid fa-palette" 
+          [(colorPicker)]="note.color" 
+          [style.background]="note.color" 
+          >
+      </button> 
     
-    <form class="example-form">
+
+        <button *ngIf="!show_url"
+        matTooltip= "Upload Image"
+        mat-icon-button
+        class="fas fa-image"
+        (click)="uploadImage()">
+        </button>
+
  
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Comment #{{note.id}}</mat-label>
-          <textarea cdkTextareaAutosize matInput placeholder="something descriptive about your file..." [(ngModel)]="note.text" name="text" (focusout)="save()"></textarea>
+    
+        <button 
+        matTooltip= "Delete"
+        mat-icon-button
+        class="fas fa-times"
+        [name]="delete"
+        (click)="delete()">
+        </button>
+      </div>
+    </div>
+    <div class="text-entry">
+
+    <form class="example-form">
+      <mat-form-field class="notetitle" appearance="fill">
+        <input matInput placeholder="note title"  [(ngModel)]="note.title" (focusout)="save()" name="title">
+
+      </mat-form-field>
+      <div *ngIf="note.imageurl">
+        <img [src]="note.imageurl" >     
+       </div>
+    
+
+      <mat-form-field *ngIf="show_url"
+      class="url">
+        <mat-label>url</mat-label>
+        <input type="tel" matInput [(ngModel)]="note.imageurl" [style.width.px]="note.width" placeholder="enter the url to your image">
+        <button 
+        matTooltip= "enter url"
+        mat-icon-button
+        class="fa-solid fa-check"
+        (click)="enterUrl()">
+        </button>
+      </mat-form-field>
+
+
+  
+        <mat-form-field class="textfield" appearance="fill">
+          <textarea cdkTextareaAutosize resizeToFitContent matInput placeholder="add your note text here" [(ngModel)]="note.text" name="text" (focusout)="save()"></textarea>
         </mat-form-field>
     </form>
 
     </div>
- 
- </div>
 
+    <div class="expand" >
+       <button mat-icon-button id="resize_button" class="expand-icon fa-solid fa-up-right-and-down-left-from-center"></button>
+       
+    </div>
 
+    <canvas id="notecanvas-{{note.id}}" hidden></canvas>
 </div>
-<canvas id="notecanvas-{{note.id}}" hidden></canvas>
-
-
 </div>
+
+
 
 

@@ -1,13 +1,43 @@
-import { L, NUMPAD_SIX } from "@angular/cdk/keycodes";
-import * as _ from "lodash";
-import { values } from "lodash";
-import { generate } from "rxjs";
-import { LoomModal } from "../modal/loom/loom.modal";
-import { Cell } from "./cell";
+
+import { getCellValue, setCellValue } from "./cell";
 import { Draft, Drawdown, Interlacement, InterlacementVal, Loom, LoomSettings, LoomUtil } from "./datatypes";
 import { createBlankDrawdown, warps, wefts } from "./drafts";
 import utilInstance from "./util";
 
+
+/*********** GENERIC FUNCTIONS RELATING TO LOOMS AND LOOM UTILS ************/
+
+export const copyLoom = (l:Loom) : Loom => {
+  if(l === undefined || l == null) return null;
+  const copy_loom  = {
+    threading: l.threading.slice(),
+    treadling: l.treadling.slice(),
+    tieup: l.tieup.slice(),
+  } 
+  return copy_loom;
+}
+
+export const copyLoomSettings = (ls:LoomSettings) : LoomSettings => {
+  const copy_loomsettings  = {
+      type: ls.type,
+      epi: ls.epi,
+      units: ls.units,
+      frames: ls.frames,
+      treadles: ls.treadles
+  };
+  return copy_loomsettings;
+}
+
+
+export const convertEPItoMM = (ls: LoomSettings) : number => {
+
+  if(ls.units == 'cm'){
+    return ls.epi;
+  }else{
+    return (25.4/ls.epi);
+  }
+
+}
 
 
 
@@ -85,7 +115,7 @@ const jacquard_utils: LoomUtil = {
               let active_ts = [];
               let i_pattern = d[i].slice();
               i_pattern.forEach((cell, j) => {
-                if(cell.isUp()){
+                if(getCellValue(cell) == true){
                   const frame_assignment = obj.threading[j];
                   if(frame_assignment !== -1){
                     active_ts.push(frame_assignment);
@@ -123,7 +153,7 @@ const jacquard_utils: LoomUtil = {
         let active_ts = [];
         let i_pattern = d[i].slice();
         i_pattern.forEach((cell, j) => {
-          if(cell.isUp()){
+          if(getCellValue(cell) == true){
             const frame_assignment = new_loom.threading[j];
             if(frame_assignment !== -1){
               active_ts.push(frame_assignment);
@@ -223,7 +253,7 @@ const jacquard_utils: LoomUtil = {
                 const active_treadle_id = loom.treadling[i][0];
                 const row = d[i];
                 row.forEach((cell, j) => {
-                  if(cell.isUp()){
+                  if(getCellValue(cell) == true){
                     const active_frame_id = loom.threading[j];
                     loom.tieup[active_frame_id][active_treadle_id] = true;
                   } 
@@ -268,7 +298,7 @@ const jacquard_utils: LoomUtil = {
             const active_treadle_id = new_loom.treadling[i][0];
             const row = d[i];
             row.forEach((cell, j) => {
-              if(cell.isUp()){
+              if(getCellValue(cell) == true){
                 const active_frame_id = new_loom.threading[j];
                 new_loom.tieup[active_frame_id][active_treadle_id] = true;
               } 
@@ -336,7 +366,7 @@ export const pasteDirectAndFrameThreading = (loom:Loom, drawdown: Drawdown, ndx:
   for(let j = 0; j < width; j++){
     const pattern_ndx = j % drawdown[0].length;
     const column_vals = drawdown.map(row => row[pattern_ndx]);
-    const frame = column_vals.findIndex(cell => cell.getHeddle() == true);
+    const frame = column_vals.findIndex(cell => getCellValue(cell) == true);
     if(frame < numFrames(loom)) loom.threading[ndx.j + j] = frame;
   }
 
@@ -350,7 +380,7 @@ export const pasteDirectAndFrameTreadling= (loom:Loom, drawdown: Drawdown, ndx: 
     const pattern_ndx = i % drawdown.length;
     const treadle_list = [];
     for(let j = 0; j < numTreadles(loom); j++){
-      if(drawdown[pattern_ndx][j].getHeddle() == true) treadle_list.push(j);
+      if(getCellValue(drawdown[pattern_ndx][j]) == true) treadle_list.push(j);
     }
     loom.treadling[ndx.i + i] = treadle_list.slice();
   }
@@ -393,7 +423,7 @@ export const pasteDirectAndFrameTreadling= (loom:Loom, drawdown: Drawdown, ndx: 
             if (loom.tieup[j][treadle]) {
               for (var k = 0; k < loom.threading.length;k++) {
                 if (loom.threading[k] == j) {
-                  pattern[i][k].setHeddle(true);
+                  pattern[i][k] = setCellValue(pattern[i][k], true);
                 }
               }
             }
@@ -451,7 +481,7 @@ export const pasteDirectAndFrameTreadling= (loom:Loom, drawdown: Drawdown, ndx: 
     //progressively add new frames in the order they appear
     for(let i = 0; i < pattern.length; i++){
 
-      const has_up = pattern[i].find(el => el.isUp());
+      const has_up = pattern[i].find(el => getCellValue(el) == true);
       if(has_up === undefined) treadling[i] = [];
       else{
       const match = utilInstance.hasMatchingRow(i, pattern);

@@ -1,11 +1,10 @@
-import { Component, OnInit, Inject, EventEmitter, Output } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Shuttle } from '../../../core/model/shuttle';
+import { Component, OnInit, Inject, EventEmitter, Output, ViewChild, Input } from '@angular/core';
 import { DesignmodesService } from '../../provider/designmodes.service';
 import { MaterialMap, MaterialsService } from '../../provider/materials.service';
 import { TreeService } from '../../../core/provider/tree.service';
 import utilInstance from '../../model/util';
-import { Draft,DraftNode } from '../../model/datatypes';
+import { Draft,DraftNode, Material } from '../../model/datatypes';
+import { createMaterial, setMaterialID } from '../../model/material';
 
 
 @Component({
@@ -18,20 +17,17 @@ import { Draft,DraftNode } from '../../model/datatypes';
 
 export class MaterialModal{
 
-  @Output() onChange: any = new EventEmitter();
-
+  @Output() onMaterialChange: any = new EventEmitter();
 
   replacements: Array<number> = [];
   types: any;
-  newshuttle: Shuttle = new Shuttle();
+  newshuttle: Material = createMaterial();
   addmaterial: boolean = false;
 
   constructor(
       private dm: DesignmodesService,
       public ms: MaterialsService,
-      private tree: TreeService,
-      private dialogRef: MatDialogRef<MaterialModal>,
-      @Inject(MAT_DIALOG_DATA) public data: {draft:Draft}) {
+      private tree: TreeService) {
 
       ms.getShuttles().forEach((el, ndx) => {
         this.replacements.push((ndx+1%this.ms.getShuttles().length));
@@ -48,13 +44,13 @@ export class MaterialModal{
 
   /**emitted on any action that would change the current rendering */
   change(){
-    this.onChange.emit();
-
+    this.onMaterialChange.emit();
   }
 
   addMaterial(){
 
   }
+
 
 
 
@@ -82,22 +78,21 @@ export class MaterialModal{
     //map remaning replacement values to valid indices 
     this.replacements = this.replacements.map(el => (el%this.ms.getShuttles().length));
 
-    this.onChange.emit();
+    this.onMaterialChange.emit();
   }
 
   addNewShuttle(){
     console.log(this.newshuttle);
-    this.newshuttle.setID(this.ms.getShuttles().length);
+    setMaterialID(this.newshuttle,this.ms.getShuttles().length);
     this.ms.addShuttle(this.newshuttle);
-    this.newshuttle = new Shuttle();
+    this.newshuttle = createMaterial();
   }
 
-  close() {
-    this.dialogRef.close(null);
-  }
+  // close() {
+  //   this.dialogRef.close(null);
+  // }
 
   save() {
-    this.dialogRef.close(null);
   }
 
 }

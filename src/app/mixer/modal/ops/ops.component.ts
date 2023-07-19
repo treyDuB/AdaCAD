@@ -1,10 +1,12 @@
-import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
-import { OperationService } from '../../../core/provider/operation.service';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { OperationClassification, OperationInlet, OperationParam } from '../../../core/model/datatypes';
+import { OperationDescriptionsService } from '../../../core/provider/operation-descriptions.service';
+import { OperationService } from '../../../core/provider/operation.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ops',
@@ -18,23 +20,42 @@ export class OpsComponent implements OnInit {
   
   opnames:Array<string> = [];
   displaynames:Array<string> = [];
-  myControl = new FormControl();
+  myControl = new UntypedFormControl();
   filteredOptions: Observable<string[]>;
+  searchOnly: boolean = false;
+  classifications: Array<OperationClassification>;
   
-  constructor(public ops: OperationService, private dialog: MatDialog,
+  desc: string = "";
+  app: string = "";
+  name: string = "";
+  youtube: string = "";
+  url: any;
+  params: Array<OperationParam> = [];
+  inlets: Array<OperationInlet> = [];
+  
+  constructor(
+    public ops: OperationService, 
+    public op_desc: OperationDescriptionsService, 
+    private sanatizer: DomSanitizer,
+    private dialog: MatDialog,
     private dialogRef: MatDialogRef<OpsComponent>,
              @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
 
     const allops = this.ops.ops.concat(this.ops.dynamic_ops);
+    this.classifications = this.op_desc.getOpClassifications();
     this.opnames = allops.map(el => el.name);
-    this.displaynames = allops.map(el => el.displayname);
+    this.displaynames = allops.map(el => this.op_desc.getDisplayName(el.name));
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value))
     );
+
+    if(this.data.searchOnly !== undefined){
+      this.searchOnly = true;
+    }
   }
 
   private _filter(value: string): string[] {
@@ -46,6 +67,41 @@ export class OpsComponent implements OnInit {
     this.dialogRef.close(null);
   }
 
+  showDesc(obj){
+    this.name = this.op_desc.getDisplayName(obj);
+    this.desc = this.op_desc.getOpDescription(obj);
+    this.app = this.op_desc.getOpApplication(obj);
+    this.youtube = this.op_desc.getOpYoutube(obj);
+    this.url = this.createYoutubeEmbedLink(this.youtube)
+    this.params = this.ops.getOp(obj).params;
+    this.params = this.params.map(param => {
+      if(param.dx === undefined) param.dx = this.op_desc.getParamDescription(param.name);
+      return param;
+    })
+    this.inlets = this.ops.getOp(obj).inlets;
+
+  }
+
+  showCatDesc(obj){
+    this.name = "category: "+this.op_desc.getCatName(obj);
+    this.desc = this.op_desc.getCatDescription(obj);
+    this.app = "";
+  }
+
+  createYoutubeEmbedLink(embedcode: string){
+   const prefix = "https://www.youtube.com/embed/";
+   if(embedcode === "") return "";
+   const url = this.sanatizer.bypassSecurityTrustResourceUrl(prefix+embedcode);
+    console.log(this.url);
+    return url
+
+  }
+
+  // getParams(){
+  //   const op = this.op
+  // }
+
+
   addOp(name: string){
       this.onOperationAdded.emit(name);  
   }
@@ -55,6 +111,9 @@ export class OpsComponent implements OnInit {
     const ndx = this.displaynames.findIndex(el => el === event.option.value);
     if(ndx !== -1){
       this.onOperationAdded.emit(this.opnames[ndx]);
+    }
+    if(this.searchOnly){
+      this.close();
     }
 
   }

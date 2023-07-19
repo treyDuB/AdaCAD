@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Draft } from '../model/datatypes';
-import { System, makeSystemsUnique } from '../model/system';
+import { Draft, System } from '../model/datatypes';
+import { createSystem } from '../model/system';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +17,12 @@ export class SystemsService {
   constructor() { 
 
     for(let i = 0; i < 26; i++){
-      const weft = new System();
+      const weft = createSystem();
       weft.id = i; 
       weft.name = String.fromCharCode(i+97);
       this.weft_systems.push(weft);
 
-      const warp = new System();
+      const warp = createSystem();
       warp.id = i; 
       warp.name = ""+(i+1);
       this.warp_systems.push(warp);
@@ -77,11 +77,11 @@ export class SystemsService {
   }
 
   weftSystemIsVisible(id: number){
-    return this.weft_systems[id].isVisible();
+    return this.weft_systems[id].visible;
   }
 
   warpSystemIsVisible(id: number){
-    return this.warp_systems[id].isVisible();
+    return this.warp_systems[id].visible;
   }
 
     /**
@@ -186,37 +186,6 @@ export class SystemsService {
    return  system.name;
  }
 
- /**
-   * moved to system.ts in model
-   */
-  // makeSystemsUnique(systems: Array<Array<number>>) : Array<Array<number>> {
 
-  makeWeftSystemsUnique(systems: Array<Array<number>>) : Array<Array<number>> {
-
-    const unique = makeSystemsUnique(systems);
-
-    //add any weft systems required
-    unique.forEach(system => {
-      system.forEach(el => {
-        if(this.getWeftSystem(el) === undefined) this.addWeftSystemFromId(el);
-      })
-    })
-
-
-    return unique;
-  }
-
-  makeWarpSystemsUnique(systems: Array<Array<number>>) : Array<Array<number>> {
-
-    const unique = makeSystemsUnique(systems);
-
-    unique.forEach(system => {
-      system.forEach(el => {
-        if(this.getWarpSystem(el) === undefined) this.addWarpSystemFromId(el);
-      })
-    })
-
-    return unique;
-  }
 
 }

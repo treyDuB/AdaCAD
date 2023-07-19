@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
-import {TreeService } from './tree.service';
-import { Cell } from '../model/cell';
-import { Draft, DraftNodeProxy, Fileloader, FileObj, FileSaver, LoadResponse, Loom, OpComponentProxy, StatusMessage, TreeNodeProxy, NodeComponentProxy, LoomSettings, SaveObj, DraftNode } from '../model/datatypes';
-import utilInstance from '../model/util';
-import { MaterialMap, MaterialsService } from './materials.service';
-import { SystemsService } from './systems.service';
-import { Note, NotesService } from './notes.service';
-import { VersionService } from './version.service';
-import { createDraft, initDraft, initDraftWithParams, loadDraftFromFile } from '../model/drafts';
+import { Draft, DraftNodeProxy, Fileloader, FileObj, FileSaver, LoadResponse, Loom, LoomSettings, OpComponentProxy, SaveObj, StatusMessage } from '../model/datatypes';
+import { initDraftWithParams, loadDraftFromFile } from '../model/drafts';
 import { getLoomUtilByType, loadLoomFromFile } from '../model/looms';
+import utilInstance from '../model/util';
+import { FilesystemService } from './filesystem.service';
+import { MaterialsService } from './materials.service';
+import { NotesService } from './notes.service';
+import { SystemsService } from './systems.service';
+import { TreeService } from './tree.service';
+import { VersionService } from './version.service';
 import { WorkspaceService } from './workspace.service';
-import * as _ from 'lodash';
-import { I } from '@angular/cdk/keycodes';
 
 
 
@@ -39,7 +37,8 @@ export class FileService {
     private ms: MaterialsService,
     private ss: SystemsService,
     private vs: VersionService,
-    private ws: WorkspaceService) { 
+    private ws: WorkspaceService,
+    private files: FilesystemService) { 
   
   this.status = [
     {id: 0, message: 'success', success: true},
@@ -53,9 +52,11 @@ export class FileService {
    */
   const dloader: Fileloader = {
 
-     ada: async (filename: string, data: any) : Promise<LoadResponse> => {
-      console.log("DATA IN", _.cloneDeep(data))
-
+     ada: async (filename: string, id: number, desc: string, data: any) : Promise<LoadResponse> => {
+      if(desc === undefined) desc = ""
+      if(filename == undefined) filename = 'draft' 
+      if(id === -1) id = this.files.generateFileId();
+      
       let draft_nodes: Array<DraftNodeProxy> = [];
       //let looms: Array<Loom> = [];
       let ops: Array<OpComponentProxy> = [];
@@ -63,7 +64,8 @@ export class FileService {
       
       this.clearAll();
 
-     
+      if(data == undefined) return Promise.reject(" there is no data")
+
       if(data.version !== undefined) version = data.version;
 
       if(data.workspace !== undefined){
@@ -81,18 +83,22 @@ export class FileService {
         }
       }
 
-      if(data.notes !== undefined) this.ns.reloadNotes(data.notes);
+      const flips_required = utilInstance.getFlips(3, this.ws.selected_origin_option);
 
-
-      const flips_required = utilInstance.getFlips(this.ws.selected_origin_option, 3);
-    
       const loom_elements = []
       const loom_fns = []
       const draft_elements = [];
       const draft_fns = [];
 
+      if(!utilInstance.sameOrNewerVersion(version, '3.4.9')){
+        data.nodes.forEach(node => {
+          if(node.bounds !== undefined) node.topleft = node.bounds.topleft;
+        })
+      }
+
       if(utilInstance.sameOrNewerVersion(version, '3.4.5')){
         draft_nodes = data.draft_nodes;
+
         if(draft_nodes == undefined) draft_nodes = [];
 
         if(draft_nodes !== undefined){
@@ -122,18 +128,19 @@ export class FileService {
           const loom = data.looms.find(loom => loom.draft_id === node.node_id);
           const draft = data.drafts.find(draft => draft.id === node.node_id);
 
-
           const dn: DraftNodeProxy = {
             node_id: (node === undefined) ? -1 : node.node_id,
             draft_id: node.node_id,
             draft_name: node.draft_name,
-            draft:null,
+            draft:draft,
             draft_visible: (node === undefined) ? true : node.draft_visible,
             loom:null,
             loom_settings: (loom === undefined) 
               ? {type: this.ws.type, epi: this.ws.epi, units: this.ws.units, frames: this.ws.min_frames, treadles: this.ws.min_treadles } 
-              : {type: loom.type, epi: loom.epi, units: loom.units, frames: loom.min_frames, treadles: loom.min_treadles}
+              : {type: loom.type, epi: loom.epi, units: loom.units, frames: loom.min_frames, treadles: loom.min_treadles},
+            render_colors: (node === undefined || node.render_colors === undefined) ? true : node.render_colors,
           }
+
           draft_nodes.push(dn);
 
           if(draft !== null && draft !== undefined){
@@ -145,6 +152,7 @@ export class FileService {
             loom_fns.push(loadLoomFromFile(loom, flips_required, version));
             loom_elements.push(dn);
           }
+
 
         });
 
@@ -204,11 +212,117 @@ export class FileService {
             nodes: (data.nodes === undefined) ? [] : data.nodes,
             treenodes: (data.tree === undefined) ? [] : data.tree,
             draft_nodes: draft_nodes,
+            notes: (data.notes === undefined) ? [] : data.notes,
             ops: ops,
             scale: (data.scale === undefined) ? 5 : data.scale,
           }
     
-          return Promise.resolve({data: envt, status: 0}); 
+          return Promise.resolve({data: envt, name: filename, desc: desc, status: 0, id:id }); 
+  
+        }
+      )
+
+
+
+    
+
+    }, 
+
+    paste: async (data: any) : Promise<LoadResponse> => {
+      
+      let draft_nodes: Array<DraftNodeProxy> = [];
+      let ops: Array<OpComponentProxy> = [];
+      let version = "0.0.0";
+      
+      // this.clearAll();
+
+     
+
+      if(data.shuttles !== undefined){
+       //handle shuttles here
+      }
+
+      const flips_required = utilInstance.getFlips(this.ws.selected_origin_option, 3);
+
+    
+      const loom_elements = []
+      const loom_fns = []
+      const draft_elements = [];
+      const draft_fns = [];
+
+      draft_nodes = data.draft_nodes;
+
+      draft_nodes.forEach(el => {
+        if(el.draft !== null && el.draft !== undefined){
+          draft_fns.push(loadDraftFromFile(el.draft, flips_required, version));
+          draft_elements.push(el);
+        }
+
+        if(el.loom !== null && el.loom !== undefined){
+          loom_fns.push(loadLoomFromFile(el.loom, flips_required, version));
+          loom_elements.push(el);
+        }
+      });
+
+      return Promise.all(draft_fns)
+      .then( res => {
+
+          for(let i = 0; i < draft_elements.length; i++){
+            draft_elements[i].draft = res[i];
+          }
+
+      return Promise.all(loom_fns)
+      })
+      .then(res => {
+
+        for(let i = 0; i < loom_elements.length; i++){
+          draft_elements[i].loom = res[i];
+        }
+        
+        draft_nodes
+        .filter(el => el.draft !== null)
+        .forEach(el => {
+          //scan the systems and add any that need to be added
+          if(el.draft !== null && el.draft !== undefined && el.draft.rowSystemMapping !== undefined){
+            el.draft.rowSystemMapping.forEach(el => {
+              if(this.ss.getWeftSystem(el) === undefined) this.ss.addWeftSystemFromId(el);
+            });
+          }  
+  
+          //scan the systems and add any that need to be added
+          if(el.draft !== null && el.draft !== undefined && el.draft.colSystemMapping !== undefined){
+            el.draft.colSystemMapping.forEach(el => {
+              if(this.ss.getWarpSystem(el) === undefined) this.ss.addWarpSystemFromId(el);
+            });
+          }  
+        })
+      
+    
+        if(data.ops !== undefined){
+          ops = data.ops.map(data => {
+            const op: OpComponentProxy = {
+              node_id: data.node_id,
+              name: data.name,
+              params: data.params,
+              inlets: (data.inlets === undefined) ? [0] : data.inlets 
+            }
+            return op;
+          });
+        }
+        
+          const envt: FileObj = {
+            version: '0.0.0',
+            workspace: null,
+            filename: 'paste',
+            nodes: (data.nodes === undefined) ? [] : data.nodes,
+            treenodes: (data.tree === undefined) ? [] : data.tree,
+            draft_nodes: draft_nodes,
+            notes:  [],
+            ops: ops,
+            scale: 5,
+          }
+    
+          return Promise.resolve({data: envt, name: 'paste', desc: 'a file represeting copied information', status: 0, id:-1 }); 
   
         }
       )
@@ -512,11 +626,12 @@ export class FileService {
           nodes: [proxies.node], 
           treenodes: [proxies.treenode],
           draft_nodes: [proxies.draft_node],
+          notes: [],
           ops: [],
           scale: 5
         }
     
-        return Promise.resolve({data: envt, status: 0});
+        return Promise.resolve({data: envt, name: "new draft", desc: "created via form", status: 0, id: this.files.generateFileId()});
 
       });
 
@@ -537,6 +652,33 @@ export class FileService {
   
 
   const dsaver: FileSaver = {
+
+    copy:  async (include: Array<number>, current_scale: number) : Promise<SaveObj> => {
+    
+      const out: SaveObj = {
+        type: 'partial',
+        version: this.vs.currentVersion(),
+        workspace: null,
+        nodes: this.tree.exportNodesForSaving(current_scale),
+        tree: this.tree.exportTreeForSaving(),
+        draft_nodes: await this.tree.exportDraftNodeProxiesForSaving(),
+        ops: this.tree.exportOpMetaForSaving(),
+        notes: [],
+        materials: this.ms.exportForSaving(),
+        scale: 5
+      }
+
+      //now filter out things that aren't relevant
+      out.nodes = out.nodes.filter(node => include.find(el => el == node.node_id) !== undefined);
+      out.nodes.forEach(node => {node.topleft = {x: node.topleft.x + 50, y: node.topleft.y+50}});
+      out.tree = out.tree.filter(tn => include.find(el => el == tn.node) !== undefined);
+      out.draft_nodes = out.draft_nodes.filter(dn =>  include.find(el => el == dn.node_id) !== undefined);
+      out.ops = out.ops.filter(op => include.find(el => el == op.node_id) !== undefined)
+
+
+      return Promise.resolve(out);
+
+    },
     
     ada:  async (type: string, for_timeline: boolean, current_scale: number) : Promise<{json: string, file: SaveObj}> => {
            
@@ -690,7 +832,7 @@ export class FileService {
     this.tree.clear();
     this.ms.reset();
     this.ss.reset(),
-    this.ns.resetNotes();
+    this.ns.clear();
 
   }
 

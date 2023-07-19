@@ -1,10 +1,22 @@
+
+.left, 
 .right{
-    width:33%;
-    text-align: right;
+    display: flex;
+    flex-direction: row;
 }
-.collapse{
-	padding-left: 37px;
+
+.betadesc{
+    padding: 0px 40px;
+    font-size: .8em;
+    color: white;
+    background-color: #3f51b5;
 }
+
+.login{
+    background-color: white;
+    color: #3f51b5;
+}
+
 
 .filename{
     font-size: 0.6em;
@@ -12,27 +24,54 @@
     margin: 0px 0px 0 21px;
 }
 
-.left {
-    width:33%;
-    text-align: left;
-    display: flex;
-    flex-direction: row;
-}
-
-.left a{
-    margin: 0px 2px;
-}
-
 .auth{
     font-size: .6em;
     font-weight: 400;
-}
-
-.center{
-	width: 33%;
-	text-align: center;
+    display: flex;
+    flex-direction: row;
 
 }
+
+.titlebar{
+    font-size: 0.8em;
+    color: white;
+    display: inline;
+    line-height: 25px;
+}
+
+.buttonrow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.loggedInUserName{
+    display: flex;
+    line-height: 26px;
+}
+
+.stable{
+    background-color: white;
+    color: #3f51b5;
+    display: block;
+}
+
+p{
+    padding: 8px 0px;
+}
+
+a{
+    display: inline-block;
+}
+
+
+
+.topbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 
 .fa-print{
 	color: white;

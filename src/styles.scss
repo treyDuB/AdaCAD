@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
-@import '~bulma/bulma';
+@import 'bulma/bulma';
 @import '@fortawesome/fontawesome-free/css/all.css';
 
 
@@ -16,8 +16,16 @@ svg {
   overflow: visible;
 }
 
-mat-sidenav {
-  width: 60px;
+
+
+.no-text-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 .fill-remaining-space {
@@ -51,16 +59,19 @@ mat-sidenav {
 }
 
 
-mat-drawer{
-  width: 60px;
-}
-
-
 .is-outlined.is-active {
   background-color: #00d1b2 !important;
   border-color: transparent !important;
   color: #fff !important;
 }
+
+.selectable-false{
+	pointer-events: none;
+  }
+
+  .selectable-true{
+	pointer-events: all;
+  }
 
 
 .is-fullwidth {
@@ -70,3 +81,11 @@ mat-drawer{
 .mat-form-field-infix.mat-form-field-infix {
   display: flex;
 }
+
+.mat-tab-label{
+  height: 48px !important;
+  padding: 0 7px !important;
+  min-width: 80px !important;
+}
+
+

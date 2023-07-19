@@ -1,6 +1,4 @@
-import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
 import { Injectable } from '@angular/core';
-import { elementAt } from 'rxjs/operators';
 import { DesignMode } from '../model/datatypes';
 
 
@@ -84,14 +82,15 @@ export class DesignmodesService {
     
     this.design_modes = [
       {value: 'draw', viewValue: 'Draw Heddle', icon: "fas fa-pen", children: this.draw_modes, selected: false},
-      {value: 'shape', viewValue: 'Shape', icon: "fas fa-shapes", children: this.shapes,selected: false},
+      {value: 'pan', viewValue: 'Pan', icon: "fas fa-hand", children: [], selected: false},
+      // {value: 'shape', viewValue: 'Shape', icon: "fas fa-shapes", children: this.shapes,selected: false},
       {value: 'select', viewValue: 'Select', icon: "fas fa-expand", children: [],selected:false},
       {value: 'marquee', viewValue: 'Cut/Create', icon: "fas fa-expand", children: [], selected:false},
-      {value: 'move', viewValue: 'Move', icon: "fas fa-arrows-alt", children: [],selected:true},
-      {value: 'operation', viewValue: 'Operations', icon: "fas fa-project-diagram", children: [],selected:false},
-      {value: 'zoom_in', viewValue: 'Zoom In', icon: "fas fa-search-plus", children: [], selected:false},
-      {value: 'zoom_out', viewValue: 'Zoom Out', icon: "fas fa-search-minus", children: [],selected:false},
-      {value: 'comment', viewValue: 'Comment', icon: "fas fa-comment", children: [],selected:false},
+      {value: 'move', viewValue: 'Move', icon: "fas fa-arrows-alt", children: [],selected:true}
+      // {value: 'operation', viewValue: 'Operations', icon: "fas fa-project-diagram", children: [],selected:false},
+      // {value: 'zoom_in', viewValue: 'Zoom In', icon: "fas fa-search-plus", children: [], selected:false},
+      // {value: 'zoom_out', viewValue: 'Zoom Out', icon: "fas fa-search-minus", children: [],selected:false},
+      // {value: 'comment', viewValue: 'Comment', icon: "fas fa-comment", children: [],selected:false},
     ];
 
    this.design_actions = [
@@ -185,6 +184,7 @@ export class DesignmodesService {
        }
     });
 
+
    }
 
 
@@ -248,6 +248,10 @@ export class DesignmodesService {
    */
   isSelected(value:string, from: string):boolean{
     const mode: DesignMode = this.getDesignMode(value, from);
+    if(mode == null){
+      console.error("mode ", value, " in ", from, " is null ");
+      return false;
+    }
     return mode.selected;
   }
 

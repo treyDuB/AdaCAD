@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Input, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UploadService } from '../upload.service';
-import { Upload } from '../upload';
-import { finalize } from 'rxjs/operators';
-import utilInstance from '../../model/util';
+import { UploadService } from '../../provider/upload.service';
+import { Draft, Drawdown, Upload } from '../../model/datatypes';
 import { ImageService } from '../../provider/image.service';
+import { Sequence } from '../../model/sequence';
+import { initDraftFromDrawdown } from '../../model/drafts';
 
 @Component({
   selector: 'upload-form',
@@ -12,15 +12,22 @@ import { ImageService } from '../../provider/image.service';
   styleUrls: ['./upload-form.component.scss']
 })
 export class UploadFormComponent implements OnInit {
-  @Input() warps: number;
-  @Input() type: string;
+ 
+  @Input() type: string; //'single_image', 'ada', or 'bitmap_collection'
+  @Input() multiple: boolean;
+  @Input() accepts: string;
+
+
   progress:number = 0;
   selectedFiles: FileList;
   uploading: boolean = false;
   imageToShow: any;
   downloadid: string;
+
   @ViewChild('uploadImage') canvas: ElementRef;
+
   @Output() onData: any = new EventEmitter();
+  @Output() onError: any = new EventEmitter();
 
   constructor(private upSvc: UploadService, private httpClient: HttpClient, private imageService: ImageService) { }
 
@@ -55,40 +62,73 @@ export class UploadFormComponent implements OnInit {
   
   }
 
-  async uploadImage(upload: Upload, file: File){
-     await this.upSvc.pushUpload(upload).then(snapshot => {
-       console.log("loading :", upload.name)
+   uploadImage(upload: Upload, file: File) : Promise<any> {
+
+    return this.upSvc.pushUpload(upload).then(snapshot => {
       return  this.imageService.loadFiles([upload.name]);
     }).then(uploaded => {
-      const obj = this.imageService.getImageData(upload.name);
-      this.onData.emit(obj);
+
+
+      this.onData.emit(uploaded);
       this.uploading = false;
       this.selectedFiles = null;
 
-    }).catch(console.error); 
+    }).catch(e => {
+      this.onError.emit(e);
+      this.uploading = false;
+      this.selectedFiles = null;
+    }); 
   }
 
 
-  uploadSingle() {
+
+  uploadBitmap(upload: Upload, file: File) : Promise<any> {
+    
+    return this.upSvc.pushUpload(upload).then(snapshot => {
+     return  this.imageService.loadFiles([upload.name]);
+   }).catch(e => {
+      this.onError.emit(e);
+      this.uploading = false;
+      this.selectedFiles = null;
+   }); 
+ }
+
+
+
+  
+  upload() {
+    console.log("UPLOAD SINGLE", this.type)
 
     this.uploading = true;
 
     let file:File = this.selectedFiles.item(0)
     let fileType = file.name.split(".").pop();
-   const upload = new Upload(file);
+    let fileName = file.name.split(".")[0];
+
+    const upload:Upload = {
+          $key: '',
+          file:file,
+          name:fileName,
+          url:'',
+          progress:0,
+          createdAt: new Date()
+      };
 
 
-    switch(fileType){
+    switch(this.type){
       case 'ada':
         this.uploadAda(upload, file);
       break;
 
-      case 'jpg':
-      case 'bmp':
-      case 'png':
-
-      this.uploadImage(upload, file);
+      case 'single_image':
+          this.uploadImage(upload, file)
+     
       break;
+
+      case 'bitmap_collection':
+        this.uploadBitmaps();
+        break;
+
 
       default: 
       break;
@@ -97,6 +137,76 @@ export class UploadFormComponent implements OnInit {
 
 
   }
+
+  /**
+   * used when handling the upload of multiple images (bitmaps) that should be converted into a drfat
+   */
+  uploadBitmaps() {
+    
+      this.uploading = true;
+
+        const uploads= [];
+        const fns = [];
+        for(let i = 0; i < this.selectedFiles.length; i++){
+
+          let file:File = this.selectedFiles.item(i)
+          let fileName = file.name.split(".")[0];
+
+          const upload:Upload = {
+            $key: '',
+            file:file,
+            name:fileName,
+            url:'',
+            progress:0,
+            createdAt: new Date()
+        };
+        uploads.push(upload);
+        fns.push(this.uploadBitmap(upload, file));
+
+        }
+
+       Promise.all(fns).then(res => {
+        let drafts = [];
+        res.forEach(upload_arr => {
+          
+          let upload = upload_arr[0];
+
+          const twod: Sequence.TwoD = new Sequence.TwoD();
+          let bw_ndx = upload.colors_to_bw.map(el => el.black);
+
+          for(let i = 0; i < upload.height; i++){
+            const oned: Sequence.OneD = new Sequence.OneD();
+            for(let j = 0; j < upload.width; j++){
+              const ndx = upload.image_map[i][j];
+              let val:boolean = (ndx < bw_ndx.length) ? bw_ndx[ndx] : null;
+              oned.push(val);
+            }
+            twod.pushWeftSequence(oned.val());
+          }
+          const d: Draft = initDraftFromDrawdown(twod.export());
+          d.gen_name = upload.name;
+          drafts.push(d);
+        })
+
+        this.onData.emit({type: this.type, drafts: drafts});
+        this.uploading = false;
+        this.selectedFiles = null;
+        return [];
+       }).then(res => {
+          let functions = uploads.map(el => this.upSvc.deleteUpload(el));
+          return Promise.all(functions);
+       }).catch(e => {
+
+        this.onError.emit('one of the files you uploaded was not a bitmap (and had more than 100 colors, so it could not be converted to black and white), please try again');
+        this.uploading = false;
+        this.selectedFiles = null;
+       });
+
+
+    
+
+  }
+
 
   ngOnInit() {
   }
