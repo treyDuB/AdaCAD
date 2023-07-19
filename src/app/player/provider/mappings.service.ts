@@ -120,7 +120,7 @@ export class MappingsService extends Array<PedalAction> {
   chain(id: number, opName: string) {
     let o = this.createOpInstance(this.getOp(opName));
     if (this.pedalIsChained(id)) {
-      (<ChainPairing> this.getMapByID(id)).ch.addOp(o);
+      (<ChainPairing> this.getMapByID(id)).op.addOp(o);
     } else if (this.pedalIsPaired(id)) {
       const ch = ChainOp.fromSingleOp((<SimplePairing> this.getMapByID(id)).op);
       ch.addOp(o);

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { PedalAction } from '../../../model/maptypes';
 import { Pedal, PedalsService } from '../../../provider/pedals.service';
 
@@ -7,7 +7,7 @@ import { Pedal, PedalsService } from '../../../provider/pedals.service';
   templateUrl: './pedal.component.html',
   styleUrls: ['./pedal.component.scss']
 })
-export class PedalComponent implements OnInit {
+export class PedalComponent implements OnInit, AfterViewInit {
   /** The pedal rendered by the component */
   @Input() pedal: Pedal;
   /** What the pedal is mapped to (if any) */
@@ -15,11 +15,17 @@ export class PedalComponent implements OnInit {
   
   @Input() physical: boolean;
 
+  /** @ignore */
   constructor(
     public pds: PedalsService
   ) { }
 
+  /** @ignore */
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+    console.log(this.mapped);
   }
 
 }

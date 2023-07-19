@@ -20,7 +20,7 @@ export class WeavingStateComponent implements OnInit {
 
   @Input()  default_cell: number;
   @Input('draft') active_draft: Draft;
-  tiling: boolean = true;
+  @Input() tiling: boolean;
 
   @Output() isWeaving = new EventEmitter<boolean>();
 
@@ -31,6 +31,7 @@ export class WeavingStateComponent implements OnInit {
   cx: any;
   ink = 'neq'; //can be or, and, neq, not, splice
 
+  /** @ignore */
   constructor(
     public pls: PlayerService,
     public pds: PedalsService,
@@ -38,10 +39,15 @@ export class WeavingStateComponent implements OnInit {
     public pbs: PlaybackService
   ) { 
     this.default_cell = 10;
+    this.tiling = true;
   }
 
+  /** @ignore */
   ngOnInit(): void {}
 
+  /**
+   * Do all of this after the page loads.
+   */
   ngAfterViewInit() {
     this.ownElement = document.getElementById('player-container');
     this.mixerElement = document.querySelector('.mat-drawer-container');

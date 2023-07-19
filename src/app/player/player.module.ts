@@ -18,6 +18,7 @@ import { OpButtonComponent } from './sequencer/operation/op-button/op-button.com
 import { SingleOpMenuComponent } from './sequencer/operation/menu-single/menu-single.component';
 import { PedalsComponent } from './weaving-state/pedals/pedals.component';
 import { PedalComponent } from './weaving-state/pedals/pedal/pedal.component';
+import { WarpConfigComponent } from './weaving-state/warp-config/warp-config.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { PedalComponent } from './weaving-state/pedals/pedal/pedal.component';
     OpButtonComponent,
     SingleOpMenuComponent,
     PedalsComponent,
-    PedalComponent
+    PedalComponent,
+    WarpConfigComponent
   ],
   imports: [
     CommonModule,

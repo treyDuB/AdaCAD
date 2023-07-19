@@ -5,12 +5,30 @@
   [ngClass] = "physical ? 'physical' : 'virtual'"
 >
   <ng-container *ngIf="mapped">
-    <mat-icon svgIcon="op-{{ mapped.name }}" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
-  </ng-container>
-  <!-- <ng-container #unmapped>
-
-  </ng-container> -->
+    <!-- <mat-icon svgIcon="op-{{ mapped.classifier }}" aria-hidden="false" aria-label="icon for custom operation"></mat-icon> -->
   
-  {{pedal.id}}
+  <ng-container [ngSwitch] = mapped.classifier>
+    <ng-container *ngSwitchCase = "'chain'">
+      <mat-icon svgIcon="op-chain" aria-hidden="false" aria-label="icon for chain operation"></mat-icon>
+        {{name}}
+    </ng-container>
+  
+    <ng-container *ngSwitchCase = "'struct'">
+      <mat-icon svgIcon="op-custom" aria-hidden="false" aria-label="icon for custom operation"></mat-icon>
+      {{name}}
+    </ng-container>
+  
+    <ng-container *ngSwitchDefault>
+      <mat-icon svgIcon="op-{{mapped.name}}" aria-hidden="false" aria-label="icon for {{name}} operation"></mat-icon>
+      {{name}}
+    </ng-container>
+  </ng-container>
+  
+</ng-container>
 
+  <div>
+    {{pedal.id}}
+  </div>
+  
 </button>
+

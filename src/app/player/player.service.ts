@@ -192,7 +192,7 @@ export class PlayerService {
     // console.log(this.oss.getOp('germanify'));
     // const germanify = this.pedalOps.addOperation(playerOpFromTree(<PlayableTreeOp> this.oss.getOp('germanify')));
     
-    console.log('pedal ops added');
+    // console.log('pedal ops added');
 
     pedals.on('pedal-step', (id) => this.onPedal(id));
 
@@ -239,7 +239,7 @@ export class PlayerService {
 
   hasCustomStructure(d: Draft): boolean {
     let ops = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
-    console.log(ops);
+    // console.log(ops);
     if (ops.length == 0) return false;
     return ops
       .map((el) => { return (<CustomStructOp> el).struct_id == d.id})
@@ -248,7 +248,7 @@ export class PlayerService {
 
   setDraft(d: Draft) {
     if (!this.hasCustomStructure(d)) {
-      console.log("a new structure!");
+      // console.log("a new structure!");
       let structOps = this.draftClassificationS.filter((c) => c.category == "custom structure")[0].ops;
       let op = this.structureOpFromDraft(d);
       structOps.push(op);
@@ -256,7 +256,7 @@ export class PlayerService {
     }
     this.state.draft = d;
     this.state.row = 0;
-    console.log("draft set ", this.state);
+    // console.log("draft set ", this.state);
   }
 
   /**
@@ -283,7 +283,7 @@ export class PlayerService {
 
   // e = op.name
   setPedalOp(e: string, p: Pedal) {
-    console.log(e, p);
+    // console.log(e, p);
     if (this.mappings.pedalIsPaired(p.id)) {
       this.mappings.unmap(p.id);
     }
@@ -292,14 +292,14 @@ export class PlayerService {
   }
 
   onPedal(id: number) {
-    console.log('player service: pedal ', id);
+    // console.log('player service: pedal ', id);
     let mapped = this.mappings.getMapByID(id);
-    console.log(mapped);
+    // console.log(mapped);
     // console.log(this.mappings);
     // console.log(this.seq);
     if (mapped) {
       let performer;
-      console.log('mapping exists for pedal');
+      // console.log('mapping exists for pedal');
       if ((<SequencerMapping> mapped).role) { performer = this.seq; }
       else performer = mapped;
       performer.perform(this.state, id)

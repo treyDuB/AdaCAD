@@ -4,7 +4,7 @@
  */ 
 
 import { PlayerState } from "./state";
-import { OpTemplate, OpInstance, CustomStructOp, ProgressOp, refresh, newOpInstance } from "./playerop";
+import { OpTemplate, OpInstance, CustomStructOp, ProgressOp, refresh, newOpInstance, PlayerOpClassifier } from "./playerop";
 import { ChainOp } from "./chainop";
 import { OpSequencer } from "../provider/sequencer.service";
 import { OperationParam } from "../../mixer/model/operation";
@@ -13,6 +13,7 @@ import { OperationParam } from "../../mixer/model/operation";
 export interface PedalTarget {
   id?: number,
   pedal: number, 
+  classifier: PlayerOpClassifier | 'param',
   name: string, // name of the operation that matches icon name
   perform: (init: PlayerState, ...args) => Promise<PlayerState>;
 }
@@ -47,7 +48,7 @@ export interface SimplePairing extends PedalTarget {
 
 export interface ChainPairing extends PedalTarget {
   pedal:  number,
-  ch:     ChainOp
+  op:     ChainOp
 }
 
 export interface SequencerProg extends PedalTarget {
@@ -66,6 +67,7 @@ function nullMapping(p: number): SimplePairing {
   return {
     pedal: p,
     name: 'null',
+    classifier: '',
     op: newOpInstance(refresh),
     perform: refresh["perform"]
   }
@@ -77,6 +79,7 @@ export type SequencerMapping = SequencerProg | SequencerSelect;
 export function makeSimplePairing(p: number, op: OpInstance): SimplePairing {
   return {
     pedal: p,
+    classifier: op.classifier,
     name: op.name,
     op: op,
     perform: op["perform"],
@@ -86,8 +89,9 @@ export function makeSimplePairing(p: number, op: OpInstance): SimplePairing {
 export function makeChainPairing(p: number, ch: ChainOp): ChainPairing {
   return {
     pedal: p,
+    classifier: ch.classifier,
     name: ch.name,
-    ch: ch,
+    op: ch,
     perform: ch["perform"],
   }
 }
@@ -118,6 +122,7 @@ export function mapToSequencer(p: number, opts: SeqMapOptions): SequencerMapping
 
 export interface ParamControl extends PedalTarget {
   op: OpInstance,
+  classifier: 'param',
   mode: ParamControlMode,
   perform: OpInstance["perform"],
 }
