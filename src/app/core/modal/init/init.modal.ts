@@ -66,39 +66,6 @@ export class InitModal implements OnInit {
     if(this.data.source === "newdraft") this.new_draft = true;
   }
 
-<<<<<<< HEAD
-  /**
-   * this is called on upload of a file from any location
-   * @param e 
-   */
-  async handleFile(e: any) : Promise<any>{
-
-    console.log("handle file", e);
-
-    switch(e.type){
-      // case 'image': 
-      // return this.fls.loader.bmp(e.name, e.data).then(
-      //   res => this.dialogRef.close(res)
-      // );
-      // case 'wif': 
-      //   return this.fls.loader.wif(e.name, e.data)
-      //   .then(
-      //     res => this.dialogRef.close(res)
-      //   );
-      
-      case 'ada': 
-        return this.fls.loader.ada(e.name, -1, e.data)
-        .then(
-          res => this.dialogRef.close(res)
-        );
-
-        
-
-    }
-  
-  }
-=======
->>>>>>> 4.0-simdetails
 
   selectionMade(selection: any){
     if(selection === 'blank') this.dialogRef.close({
@@ -108,18 +75,6 @@ export class InitModal implements OnInit {
   }
 
 
-<<<<<<< HEAD
-    console.log("loading example: ", filename);
-    this.http.get('assets/examples/'+filename+".ada", {observe: 'response'}).subscribe((res) => {
-
-      return this.fls.loader.ada(filename, -1, res.body)
-        .then(
-          res => this.dialogRef.close(res)
-        );
-    }); 
-  }
-=======
->>>>>>> 4.0-simdetails
 
  
 
