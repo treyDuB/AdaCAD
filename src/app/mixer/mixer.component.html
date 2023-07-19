@@ -1,4 +1,5 @@
 
+
 <appKeycodes
   (onUndo)="undo()"
   (onRedo)="redo()"
@@ -202,6 +203,10 @@
             (blur)="epiChange(envt)">  
     
           </mat-form-field>
+
+          <mat-divider></mat-divider>
+
+          <app-connectloom></app-connectloom>
   
     
   
@@ -246,6 +251,7 @@
 </mat-drawer> -->
 
   <app-palette  
+  (window:beforeunload)="closeOpenConnections()"
   class="palette mode-{{dm.getSelectedDesignMode('design_modes').value}}"
   [style.width.px]='vp.getAbsoluteWidth()' 
   [style.height.px]='vp.getAbsoluteHeight()' 

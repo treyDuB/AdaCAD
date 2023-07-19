@@ -22,6 +22,7 @@ import { ImageService } from '../core/provider/image.service';
 import { MaterialsService } from '../core/provider/materials.service';
 import { NotesService } from '../core/provider/notes.service';
 import { OperationService } from '../core/provider/operation.service';
+import { SendpickService } from '../core/provider/sendpick.service';
 import { StateService } from '../core/provider/state.service';
 import { SystemsService } from '../core/provider/systems.service';
 import { TreeService } from '../core/provider/tree.service';
@@ -127,6 +128,7 @@ export class MixerComponent implements OnInit {
     private files: FilesystemService,
     private render: RenderService,
     private multiselect: MultiselectService,
+    private comms: SendpickService,
     @Optional() private fbauth: Auth
     ) {
 
@@ -179,6 +181,10 @@ export class MixerComponent implements OnInit {
 
   ngAfterViewInit() {
  
+  }
+
+  closeOpenConnections(){
+    this.comms.removeLoomConnection();
   }
 
 

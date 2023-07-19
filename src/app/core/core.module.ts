@@ -51,6 +51,7 @@ import { ExamplesComponent } from './modal/examples/examples.component';
 import { LoadfileComponent } from './modal/loadfile/loadfile.component';
 import { FilebrowserComponent } from './filebrowser/filebrowser.component';
 import { KeycodesDirective } from './keycodes.directive';
+import { SendpickService } from './provider/sendpick.service';
 
 @NgModule({
     imports: [
@@ -110,7 +111,8 @@ import { KeycodesDirective } from './keycodes.directive';
         FileService,
         VaeService,
         PatternfinderService,
-        AuthService
+        AuthService,
+        SendpickService
         ],
     exports: [
         CommonModule,
@@ -155,7 +157,7 @@ import { KeycodesDirective } from './keycodes.directive';
         LoomModal,
         FilebrowserComponent,
         ExamplesComponent,
-        KeycodesDirective
-        ]
+        KeycodesDirective        
+    ]
 })
 export class CoreModule { }

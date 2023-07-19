@@ -1,0 +1,34 @@
+
+
+
+    <button *ngIf="!comms.has_active_loom"
+            mat-stroked-button 
+            color="primary"
+            (click)="initLoomConnection();"
+            matTooltip ="connect AdaCAD to a Loom">
+            <i class="fas fa-undo"></i> Connect to Loom
+        </button>
+
+
+    <button *ngIf="comms.has_active_loom"
+        mat-stroked-button 
+        color="primary"
+        (click)="removeLoomConnection();"
+        matTooltip ="disconnect loom">
+        <i class="fas fa-undo"></i> Disconnect Loom
+    </button>
+
+  
+    <div *ngIf="comms.has_active_loom">
+        <p>Current Loom ID is: {{comms.loom_id}}</p>
+
+        <mat-form-field class="example-full-width" class="filename">
+            <mat-label>Number of Ends</mat-label>
+           <input matInput color="accent" [(ngModel)]="comms.pick_size" placeholder="pick size">
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width" class="filename">
+            <mat-label>Loom Name</mat-label>
+           <input matInput color="accent" [(ngModel)]="comms.loom_name" (change)="updateDB()">
+          </mat-form-field>
+    </div>

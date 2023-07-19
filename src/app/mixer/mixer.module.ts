@@ -17,6 +17,7 @@ import { ParameterComponent } from './palette/operation/parameter/parameter.comp
 import { InletComponent } from './palette/operation/inlet/inlet.component';
 import { DesignComponent } from './design/design.component';
 import { QuickopComponent } from './quickop/quickop.component';
+import { ConnectloomComponent } from './connectloom/connectloom.component';
 
 
 
@@ -41,7 +42,8 @@ import { QuickopComponent } from './quickop/quickop.component';
         ParameterComponent,
         InletComponent,
         DesignComponent,
-        QuickopComponent
+        QuickopComponent,
+        ConnectloomComponent
         ]
 })
 export class MixerModule { }
