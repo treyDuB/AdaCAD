@@ -23,15 +23,18 @@ To ask questions, make suggestions, and get support, consider posting to the [Ad
 
 ### Installation for developers
 1. Clone this repository onto your local hard drive.
-2. Install Angular 
-3. Open your terminal on the local root directory and run `npm install` to download the requirements. This can take a while.
-4. Once installed, run `ng serve` in the terminal and wait for Angular to compile the app. It should tell you once it's ready. If your system doesn't recognize `ng serve`, make sure that you're in the app and run `node_modules/.bin/ng serve`
-5. Navigate to `http://localhost:4200/` and you should see AdaCAD!
+2. Open your terminal on the local root directory and run `npm install` to download the requirements. This can take a while. If you have trouble with this step and it not installing, try the following:
+ -- run npm `install --force`
+ -- install angular command line tools: `npm install -g @angular/cli`
+
+3. Once installed, run `ng serve` in the terminal and wait for Angular to compile the app. It should tell you once it's ready. If your system doesn't recognize `ng serve`, make sure that you're in the app and run `node_modules/.bin/ng serve`
+4. Navigate to `http://localhost:4200/` and you should see AdaCAD!
+5. To get more help on the Angular CLI, use `ng help` or go to the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 ## Development Notes
 There are three core modules in this repo: 
 
-- Core: contains components, services, directives, etc. that are used by both weaver (individual draft view) and mixer (generative workspace) modules. Changes to core will affect both deployments and should be checked before pushing.
+- Core: contains components, services, directives, etc. that are used by both the draft detail viewer (showed when a user expands an individual draft) and mixer (generative workspace) modules. Changes to core will affect both deployments and should be checked before pushing.
 
 - DraftDetail: contains all components, services, directives, etc. that are used in "Detail" mode for a given draft. This view supports designing on a simulated loom and viewing yarn paths.
 
@@ -88,22 +91,3 @@ The mixer describes the parametric design view of the AdaCAD interface. This vie
 
 
 
-## Angular CLI Tips
-
-### Code scaffolding
-The Angular CLI provides built-in commands to generate the utility files for components, services, and other such things categorized as "**schematics**". These files will be generated in the current directory of the terminal, so navigate to the appropriate subdirectory first.
-* New component: 
-  1. Make a subfolder in the appropriate module named `<component-name>`
-  2. In this subfolder, run `ng generate component <component-name>`
-* New service:
-  1. In the appropriate module's `provider` subfolder, run `ng generate service <service-name>`
-* For other options, refer to the [Angular CLI documentation](https://angular.io/cli/generate).
-
-### Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you save changes in any of the source files.
-
-### Build
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-### Further help
-To get more help on the Angular CLI, use `ng help` or go to the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
