@@ -45,6 +45,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
+#Packages
+package-lock.json
+
 # Firebase
 .firebase
 *-debug.log
