@@ -2,7 +2,8 @@
 <div class="toprow">
   <button mat-icon-button (click)="close()"><i class="fas fa-times"></i></button>
   
-  <h2 mat-dialog-title>Open a Workspace</h2>
+  <h2 *ngIf="!new_draft" mat-dialog-title>Open a Workspace</h2>
+  <h2 *ngIf="new_draft" mat-dialog-title>Create a Blank Draft</h2>
 
 </div>
 
@@ -10,14 +11,18 @@
 <mat-dialog-content>
 
 
+
   <form #initForm="ngForm">
 
-      <ng-container>
+
+
+
+      <ng-container *ngIf="!new_draft">
         <mat-form-field appearance="fill">
           <mat-label>Where would you like to begin?</mat-label>
         <mat-select [(value)]="selected" (selectionChange)="selectionMade(selected)">
-          
-          
+    
+        
           <mat-option *ngFor="let opt of opts" [value]="opt.value">
             {{opt.viewValue}}
           </mat-option>
@@ -25,67 +30,22 @@
         </mat-form-field>
       </ng-container>
 
-
-    <ng-container *ngIf="(selected == 'new')">
-      <p>just so you know, you'll be able to change these values at any time</p>
-
-      <mat-form-field appearance="fill">
-          <mat-label>Which type of loom are you designing for?</mat-label>
-          <mat-select [(value)]="loomtype" [(ngModel)]="loomtype" name="loomtype">
-          <mat-option *ngFor="let type of dm.loom_types" [value]="type.value">
-            {{type.viewValue}}
-          </mat-option>
-        </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-        <input matInput  type="number" placeholder="Number of Warp Ends" name="warps" min="2" step="1" [(ngModel)]="warps"  required (change) = "valid = 1">
-        </mat-form-field>
-
-       <mat-form-field appearance="fill">
-        <input matInput  type="number" placeholder="Number of Weft Picks" name="wefts" min="2" step="1" [(ngModel)]="wefts"  required (change) = "valid = 1">
-        </mat-form-field>
-
-
-      <mat-form-field appearance="fill">
-          <mat-label>Density Units</mat-label>
-          <mat-select [(value)]="units" [(ngModel)]="units" name="units">
-          <mat-option *ngFor="let unit of dm.density_units" [value]="unit.value">
-            {{unit.viewValue}}
-          </mat-option>
-        </mat-select>
-        </mat-form-field>
-
-       <mat-form-field appearance="fill">
-        <input matInput  type ="number" placeholder="Weave Density" name="epi" value="10" [(ngModel)]="epi">
-       </mat-form-field> 
-
-
-
-
-      <ng-container *ngIf="(loomtype == 'frame') || (loomtype == 'direct')">
-        <mat-form-field appearance="fill">
-         <input matInput  type="number" placeholder="Number of Shafts" name="frame_num" min="2" step="1" value="8" [(ngModel)]="frame_num">
-        </mat-form-field>
-      </ng-container>
-
-      <ng-container *ngIf="(loomtype == 'frame') ">
-     <mat-form-field appearance="fill">
-      <input matInput  type ="number" placeholder="Number of Treadles" name="treadle_num" [(ngModel)]="treadle_num" min="2" step="1" value="10">
-     </mat-form-field> 
-    </ng-container>
-
-   
-
-    </ng-container>
-
+      <ng-container *ngIf="(selected == 'new') || new_draft">
+        <app-blankdraft
+        (onNewDraftCreated)='newDraftCreated($event)'
+        ></app-blankdraft>
+       </ng-container>
+    
+    
+      
     
     <ng-container *ngIf="(selected == 'ada' || selected == 'bmp' || selected == 'wif' || selected == 'jpg')">
-    <upload-form type="init" (onData)="handleFile($event)" class="button"></upload-form>
-    <div class="error">{{error}}</div> 
-  </ng-container>
+      <app-loadfile></app-loadfile>  
+
+    </ng-container>
 
   <ng-container *ngIf="(selected == 'example')">
+<<<<<<< HEAD
     <div class="preloaded_files">
       <mat-card >
         <mat-card-title>Praxis Workshop
@@ -240,6 +200,9 @@
 
 
     </div>    
+=======
+          <app-examples></app-examples>  
+>>>>>>> 4.0-simdetails
   </ng-container>
 
 
@@ -250,8 +213,3 @@
 
 </mat-dialog-content>
 
- <ng-container *ngIf="(selected !== 'example')">
-    <mat-dialog-actions>
-        <button [disabled]="!warps && !valid" class="mat-raised-button mat-primary" (click)="save(initForm, loomtype, epi, frame_num, treadle_num)">Load</button>
-    </mat-dialog-actions>
- </ng-container>

@@ -1,14 +1,15 @@
 import { ViewRef } from "@angular/core";
+import { NoteComponent } from "../../mixer/palette/note/note.component";
 import { ConnectionComponent } from "../../mixer/palette/connection/connection.component";
 import { OperationComponent } from "../../mixer/palette/operation/operation.component";
 import { SubdraftComponent } from "../../mixer/palette/subdraft/subdraft.component";
-import { Note } from "../provider/notes.service";
-import { Cell } from "./cell";
-import { Shuttle } from "./shuttle";
+import { MaterialsService } from "../provider/materials.service";
+import { Subject } from "rxjs";
 
 /**
  * This file contains all definitions of custom types and objects
  */
+
 
 
 /*****   OBJECTS/TYPES RELATED TO DRAFTS  *******/
@@ -40,6 +41,37 @@ export interface Draft{
   rowSystemMapping: Array<number>,
   colShuttleMapping: Array<number>,
   colSystemMapping: Array<number>,
+}
+
+export interface Cell{
+  is_set: boolean,
+  is_up: boolean
+}
+
+
+export interface System{
+  id: number;
+  name: string;
+  notes: string;
+  visible: boolean;
+  in_use: boolean;
+}
+
+
+
+export interface Material {
+  id: number;
+  name: string;
+  insert: boolean; //true is left, false is right
+  visible: boolean;
+  color: string;
+  thickness: number; //percentage of base dims
+  type: number;
+  diameter: number;
+  startLabel?: string;
+  endLabel?: string;
+  notes: string;
+
 }
 
 /**
@@ -157,57 +189,18 @@ export interface ViewModes {
   selected: boolean;
 }
 
-/****** OBJECTS/TYPES to CONTROL YARN SIMULATION ******/
-
-
-/**
- * Used to draw on screen paths, refers to x, y coordiantes relative to the draft simulation
- * Used only in yarn sim
- * @param x - x position rendered as a % of the total width
- * @param y - y position
- */
- export interface Vertex{
-  x_pcent: number;
-  y: number;
-}
-
-/**
- * Used to draw on screen paths, refers to x, y coordiantes relative to the draft simulation
- * Used only in yarn sim
- * @param draft_ndx - the row id within the draft of this yarn
- * @param material_id the material id at this row
- * @param verticies - list of points that form this path
- */
- export interface YarnPath{
-  draft_ndx: number;
-  material_id: number;
-  verticies: Array<Vertex>;
-}
-
-/**
- * describes the relationship between weft rows along the same warp
- */
- export type crossType = {t:boolean, b:boolean} |
-   {t:null, b:null} | //"FLOAT",
-   {t:null, b:true} | //"UNSET_UNDER"
-  {t:null, b:false} | //"UNSET_OVER"
-  {t:true, b:null} | //"UNDER_UNSET"
-  {t:false, b:null} | //"OVER_UNSET"
-  {t:false, b:true} | //"OVER_UNDER",
-  {t:true, b:false}; //"UNDER_OVER", 
-
-
-/**
- * A yarn cross describes the relationship betwen two draft cells
- * read from top to bottom. This is used within the sparce 
- * draft representation, stores only "warp" crossings
- */
- export interface Crossing{
-  j: number, 
-  type: crossType;
-}
-
-
+export interface Note{
+  id: number,
+  interlacement: Interlacement; 
+  title: string;
+  text: string;
+  ref: ViewRef;
+  color: string;
+  component: NoteComponent; 
+  imageurl: string;
+  width: number;
+  height: number;
+ }
 
 
 /**
@@ -234,7 +227,6 @@ export type Loom = {
   tieup: Array<Array<boolean>>,
   treadling: Array<Array<number>>
 }
-
 
 
 
@@ -285,7 +277,7 @@ export type YarnMap = Array<Array<Cell>>;
 export interface NodeComponentProxy{
   node_id: number,
   type: string,
-  bounds: Bounds
+  topleft: Point
  }
 
 /**
@@ -318,8 +310,9 @@ export interface NodeComponentProxy{
     draft_name: string;
     draft: Draft;
     draft_visible: boolean;
-    loom: Loom,
+    loom: Loom;
     loom_settings: LoomSettings;
+    render_colors: boolean;
    }
 
  /**
@@ -347,9 +340,9 @@ export interface NodeComponentProxy{
   nodes: Array<NodeComponentProxy>,
   tree: Array<TreeNodeProxy>,
   draft_nodes: Array<DraftNodeProxy>,
-  ops: Array<any>,
+  ops: Array<OpComponentProxy>,
   notes: Array<Note>,
-  materials: Array<Shuttle>,
+  materials: Array<Material>,
   scale: number
  }
 
@@ -360,6 +353,7 @@ export interface FileObj{
  nodes: Array<NodeComponentProxy>,
  treenodes: Array<TreeNodeProxy>,
  draft_nodes: Array<DraftNodeProxy>,
+ notes: Array<any>,
  ops: Array<OpComponentProxy>
  scale: number
 }
@@ -372,11 +366,15 @@ export interface StatusMessage{
 
 export interface LoadResponse{
   data: FileObj,
+  id: number,
+  name: string, 
+  desc: string,
   status: number;
 }
 
 export interface Fileloader{
-  ada: (filename: string, id: number, data: any) => Promise<LoadResponse>,
+  ada: (filename: string, id: number, desc: string, data: any) => Promise<LoadResponse>,
+  paste: (data: any) => Promise<LoadResponse>,
   //wif: (filename: string, data: any) => Promise<LoadResponse>,
   //bmp: (filename: string, data: any) => Promise<LoadResponse>,
   //jpg: (filename: string, data: any) => Promise<LoadResponse>,
@@ -384,6 +382,7 @@ export interface Fileloader{
 
 export interface FileSaver{
   ada: (type: string, for_timeline:boolean, current_scale: number) => Promise<{json: string, file: SaveObj}>,
+  copy: (include: Array<number>, current_scale: number) => Promise<SaveObj>,
   //wif: (draft: Draft, loom: Loom) => Promise<string>,
   bmp: (canvas: HTMLCanvasElement) => Promise<string>,
   jpg: (canvas: HTMLCanvasElement) => Promise<string>
@@ -398,6 +397,7 @@ export interface FileSaver{
  * @param name the display name to show with this inlet
  * @param type the type of parameter that becomes mapped to inputs at this inlet, static means that the user cannot change this value
  * @param dx the description of this inlet
+ * @param uses this is used to alert the user the inforamation from the input this inlet will use, draft or materials. 
  * @param value the assigned value of the parameter. 
  * @param num_drafts the total number of drafts accepted into this inlet (or -1 if unlimited)
  */
@@ -405,7 +405,8 @@ export interface FileSaver{
   name: string,
   type: 'number' | 'notation' | 'system' | 'color' | 'static' | 'draft' | 'profile' | 'null',
   dx: string,
-  value: number | string,
+  uses: 'draft' | 'weft-data' | 'warp-data' | 'warp-and-weft-data' ,
+  value: number | string | null,
   num_drafts: number
 }
 
@@ -431,7 +432,7 @@ export interface FileSaver{
  */
 export type OperationParam = {
   name: string,
-  type: 'number' | 'boolean' | 'select' | 'file' | 'string' | 'draft',
+  type: 'number' | 'boolean' | 'select' | 'file' | 'string' | 'draft' | 'notation_toggle';
   value: any,
   dx: string
 }
@@ -467,18 +468,20 @@ export type BoolParam = OperationParam & {
 
 /**
 * An extension of Param that handles extra requirements for select file inputs
-* Currently a placeholder should extra data be required. 
 */
 export type FileParam = OperationParam & {
 }
 
+
 /**
-* An extension of Param that handles extra requirements for select drafts as inputs
+* An extension of Param that in intended to shape how inlets parse layer notation to generate inlets
 * @param id draft id at this parameter --- unusued currently 
 */
-export type DraftParam = OperationParam & {
-  id: number;
+export type NotationTypeParam = OperationParam & {
+  falsestate: string,
+  truestate: string
 }
+
 
 /**
 * An extension of Param that handles extra requirements for strings as inputs
@@ -493,43 +496,27 @@ export type StringParam = OperationParam & {
 }
 
 
-/**
- * A container operation that takes drafts with some parameter assigned to them 
- * @param name the internal name of this operation used for index (DO NOT CHANGE THESE NAMES!)
- * @param displayname the name to show the viewer 
- * @param params the parameters that one can directly input to the parent
- * @param dynamic_param_id which parameter id should we use to dynamically create paramaterized input slots
- * @param dynamic_param_type the type of parameter that we look to generate
- * @param inlets the inlets available for input by default on this operation
- * @param dx the description of this operation
- * @param old_names referes to any prior name of this operation to aid when loading old files
- * @param perform a function that executes when this operation is performed, takes a series of inputs and resturns an array of drafts
- */
-export interface DynamicOperation {
-  name: string,
-  displayname: string,
-  params: Array<OperationParam>, 
-  dynamic_param_id: number,
-  dynamic_param_type: string,
-  inlets: Array<OperationInlet>,
-  dx: string,
-  old_names: Array<string>,
-  perform: (op_inputs: Array<OpInput>) => Promise<Array<Draft>>;
-}
+ /**
+  * this containers the parameters associated with the operation
+  * @param op_name the name of the operation  input parameter
+  * @param params the parameters associated with this operation OR child input
+  */
+ export interface OpParamVal{
+  param: OperationParam,
+  val: any
+ }
 
 
  /**
-  * this is a type that contains a series of smaller operations held under the banner of one larger operation (such as layer)
-  * @param op_name the name of the operation or "child" if this is an assignment to an input parameter
-  * @param drafts the drafts associated with this input
-  * @param params the parameters associated with this operation OR child input
-  * @param inlets the index of the inlet for which the draft is entering upon
+  * this is a type that contains and contextualizes a series of inputs to an operation, each inlet on an operation corresponds to one op input
+  * @param drafts the drafts (from zero to multiple) associated with this input
+  * @param params the parameters associated with this input
+  * @param inlet_id the index of the inlet for which the draft is entering upon
   */
   export interface OpInput{
-    op_name: string,
     drafts: Array<Draft>,
     params: Array<any>,
-    inlet: number
+    inlet_id: number
    }
   
 /**
@@ -541,16 +528,29 @@ export interface DynamicOperation {
  * @param inets the inlets associated with this operation
  * @param old_names referes to any prior name of this operation to aid when loading old files
  * @param perform a function that executes when this operation is performed, takes a series of inputs and resturns an array of drafts
+ * @param generateName a function that computes the system provided name default based on the inputs. a number can be passed in args to handle cases where the operation needs to assign different names to different draft outputs
  */
-export interface Operation {
+export type Operation = {
     name: string,
-    displayname: string,
-    dx: string,
     params: Array<OperationParam>,
     inlets: Array<OperationInlet>,
     old_names: Array<string>,
-    perform: (op_inputs: Array<OpInput>) => Promise<Array<Draft>>
+    perform: (op_settings: Array<OpParamVal>, op_inputs: Array<OpInput>) => Promise<Array<Draft>>,
+    generateName: (op_settings: Array<OpParamVal>, op_inputs: Array<OpInput>, ...args) => string
  }
+
+ /**
+ * A container operation that takes drafts with some parameter assigned to them 
+ * @param dynamic_param_id which parameter id should we use to dynamically create paramaterized input slots
+ * @param dynamic_param_type the type of parameter that we look to generate
+ * @param onParamChange a function that executes when this operation is performed, takes a series of inputs and resturns an array of drafts
+ */
+export type DynamicOperation = Operation &  {
+  dynamic_param_id: number,
+  dynamic_param_type: string,
+  onParamChange: ( param_vals: Array<OpParamVal>, inlets: Array<OperationInlet>, inlet_vals: Array<any>, changed_param_id: number, param_val: any) => Array<any>;
+  perform: (param_vals: Array<OpParamVal>, op_inputs: Array<OpInput>) => Promise<Array<Draft>>;
+}
 
 
 
@@ -561,10 +561,37 @@ export interface Operation {
   * @param ops an array of all the operations associated with this category
   */
  export interface OperationClassification{
-  category: string,
-  dx: string,
-  ops: Array<Operation> 
+  category_name: string,
+  description: string,
+  op_names: Array<string>;
  }
+
+
+
+ export interface AnalyzedImage{
+    id: string,
+    name: string,
+    data: ImageData, 
+    colors: Array<string>,
+    colors_to_bw: Array<any>,
+    image: HTMLImageElement,
+    image_map: Array<Array<number>>,
+    width:number,
+    height: number,
+    type: string,
+    warning: string
+ }
+
+ export interface Upload {
+  $key: string,
+  file:File,
+  name:string,
+  url:string,
+  progress:number,
+  createdAt: Date,
+
+}
+
 
 
 /****************** OBJECTS/TYPES RELATED to OPERATION TREE *****************/
@@ -609,7 +636,8 @@ export type OpNode = BaseNode & {
  export type DraftNode = BaseNode & {
   draft: Draft,
   loom: Loom,
-  loom_settings: LoomSettings
+  loom_settings: LoomSettings,
+  render_colors: boolean
  }
 
 
@@ -664,9 +692,145 @@ export type YarnCell = number;
 
 
 /**
- * Stores all the simulation information as a 2D array mapped onto the draft
+ * represts the point of this yarn within the simulation
  */
- export type YarnSim = Array<Array<YarnCell>>;
+export type YarnVertex = {
+  x: number, 
+  y: number, 
+  z: number, 
+  i: number, 
+  j: number
+};
+
+/**
+ * used in the relaxing round of the simulation to store teh amount of deflection that should be inflicted on any individual vertex. 
+ */
+export type Deflection = {
+  dx: number, 
+  dy: number, 
+  dz: number, 
+  i: number, 
+  j: number
+};
+
+
+
+
+/**
+ * used to calculate arching of floats
+ */
+export type YarnFloat = {
+  heddle: boolean, 
+  end: number,
+  start: number,
+  layer: number
+}
+
+
+
+
+
+export type YarnSimSettings = {
+
+  warp_sett: number, //the distance between warp center points on the loom
+  warp_tension: number, //the tension value of the warp (higher tension, tighter packing)
+  fpack: number, //the force exerted by the packing 
+
+}
+
+export type WarpInterlacementTuple = {
+  j: number, 
+  i_top: number,
+  i_bot: number,
+  orientation: boolean; //true = black cell over white, false white over black. 
+}
+
+export type WeftInterlacementTuple = {
+  i: number, 
+  j_left: number,
+  j_right: number,
+  orientation: boolean //true = black left white right 
+}
+
+export type InterlacementLayerMap = {
+  i: number, 
+  j: number,
+  layer: number
+
+}
+
+//marks a point of interlacement between wefts and warps
+// x -             - x
+// - x === true    x - == false
+export type TopologyVtx ={
+  id: string,
+  i_top: number,
+  i_bot: number,
+  j_left: number,
+  j_right: number,
+  z_pos: number,
+  orientation: boolean;
+
+}
+
+export type WarpRange ={
+  j_left: number, 
+  j_right: number
+
+}
+
+export type WarpWeftLayerCount = {
+  ndx: number, 
+  count: number,
+  layer: number
+}
+
+export type WarpHeight = {
+  over: number,
+  under: number
+}
+
+export type SimulationData = {
+  draft: Draft,
+  bounds: Bounds,
+  sim: SimulationVars,
+  topo: Array<TopologyVtx>,
+  vtxs: VertexMaps,
+  layer_maps: LayerMaps
+};
+
+export type SimulationVars = {
+  warp_spacing: number, 
+  layer_spacing: number,
+  layer_threshold: number,
+  max_interlacement_width: number,
+  max_interlacement_height: number,
+  boundary: number,
+  radius: number,
+  ms: MaterialsService
+}
+
+export type LayerMaps = {
+  warp: Array<Array<number>>,
+  weft: Array<Array<number>>
+}
+
+export type VertexMaps = {
+  warps: Array<Array<YarnVertex>>,
+  wefts: Array<Array<YarnVertex>>
+}
+
+
+/**** SETTINGS FOR OTHER FEATURES */
+
+export type Example = {
+  id: string,
+  ext: string,
+  title: string,
+  desc: string
+}
+
+
 
 
 

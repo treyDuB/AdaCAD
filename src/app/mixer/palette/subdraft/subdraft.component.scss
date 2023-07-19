@@ -1,22 +1,153 @@
+
+
+
+canvas{
+	width: fit-content;
+	height: fit-content;
+  }
+
+.top-half-draft{
+display: flex;
+flex-direction: row;
+}
+
+
+.local_zoom.origin0,
+.local_zoom.origin3
+{
+  flex-direction: column;
+}
+
+.local_zoom.origin1,
+.local_zoom.origin2
+{
+  flex-direction: column-reverse;
+}
+
+.warp-systems-container{
+	display: flex;
+	margin: 10px 0px;
+  }
+  
+  .warp-systems-container.origin0
+  {
+	flex-direction: column;
+	align-items: flex-start;
+	padding-right: 30px;
+
+  }
+  
+  
+  .warp-systems-container.origin3
+  {
+	flex-direction: column;
+	align-items: flex-end;
+
+  }
+  
+  .warp-systems-container.origin1{
+  
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    padding-right: 10px;
+
+  
+  }
+  
+  
+  .warp-systems-container.origin2
+  {
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  
+  }
+
+
+.drawdown-container{
+	display: flex;
+  }
+  
+  .drawdown-container.origin0,
+  .drawdown-container.origin1
+  {
+	flex-direction: row; 
+  }
+  
+  .drawdown-container.origin2,
+  .drawdown-container.origin3
+  {
+	flex-direction: row-reverse; 
+  }
+
+
+
+.weft-systems-container{
+	display: flex;
+	margin: 0px 10px;
+  }
+  
+  .weft-systems-container.origin0,
+  .weft-systems-container.origin1
+  {
+	flex-direction: row; 
+  }
+  
+  .weft-systems-container.origin2,
+  .weft-systems-container.origin3
+  {
+	flex-direction: row-reverse; 
+  }
+  
+  
+
+
+
 .subdraft-container{
+	background: rgba(255, 255, 255, 0.6);
 
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	display: flex;
+	flex-direction: column;
+	justify-content:flex-start;
+	min-width: 300px;
+	height: fit-content;
+	padding: 0px 10px 0px 0px;
+
+
+}
+
+.multiselected{
+	border: thin solid #ff3860;
+}
+
+
+
+.datarow{
+	display: flex;
 	flex-direction: row;
-	justify-content:flex-end;
+	justify-content: space-between;
+	color: white;
+    font-size: 0.7em;
+	padding: 0px 4px;
+	height: 20px;
+
 }
 
 .bottom-opts{
-    display: flex;
+	display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    padding: 8px 0px;
+    color: #555;
+    height: 40px;
+	
 }
+
 
 .bottom-opts.has_draft_hidden{
 	height: auto;
-	background-color: white;
 	width: 224px;
 }
 
@@ -30,6 +161,7 @@
 	flex-direction: row;
 	justify-content:flex-end;
 }
+
 
 h3{
 	font-weight: 800;
@@ -46,79 +178,55 @@ h3{
 }
 
 
-.active-selection.subdraft-container:hover,
-.active-selection.subdraft-container:active{
-
-	.is-primary{
-		background: #ff4081 !important;
-	}
-
-	.cloak{
-		display: none;
-	}
-
-	.maindraft{
-		border: thin solid #ff4081;
-	}
-
-
-
-}
-
-
-.subdraft-container:hover,
-.subdraft-container:active{
-
-
-	.cloak.hide{
-		display: none;
-	}
-	.cloak{
-		display: flex;
-	}
-
-	.maindraft{
-		border: thin solid #00d1b2;
-	}
-
-}
 
 button.output{
     position: relative;
-	background-color: #00d1b2;
+    top: 9px;
+    font-size: 24px;
+    color: #333;
+	background-color: transparent;
+	border: none;
+}
+
+button.output.active,
+button.output:active,
+button.output:hover{
+	color: #ff3860;
+}
+
+
+
+.single_line{
+	display: flex;
+	flex-direction: row;
+}
+
+.outlet_row{
+    height: 34px;
+    display: flex;
+    flex-direction: row;
+    padding-top: 9px;
+    color: black;
+}
+
+.outlet{
+	background-color: transparent;
 	color: white;
 	border: none; 
-}
+	width: 20px;
+	
+	i{
+		font-size: 20px;
+		position: relative;
 
-
-.drawing{
-	z-index: -1;
-
-	.cloak{
-		pointer-events: all;
 	}
-
-	.maindraft{
-		pointer-events: none;
-	}
+	
 }
 
-.dims_and_name{
-    display: flex;
-    flex-direction: column;
-    font-size: 0.7em;
-    margin: 0px 6px;
-    justify-content: space-between;
-    width: 100%;
-	min-width: 60px;
-	overflow: hidden;
-}
+
 .error{
 	color: #ff3860;
   }
-.mat-icon{
-	height: auto;
-}
 
 .dropdown{
 	display: flex;
@@ -127,10 +235,13 @@ button.output{
 
 .subdraft-details{
 	position: relative;
-	left: -30px;
-	width:30px;
-	flex-direction: column;
-	justify-content: flex-start;
+	top: -10px;
+
+}
+
+.local_zoom{
+	transform-origin: top center;
+	display: flex;
 }
 
 .cloak{
@@ -145,29 +256,23 @@ button.output{
 }
 
 .subdraft-contents{
-	display: block;
+	display: flex;
+	flex-direction: column;
 	position: relative;
-	left: -30px;
-	min-width: 200px;
+	align-items: center;
+	justify-content: center;
+	padding: 4px;
+	border: none;
+	background-color: transparent;
 }
+	
+
 
 .is-active{
 	background: #00d1b2;
 	background: #00000070
 }
 
-button.is-primary.is-active{
-    background-color: rgb(255, 64, 129);
-}
-
-button.is-primary{
-    background-color: rgba(255,255,255,.5);
-	color: black;
-}
-
-button{
-	width: 30px;
-}
 
 svg{
 	display: block;
@@ -182,7 +287,6 @@ svg{
 .maindraft{
 	display: block;
 	overflow:hidden;
-	border: thin solid white;
 }
 
 .hidden {
@@ -193,9 +297,6 @@ svg{
 	pointer-events: none;
 }
 
-div.cdk-drag-dragging .maindraft{
-	border: thin solid #ff4081;
-}
 
 .hide{
 	display:none;

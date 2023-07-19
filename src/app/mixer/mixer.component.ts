@@ -1,56 +1,86 @@
-import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, ɵNOT_FOUND_CHECK_ONLY_ELEMENT_INJECTOR, enableProdMode, Optional } from '@angular/core';
-import { DesignmodesService } from '../core/provider/designmodes.service';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
-import {Subject} from 'rxjs';
-import { PaletteComponent } from './palette/palette.component';
-import { TreeService} from '../core/provider/tree.service';
-import { Draft, Loom, FileObj, Node, LoadResponse, NodeComponentProxy, OpComponentProxy, SaveObj, TreeNodeProxy, LoomSettings, TreeNode, DraftNode, IOTuple  } from '../core/model/datatypes';
-import { SidebarComponent } from '../core/sidebar/sidebar.component';
-import { ViewportService } from './provider/viewport.service';
-import { NotesService } from '../core/provider/notes.service';
-import { Cell } from '../core/model/cell';
-import { WorkspaceService } from '../core/provider/workspace.service';
-import { StateService } from '../core/provider/state.service';
-import { MaterialsService } from '../core/provider/materials.service';
-import { SystemsService } from '../core/provider/systems.service';
 import { HttpClient } from '@angular/common/http';
-import { InitModal } from '../core/modal/init/init.modal';
-import { MatDialog } from '@angular/material/dialog';
-import { AuthService } from '../core/provider/auth.service';
-import {getDatabase, ref as fbref, get as fbget, child} from '@angular/fire/database'
-import {getAnalytics, logEvent} from '@angular/fire/analytics'
-import { ImageService } from '../core/provider/image.service';
-import { OperationService } from '../core/provider/operation.service';
-import { FileService} from '../core/provider/file.service'
-import { initDraft, initDraftWithParams, loadDraftFromFile } from '../core/model/drafts';
-import * as _ from 'lodash';
-import { any } from '@tensorflow/tfjs';
-import { SubdraftComponent } from './palette/subdraft/subdraft.component';
-import utilInstance from '../core/model/util';
-import { FilesystemService } from '../core/provider/filesystem.service';
+import { Component, enableProdMode, OnInit, Optional, ViewChild } from '@angular/core';
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
 import { Auth, authState, User } from '@angular/fire/auth';
-
-
+import { NgForm } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipDefaultOptions, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
+import { Subject } from 'rxjs';
+import { BlankdraftModal } from '../core/modal/blankdraft/blankdraft.modal';
+import { createCell } from '../core/model/cell';
+import { DesignMode, Draft, DraftNode, FileObj, IOTuple, LoadResponse, Loom, LoomSettings, NodeComponentProxy, OpInput, SaveObj, TreeNode, TreeNodeProxy } from '../core/model/datatypes';
+import { defaults } from '../core/model/defaults';
+import { copyDraft, flipDraft, initDraftWithParams, warps, wefts } from '../core/model/drafts';
+import { copyLoom, copyLoomSettings, flipLoom } from '../core/model/looms';
+import utilInstance from '../core/model/util';
+import { AuthService } from '../core/provider/auth.service';
+import { DesignmodesService } from '../core/provider/designmodes.service';
+import { FileService } from '../core/provider/file.service';
+import { FilesystemService } from '../core/provider/filesystem.service';
+import { ImageService } from '../core/provider/image.service';
+import { MaterialsService } from '../core/provider/materials.service';
+import { NotesService } from '../core/provider/notes.service';
+import { OperationService } from '../core/provider/operation.service';
+import { StateService } from '../core/provider/state.service';
+import { SystemsService } from '../core/provider/systems.service';
+import { TreeService } from '../core/provider/tree.service';
+import { WorkspaceService } from '../core/provider/workspace.service';
+import { DraftDetailComponent } from '../draftdetail/draftdetail.component';
+import { RenderService } from '../draftdetail/provider/render.service';
+import { PaletteComponent } from './palette/palette.component';
+import { SubdraftComponent } from './palette/subdraft/subdraft.component';
+import { MultiselectService } from './provider/multiselect.service';
+import { ViewportService } from './provider/viewport.service';
+import { ZoomService } from './provider/zoom.service';
 //disables some angular checking mechanisms
 enableProdMode();
 
 
 
 
+/** Custom options the configure the tooltip's default show/hide delays. */
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+  position: 'right',
+  disableTooltipInteractivity: true,
+
+};
 
 
 @Component({
   selector: 'app-mixer',
   templateUrl: './mixer.component.html',
-  styleUrls: ['./mixer.component.scss']
+  styleUrls: ['./mixer.component.scss'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+
 })
 export class MixerComponent implements OnInit {
 
+
   @ViewChild(PaletteComponent) palette;
-  @ViewChild(SidebarComponent) view_tool;
+  @ViewChild(DraftDetailComponent) details;
+
+  epi: number = 10;
+  units:string = 'cm';
+  frames:number =  8;
+  treadles:number = 10;
+  loomtype:string = "jacquard";
+  loomtypes:Array<DesignMode>  = [];
+  density_units:Array<DesignMode> = [];
+  warp_locked:boolean = false;
+  origin_options: any = null;
+  selected_origin: number = 0;
+  show_viewer: boolean = false;
+  show_details: boolean = false;
+  loading: boolean = false;
 
 
-  filename = "adacad_mixer";
+
+
+
 
  /**
    * The weave Timeline object.
@@ -63,11 +93,13 @@ export class MixerComponent implements OnInit {
 
   private unsubscribe$ = new Subject();
 
-  collapsed:boolean = false;
+  collapsed:boolean = true;
 
   scrollingSubscription: any;
 
-  scale: number = 5;
+
+  selected_nodes_copy: any = null;
+
 
   /// ANGULAR FUNCTIONS
   /**
@@ -91,12 +123,24 @@ export class MixerComponent implements OnInit {
     private image: ImageService,
     private ops: OperationService,
     private http: HttpClient,
+    private zs: ZoomService,
     private files: FilesystemService,
-    @Optional() private fbauth: Auth,
+    private render: RenderService,
+    private multiselect: MultiselectService,
+    @Optional() private fbauth: Auth
     ) {
 
 
+      this.selected_origin = this.ws.selected_origin_option;
 
+      this.origin_options = this.ws.getOriginOptions();
+      this.epi = ws.epi;
+      this.units = ws.units;
+      this.frames = ws.min_frames;
+      this.treadles = ws.min_treadles;
+      this.loomtype = ws.type;
+      this.loomtypes = dm.getOptionSet('loom_types');
+     this.density_units = dm.getOptionSet('density_units');
     //this.dialog.open(MixerInitComponent, {width: '600px'});
 
     this.scrollingSubscription = this.scroll
@@ -105,20 +149,28 @@ export class MixerComponent implements OnInit {
             this.onWindowScroll(data);
     });
     
-    this.vp.setAbsolute(16380, 16380); //max size of canvas, evenly divisible by default cell size
+    this.vp.setAbsolute(defaults.mixer_canvas_width, defaults.mixer_canvas_height); //max size of canvas, evenly divisible by default cell size
    
 
+
+
+    //subscribe to the login event and handle what happens in that case 
 
     if (auth) {
       const success = authState(this.fbauth).subscribe(async user => {
          this.initLoginLogoutSequence(user) 
+          
       })
 
    }
+
+
+
   }
 
 
   ngOnInit(){
+    
     const analytics = getAnalytics();
     logEvent(analytics, 'onload', {
       items: [{ uid: this.auth.uid }]
@@ -126,15 +178,14 @@ export class MixerComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-
-
+ 
   }
 
 
   private onWindowScroll(data: any) {
     if(!this.manual_scroll){
      this.palette.handleWindowScroll(data);
-     this.view_tool.updateViewPort(data);
+    // this.view_tool.updateViewPort(data);
     }else{
       this.manual_scroll = false;
     }
@@ -147,41 +198,282 @@ export class MixerComponent implements OnInit {
   }
 
 
-  /**
-   * A function originating in the deisgn tool that signals a design mode change and communicates it to the palette
-   * @param name the name of the current design mode
-   */
-  designModeChange(name: string){
-    this.palette.designModeChanged();
-  }
 
-  /**
-   * A function originating in the deisgn tool that signals a design mode change and communicates it to the palette
-   * @param name the name of the current design mode
-   */
-  private inkChanged(name: string){
-    // this.palette.inkChanged();
-  }
+  closeDetailViewer(obj: any){
+    console.log("OBJ ", obj)
+    this.show_details = false; 
+    this.details.windowClosed();
+
+    //the object was never copied
+    if(obj.clone_id == -1){
+      let comp = <SubdraftComponent>this.tree.getComponent(obj.id);
+      comp.redrawExistingDraft();
+
+      this.palette.updateDownstream(obj.id).then(el => {
+        this.palette.addTimelineState();
+      });
+    //reperform all of the ops 
+    }else{
+      //this object was copied and we need to keep the copy
+      if(obj.dirty){
+        const parent = this.tree.getComponent(obj.clone_id);
+        let el = document.getElementById('scale-'+parent.id);
+        let width = 0;
+        if(el !== null && el !== undefined) width = el.offsetWidth;
+        this.palette.createSubDraftFromEditedDetail(obj.id).then(sd => {
+          const new_topleft = {
+            x: parent.topleft.x+((width+40)*this.zs.zoom/defaults.mixer_cell_size), 
+            y: parent.topleft.y};
+    
+            sd.setPosition(new_topleft);
+        });
+
+       
+      }else{
+        this.tree.removeSubdraftNode(obj.id);
+      }
+    }
+
+
+
   
+    //refresh all of the subdrafts
+    // let tlds:Array<number> = this.tree.getTopLevelDrafts();
+    // tlds.forEach(tld => {
+    //   let comp: SubdraftComponent = <SubdraftComponent>this.tree.getComponent(tld);
+    //   comp.redrawExistingDraft();
+    // })
+
+
+    // this.palette.updateDownstream(obj).then(el => {
+    //   this.palette.addTimelineState();
+    // });
+    // //reperform all of the ops 
+
+
+  }
+
+  detailViewChange(){
+    this.details.weaveRef.rescale(this.render.getZoom());
+
+  }
+
+
+  addOp(event: any){
+    this.palette.addOperation(event)
+  }
 
 
 
+  isBlankWorkspace() : boolean {
+    return this.tree.nodes.length == 0;
+  }
+
+
+  zoomIn(){
+    const old_zoom = this.zs.zoom;
+    this.zs.zoomIn();
+    this.renderChange(old_zoom);
+
+  }
+
+
+  zoomOut(){
+    const old_zoom = this.zs.zoom;
+    this.zs.zoomOut();
+    this.renderChange(old_zoom);
+    
+}
+
+createNewDraft(){
+
+  const dialogRef = this.dialog.open(BlankdraftModal, {
+  });
+
+  dialogRef.afterClosed().subscribe(obj => {
+    if(obj !== undefined && obj !== null) this.newDraftCreated(obj);
+ });
+}
+ 
+
+zoomChange(e:any, source: string){
+  
+  const old_zoom = this.zs.zoom;
+  this.zs.setZoom(e.value)
+  this.palette.rescale(old_zoom);
+
+}
+
+
+
+  /**
+   * this is called anytime a user event is fired
+   * @param user 
+   */
+  initLoginLogoutSequence(user:User) {
+    console.log("IN LOGIN/LOGOUT ", user)
+
+
+    let searchParams = new URLSearchParams(window.location.search);
+    if(searchParams.has('ex')){
+      this.loadExampleAtURL(searchParams.get('ex'));  
+      return;
+    }
+
+
+    if(user === null){
+      //this is a logout event
+      this.files.setCurrentFileInfo(this.files.generateFileId(), 'blank draft','');
+      this.files.clearTree();
+
+
+
+    }else{
+
+      if(this.auth.isFirstSession() || (!this.auth.isFirstSession() && this.isBlankWorkspace())){
+    
+        this.auth.getMostRecentFileIdFromUser(user).then(async fileid => {
+
+          if(fileid !== null){
+
+            const ada = await this.files.getFile(fileid).catch(e => {
+              console.error("HI ", e)
+            });
+            const meta = await this.files.getFileMeta(fileid).catch(console.error);           
+             
+
+              if(ada === undefined){
+                this.loadBlankFile();
+
+              }else if(meta === undefined){
+                this.files.setCurrentFileInfo(fileid, 'file name not found', '');
+                this.prepAndLoadFile('file name not found', fileid, '', ada);
+              
+              }else{
+
+                this.files.setCurrentFileInfo(fileid, meta.name, meta.desc);
+                this.prepAndLoadFile(meta.name, fileid, meta.desc, ada);
+              }
+
+          }else{
+              console.log("LOOKING FOR ADA FILE")
+             this.auth.getMostRecentAdaFromUser(user).then(async adafile => {
+                console.log("ADA FILE IS ", adafile)
+                if(adafile !== null){
+                    let fileid = await this.files.convertAdaToFile(user.uid, adafile); 
+                    console.log("convert ada to file id ", fileid)
+            
+                    let ada = await this.files.getFile(fileid);
+                    let meta = await this.files.getFileMeta(fileid);           
+                    
+                    if(ada === undefined){
+                      this.loadBlankFile();
+                    }else if(meta === undefined){
+                      this.files.setCurrentFileInfo(fileid, 'file name not found', '');
+                      this.prepAndLoadFile('file name not found', fileid, '', ada);
+      
+                    }else{
+                      this.files.setCurrentFileInfo(fileid, meta.name, meta.desc);
+                      this.prepAndLoadFile(meta.name, fileid, meta.desc, ada);
+                    }
+
+                }else{
+                  console.log("load blank")
+                  this.loadBlankFile();
+                  return;
+                }
+             });
+          }
+        }) 
+
+      }else{
+        
+        //this.loadBlankFile();
+        this.saveFile();
+        this.files.writeNewFileMetaData(user.uid, this.files.current_file_id, this.files.current_file_name, this.files.current_file_desc)
+
+    
+      }
+      
+    }
+  }
+
+    /**
+   * this is called when paste is called and has loaded in the data from the copy event. 
+   * @param result 
+   */
+    insertPasteFile(result: LoadResponse){
+      this.processFileData(result.data).then(data => {
+        this.palette.changeDesignmode('move');
+        this.saveFile();
+
+      }
+  
+      ).catch(console.error);
+      
+    }
 
   /**
    * this gets called when a new file is started from the topbar or a new file is reload via undo/redo
    * @param result 
    */
   loadNewFile(result: LoadResponse){
+    this.clearAll();
 
-    this.clearView();
-    this.tree.clear();
-    console.log("loaded new file", result, result.data)
+
+
+    this.files.setCurrentFileInfo(result.id, result.name, result.desc);
+    
+
     this.processFileData(result.data).then(data => {
       this.palette.changeDesignmode('move');
+      this.saveFile();
     }
 
-    ).catch(console.error);
+    ).catch(e => {
+      console.log("CAUGHT ERROR through from process file data")
+    });
     
+  }
+
+  async loadFromDB(fileid: number){
+    this.clearAll();
+
+
+    const ada = await this.files.getFile(fileid);
+    const meta = await this.files.getFileMeta(fileid);           
+    this.files.setCurrentFileInfo(fileid, meta.name, meta.desc);
+    this.prepAndLoadFile(meta.name, fileid, meta.desc, ada);
+    this.saveFile();
+    
+  }
+
+  loadBlankFile(){
+    this.clearAll();
+    this.files.setCurrentFileInfo(this.files.generateFileId(), 'load blank', '');
+    this.saveFile();
+    
+  }
+
+  deleteCurrentFile(){
+    this.clearAll();
+    if(this.files.file_tree.length > 0){
+      this.loadFromDB(this.files.file_tree[0].id)
+    }else{
+      this.files.setCurrentFileInfo(this.files.generateFileId(), 'new blank file', '');
+    }
+    this.saveFile();
+  }
+
+  saveFile(){
+        //if this user is logged in, write it to the
+        this.fs.saver.ada(
+          'mixer', 
+          true,
+          this.zs.zoom)
+          .then(so => {
+            this.ss.addMixerHistoryState(so);
+          });
   }
 
 
@@ -195,8 +487,8 @@ export class MixerComponent implements OnInit {
     this.processFileData(result.data)
     .then( data => {
       this.palette.changeDesignmode('move')
-      this.clearView();
-      this.tree.clear();
+      this.clearAll();
+
       console.log("imported new file", result, result.data)
       })
       .catch(console.error);
@@ -205,7 +497,6 @@ export class MixerComponent implements OnInit {
 
 
   printTreeStatus(name: string, treenode: Array<TreeNode>){
-    console.log("PRINTING TREE STATUS FOR ", name);
 
     treenode.forEach(tn => {
       if(tn === undefined){
@@ -301,7 +592,9 @@ export class MixerComponent implements OnInit {
               console.error("could not find matching node"); 
             }
           }else{
+            
             const output_map = id_map.find(el => el.prev_id === output.tn);
+
             if(output_map !== undefined){
              return {tn: output_map.cur_id, ndx: output.ndx};
             }else{
@@ -310,8 +603,6 @@ export class MixerComponent implements OnInit {
           } 
       });
       
-
-
       const new_tn: TreeNodeProxy = {
         node: id_map.find(el => el.prev_id === tn.node).cur_id,
         parent: (tn.parent === null || tn.parent === -1) ? -1 : id_map.find(el => el.prev_id === tn.parent).cur_id,
@@ -333,26 +624,27 @@ export class MixerComponent implements OnInit {
    * Take a fileObj returned from the fileservice and process
    */
    async processFileData(data: FileObj) : Promise<string|void>{
-
+    this.loading = true;
 
     let entry_mapping = [];
-    this.filename = data.filename;
 
 
-    this.notes.notes.forEach(note => {
-        this.palette.loadNote(note);
-    });
+    this.updateOrigin(this.ws.selected_origin_option)
 
     //start processing images first thing 
     const images_to_load = [];
+   
     data.ops.forEach(op => {
       const internal_op = this.ops.getOp(op.name); 
       if(internal_op === undefined || internal_op == null|| internal_op.params === undefined) return;
       const param_types = internal_op.params.map(el => el.type);
       param_types.forEach((p, ndx) => {
-        if(p === 'file') images_to_load.push(op.params[ndx]);
+        if(p === 'file'){
+          images_to_load.push(op.params[ndx]);
+        } 
       });
     })
+
 
 
     return this.image.loadFiles(images_to_load).then(el => {
@@ -373,16 +665,13 @@ export class MixerComponent implements OnInit {
         .map(tn => tn.entry);
      
 
-      const seeds: Array<{entry, id, draft, loom, loom_settings}> = seednodes
+      const seeds: Array<{entry, id, draft, loom, loom_settings, render_colors}> = seednodes
       .map(sn =>  {
 
 
          let d:Draft =null;
-        // let ls:LoomSettings = {
-        //   this.ws.type
-        // }
-        // let l = new Loom(d, this.ws.type, this.ws.min_frames, this.ws.min_treadles);
-
+         let render_colors = true;
+ 
         const draft_node = data.nodes.find(node => node.node_id === sn.prev_id);
         //let d: Draft = initDraft();
         let l: Loom = {
@@ -406,9 +695,10 @@ export class MixerComponent implements OnInit {
             console.error("could not find draft with id in draft list");
           }
           else{
-            d = _.cloneDeep(located_draft.draft);
-            ls = _.cloneDeep(located_draft.loom_settings);
-            l = _.cloneDeep(located_draft.loom);
+            d = copyDraft(located_draft.draft);
+            ls = copyLoomSettings(located_draft.loom_settings);
+            l = copyLoom(located_draft.loom);
+            if(located_draft.render_colors !== undefined) render_colors = located_draft.render_colors; 
           } 
 
         }else{
@@ -416,25 +706,26 @@ export class MixerComponent implements OnInit {
         }
 
   
-
-        d.id = (sn.cur_id); //do this so that all draft ids match the component / node ids
-
-      return {
-        entry: sn,
-        id: sn.cur_id,
-        draft: d,
-        loom: l,
-        loom_settings: ls
+        if(d !== null && d !== undefined){
+          d.id = (sn.cur_id); //do this so that all draft ids match the component / node ids
+        }else{
+          d = initDraftWithParams({warps: 1, wefts: 1, drawdown: [[false]]});
+          d.id = (sn.cur_id);
         }
+
+          return {
+            entry: sn,
+            id: sn.cur_id,
+            draft: d,
+            loom: l,
+            loom_settings: ls,
+            render_colors: render_colors
+            }
+        
       });
 
       
-
-      // console.log("ALL TREADLING in Mixer");
-      // seeds.forEach(node => {
-      //   console.log(node.loom.treadling)
-      // })
-      const seed_fns = seeds.map(seed => this.tree.loadDraftData(seed.entry, seed.draft, seed.loom,seed.loom_settings));
+      const seed_fns = seeds.map(seed => this.tree.loadDraftData(seed.entry, seed.draft, seed.loom,seed.loom_settings, seed.render_colors));
   
       const op_fns = data.ops.map(op => {
         const entry = entry_mapping.find(el => el.prev_id == op.node_id);
@@ -457,7 +748,7 @@ export class MixerComponent implements OnInit {
       .filter(el => el.draft === null)
       .forEach(el => {
         if(this.tree.hasParent(el.id)){
-          el.draft = initDraftWithParams({warps: 1, wefts: 1, pattern: [[new Cell(false)]]});
+          el.draft = initDraftWithParams({warps: 1, wefts: 1, pattern: [[createCell(false)]]});
           el.draft.id = el.id;
         } else{
           console.log("removing node ", el.id, el.type, this.tree.hasParent(el.id));
@@ -481,23 +772,26 @@ export class MixerComponent implements OnInit {
             break;
           case 'op':
             const op = this.tree.getOpNode(node.id);
-            this.palette.loadOperation(op.id, op.name, op.params, op.inlets, data.nodes.find(el => el.node_id === entry.prev_id).bounds, data.scale);
+            this.palette.loadOperation(op.id, op.name, op.params, op.inlets, data.nodes.find(el => el.node_id === entry.prev_id).topleft, data.scale);
             break;
-        }
-      })
-
-
-    }
-    ).then(el => {
-      return this.tree.nodes.forEach(node => {
-        if(!(node.component === null || node.component === undefined)) return;
-        switch (node.type){
           case 'cxn':
             this.palette.loadConnection(node.id)
             break;
         }
       })
+
+
     })
+    // ).then(el => {
+    //   return this.tree.nodes.forEach(node => {
+    //     if(!(node.component === null || node.component === undefined)) return;
+    //     switch (node.type){
+    //       case 'cxn':
+    //         this.palette.loadConnection(node.id)
+    //         break;
+    //     }
+    //   })
+    // })
     .then(el => {
 
       //NOW GO THOUGH ALL DRAFT NODES and ADD IN DATA THAT IS REQUIRED
@@ -515,11 +809,22 @@ export class MixerComponent implements OnInit {
       // dn.forEach(node => {
       //   console.log("RES", node.draft, node.loom, node.loom_settings)
       // })
+
+      data.notes.forEach(note => {
+        this.palette.createNote(note);
+    });
   
 
     })
-    .then(data => {return Promise.resolve('alldone')})
-    .catch(console.error);
+    .then(res => {
+      // this.palette.rescale(data.scale);
+      this.loading = false;
+      return Promise.resolve('alldone')
+    })
+    .catch(e => {
+      this.loading = false;
+      console.log("ERROR THOWN in process", e)
+    });
 
 
     //print out all trees:
@@ -531,7 +836,70 @@ export class MixerComponent implements OnInit {
 
  
 
-  
+  /**
+   * Called from import bitmaps to drafts features. The drafts have already been imported and sent to this function, 
+   * which now needs to draw them to the workspace
+   * @param drafts 
+   */
+  loadDrafts(drafts: any){
+    const loom:Loom = {
+      threading:[],
+      tieup:[],
+      treadling: []
+    };
+
+    const loom_settings:LoomSettings = {
+      type:this.ws.type,
+      epi: this.ws.epi,
+      units: this.ws.units,
+      frames: this.ws.min_frames,
+      treadles: this.ws.min_treadles
+      
+    }
+
+    let topleft = this.vp.getTopLeft();
+
+    let max_h = 0;
+    let cur_h = topleft.y + 20; //start offset from top
+    let cur_w = topleft.x + 50;
+    let zoom_factor = defaults.mixer_cell_size / this.zs.zoom;
+    let x_margin = 20 / zoom_factor;
+    let y_margin = 40 / zoom_factor;
+
+    let view_width = this.vp.getWidth() * zoom_factor;
+
+    drafts.forEach(draft => {
+      
+      
+      const id = this.tree.createNode("draft", null, null);
+      this.tree.loadDraftData({prev_id: null, cur_id: id,}, draft, loom, loom_settings, true);
+      this.palette.loadSubDraft(id, draft, null, null, this.zs.zoom);
+
+      //position the drafts so that they don't all overlap. 
+       max_h = (wefts(draft.drawdown)*defaults.mixer_cell_size > max_h) ? wefts(draft.drawdown)*defaults.mixer_cell_size : max_h;
+      
+       let approx_w = warps(draft.drawdown);
+
+       //300 because each draft is defined as having min-width of 300pm
+       let w = (approx_w*defaults.mixer_cell_size > 300) ? approx_w *defaults.mixer_cell_size : 300 / zoom_factor;
+
+       let dn = this.tree.getNode(id);
+       dn.component.topleft = {x: cur_w, y: cur_h};
+       
+       cur_w += (w + x_margin);
+       if(cur_w > view_width){
+        cur_w = topleft.x + 50;
+        cur_h += (max_h+y_margin);
+        max_h = 0;
+       }
+
+
+    });
+
+    this.palette.addTimelineState();
+
+    
+  }
 
 
   loadExampleAtURL(name: string){
@@ -545,203 +913,20 @@ export class MixerComponent implements OnInit {
       if(res.status == 404) return;
 
       this.clearAll();
-      return this.fs.loader.ada(name, -1, res.body)
+      return this.fs.loader.ada(name, -1, '', res.body)
      .then(loadresponse => {
        this.loadNewFile(loadresponse)
      });
     }); 
   }
 
-  isBlankWorkspace() : boolean {
-    return this.tree.nodes.length == 0;
-  }
-
-  loadBlankFile(){
-    this.clearAll();
-    this.files.setCurrentFileInfo(this.files.generateFileId(), 'load blank', '');
-    this.saveFile();
-  }
-
-  saveFile(){
-    //if this user is logged in, write it to the
-    this.fs.saver.ada(
-      'mixer', 
-      true,
-      this.scale)
-      .then(so => {
-        this.ss.addMixerHistoryState(so);
-      });
-}
-
 
   prepAndLoadFile(name: string, id: number, desc: string, ada: any) : Promise<any>{
-    return this.fs.loader.ada(name, id, ada).then(lr => {
-      this.loadNewFile(lr);
-    });
+      return this.fs.loader.ada(name, id,desc, ada).then(lr => {
+        this.loadNewFile(lr);
+      });
   }
 
-
-  initLoginLogoutSequence(user:User) {
-    console.log("IN LOGIN/LOGOUT ", user)
-
-
-    let searchParams = new URLSearchParams(window.location.search);
-    if(searchParams.has('ex')){
-      this.loadExampleAtURL(searchParams.get('ex'));  
-      return;
-    }
-
-
-    if(user === null){
-      //this is a logout event
-      this.files.setCurrentFileInfo(this.files.generateFileId(), 'blank draft','');
-      this.files.clearTree();
-
-
-
-    }else{
-
-      if(this.auth.isFirstSession() || (!this.auth.isFirstSession() && this.isBlankWorkspace())){
-    
-        this.auth.getMostRecentFileIdFromUser(user).then(async fileid => {
-
-          if(fileid !== null){
-
-            const ada = await this.files.getFile(fileid);
-            const meta = await this.files.getFileMeta(fileid);           
-             
-
-              if(ada === undefined){
-                this.loadBlankFile();
-
-              }else if(meta === undefined){
-                this.files.setCurrentFileInfo(fileid, 'file name not found', '');
-                this.prepAndLoadFile('file name not found', fileid, '', ada);
-              
-              }else{
-
-                this.files.setCurrentFileInfo(fileid, meta.name, meta.desc);
-                this.prepAndLoadFile(meta.name, fileid, meta.desc, ada);
-              }
-
-          }else{
-              console.log("LOOKING FOR ADA FILE")
-             this.auth.getMostRecentAdaFromUser(user).then(async adafile => {
-                console.log("ADA FILE IS ", adafile)
-                if(adafile !== null){
-                    let fileid = await this.files.convertAdaToFile(user.uid, adafile); 
-                    console.log("convert ada to file id ", fileid)
-            
-                    let ada = await this.files.getFile(fileid);
-                    let meta = await this.files.getFileMeta(fileid);           
-                    
-                    if(ada === undefined){
-                      this.loadBlankFile();
-                    }else if(meta === undefined){
-                      this.files.setCurrentFileInfo(fileid, 'file name not found', '');
-                      this.prepAndLoadFile('file name not found', fileid, '', ada);
-      
-                    }else{
-                      this.files.setCurrentFileInfo(fileid, meta.name, meta.desc);
-                      this.prepAndLoadFile(meta.name, fileid, meta.desc, ada);
-                    }
-
-                }else{
-                  console.log("load blank")
-                  this.loadBlankFile();
-                  return;
-                }
-             });
-          }
-        }) 
-
-      }else{
-        
-        //this.loadBlankFile();
-        this.saveFile();
-        this.files.writeNewFileMetaData(user.uid, this.files.current_file_id, this.files.current_file_name, this.files.current_file_desc)
-
-    
-      }
-      
-    }
-  }
-
-
-
-  // loadLoggedInUser(){
-
-  //   this.auth.user.subscribe(user => {
-
-  //     if(user === null){
-
-  //       const dialogRef = this.dialog.open(InitModal, {
-  //         data: {source: 'mixer'}
-  //       });
-
-
-  //       dialogRef.afterClosed().subscribe(loadResponse => {
-  //         this.palette.changeDesignmode('move');
-  //         if(loadResponse !== undefined){
-  //           if(loadResponse.status == -1){
-  //             this.ss.setCurrentFileInfo(this.ss.generateFileId(), loadResponse,'');
-  //             this.clearAll();
-  //           }
-  //           else{
-  //             this.ss.setCurrentFileInfo(, loadResponse,'');
-  //             this.loadNewFile(loadResponse);
-  //           }
-  //         } 
-        
-    
-  //      });
-  //     }else{
-
-  //       //in the case someone logs in mid way through, don't replace their work. 
-  //       if(this.tree.nodes.length > 0) return;
-       
-
-  //       const db = fbref(getDatabase());
-
-
-  //               fbget(child(db, `users/${this.auth.uid}/ada`)).then((snapshot) => {
-  //                 if (snapshot.exists()) {
-  //                   this.fs.loader.ada("recovered draft", snapshot.val()).then(lr => {
-  //                     this.loadNewFile(lr);
-  //                   });
-  //                 }
-  //               }).catch((error) => {
-  //                 console.error(error);
-  //               });
-
-  //     }
-  //   });
-
-  // }
-
-
-  loadSavedFile(){
-  //   this.auth.user.subscribe(user => {
-  //       if(user !== null){
-
-  //         const db = fbref(getDatabase());
-
-
-  //         fbget(child(db, `users/${this.auth.uid}/ada`)).then((snapshot) => {
-  //           if (snapshot.exists()) {
-  //             this.fls.loader.ada("recovered draft", snapshot.val()).then(lr => {
-  //               this.dialogRef.close(lr)
-  //             });
-  //           }
-  //         }).catch((error) => {
-  //           console.error(error);
-  //         });
-    
-  //     }
-    
-  // });
-
-  }
 
 
   clearView() : void {
@@ -751,10 +936,12 @@ export class MixerComponent implements OnInit {
   }
 
   clearAll() : void{
-    console.log("CLEAR ALL from MIXER")
-    this.palette.addTimelineState();
-    this.fs.clearAll();
+
+    console.log("CLEAR ALL")
     this.clearView();
+    this.tree.clear();
+    this.ss.clearTimeline();
+    this.notes.clear();
 
   }
 
@@ -770,8 +957,11 @@ export class MixerComponent implements OnInit {
 
     let so: SaveObj = this.ss.restorePreviousMixerHistoryState();
     if(so === null || so === undefined) return;
-    this.fs.loader.ada(this.filename, this.ss.current_file_id, so).then(
-      lr => this.loadNewFile(lr)
+    this.fs.loader.ada(this.files.current_file_name, this.files.current_file_id, this.files.current_file_desc, so).then(lr => {
+      console.log("LOADing FILE ", lr);
+      this.loadNewFile(lr)
+    }
+    
     );
 
   
@@ -782,156 +972,69 @@ export class MixerComponent implements OnInit {
     let so: SaveObj = this.ss.restoreNextMixerHistoryState();
     if(so === null || so === undefined) return;
 
-    this.fs.loader.ada(this.filename, this.ss.current_file_id, so)
+    this.fs.loader.ada(this.files.current_file_name, this.files.current_file_id,this.files.current_file_desc,  so)
     .then(lr =>  this.loadNewFile(lr));
 
    
   }
 
-/**
-   * Change to draw mode on keypress d
-   * @returns {void}
-   */
-  @HostListener('window:keydown.d', ['$event'])
-  private keyChangetoDrawMode(e) {
-    // console.log("event", e);
-
-    // //make sure the path doesn't change if we're typing
-    // const from_ta = e.path.find(el => el.localName === 'textarea');
-
-    // if(from_ta !== undefined){
-    //   return;
-    // } 
-    
-
-    // this.dm.selectDesignMode('draw', 'design_modes');
-    // this.designModeChange('draw');
+  onCopySelections(){
+    const selections = this.multiselect.copySelections();
+    this.selected_nodes_copy = selections;
   }
 
-  /**
-   * Change to draw mode on keypress s
-   * @returns {void}
-   */
-   @HostListener('window:keydown.s', ['$event'])
-   private keyChangeToSelect(e) {
-    //  this.dm.selectDesignMode('marquee','design_modes');
-    //  this.designModeChange('marquee');
-   }
+  onPasteSelections(){
 
+    //check to make sure something has been copied
+    if(this.multiselect.copy == undefined) return;
 
-     /**
-   * Change to draw mode on keypress s
-   * @returns {void}
-   */
-      @HostListener('window:keydown.m', ['$event'])
-      private keyChangeToMove(e) {
-        // this.dm.selectDesignMode('move','design_modes');
-        // this.designModeChange('move');
-      }
+    this.multiselect.copy.then(ada => {
+
+      return this.fs.loader.paste(ada).then(lr => {
+        this.insertPasteFile(lr);
+      });
+    })
+
    
+   
+
+    this.multiselect.clearSelections();
+    
+  }
+
+  togglePanMode(){
+    if(this.dm.isSelected('pan', "design_modes")){
+      this.dm.selectDesignMode('move', 'design_modes');
+    }else{
+      this.dm.selectDesignMode('pan', 'design_modes');
+    }
+    this.palette.designModeChanged();
+    //this.show_viewer = true;
+
+  }
+
+  toggleSelectMode(){
+    if(this.dm.isSelected('marquee', "design_modes")){
+      this.dm.selectDesignMode('move','design_modes');
+
+    }else{
+      this.dm.selectDesignMode('marquee','design_modes');
+
+    }
+
+    this.palette.designModeChanged();
+  }
+
+  
+
 
     operationAdded(name:string){
       this.palette.addOperation(name);
     }
 
-/**
-   * Call zoom out on Shift+o.
-   * @extends WeaveComponent
-   * @param {Event} shift+o
-   * @returns {void}
-   */
-  // @HostListener('window:keydown.Shift.o', ['$event'])
-  // private keyEventZoomOut(e) {
-  //   console.log("zoom out");
-  //   this.render.zoomOut();
-  //   this.palette.rescale();
-  // }
-
 
   /**
-   * Sets selected area to clear
-   * @extends WeaveComponent
-   * @param {Event} delete key pressed
-   * @returns {void}
-   */
-
-  // @HostListener('window:keydown.e', ['$event'])
-  // private keyEventErase(e) {
-  //   this.design_mode = {
-  //     name: 'down',
-  //     id: -1
-  //   };
-  //   this.palette.unsetSelection();
-
-  // }
-
-  /**
-   * Sets brush to point on key control + d.
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + d
-   * @returns {void}
-   */
-  // @HostListener('window:keydown.d', ['$event'])
-  // private keyEventPoint(e) {
-  //   this.design_mode = {
-  //     name: 'up',
-  //     id: -1};
-  //   this.palette.unsetSelection();
-
-  // }
-
-  /**
-   * Sets brush to select on key control + s
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + s
-   * @returns {void}
-   */
-  // @HostListener('window:keydown.s', ['$event'])
-  // private keyEventSelect(e) {
-  //   this.design_mode = {
-  //     name: 'select',
-  //     id: -1};
-  //   this.palette.unsetSelection();
-
-  // }
-
-  /**
-   * Sets key control to invert on control + x
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + x
-   * @returns {void}
-   */
-  // @HostListener('window:keydown.x', ['$event'])
-  // private keyEventInvert(e) {
-  //   this.design_mode = {
-  //     name: 'toggle',
-  //     id: -1
-  //   };
-  //   this.palette.unsetSelection();
-
-  // }
-
-  /**
-   * Sets key to copy 
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + x
-   * @returns {void}
-   */
-  // @HostListener('window:keydown.c', ['$event'])
-  // private keyEventCopy(e) {
-  //   this.onCopy();  
-  // }
-
-    /**
-   * Sets key to copy 
-   * @extends WeaveComponent
-   * @param {Event} e - Press Control + x
-   * @returns {void}
-   */
-
-
-  /**
-   * this is called when a user pushes bring from the topbar
+   * this is called when a user pushes save from the topbar
    * @param event 
    */
   public async onSave(e: any) : Promise<any>{
@@ -945,7 +1048,7 @@ export class MixerComponent implements OnInit {
       return this.fs.saver.jpg(this.palette.getPrintableCanvas(e))
       .then(href => {
         link.href= href;
-        link.download = e.name + ".jpg";
+        link.download = this.files.current_file_name + ".jpg";
         this.palette.clearCanvas();
         link.click();
       });
@@ -961,9 +1064,9 @@ export class MixerComponent implements OnInit {
       this.fs.saver.ada(
         'mixer', 
         false,
-        this.scale).then(out => {
+        this.zs.zoom).then(out => {
           link.href = "data:application/json;charset=UTF-8," + encodeURIComponent(out.json);
-          link.download = e.name + ".ada";
+          link.download =  this.files.current_file_name + ".ada";
           link.click();
         })
       break;
@@ -977,35 +1080,19 @@ export class MixerComponent implements OnInit {
 
   /**
    * Updates the canvas based on the weave view.
-   * @extends WeaveComponent
-   * @param {Event} e - view change event from design component.
-   * @returns {void}
    */
-  public renderChange(event: any) {
-
-    this.scale = event.value;
-     this.palette.rescale(this.scale);
-
-
+  public renderChange(old_zoom: number) {
+    this.palette.rescale(old_zoom);
   }
 
 
-
- 
   /**
-   * global loom ahs just changed to be deafults, so we don't need to update specific looms based on the outcomes
-   * @param e 
+   * Updates the canvas based on the weave view.
    */
-  public globalLoomChange(e: any){
-    
-    const dn = this.tree.getDraftNodes();
-    dn.forEach(node => {
-      const draft = this.tree.getDraft(node.id)
-      const loom = this.tree.getLoom(node.id)
-      const loom_settings = this.tree.getLoomSettings(node.id);
-      (<SubdraftComponent> node.component).drawDraft(draft)});
-    
+   public zoomChangeExternal(event: any) {
+    this.palette.rescale(event.old_zoom);
   }
+
 
 
 
@@ -1014,13 +1101,25 @@ export class MixerComponent implements OnInit {
     //this.draft.notes = e;
   }
 
+ 
+
 
   public toggleCollapsed(){
     this.collapsed = !this.collapsed;
   }
 
   public createNote(){
-    this.palette.createNote();
+    this.palette.createNote(null);
+  }
+  /**
+   * called when the user adds a new draft from the sidebar
+   * @param obj 
+   */
+  public newDraftCreated(obj: any){
+    const id = this.tree.createNode("draft", null, null);
+    this.tree.loadDraftData({prev_id: null, cur_id: id,}, obj.draft, obj.loom, obj.loom_settings, true);
+    this.palette.loadSubDraft(id, obj.draft, null, null, this.zs.zoom);
+    //id: number, d: Draft, nodep: NodeComponentProxy, draftp: DraftNodeProxy,  saved_scale: number
   }
 
 
@@ -1029,7 +1128,142 @@ export class MixerComponent implements OnInit {
    * there is a modal showing materials open and update it if there is
    */
    public materialChange() {
-    this.palette.redrawOpenModals();
+    
     this.palette.redrawAllSubdrafts();
+
+    if(this.show_details){
+      this.details.redrawSimulation();
+    }
+
+    this.saveFile();
  }
+
+
+ /**
+  * the origin must be updated after the file has been loaded. 
+  * @param selection 
+  */
+ updateOrigin(selection: number){
+  this.selected_origin = selection
+  
+ }
+
+
+
+/**
+ * when the origin changes, all drafts on the canavs should be modified to the new position
+ * origin changes can ONLY happen on globals
+ * flips must be calculated from the prior state
+ * @param e 
+ */
+originChange(e:any){
+
+
+  const flips = utilInstance.getFlips(this.selected_origin, e.value);
+  this.selected_origin = e.value;
+  this.ws.selected_origin_option = this.selected_origin;
+  
+  const dn: Array<DraftNode> = this.tree.getDraftNodes();
+  const data = dn.map(node => {
+    return {
+    draft: node.draft, 
+    loom: node.loom, 
+    horiz: flips.horiz,
+    vert: flips.vert}
+  });
+
+  // dn.forEach(node => {
+  //  if(node.loom !== null) console.log(node.loom.treadling)
+  // })
+
+  const draft_fns = data.map(el => flipDraft(el.draft, el.horiz, el.vert));
+
+  return Promise.all(draft_fns)
+  .then(res => {
+    for(let i = 0; i < dn.length; i++){
+      dn[i].draft = <Draft>{
+        id: res[i].id,
+        gen_name: res[i].gen_name,
+        ud_name: res[i].ud_name,
+        drawdown: res[i].drawdown,
+        rowShuttleMapping: res[i].rowShuttleMapping,
+        rowSystemMapping: res[i].rowSystemMapping,
+        colShuttleMapping: res[i].colShuttleMapping,
+        colSystemMapping: res[i].colSystemMapping
+      };
+    }
+    const loom_fns = data.map(el => flipLoom(el.loom, el.horiz, el.vert))
+    return Promise.all(loom_fns)
+  .then(res => {
+    for(let i = 0; i < dn.length; i++){
+      if(res[i] !== null){
+        dn[i].loom = {
+          threading: res[i].threading.slice(),
+          tieup: res[i].tieup.slice(),
+          treadling: res[i].treadling.slice()
+        }
+      }
+    }
+  }).then(out => {
+    this.saveFile();
+  })
+
+
+
+})
+
+  
+
+
+}
+
+epiChange(f: NgForm) {
+
+
+  if(!f.value.epi){
+    f.value.epi = 1;
+    this.epi = f.value.epi;
+  } 
+  
+  //this.loom.overloadEpi(f.value.epi);
+  this.ws.epi = f.value.epi;
+
+
+
+}
+
+
+/**
+ * when a user selects a new loom type, the software will pull all subdrafts and update their loom information 
+ * @param e 
+ * @returns 
+ */
+loomChange(e:any){
+
+  console.log("e.value.loomtype", e.value.loomtype)
+   this.ws.type = e.value.loomtype;
+  if(this.ws.type === 'jacquard') this.dm.selectDesignMode('drawdown', 'drawdown_editing_style')
+  else this.dm.selectDesignMode('loom', 'drawdown_editing_style') 
+  
+  const dn: Array<DraftNode> = this.tree.getDraftNodes();
+  dn.forEach(node => {
+    node.loom_settings.type = e.value.loomtype; 
+  })
+
+
+}
+
+  unitChange(e:any){
+    
+      this.ws.units = e.value.units;
+
+
+  }
+
+  showDraftDetails(id: number){
+    console.log("mixer draft details", id)
+    this.show_details = true;
+    this.details.loadDraft(id);
+    this.dm.selectDesignMode('toggle','draw_modes')
+  }
 }

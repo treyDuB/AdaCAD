@@ -1,29 +1,102 @@
 
 .input-color{
     width: 30px;
-    height: 30px;
+    height: 80%;
     border: thin solid white;
+}
+
+.inlet_connector{
+    display: block;
+}
+
+button{
+    display: block;
+    position: relative;
+
 }
 
 button.input{
     position: relative;
-	background-color: #00d1b2;
+	background-color: #333333;
 	color: white;
-	border: none;
-    width:30px;
+	border: 1px solid white;
+    display: flex;
+    flex-direction: row;
+    border-bottom: none;
+
+    .inlet_arrow{
+       margin-right: 4px;
+    }
 }
 
-
-
-button.cxn{
-    background-color: lightgrey;
-    border: thin solid black;
+.show_connection{
+    /* display: flex; */
+    flex-direction: column;
+    background: white;
     color: black;
+    z-index: 100;
+    padding: 4px;
+    position: absolute;
+    top: 23px;
+    text-align: center;
+    border: thin solid black;
+    font-size: 1.5em;
 }
+
+button.open_inlet,
+button.toggle_visibility{
+    background-color: transparent;
+    border: none;
+     
+    i{
+        position: relative;
+        top: -9px;
+        font-size: 24px;
+    }
+}
+
+button.open_inlet i{
+    color: white;
+}
+button.toggle_visibility i{
+    color: #ff3860;
+}
+
+
+
+
+
+button.open_inlet:active,
+button.open_inlet:hover,
+button.toggle_visibility:active,
+button.toggle_visibility:hover{
+    i{
+        color:#ff3860;
+    }
+}
+
+.inlet_block{
+    display: flex;
+    flex-direction: row;
+    padding-right: 12px;
+    font-size: 1.2em;
+}
+
+
+button.input:active,
+button.input:hover{
+	background-color: #ff3860;
+}
+
+
 
 .input-name{
     margin-left: 8px;
     line-height: 30px;
+}
+
+.colorgroup{
+    display: inline-flex;
 }
 
 
@@ -54,6 +127,21 @@ input{
 .inlet-label,
 .inlet-name{
     color: #fff;
-    line-height: 30px;
-    padding-right: 6px;
+    font-size: 1.2em;
 }
+
+.draft-inlet-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url(../../../../../assets/svg/draft_inlet.svg);
+    background-size: 24px 24px;
+  }
+
+  .material-inlet-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url(../../../../../assets/svg/material_inlet.svg);
+    background-size: 24px 24px;
+  }

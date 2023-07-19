@@ -1,0 +1,62 @@
+{
+    "examples": [
+
+        {
+            "id": "material-calculus",
+            "ext": "gif",
+            "title":"Intro to Drafting as Material Calculus",
+            "desc":"Not sure what a weave draft is or how you might think about weave drafting as a series of algorithmic operations, start here."
+        },
+        {
+            "id": "operation_playground",
+            "ext": "gif",
+            "title":"Operations Playground",
+            "desc":"Play with every possible operation that AdaCAD offers"
+        },
+        {
+            "id": "drawdownexperiments",
+            "ext": "gif",
+            "title":"Drawdown Experiments",
+            "desc":"Playing with generating drawdowns by manipulating threading and threadlines with sine waves and zig zags"
+        },
+        {
+            "id":"sample7b",
+            "ext": "png",
+            "title": "Lattice Structures",
+            "desc":"We recreate one of Elizabeth Meiklejohn's Samples from the 2023 Experimental Weaving Residency in AdaCAD for those who are interesting in making stretchy, multi-layer, lattice structures"
+        },
+        {
+            "id": "shading",
+            "ext": "png",
+            "title":"Shaded Structures",
+            "desc":"A few different examples of how AdaCAD structures can be leveraged to make shaded structures"
+        },
+        {
+            "id": "etextile",
+            "ext": "png",
+            "title":"E-Textiles Sampler",
+            "desc":"Shows partiuclar techniques that can be particularly useful for creating e-textile LED circuits, force sensors, or electrodes"
+        },
+        {
+            "id": "electrode",
+            "ext": "png",
+            "title":"Woven Electrode Sample",
+            "desc":"Presents strategies and patterns for drafting woven electrodes."
+        },        
+        {
+            "id": "twopic",
+            "ext": "png",
+            "title":"Color Effects with Two Pick Structures",
+            "desc":"Two pick structures can create really interesting graphic patterns in the cloth and you can a apply a set of operations to make any weft-facing structure a 2 pic structure "
+        },
+        {
+            "id": "threelayer",
+            "ext": "png",
+            "title":"Designing Multi-Layer Weaves",
+            "desc":" We create three variations of a three layer weave structure, each which has a different layer on top. We then map each of those to an image."
+        }
+
+
+
+    ]
+}

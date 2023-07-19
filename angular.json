@@ -23,7 +23,8 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -96,8 +97,8 @@
             "prerender": false,
             "ssr": false,
             "browserTarget": "adacad-weaver:build:production",
-            "firebaseProject": "adacad-weaver",
-            "firebaseHostingSite": "adacad-weaver"
+            "firebaseProject": "adacad-beta-fa4dc",
+            "firebaseHostingSite": "adacad-beta-fa4dc"
           }
         }
       }
@@ -117,7 +118,6 @@
       }
     }
   },
-  "defaultProject": "adacad-weaver",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
@@ -126,5 +126,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

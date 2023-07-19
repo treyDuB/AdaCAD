@@ -1,8 +1,9 @@
 import { Injectable, Optional } from '@angular/core';
 import { getDatabase, ref as fbref, set as fbset, query, ref, get as fbget, remove } from '@angular/fire/database';
 import utilInstance from '../model/util';
-import { DataSnapshot, onChildAdded, onChildChanged, onChildRemoved, update } from 'firebase/database';
+import { DataSnapshot, onChildAdded, onChildChanged, onChildRemoved, onDisconnect, onValue, update } from 'firebase/database';
 import { FileService } from './file.service';
+import { ZoomService } from '../../mixer/provider/zoom.service';
 import { Auth, authState, getAuth } from '@angular/fire/auth';
 import { Observable, Observer, Subject } from 'rxjs';
 import { FilebrowserComponent } from '../filebrowser/filebrowser.component';
@@ -39,19 +40,40 @@ import { FilebrowserComponent } from '../filebrowser/filebrowser.component';
 export class FilesystemService {
 
   file_tree_change$ = new Subject<any>();
+  file_saved_change$ = new Subject<any>();
+
   file_tree: Array<any> = [];
+
   current_file_id: number = -1;
   current_file_name: string = "draft"
   current_file_desc: string = "";
+
+  connected: boolean = false;
+
+  last_saved_time: number = 0;
+
   updateUItree: Observable<Array<any>>;
 
 
  constructor(@Optional() private auth: Auth,
-    private fs: FileService) {
+    private fs: FileService, private zs: ZoomService) {
 
+      const db = getDatabase();
 
-      
+    const presenceRef = ref(db, "disconnectmessage");
+    // Write a string when this client loses connection
+    onDisconnect(presenceRef).set("I disconnected!");
 
+    const connectedRef = ref(db, ".info/connected");
+    onValue(connectedRef, (snap) => {
+      if (snap.val() === true) {
+        console.log("connected");
+        this.connected = true;
+      } else {
+        console.log("not connected");
+        this.connected = false;
+      }
+    });
 
       this.file_tree = [];
 
@@ -66,7 +88,6 @@ export class FilesystemService {
     
     
     
-        const db = getDatabase();
         const userFiles = query(ref(db, 'users/'+user.uid+'/files'));
         
 
@@ -100,6 +121,10 @@ export class FilesystemService {
     
       });
 
+
+     
+   
+
   }
 
   
@@ -115,7 +140,7 @@ export class FilesystemService {
   public clearTree(){
     this.file_tree = [];
   }
-
+  
 
   /**
    * adds to the local tree for the UI
@@ -176,11 +201,27 @@ export class FilesystemService {
     const user = auth.currentUser;
     if(user){
       const db = getDatabase();
-      console.log("renaming to "+newname);
       update(fbref(db, 'users/'+user.uid+'/files/'+fileid),{
         name: newname});
     }
   }
+
+  updateDescription(fileid: number, desc: string){
+  
+    if(fileid === null || fileid == undefined) return; 
+    if(desc === null || desc === undefined) desc = ''; 
+    
+    this.current_file_desc = desc;
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if(user){
+      const db = getDatabase();
+      update(fbref(db, 'users/'+user.uid+'/files/'+fileid),{
+        desc: desc});
+    }
+  }
+
 
   generateFileId() : number{
     return utilInstance.generateId(8);
@@ -208,7 +249,12 @@ export class FilesystemService {
    */
   getFile(fileid: number) : Promise<any> {
     const db = getDatabase();
-    return fbget(fbref(db, `filedata/${fileid}`)).then((filedata) => {
+
+    
+
+
+    return fbget(fbref(db, `filedata/${fileid}`))
+    .then((filedata) => {
 
 
         if(filedata.exists()){
@@ -218,7 +264,7 @@ export class FilesystemService {
          return Promise.reject("User found but file id not found")
         }
 
-      });
+      }).catch(e => {console.error(e)});
 
   }
 
@@ -261,8 +307,9 @@ export class FilesystemService {
         }
 
       });
+    }
 
-  }
+
 
   /**
    * writes the data for the currently open file to the database
@@ -271,8 +318,19 @@ export class FilesystemService {
    */
   writeFileData(uid: string, fileid: number, cur_state: any) {
     const db = getDatabase();
-    update(fbref(db, 'filedata/'+fileid),{ada: cur_state});
+    const ref = fbref(db, 'filedata/'+fileid);
+    update(ref,{ada: cur_state})
+    .then(success => {
+      this.last_saved_time = Date.now();
+      this.file_saved_change$.next(this.last_saved_time);
+
+    })
+    .catch(err => {
+      console.error(err);
+    })
   }
+
+
 
 
 

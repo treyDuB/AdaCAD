@@ -1,7 +1,7 @@
-# AdaCAD
+# AdaCAD - 3.0-Stable
 AdaCAD is a parametric design tools for making woven drafts. It supports a designer in creating drafts by connecting different operations into a model or pipeline that results in drafts. It currently supports outputs and representations for Jacuqard, Floor, and Direct-Tieup Loom. 
 
-You can use the last release of the tool at [https://adacad.org/](https://adacad.org/).
+You can use the most recent stable release of the tool at [https://adacad.org/](https://adacad.org/).
 For more information about the project and user guides, visit [https://adacad.unstable.design/](https://adacad.unstable.design/)
 
 AdaCAD does not require any installing or downloading anything on your device, just [open the app in your browser](https://adacad.org/) (same link as above). 

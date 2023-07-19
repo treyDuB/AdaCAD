@@ -5,11 +5,10 @@
 
 import { SubdraftComponent } from "../../mixer/palette/subdraft/subdraft.component";
 import { MaterialMap } from "../provider/materials.service";
-import { Cell } from "./cell";
-import { Point, Interlacement, Bounds, Draft, Loom } from "./datatypes";
-import { flipDraft, hasCell, initDraftWithParams, warps, wefts } from "./drafts";
-import { flipPattern } from "./looms";
-import { Shuttle } from "./shuttle";
+import { getCellValue, setCellValue } from "./cell";
+import { Point, Interlacement, Bounds, Draft, Loom, LoomSettings, Material, Cell } from "./datatypes";
+import { hasCell, initDraftWithParams, warps, wefts } from "./drafts";
+import { createMaterial, setMaterialID } from "./material";
 
 
 class Util {
@@ -44,7 +43,7 @@ class Util {
         unmatch = false;
         if(j_comp != j){
           for(let i = 0; i < drawdown.length && !unmatch; i++){
-            if(drawdown[i][j].getHeddle() !== drawdown[i][j_comp].getHeddle()){
+            if(getCellValue(drawdown[i][j]) !== getCellValue(drawdown[i][j_comp])){
               unmatch = true;
             }
           }
@@ -70,7 +69,7 @@ class Util {
        
         let blank = true;
         drawdown.forEach((row, i) => {
-          if(row[j].isUp()) blank = false;
+          if(getCellValue(row[j]) == true) blank = false;
         });
   
         return blank;
@@ -91,7 +90,7 @@ class Util {
       unmatch = false;
       if(i_comp != i){
         for(let j = 0; j < drawdown[i_comp].length && !unmatch; j++){
-          if(drawdown[i][j].getHeddle() !== drawdown[i_comp][j].getHeddle()){
+          if(getCellValue(drawdown[i][j]) !== getCellValue(drawdown[i_comp][j])){
             unmatch = true;
           }
         }
@@ -227,15 +226,15 @@ class Util {
    * @param isects all intersecting components
    * @returns the rightmost component
    */
-  getRightMost(main:SubdraftComponent,  isects:Array<SubdraftComponent>):SubdraftComponent{
+  // getRightMost(main:SubdraftComponent,  isects:Array<SubdraftComponent>):SubdraftComponent{
 
-    return isects.reduce((acc, isect) => {
-      if((isect.getTopleft().x + isect.bounds.width) > (acc.getTopleft().x + acc.bounds.width)) {
-        acc = isect;
-      }
-      return acc;
-    }, main);    
-  }
+  //   return isects.reduce((acc, isect) => {
+  //     if((isect.getTopleft().x + isect.bounds.width) > (acc.getTopleft().x + acc.bounds.width)) {
+  //       acc = isect;
+  //     }
+  //     return acc;
+  //   }, main);    
+  // }
 
   /**
    * finds the bottom-most component, used to create bounding box 
@@ -243,15 +242,15 @@ class Util {
    * @param isects all intersecting components
    * @returns the bottom-most component
    */
-  getBottomMost(main:SubdraftComponent,  isects:Array<SubdraftComponent>):SubdraftComponent{
+  // getBottomMost(main:SubdraftComponent,  isects:Array<SubdraftComponent>):SubdraftComponent{
 
-    return isects.reduce((acc, isect) => {
-      if((isect.getTopleft().y + isect.bounds.height)> (acc.getTopleft().y + acc.bounds.height)) {
-        acc = isect;
-      }
-      return acc;
-    }, main);    
-  }
+  //   return isects.reduce((acc, isect) => {
+  //     if((isect.getTopleft().y + isect.bounds.height)> (acc.getTopleft().y + acc.bounds.height)) {
+  //       acc = isect;
+  //     }
+  //     return acc;
+  //   }, main);    
+  // }
 
   /**
    * takes absolute screen coordinates and returns the i, j position if a cell were to exist at that point
@@ -261,7 +260,7 @@ class Util {
    * @returns an Interlacement
    */
   resolveCoordsToNdx(p: Point, scale:number) : Interlacement {  
-    const i = Math.floor((p.y - 62) / scale);
+    const i = Math.floor((p.y) / scale);
     const j = Math.floor((p.x) / scale);
     return {i: i, j: j, si: i};
   }
@@ -287,8 +286,6 @@ class Util {
   computeFilter(ink: string, a: boolean, b: boolean):boolean{
       switch(ink){
         case 'neq':
-          if(a === null) return b;
-          if(b === null) return a;
           return (a !== b);
         break;
   
@@ -316,6 +313,13 @@ class Util {
         if(a === null || b === null) return null;
         return (a && b)
         break;
+
+        case 'cut':
+          if(a == null) return a;
+          if(b === null) return a;
+          if(a == true && b == true) return false;
+          return a;
+          break;
   
         case 'or':
           if(a === null) return b;
@@ -360,47 +364,47 @@ class Util {
    * @param isect an array of all the components that intersect
    * @returns the array of bounds of all intersections
    */
-    getIntersectionBounds(primary: SubdraftComponent, isect: SubdraftComponent):Bounds{
+    // getIntersectionBounds(primary: SubdraftComponent, isect: SubdraftComponent):Bounds{
 
-      const left: number = Math.max(primary.bounds.topleft.x, isect.bounds.topleft.x);
-      const top: number = Math.max(primary.bounds.topleft.y, isect.bounds.topleft.y);
-      const right: number = Math.min((primary.bounds.topleft.x + primary.bounds.width), (isect.bounds.topleft.x + isect.bounds.width));
-      const bottom: number = Math.min((primary.bounds.topleft.y + primary.bounds.height), (isect.bounds.topleft.y + isect.bounds.height));
+    //   const left: number = Math.max(primary.bounds.topleft.x, isect.bounds.topleft.x);
+    //   const top: number = Math.max(primary.bounds.topleft.y, isect.bounds.topleft.y);
+    //   const right: number = Math.min((primary.bounds.topleft.x + primary.bounds.width), (isect.bounds.topleft.x + isect.bounds.width));
+    //   const bottom: number = Math.min((primary.bounds.topleft.y + primary.bounds.height), (isect.bounds.topleft.y + isect.bounds.height));
   
-      return {
-        topleft: {x: left, y: top},
-        width: right - left,
-        height: bottom - top
-      };
+    //   return {
+    //     topleft: {x: left, y: top},
+    //     width: right - left,
+    //     height: bottom - top
+    //   };
   
-    }
+    // }
   
     /**
      * gets the combined boundary of a Subdraft and any of its intersections
      * @param moving A SubdraftComponent that is our primary subdraft
      * @param isect  Any subdrafts that intersect with this component 
      * @returns the bounds of a rectangle that holds both components
-     */
-    getCombinedBounds(moving: SubdraftComponent, isect: Array<SubdraftComponent>):Bounds{
+    //  */
+    // getCombinedBounds(moving: SubdraftComponent, isect: Array<SubdraftComponent>):Bounds{
       
-      const bounds: Bounds = {
-        topleft: {x: 0, y:0},
-        width: 0,
-        height: 0
-      }
+    //   const bounds: Bounds = {
+    //     topleft: {x: 0, y:0},
+    //     width: 0,
+    //     height: 0
+    //   }
   
-      bounds.topleft.x = utilInstance.getLeftMost(moving, isect).getTopleft().x;
-      bounds.topleft.y = utilInstance.getTopMost(moving, isect).getTopleft().y;
+    //   bounds.topleft.x = utilInstance.getLeftMost(moving, isect).getTopleft().x;
+    //   bounds.topleft.y = utilInstance.getTopMost(moving, isect).getTopleft().y;
   
-      const rm =  utilInstance.getRightMost(moving, isect);
-      const bm =  utilInstance.getBottomMost(moving, isect);
+    //   const rm =  utilInstance.getRightMost(moving, isect);
+    //   const bm =  utilInstance.getBottomMost(moving, isect);
   
-      bounds.width = (rm.getTopleft().x + rm.bounds.width) - bounds.topleft.x;
-      bounds.height =(bm.getTopleft().y + bm.bounds.height) - bounds.topleft.y;
+    //   bounds.width = (rm.getTopleft().x + rm.bounds.width) - bounds.topleft.x;
+    //   bounds.height =(bm.getTopleft().y + bm.bounds.height) - bounds.topleft.y;
   
-      return bounds;
+    //   return bounds;
   
-    }
+    // }
 
     /**
      * computes the value of a heddle given overlapping drafts
@@ -426,7 +430,7 @@ class Util {
     getAdjustedPointerPosition(p: Point, viewport:Bounds) : any {   
       return {
         x: p.x + viewport.topleft.x,
-        y: p.y + viewport.topleft.y -62
+        y: p.y + viewport.topleft.y
       } 
     }
 
@@ -660,11 +664,11 @@ class Util {
   }
 
   //can likely simplify this as it is mostlyy like the function above but with different variable names for the respective applications
-  getColorTable(e) :Array<Shuttle>  {
+  getColorTable(e) :Array<Material>  {
     var color_table = [];
-    var originalShuttle = new Shuttle();
-    originalShuttle.setColor("#3d3d3d");
-    originalShuttle.setID(0);
+    var originalShuttle = createMaterial();
+    originalShuttle.color = "#3d3d3d";
+    setMaterialID(originalShuttle, 0);
     color_table.push(originalShuttle);
 
     var indexOfLabel = e.search("COLOR TABLE]");
@@ -701,9 +705,9 @@ class Util {
         hex += hexb;
       }
 
-      var shuttle = new Shuttle();
-      shuttle.setColor(hex);
-      shuttle.setID(id);
+      var shuttle = createMaterial();
+      shuttle.color = hex;
+      setMaterialID(shuttle, id);
       id++;
 
       color_table.push(shuttle);
@@ -810,7 +814,7 @@ class Util {
   }
 
   hasOnlyUnset(cells: Array<Cell>) : boolean{
-    const hasValue = cells.find(el => el.getHeddle() !== null);
+    const hasValue = cells.find(el => getCellValue(el) !== null);
     if(hasValue === undefined) return true;
     else return false;
   }
@@ -853,7 +857,89 @@ class Util {
 }
 
 /**
- * take an array of drafts and interlace them, in the order in which they appear in the array
+ * checks two looms settings objects 
+ * @param ls1 
+ * @param ls2 
+ * @returns  true if they have the same value
+ */
+areLoomSettingsTheSame(ls1: LoomSettings, ls2: LoomSettings) : boolean {
+  if(ls1.epi !== ls2.epi) return false;
+  if(ls1.frames !== ls2.frames) return false;
+  if(ls1.treadles !== ls2.treadles) return false;
+  if(ls1.type !== ls2.type) return false;
+  if(ls1.units !== ls2.units) return false;
+  return true;
+}
+
+/**
+ * checks two loom objects 
+ * @param loom1 
+ * @param loom2 
+ * @returns  true if they have the same value
+ */
+areLoomsTheSame(loom1: Loom, loom2: Loom) : boolean {
+  if(loom1 === null && loom2 === null) return true;
+
+  for(let ndx = 0; ndx < loom1.threading.length; ndx++){
+    if(loom1.threading[ndx] !== loom2.threading[ndx]) return false;
+  }
+
+
+  for(let p = 0; p < loom1.treadling.length; p++){
+    for(let q = 0; q < loom1.treadling[p].length; q++){
+      if(loom1.treadling[p][q] !== loom2.treadling[p][q]) return false;
+    }
+  }
+
+  for(let p = 0; p < loom1.tieup.length; p++){
+    for(let q = 0; q < loom1.tieup[p].length; q++){
+      if(loom1.tieup[p][q] !== loom2.tieup[p][q]) return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * compares the states of two drafts
+ * @param d1 
+ * @param d2 
+ * @returns true if they are the exact same in terms of the draft data (ignores names and ids)
+ */
+areDraftsTheSame(d1: Draft, d2: Draft) : boolean {
+
+  if(d1 === null && d2 === null) return true;
+
+  for(let ndx = 0; ndx <  d1.colShuttleMapping.length; ndx++){
+    if( d1.colShuttleMapping[ndx] !==  d2.colShuttleMapping[ndx]) return false;
+  }
+
+  for(let ndx = 0; ndx <  d1.colSystemMapping.length; ndx++){
+    if( d1.colSystemMapping[ndx] !==  d2.colSystemMapping[ndx]) return false;
+  }
+
+  for(let ndx = 0; ndx <  d1.rowShuttleMapping.length; ndx++){
+    if( d1.rowShuttleMapping[ndx] !==  d2.rowShuttleMapping[ndx]) return false;
+  }
+
+  for(let ndx = 0; ndx <  d1.rowSystemMapping.length; ndx++){
+    if( d1.rowSystemMapping[ndx] !==  d2.rowSystemMapping[ndx]) return false;
+  }
+
+  for(let p = 0; p < d1.drawdown.length; p++){
+    for(let q = 0; q < d1.drawdown[p].length; q++){
+      if(getCellValue(d1.drawdown[p][q]) !== getCellValue(d2.drawdown[p][q])) return false;
+    }
+  }
+
+  return true;
+
+
+
+}
+
+/**
+ * take an array of drafts and interlace them weft wise, in the order in which they appear in the array
  * this will also interlace weft systems and materials, but will use the first draft as the indication for the warp materials
  * @param drafts the drafts whose wefts we will be interlacing
  * @param factor_in_repeats should we calculate the size such that the pattern repeats in even intervals? 
@@ -890,10 +976,61 @@ interlace(drafts: Array<Draft>, factor_in_repeats: number, warp_patterns: Draft)
           const select_col = (factor_in_repeats === 1) ? j % warps(drafts[select_array].drawdown) : j;
           if(hasCell(drafts[select_array].drawdown, select_row, select_col)){
               const pattern = drafts[select_array].drawdown;
-              cell.setHeddle(pattern[select_row][select_col].getHeddle());
+              cell = setCellValue(cell, getCellValue(pattern[select_row][select_col]));
 
           }else{
-              cell.setHeddle(null);
+              cell = setCellValue(cell, null);
+          }
+      });
+
+  });
+  
+
+  return d;
+
+}
+
+/**
+ * take an array of drafts and interlace them warp-wise, in the order in which they appear in the array
+ * @param drafts the drafts whose wefts we will be interlacing
+ * @param factor_in_repeats should we calculate the size such that the pattern repeats in even intervals? 
+ * @param weft_patterns a draft to use to represent the warp systems. 
+ */
+interlace_warps(drafts: Array<Draft>, factor_in_repeats: number, weft_patterns: Draft): Draft {
+
+
+  let total_warps: number = 0;
+  const all_warps = drafts.map(el => warps(el.drawdown)).filter(el => el > 0);
+  if(factor_in_repeats === 1)  total_warps = utilInstance.lcm(all_warps);
+  else  total_warps = utilInstance.getMaxWefts(drafts);
+
+  let total_wefts: number = 0;
+  const all_wefts = drafts.map(el => wefts(el.drawdown)).filter(el => el > 0);
+
+  if(factor_in_repeats === 1)  total_wefts = utilInstance.lcm(all_wefts);
+  else  total_wefts = utilInstance.getMaxWarps(drafts);
+
+
+
+  //create a draft to hold the merged values
+  const d:Draft = initDraftWithParams(
+    {warps: total_warps*drafts.length, 
+      wefts:(total_wefts),
+      rowShuttleMapping: weft_patterns.rowShuttleMapping,
+      rowSystemMapping: weft_patterns.rowSystemMapping});
+
+    d.drawdown.forEach((col, ndx) => {
+
+      const select_array: number = ndx %drafts.length; 
+      const select_col: number = (factor_in_repeats === 1) ? Math.floor(ndx /drafts.length) % warps(drafts[select_array].drawdown) : Math.floor(ndx /drafts.length);
+      col.forEach((cell, i) =>{
+          const select_row = (factor_in_repeats === 1) ? i % wefts(drafts[select_array].drawdown) : i;
+          if(hasCell(drafts[select_array].drawdown, select_row, select_col)){
+              const pattern = drafts[select_array].drawdown;
+              cell = setCellValue(cell, getCellValue(pattern[select_row][select_col])); 
+
+          }else{
+              cell = setCellValue(cell, null);
           }
       });
 
@@ -974,6 +1111,8 @@ filterToUniqueValues(arr: Array<any>) : Array<any>{
  * @param input 
  */
 parseRegex(input:string, regex: RegExp) : Array<any> {
+  if(input == undefined || regex == undefined) return [];
+  input = input.toString();
   const global_regex = new RegExp(regex, 'g');
   const matches = input.match(global_regex);
   return matches;
@@ -1047,7 +1186,7 @@ printDraft(d: Draft){
   console.log('draft ', d.id);
   for(let i = 0; i < wefts(d.drawdown);i++){
     const row: string = d.drawdown[i].reduce((acc, el) => {
-      if(el.getHeddle() === true) acc = acc.concat('x')
+      if(getCellValue(el) === true) acc = acc.concat('x')
       else acc = acc.concat('o')
       return acc;
     }, '');

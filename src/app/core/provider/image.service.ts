@@ -1,41 +1,56 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AnalyzedImage } from '../model/datatypes';
 import utilInstance from '../model/util';
-import { UploadService } from '../uploads/upload.service';
-import { Observable, of } from 'rxjs';
+import { UploadService } from '../provider/upload.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
 
-  images: Array<{id: string, data: any}> = [];
+  images: Array<{id: string, data: AnalyzedImage}> = [];
 
 
   constructor(private upSvc: UploadService, private httpClient: HttpClient) { }
 
 
   loadFiles(ids: Array<string>) : Promise<any> {
-    const fns = ids.map(id => this.loadFile(id));
+    const fns = ids
+    .filter(id => id !== '')
+    .map(id => this.loadFile(id));
     return Promise.all(fns);
   }
 
 
-  loadFile(id: string) : Promise<any>{
+  loadFile(id: string) : Promise<AnalyzedImage>{
 
-    
     let url = "";
     this.images.push({id: id, data: null});
   
-    
-    //const data = ids.map(id => this.upSvc.getDownloadData(id));
     return this.upSvc.getDownloadData(id).then(obj =>{
-        if(obj === '') return Promise.resolve(null)
-        url = obj;
-        return  this.processImage(obj);
+      console.log("GOT DOWNLOAD DATA ", obj);
+      if(obj === undefined) return null;
+      url = obj;
+      return  this.processImage(obj);
       
     }).then(data => {
-      if(data == null) return Promise.reject('nulldata');
+      if(data == null){
+        var obj: AnalyzedImage = {
+          id: id,
+          name: 'placeholder',
+          data: null,
+          colors: [],
+          colors_to_bw: [],
+          image: null,
+          image_map: [],
+          width: 0,
+          height: 0,
+          type: 'image',
+          warning: 'image not found'
+        }
+        return obj;
+      } 
       var canvas = document.createElement('canvas');
       var ctx = canvas.getContext('2d');
       var image = new Image();
@@ -60,29 +75,61 @@ export class ImageService {
         for(let i = 0; i < pixels.length; i+= 4){
 
           let r: string= pixels[i].toString(16);
+          let r_val: number = pixels[i];
+      
           if(r.length == 1) r = '0'+r;
 
           let g:string = pixels[i+1].toString(16);
+          let g_val: number = pixels[i+1];
           if(g.length == 1) g = '0'+g;
 
           let b:string = pixels[i+2].toString(16);
+          let b_val: number = pixels[i+2];
+
           if(b.length == 1) b = '0'+b;
 
+          const is_black:boolean = ((r_val + g_val + b_val/3) < (255/2))
           const o = pixels[i+3].toString(16);
-          all_colors.push('#'+r+''+g+''+b);
+
+
+          all_colors.push({hex: '#'+r+''+g+''+b, black: is_black});
+
+        }
+
+        const just_hex = all_colors.map(el => el.hex);
+        let filewarning = "";
+
+        let seen_vals = [];
+        let unique_count = 0;
+        for(let i = 0; i < just_hex.length && unique_count < 100; i++){
+          if(seen_vals.find(el => el == just_hex[i]) == undefined){
+            unique_count++;
+            seen_vals.push(just_hex[i]);
+          } 
         }
 
 
-        const unique = utilInstance.filterToUniqueValues(all_colors);
-        
-        let filewarning = "";
+        if(unique_count >= 100){
+          filewarning = "this image contains more than 100 colors and will take too much time to process, consider indexing to a smaller color space"
+          return Promise.reject(filewarning);
+        } 
+
+        /**this is expensive, so just do a fast run to make sure the size is okay before we go into this */
+        const unique = utilInstance.filterToUniqueValues(just_hex);
+
+        const color_to_bw = unique.map(el => {
+          const item = all_colors.find(ell => ell.hex == el);
+          if(item !== undefined) return item
+        })
+
+ 
         let image_map: Array<Array<number>> = [];
         if(unique.length > 100){
           filewarning = "this image contains "+unique.length+" color and will take too much time to process, consider indexing to a smaller color space"
-          Promise.reject('color');
+          return Promise.reject(filewarning);
         } 
         else{
-          const image_map_flat: Array<number> = all_colors.map(color => unique.findIndex(el => el === color));
+          const image_map_flat: Array<number> = all_colors.map(item => unique.findIndex(el => el === item.hex));
 
           let cur_i = 0;
           let cur_j = 0;
@@ -95,11 +142,12 @@ export class ImageService {
           });
         }
       
-        var obj = {
+        var obj: AnalyzedImage = {
           id: id,
-          name: id,
+          name: 'placeholder',
           data: imgdata,
           colors: unique,
+          colors_to_bw: color_to_bw,
           image: image,
           image_map: image_map,
           width: imgdata.width,
@@ -108,16 +156,29 @@ export class ImageService {
           warning: filewarning
         }
 
-        this.setImageData(id, obj);
-        return Promise.resolve(obj);
+        return obj;
       
-      });
+      }).then(imageobj => {
+
+        if(imageobj.data == null){
+          return Promise.resolve(imageobj);
+        }
+
+        return this.upSvc.getDownloadMetaData(id)
+        .then(metadata => {
+          if(metadata.customMetadata.filename !== undefined) imageobj.name = metadata.customMetadata.filename;
+          this.setImageData(id, imageobj);
+          return Promise.resolve(imageobj);
+
+        })
+
+      }) ;
   });
   }
 
   
 
-  getImageData(id: string){
+  getImageData(id: string) : {id: string, data: AnalyzedImage}{
     return this.images.find(el => el.id === id);
   }
 

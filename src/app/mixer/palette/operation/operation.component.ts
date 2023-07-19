@@ -1,17 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Bounds, Interlacement, Point,Operation, DynamicOperation,IOTuple, OpNode } from '../../../core/model/datatypes';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Bounds, DynamicOperation, Interlacement, IOTuple, Operation, OpNode, Point } from '../../../core/model/datatypes';
 import utilInstance from '../../../core/model/util';
-import { OperationService } from '../../../core/provider/operation.service';
-import { OpHelpModal } from '../../modal/ophelp/ophelp.modal';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl} from '@angular/forms';
-import { ViewportService } from '../../provider/viewport.service';
-import { TreeService } from '../../../core/provider/tree.service';
 import { DesignmodesService } from '../../../core/provider/designmodes.service';
-import { SubdraftComponent } from '../subdraft/subdraft.component';
 import { ImageService } from '../../../core/provider/image.service';
+import { OperationDescriptionsService } from '../../../core/provider/operation-descriptions.service';
+import { OperationService } from '../../../core/provider/operation.service';
 import { SystemsService } from '../../../core/provider/systems.service';
-import { stat } from 'fs';
+import { TreeService } from '../../../core/provider/tree.service';
+import { OpHelpModal } from '../../modal/ophelp/ophelp.modal';
+import { MultiselectService } from '../../provider/multiselect.service';
+import { ViewportService } from '../../provider/viewport.service';
+import { SubdraftComponent } from '../subdraft/subdraft.component';
+import { InletComponent } from './inlet/inlet.component';
+import { ParameterComponent } from './parameter/parameter.component';
 
 
 
@@ -21,6 +23,10 @@ import { stat } from 'fs';
   styleUrls: ['./operation.component.scss']
 })
 export class OperationComponent implements OnInit {
+
+
+  @ViewChildren(ParameterComponent) paramsComps!: QueryList<ParameterComponent>;
+  @ViewChildren(InletComponent) inletComps!: QueryList<InletComponent>;
 
    @Input() id: number; //generated from the tree service
    @Input() name: string;
@@ -34,7 +40,10 @@ export class OperationComponent implements OnInit {
    }
    private _scale:number = 5;
  
-
+ /**
+  * handles actions to take when the mouse is down inside of the palette
+  * @param event the mousedown event
+  */
 
    @Input() default_cell: number;
    @Input() zndx: number;
@@ -46,6 +55,9 @@ export class OperationComponent implements OnInit {
    @Output() deleteOp = new EventEmitter <any>(); 
    @Output() duplicateOp = new EventEmitter <any>(); 
    @Output() onInputAdded = new EventEmitter <any> ();
+   @Output() onInputVisibilityChange = new EventEmitter <any> ();
+   @Output() onInletLoaded = new EventEmitter <any> ();
+   @Output() onOpLoaded = new EventEmitter <any> ();
 
 
    params_visible: boolean = true;
@@ -69,16 +81,22 @@ export class OperationComponent implements OnInit {
       */
     duplicated: boolean = false;
 
+    description: string; 
+    application: string; 
+    displayname: string; 
 
    tooltip: string = "select drafts to input to this operation"
 
    disable_drag: boolean = false;
  
-   bounds: Bounds = {
-     topleft: {x: 0, y:0},
-     width: 200,
-     height: 100
-   };
+   topleft: Point = {x: 0, y:0};
+
+
+  //  bounds: Bounds = {
+  //    topleft: {x: 0, y:0},
+  //    width: 200,
+  //    height: 100
+  //  };
    
    op:Operation | DynamicOperation;
 
@@ -88,10 +106,6 @@ export class OperationComponent implements OnInit {
    loaded_inputs: Array<number> = [];
 
    has_image_preview: boolean = false;
-
-   //these are the drafts with any input parameters
-  //  inlets: Array<FormControl> = [];
-
 
   // has_connections_in: boolean = false;
    subdraft_visible: boolean = true;
@@ -104,6 +118,11 @@ export class OperationComponent implements OnInit {
 
    all_system_codes: Array<string> = [];
 
+   viewInit: boolean = false;
+
+
+   hasInlets: boolean = false;
+
   constructor(
     private operations: OperationService, 
     private dialog: MatDialog,
@@ -111,9 +130,10 @@ export class OperationComponent implements OnInit {
     public tree: TreeService,
     public dm: DesignmodesService,
     private imageService: ImageService,
-    public systems: SystemsService) { 
+    public systems: SystemsService,
+    public multiselect: MultiselectService,
+    public opdescriptions: OperationDescriptionsService) { 
      
-
 
   }
 
@@ -121,77 +141,62 @@ export class OperationComponent implements OnInit {
 
     this.op = this.operations.getOp(this.name);
     this.is_dynamic_op = this.operations.isDynamic(this.name);
-    
+    this.description = this.opdescriptions.getOpDescription(this.name);
+    this.displayname = this.opdescriptions.getDisplayName(this.name);
+    this.application = this.opdescriptions.getOpApplication(this.name);
 
-    const tl: Point = this.viewport.getTopLeft();
-    const tl_offset = {x: tl.x + 60, y: tl.y};
 
-    if(this.bounds.topleft.x == 0 && this.bounds.topleft.y == 0) this.setPosition(tl_offset);
-    this.interlacement = utilInstance.resolvePointToAbsoluteNdx(this.bounds.topleft, this.scale);
+    // const tl: Point = this.viewport.getTopLeft();
+    // const tl_offset = {x: tl.x, y: tl.y};
+    // console.log("setting position to ", tl)
+
+    //  if(this.topleft.x == 0 && this.topleft.y == 0){
+    //   this.setPosition(tl_offset);
+    //  } 
+     this.interlacement = utilInstance.resolvePointToAbsoluteNdx(this.topleft, this.scale);
 
 
     this.opnode = <OpNode> this.tree.getNode(this.id);
     if(this.is_dynamic_op) this.dynamic_type = (<DynamicOperation>this.op).dynamic_param_type;
-    this.base_height =  60 + 40 * this.opnode.params.length
-    this.bounds.height = this.base_height;
 
   }
 
   ngAfterViewInit(){
     this.rescale();
    // this.onOperationParamChange.emit({id: this.id});
-    if(this.name == 'imagemap'){
+    if(this.name == 'imagemap' || this.name == 'bwimagemap'){
+      
       this.drawImagePreview();
     }
 
-    const container: HTMLElement = document.getElementById('scale-'+this.id);
-    this.bounds.height = container.offsetHeight;
+    // const children = this.tree.getDraftNodes().filter(node => this.tree.getSubdraftParent(node.id) === this.id);
+    // if(children.length > 0) this.updatePositionFromChild(<SubdraftComponent>this.tree.getComponent(children[0].id));
+   
+    this.viewInit = true;
+    this.hasInlets = this.op.inlets.length > 0 || this.opnode.inlets.length > 0;
 
-    const children = this.tree.getDraftNodes().filter(node => this.tree.getSubdraftParent(node.id) === this.id);
-    if(children.length > 0) this.updatePositionFromChild(<SubdraftComponent>this.tree.getComponent(children[0].id));
 
+    this.onOpLoaded.emit({id: this.id})
 
   }
 
-  
-
-  drawImagePreview(){
-
-      const opnode = this.tree.getOpNode(this.id);
-      const paramid = this.op.params.findIndex(el => el.type === 'file');
-      const obj = this.imageService.getImageData(opnode.params[paramid]);
-
-      if(obj === undefined) return;
-
-      this.has_image_preview = true;
-      const image_div =  document.getElementById('param-image-'+this.id);
-      image_div.style.display = 'flex';
-
-      const dims_div =  document.getElementById('param-image-dims-'+this.id);
-      dims_div.innerHTML=obj.data.width+"px x "+obj.data.height+"px";
-
-      const canvas: HTMLCanvasElement =  <HTMLCanvasElement> document.getElementById('preview_canvas-'+this.id);
-      const ctx = canvas.getContext('2d');
-
-      const max_dim = (obj.data.width > obj.data.height) ? obj.data.width : obj.data.height;
-      canvas.width = obj.data.width / max_dim * 100;
-      canvas.height = obj.data.height / max_dim * 100;
-      ctx.drawImage(obj.data.image, 0, 0, obj.data.width / max_dim * 100, obj.data.height / max_dim * 100);
-     
-    }
 
 
-  setBounds(bounds:Bounds){
-    this.bounds.topleft = {x: bounds.topleft.x, y: bounds.topleft.y},
-    this.bounds.width = bounds.width;
-    this.bounds.height = bounds.height;
-    this.interlacement = utilInstance.resolvePointToAbsoluteNdx(bounds.topleft, this.scale);
-  }
+  // setBounds(bounds:Bounds){
+  //   this.bounds.topleft = {x: bounds.topleft.x, y: bounds.topleft.y},
+  //   this.bounds.width = bounds.width;
+  //   this.bounds.height = bounds.height;
+  //   this.interlacement = utilInstance.resolvePointToAbsoluteNdx(bounds.topleft, this.scale);
+  // }
 
   setPosition(pos: Point){
-    this.bounds.topleft =  {x: pos.x, y:pos.y};
+    this.topleft =  {x: pos.x, y:pos.y};
     this.interlacement = utilInstance.resolvePointToAbsoluteNdx(pos, this.scale);
   }
+
+  // refreshInlets(){
+  //   this.opnode.inlets
+  // }
 
 
 
@@ -204,12 +209,12 @@ export class OperationComponent implements OnInit {
     container.style.transformOrigin = 'top left';
     container.style.transform = 'scale(' + zoom_factor + ')';
 
-    this.bounds.topleft = {
+    this.topleft = {
       x: this.interlacement.j * this.scale,
       y: this.interlacement.i * this.scale
     };
 
-    this.bounds.height = this.base_height * zoom_factor;
+    // this.bounds.height = this.base_height * zoom_factor;
 
  
   
@@ -219,9 +224,10 @@ export class OperationComponent implements OnInit {
 
   drawForPrint(canvas, cx, scale){
     if(canvas === undefined) return;
+    const bounds = document.getElementById('scale-'+this.id);
 
     cx.fillStyle = "#ffffff";
-    cx.fillRect(this.bounds.topleft.x, this.bounds.topleft.y, this.bounds.width, this.bounds.height); 
+    cx.fillRect(this.topleft.x, this.topleft.y, bounds.offsetWidth, bounds.offsetHeight); 
 
     cx.fillStyle = "#666666";
     cx.font = this.scale*2+"px Verdana";
@@ -233,7 +239,7 @@ export class OperationComponent implements OnInit {
       datastring = datastring + p.name +": "+ opnode.params[ndx] + ", ";
     });
 
-    cx.fillText(datastring,this.bounds.topleft.x + 5, this.bounds.topleft.y+25 );
+    cx.fillText(datastring,this.topleft.x + 5, this.topleft.y+25 );
 
 
   }
@@ -243,24 +249,25 @@ export class OperationComponent implements OnInit {
    * */
     updatePositionFromChild(child: SubdraftComponent){
 
-
+      if(child == undefined) return;
        const container = <HTMLElement> document.getElementById("scale-"+this.id);
-       if(container !== null) this.setPosition({x: child.bounds.topleft.x, y: child.bounds.topleft.y - (container.offsetHeight * this.scale/this.default_cell) });
+       if(container !== null) this.setPosition({x: child.topleft.x, y: child.topleft.y - (container.offsetHeight * this.scale/this.default_cell) });
   
     }
 
   /**
    * set's the width to at least 200, but w if its large
    */
-  setWidth(w:number){
-    this.bounds.width = (w > 200) ? w : 200;
-  }
+  // setWidth(w:number){
+  //   this.bounds.width = (w > 200) ? w : 200;
+  // }
 
   // addOutput(dm: DraftMap){
   //   this.outputs.push(dm);
   // }
 
   disableDrag(){
+    console.log("DIABLE DRAG CALLED ON ", this.id)
     this.disable_drag = true;
   }
 
@@ -268,19 +275,72 @@ export class OperationComponent implements OnInit {
     this.disable_drag = false;
   }
 
+  toggleParamsVisible(){
+    this.params_visible = !this.params_visible;
+  }
+
+  toggleSelection(e: any){
+
+
+      if(e.shiftKey == true){
+        this.multiselect.toggleSelection(this.id, this.topleft);
+      }else{
+        this.multiselect.clearSelections();
+      }
+
+  }
+
+  
+
+  /**
+   * prevents hits on the operation to register as a palette click, thereby voiding the selection
+   * @param e 
+   */
+  mousedown(e: any){
+    e.stopPropagation();
+
+
+  }
+
   drop(){
     console.log("dropped");
   }
 
 
-  inputSelected(input_id: number){
-    this.disableDrag();
+  inputSelected(obj: any){
+    let input_id = obj.inletid;
     this.onInputAdded.emit({id: this.id, ndx: input_id});
   }
+
+  visibilityChange(obj: any){
+    this.onInputVisibilityChange.emit({id: this.id, ndx:  obj.inletid, ndx_in_inlets: obj.ndx_in_inlets, show: obj.show});
+  }
+
+  /**
+   * resets the visibility on any inlet in the attached list
+   * @param inlets 
+   */
+  resetVisibliity(inlets: Array<number>){
+
+    inlets.forEach(id => {
+      const ilet = this.inletComps.find(el => el.inletid == id);
+      if(ilet !== undefined) ilet.show_connection_name = -1;
+    })
+  }
+
+
 
 
   removeConnectionTo(obj:any){
     this.onConnectionRemoved.emit(obj);
+
+    // const inlets = this.tree.getInputs(this.id);
+    // inlets.forEach(id => {
+    //   const comp = <ConnectionComponent> this.tree.getComponent(id);
+    //   comp.updateToPosition(this);
+
+    // })
+
   }
 
   openHelpDialog() {
@@ -302,26 +362,52 @@ export class OperationComponent implements OnInit {
    */
   onParamChange(obj: any){
 
+
+
+
     if(this.is_dynamic_op){
+
       const opnode = <OpNode> this.tree.getNode(this.id);
       const op = <DynamicOperation> this.operations.getOp(opnode.name);
       //this is a hack to use an input draft to generate inlets
-      if(op.params[obj.id].type == 'draft'){
-        const inputs:Array<IOTuple> = this.tree.getInputsAtNdx(this.id, 0);
-        if(inputs.length === 0) obj.value = -1;
-        else {
-          const draft_node_in_id = inputs[0].tn.inputs[0].tn.node.id;
-          obj.value = draft_node_in_id;
-        }
-        
-      }
-      const new_inlets = this.tree.onDynanmicOperationParamChange(this.name, opnode.inlets, obj.id, obj.value)
-      this.opnode.inlets = new_inlets.slice();
+      
+      if(op.dynamic_param_id == obj.id || obj.type =="notation_toggle"){
 
-      if(op.dynamic_param_type == "number") this.opnode.inlets = this.opnode.inlets.map(el => parseInt(el));
+        if(op.params[obj.id].type == 'draft'){
+          const inputs:Array<IOTuple> = this.tree.getInputsAtNdx(this.id, 0);
+          if(inputs.length === 0) obj.value = -1;
+          else {
+            const draft_node_in_id = inputs[0].tn.inputs[0].tn.node.id;
+            obj.value = draft_node_in_id;
+          }
+          
+        }
+
+        this.opnode.inlets = this.tree.onDynanmicOperationParamChange(this.id, this.name, opnode.inlets, obj.id, obj.value)
+        this.hasInlets = opnode.inlets.length > 0;
+
+        if(opnode.name == 'imagemap' || opnode.name == 'bwimagemap'){
+
+
+          this.drawImagePreview();
+
+          //update the width and height
+          let image_param = opnode.params[op.dynamic_param_id];
+          opnode.params[1] = image_param.data.width;
+          opnode.params[2] = image_param.data.height;
+
+
+        }
+      }
+
     }
     
     this.onOperationParamChange.emit({id: this.id});
+  }
+
+  drawImagePreview(){
+    let param = this.paramsComps.get( (<DynamicOperation>this.op).dynamic_param_id)
+    param.drawImagePreview();
   }
 
   //returned from a file upload event
@@ -335,23 +421,19 @@ export class OperationComponent implements OnInit {
     const image_div =  document.getElementById('param-image-'+this.id);
     image_div.style.display = 'none';
 
-
-    obj = obj.data;
-
-
-    switch(obj.type){
+    switch(obj.data.type){
       case 'image':
 
         if(this.operations.isDynamic(this.name) && (<DynamicOperation> this.op).dynamic_param_type !== 'color') return;
 
-        if(obj.warning !== ''){
+        if(obj.data.warning !== ''){
           image_div.style.display = 'flex';
           this.filewarning = obj.warning;
         }else{
 
           const opnode = this.tree.getOpNode(this.id);
-
-          obj.colors.forEach(hex => {
+          
+          obj.inlets.forEach(hex => {
 
             //add any new colors
             const ndx = opnode.inlets.findIndex(el => el.value === hex);
@@ -364,7 +446,7 @@ export class OperationComponent implements OnInit {
           //now remove any inlets that no longer have values
           opnode.inlets.forEach((inlet, ndx) => {
             if(inlet === 0) return;
-            const found = obj.colors.find(el => el === inlet);
+            const found = obj.inlets.find(el => el === inlet);
             if(found === undefined){
               remove.push(ndx);
             }
@@ -375,14 +457,21 @@ export class OperationComponent implements OnInit {
 
         
           //now update the default parameters to the original size 
-          opnode.params[1] = obj.data.width/10;
-          opnode.params[2] = obj.data.height/10;
-          this.drawImagePreview();
+          opnode.params[1] = obj.data.width;
+          opnode.params[2] = obj.data.height;
 
 
         }
         break;
     }
+
+    this.onOperationParamChange.emit({id: this.id});  
+
+  }
+
+  inletLoaded(obj){
+    obj.opid = this.id;
+    this.onInletLoaded.emit(obj);
   }
 
   /**
@@ -404,16 +493,24 @@ export class OperationComponent implements OnInit {
 
 
 
-  dragStart($event: any) {
-   
+  dragStart(e: any) {
+
+     if(this.multiselect.isSelected(this.id)){
+      this.multiselect.setRelativePosition(this.topleft);
+     }else{
+      this.multiselect.clearSelections();
+     }
   }
 
   dragMove($event: any) {
        //position of pointer of the page
+
+
+
        const pointer:Point = $event.pointerPosition;
        const relative:Point = utilInstance.getAdjustedPointerPosition(pointer, this.viewport.getBounds());
        const adj:Point = utilInstance.snapToGrid(relative, this.scale);
-       this.bounds.topleft = adj;  
+       this.topleft = adj;  
        this.interlacement = utilInstance.resolvePointToAbsoluteNdx(adj, this.scale);
        this.onOperationMove.emit({id: this.id, point: adj});
 
@@ -421,7 +518,8 @@ export class OperationComponent implements OnInit {
 
 
   dragEnd($event: any) {
-    this.onOperationMoveEnded.emit();
+    this.multiselect.setRelativePosition(this.topleft);
+    this.onOperationMoveEnded.emit({id: this.id});
 
   }
  

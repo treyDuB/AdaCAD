@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Draft, SaveObj } from '../model/datatypes';
-import {cloneDeep} from 'lodash';
-import {Firestore } from '@angular/fire/firestore';
+import { getAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import {getDatabase, ref as fbref, set as fbset, onValue, update} from '@angular/fire/database'
-import { AuthService } from './auth.service';
-import * as _ from 'lodash';
-import { getAuth } from 'firebase/auth';
-import utilInstance from '../model/util';
+import { Draft, SaveObj } from '../model/datatypes';
+import { copyDraft } from '../model/drafts';
 import { FilesystemService } from './filesystem.service';
 /**
  * stores a state within the undo/redo timeline
@@ -27,24 +22,26 @@ export class StateService {
 
   active_id = 0;
   max_size = 10;
+  last_saved_time: string = "";
   undo_disabled: boolean;
   redo_disabled: boolean;
   timeline: Array<HistoryState>; //new states are always pushed to front of draft
   // private itemDoc: AngularFirestoreDocument<Item>;
   
-  current_file_id: number = -1;
-  current_file_name: string = "draft"
-  current_file_desc: string = ""
+  constructor(private files: FilesystemService) {
 
-
-  constructor(firestore: Firestore, public auth: AuthService, private files: FilesystemService) {
-
-    const db = getDatabase();
 
     this.active_id = 0;
     this.timeline = [];
+
+
+  }
+
+  clearTimeline(){
+    this.active_id = 0;
     this.undo_disabled = true;
     this.redo_disabled = true;
+    this.timeline = [];
 
   }
 
@@ -55,51 +52,11 @@ export class StateService {
 
 
   validateWriteData(cur_state: any) : any {
-    console.log(_.cloneDeep(cur_state));
     return cur_state;
   }
 
-
-  /**
-   * this writes the most current state of the program to the user's entry to the realtime database
-   * @param cur_state returned from file saver, constains the JSON string of the file as well as the obj
-   * @returns 
-   */
-  // public writeUserData(cur_state: any) {
-
-  //   if(this.auth.uid === undefined) return;
-
-  //   cur_state = this.validateWriteData(cur_state)
-
-
-
-
-    
-  //   const db = getDatabase();
-  //   fbset(fbref(db, 'users/' + this.auth.uid), {
-  //     timestamp: Date.now(),
-  //     ada: cur_state
-  //   }).catch(console.error);
-  // }
-
-  
-
-
-  // update(item: Item) {
-  //   // this.itemDoc.update(item);
-  // }
-
-  // public writeUserData(userId, name, email, imageUrl) {
-  //   const db = getDatabase();
-  //   fbset(fbref(db, 'users/' + userId), {
-  //     username: name,
-  //     email: email,
-  //     profile_picture : imageUrl
-  //   });
-  // }
-
  
- 
+
 /**
  * used in weaver - adds a draft to the history state
  * @param draft 
@@ -108,7 +65,7 @@ export class StateService {
 
 
     var state = {
-      draft: cloneDeep(draft),
+      draft: copyDraft(draft),
       ada: null
     }
 
@@ -136,30 +93,35 @@ export class StateService {
  * used in mixer - adds an ada file to the history state
  * @param ada 
  */
-public addMixerHistoryState(ada:{json: string, file: SaveObj}):void{
+  public addMixerHistoryState(ada:{json: string, file: SaveObj}):void{
 
 
-  var state = {
-    draft: null,
-    ada: {
-      version: ada.file.version,
-      workspace: ada.file.workspace,
-      type: ada.file.type,
-      nodes: ada.file.nodes.slice(),
-      tree: ada.file.tree.slice(),
-      draft_nodes: ada.file.draft_nodes.slice(),
-      ops: ada.file.ops.slice(),
-      notes: ada.file.notes.slice(),
-      materials: ada.file.materials.slice(),
-      scale: ada.file.scale
+    var state = {
+      draft: null,
+      ada: {
+        version: ada.file.version,
+        workspace: ada.file.workspace,
+        type: ada.file.type,
+        nodes: ada.file.nodes.slice(),
+        tree: ada.file.tree.slice(),
+        draft_nodes: ada.file.draft_nodes.slice(),
+        ops: ada.file.ops.slice(),
+        notes: ada.file.notes.slice(),
+        materials: ada.file.materials.slice(),
+        scale: ada.file.scale
+      }
     }
-  }
+  
 
-  //write this to database, overwritting what was previously there
-  //this.files.writeUserData(ada.file);
+    //write this to database, overwritting what was previously there
+    //this.files.writeUserData(ada.file);
 
-  const auth = getAuth();
-  const user = auth.currentUser;
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if(user !== null){
+      this.files.writeFileData(user.uid, this.files.current_file_id, ada.file)
+    } 
 
   if(user !== null){
     this.files.writeFileData(user.uid, this.files.current_file_id, ada.file)

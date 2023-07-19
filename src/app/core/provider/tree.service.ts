@@ -1,18 +1,17 @@
 import { Injectable, ViewRef } from '@angular/core';
-import { cloneDeep, flip, map, toNumber } from 'lodash';
-import { ConnectionComponent } from '../../mixer/palette/connection/connection.component';
-import { OperationComponent } from '../../mixer/palette/operation/operation.component';
-import { SubdraftComponent } from '../../mixer/palette/subdraft/subdraft.component';
-import { OperationService} from './operation.service';
-import { OpInput, Node, DynamicOperation, Operation, StringParam, TreeNode, DraftNode, OpNode, IOTuple } from '../../core/model/datatypes';
-import { Draft, DraftNodeProxy, Drawdown, Loom, LoomSettings, LoomUtil, NodeComponentProxy, OpComponentProxy, TreeNodeProxy } from '../../core/model/datatypes';
+import { boolean } from 'mathjs';
+import { BoolParam, Draft, DraftNode, DraftNodeProxy, Drawdown, DynamicOperation, IOTuple, Loom, LoomSettings, Node, NodeComponentProxy, NotationTypeParam, OpComponentProxy, Operation, OpInput, OpNode, OpParamVal, StringParam, TreeNode, TreeNodeProxy } from '../../core/model/datatypes';
+import { copyDraft, createDraft, flipDraft, getDraftName, initDraftWithParams, warps, wefts } from '../../core/model/drafts';
+import { copyLoom, flipLoom, getLoomUtilByType } from '../../core/model/looms';
 import utilInstance from '../../core/model/util';
 import { SystemsService } from '../../core/provider/systems.service';
 import { WorkspaceService } from '../../core/provider/workspace.service';
-import { flipLoom, getLoomUtilByType } from '../../core/model/looms';
-import { createDraft, flipDraft, getDraftName, initDraft, initDraftWithParams, warps, wefts } from '../../core/model/drafts';
-import * as _ from 'lodash';
-import { ignoreElements } from 'rxjs/operators';
+import { ConnectionComponent } from '../../mixer/palette/connection/connection.component';
+import { OperationComponent } from '../../mixer/palette/operation/operation.component';
+import { SubdraftComponent } from '../../mixer/palette/subdraft/subdraft.component';
+import { createCell } from '../model/cell';
+import { ImageService } from './image.service';
+import { OperationService } from './operation.service';
 
 
 /**
@@ -33,6 +32,7 @@ export class TreeService {
   constructor(
     private ws: WorkspaceService,
     private ops: OperationService,
+    private imageservice: ImageService,
     private systemsservice: SystemsService) { 
   }
 
@@ -106,94 +106,158 @@ export class TreeService {
    * @param value the value at that parameter
    * @returns a list of inlet values to add.
    */
-   onDynanmicOperationParamChange(name: string, inlets: Array<any>, param_id: number, param_val: any) : Array<any>{
+   onDynanmicOperationParamChange(opid: number, name: string, inlets: Array<any>, param_id: number, param_val: any) : Array<any>{
+
+    console.log("ON DYNAMIC PARAM CHANGE ", opid, param_id, param_val)
+
+      const op = <DynamicOperation> this.ops.getOp(name);
+      const param_type = op.params[param_id].type
+      const opnode = this.getOpNode(opid);
+
+      if(!this.ops.isDynamic(name)) return;
+
+      if(op.dynamic_param_id != param_id && param_type !== 'notation_toggle') return;
 
 
-    const op = this.ops.getOp(name);
+      let param_vals:Array<OpParamVal> = opnode.params.map((el, ndx) =>  {
+       return  { op_name: name, param: op.params[ndx], val: el}
+      });
 
-      let param_type = op.params[param_id].type;
 
-      //check to see if we should add or remove draft inputs
-      if(param_id === (<DynamicOperation>op).dynamic_param_id){
-        const type = (<DynamicOperation>op).dynamic_param_type;
+      inlets = op.onParamChange(param_vals, op.inlets, inlets, param_id, param_val);
 
-        let static_inputs = op.inlets.filter(el => el.type === 'static');
-        let num_dynamic_inlets = inlets.length - static_inputs.length;
-        let matches = [];
 
-        switch(type){
+      return inlets;
+  }
 
-          case 'notation':
-            matches = utilInstance.parseRegex(param_val, (<StringParam>op.params[0]).regex);
-            matches = matches.map(el => el.slice(1, -1))
-            inlets = inlets.slice(0,static_inputs.length);
-            matches.forEach(el => {
-              inlets.push(el);
-            })
-          break;
+//   onDynanmicOperationParamChange(opid: number, name: string, inlets: Array<any>, param_id: number, param_val: any) : Array<any>{
 
-          case 'profile':
-            matches = utilInstance.parseRegex(param_val, (<StringParam>op.params[0]).regex);
-            inlets = inlets.slice(0,static_inputs.length);
-            matches.forEach(el => {
-              if(inlets.find(inletval => inletval == el.charAt(0)) === undefined) inlets.push(el.charAt(0));
-            })
-          break;
 
-          case 'draft':
-            if(param_val !== -1){
-              const draftNode = <DraftNode> this.getNode(param_val);
-              const uniqueVals = utilInstance.filterToUniqueValues(draftNode.loom.threading);
-              const inlet_nums = uniqueVals.length;
-              inlets = inlets.slice(0,static_inputs.length);
-              for(let i = 0; i < inlet_nums; i++){
-                inlets.push(i+1);
-              }
-            }
-          break;
+
+//     const op = this.ops.getOp(name);
+//     const opnode = this.getOpNode(opid);
+
+//     let param_type = op.params[param_id].type;
+
+
+//     if(param_id === (<DynamicOperation>op).dynamic_param_id || param_type == 'notation_toggle'){
+//       const type = (<DynamicOperation>op).dynamic_param_type;
+      
+//       let static_inputs = op.inlets.filter(el => el.type === 'static');
+//       let num_dynamic_inlets = inlets.length - static_inputs.length;
+//       let matches = [];
+
+//       switch(type){
+
+
+
+//         case 'notation':
+
+//           const system_parsing_regex = /.*?(.*?[a-xA-Z]+[\d]+).*?/i;
+
+//           if(param_id == 1 && param_val == 0){
+//             const string_to_parse = op.params[0].value;
+//             matches = utilInstance.parseRegex(opnode.params[0], (<StringParam> op.params[0]).regex);
+//             matches = matches.map(el => el.slice(1, -1))
+//             matches = matches.reduce((acc, val) => {
+//               const sub_match = utilInstance.parseRegex(val, system_parsing_regex);
+//               return acc.concat(sub_match);
+//             }, []);
+
+//             inlets = inlets.slice(0,static_inputs.length);
+//             matches.forEach(el => {
+//               inlets.push(el);
+//             })
+//           }else if(param_id == 1 && param_val == 1){
+//             matches = utilInstance.parseRegex(opnode.params[0],(<StringParam> op.params[0]).regex);
+//             matches = matches.map(el => el.slice(1, -1))
+//             inlets = inlets.slice(0,static_inputs.length);
+//             matches.forEach(el => {
+//               inlets.push(el);
+//             })
+//           }else{
+  
+
+//             matches = utilInstance.parseRegex(param_val, (<StringParam> op.params[0]).regex);
+//             matches = matches.map(el => el.slice(1, -1))
+//             if(opnode.params[1] == 0){
+//               matches = matches.reduce((acc, val) => {
+//                 const sub_match = utilInstance.parseRegex(val, system_parsing_regex);
+//                 return acc.concat(sub_match);
+//               }, []);
+//             }  
+
+//             inlets = inlets.slice(0,static_inputs.length);
+//             matches.forEach(el => {
+//               inlets.push(el);
+//             })
+//           }
+          
+//         break;
+
+//         case 'profile':
+//           matches = utilInstance.parseRegex(param_val, (<StringParam>op.params[0]).regex);
+//           inlets = inlets.slice(0,static_inputs.length);
+//           matches.forEach(el => {
+//             if(inlets.find(inletval => inletval == el.charAt(0)) === undefined) inlets.push(el.charAt(0));
+//           })
+//         break;
+
+//         case 'draft':
+//           if(param_val !== -1){
+//             const draftNode = <DraftNode> this.getNode(param_val);
+//             const uniqueVals = utilInstance.filterToUniqueValues(draftNode.loom.threading);
+//             const inlet_nums = uniqueVals.length;
+//             inlets = inlets.slice(0,static_inputs.length);
+//             for(let i = 0; i < inlet_nums; i++){
+//               inlets.push(i+1);
+//             }
+//           }
+//         break;
+
+        
+//         case 'number':
+
+//         if(param_type === 'number'){
+//           if(param_val > num_dynamic_inlets){
+//             for(let i = num_dynamic_inlets; i < param_val; i++){
+//                 inlets.push(i+1);
+//             }
+//           }else if(param_val < num_dynamic_inlets){
+//             const delete_num = num_dynamic_inlets - param_val;
+//             inlets = inlets.slice(0, -delete_num);
+//           }
+//         }else if(param_type == 'string'){
+//           const all_inputs = param_val.split(' ');
+//           const unique_values = utilInstance.filterToUniqueValues(all_inputs);
+//           inlets = inlets.slice(0,static_inputs.length);
+//           unique_values.forEach(el => {
+//             inlets.push(el);
+//           })
+//         }
+
+//         break;
+//         case 'system':
+//            static_inputs = op.inlets.filter(el => el.type === 'static');
+//            num_dynamic_inlets = inlets.length - static_inputs.length;
+
+//           if(param_val > num_dynamic_inlets){
+//             for(let i = num_dynamic_inlets; i < param_val; i++){
+//                 this.systemsservice.weft_systems[i].in_use = true;
+//                 inlets.push(i);  
+//             }
+//           }else if(param_val < num_dynamic_inlets){
+//             inlets = inlets.slice(0, param_val+static_inputs);
+//           }
+//         break;
 
           
-          case 'number':
 
-          if(param_type === 'number'){
-            if(param_val > num_dynamic_inlets){
-              for(let i = num_dynamic_inlets; i < param_val; i++){
-                  inlets.push(i+1);
-              }
-            }else if(param_val < num_dynamic_inlets){
-              const delete_num = num_dynamic_inlets - param_val;
-              inlets = inlets.slice(0, -delete_num);
-            }
-          }else if(param_type == 'string'){
-            const all_inputs = param_val.split(' ');
-            const unique_values = utilInstance.filterToUniqueValues(all_inputs);
-            inlets = inlets.slice(0,static_inputs.length);
-            unique_values.forEach(el => {
-              inlets.push(el);
-            })
-          }
+//       }
+//     }
+//   return inlets;
+// }
 
-          break;
-          case 'system':
-             static_inputs = op.inlets.filter(el => el.type === 'static');
-             num_dynamic_inlets = inlets.length - static_inputs.length;
-
-            if(param_val > num_dynamic_inlets){
-              for(let i = num_dynamic_inlets; i < param_val; i++){
-                  this.systemsservice.weft_systems[i].in_use = true;
-                  inlets.push(i);  
-              }
-            }else if(param_val < num_dynamic_inlets){
-              inlets = inlets.slice(0, param_val+static_inputs);
-            }
-          break;
-
-            
-
-        }
-      }
-    return inlets;
-  }
 
 
 
@@ -241,7 +305,9 @@ export class TreeService {
             return (params[ndx]) ? 1 : 0;
           
             case "file":
-              return params[ndx];
+              const id_and_data = this.imageservice.getImageData(params[ndx]);
+              if(id_and_data === undefined  || id_and_data.data === undefined) return {id: params[ndx], data: null}
+              else return {id: params[ndx], data: id_and_data.data};
         
             default:
               return params[ndx];
@@ -263,7 +329,9 @@ export class TreeService {
         inlets = default_inlet_values.slice();
         if(this.ops.isDynamic(name)){
           const op = <DynamicOperation> this.ops.getOp(name);
-          let dynamic_inlets = this.onDynanmicOperationParamChange(name, inlets, op.dynamic_param_id, op.params[op.dynamic_param_id].value);
+          (<OpNode> node).params = params_out.slice()
+          let dynamic_inlets = this.onDynanmicOperationParamChange(node.id, name, inlets, op.dynamic_param_id, op.params[op.dynamic_param_id].value);
+          
           inlets = dynamic_inlets.slice();
         }
       }
@@ -313,9 +381,10 @@ export class TreeService {
       ref: sd.hostView,
       component: <SubdraftComponent> sd.instance,
       dirty: true, 
-      draft: cloneDeep(draft),
+      draft: copyDraft(draft),
       loom: null,
-      loom_settings: null
+      loom_settings: null,
+      render_colors: false
     }
 
     sd.dirty = true;
@@ -326,7 +395,7 @@ export class TreeService {
 
   setPreviewDraft(draft: Draft) : Promise<DraftNode>{
     if(this.preview === undefined) return Promise.reject("preview undefined");
-      this.preview.draft = cloneDeep(draft);
+      this.preview.draft = copyDraft(draft);
       this.preview.dirty = true;
       (<SubdraftComponent> this.preview.component).draft = draft;
       return Promise.resolve(this.preview);
@@ -372,7 +441,7 @@ export class TreeService {
   * @param loom the loom to associate with this node
   * @returns the created draft node and the entry associated with this
   */
-  loadDraftData(entry: {prev_id: number, cur_id: number}, draft: Draft, loom: Loom, loom_settings: LoomSettings) : Promise<{dn: DraftNode, entry:{prev_id: number, cur_id: number}}>{
+  loadDraftData(entry: {prev_id: number, cur_id: number}, draft: Draft, loom: Loom, loom_settings: LoomSettings, render_colors: boolean) : Promise<{dn: DraftNode, entry:{prev_id: number, cur_id: number}}>{
 
     const nodes = this.nodes.filter(el => el.id === entry.cur_id);
 
@@ -381,7 +450,7 @@ export class TreeService {
     nodes[0].dirty = true;
 
     draft.id = entry.cur_id;
-   (<DraftNode> nodes[0]).draft = cloneDeep(draft);
+   (<DraftNode> nodes[0]).draft = copyDraft(draft);
 
 
 
@@ -404,9 +473,12 @@ export class TreeService {
       (<DraftNode> nodes[0]).loom = loom;
     });
    }else{
-    (<DraftNode> nodes[0]).loom = _.cloneDeep(loom);
+    (<DraftNode> nodes[0]).loom = copyLoom(loom);
 
    }
+
+   if(render_colors === undefined || render_colors === null)  (<DraftNode> nodes[0]).render_colors = false;
+   else (<DraftNode> nodes[0]).render_colors = render_colors;
    //console.log("DRAFT NODE LOADED:",_.cloneDeep(<DraftNode> nodes[0]))
    return Promise.resolve({dn: <DraftNode> nodes[0], entry});
 
@@ -481,6 +553,7 @@ export class TreeService {
   
     return {prev_id: id, cur_id: node.id};
   }
+
 
 
 
@@ -572,9 +645,7 @@ export class TreeService {
    * @returns  true if it indeed changed the value
    */
   unsetOpenConnection() : boolean{
-    // console.log("unsetting open cxn")
-    // const b = this.open_connection !== -1;
-    // this.open_connection = -1;
+    this.open_connection = -1;
       return true;
   }
 
@@ -613,8 +684,14 @@ export class TreeService {
   
     const tn: TreeNode = this.getTreeNode(node_id);
     tn.parent = (parent_id === -1) ? null : this.getTreeNode(parent_id);
-    tn.inputs = inputs.map(input => {return {tn: this.getTreeNode(input.tn), ndx: input.ndx}});
-    tn.outputs = outputs.map(output => {return {tn: this.getTreeNode(output.tn), ndx: output.ndx}});
+    tn.inputs = inputs
+      .filter(input => input !== undefined)
+      .map(input => {return {tn: this.getTreeNode(input.tn), ndx: input.ndx}});
+    tn.outputs = outputs
+      .filter(output => output !== undefined)
+      .map(output => {
+      return {tn: this.getTreeNode(output.tn), ndx: output.ndx}
+    });
     return Promise.resolve({tn, entry});
 
 
@@ -1089,21 +1166,34 @@ removeOperationNode(id:number) : Array<Node>{
  * @param id - the connection to remove
  * @returns a list of all nodes removed as a result of this action
  */
- removeConnectionNode(from:number, to:number, inletid: number) : Array<Node>{
+ //removeConnectionNode(from:number, to:number, inletid: number) : Array<Node>{
+  removeConnectionNode(from:number, to:number, inletid: number) : Array<Node>{
 
 
   const cxn_id:number = this.getConnectionAtInlet(from, to, inletid);
-  console.log("got connection ", cxn_id);
 
   const deleted:Array<Node> = []; 
   if(cxn_id === undefined) return;
 
-  console.log("removeing node in connection")
   deleted.push(this.removeNode(cxn_id));
 
   return deleted;
     
 }
+
+removeConnectionNodeById(cxn_id: number) : Array<Node>{
+
+
+
+  const deleted:Array<Node> = []; 
+  if(cxn_id === undefined) return;
+
+  deleted.push(this.removeNode(cxn_id));
+
+  return deleted;
+    
+}
+
 
 
 /**
@@ -1113,7 +1203,6 @@ removeOperationNode(id:number) : Array<Node>{
  */
   removeNode(id: number) : Node{
 
-    console.log("REMOVE NODE CALLED ON ", id);
 
     const deleted: Array<Node> = [];
 
@@ -1168,16 +1257,16 @@ removeOperationNode(id:number) : Array<Node>{
    * @param res the list of results from perform op
    * @returns a list of the draft nodes touched. 
    */
- async updateDraftsFromResults(parent: number, res: Array<Draft>) : Promise<Array<number>>{
-
+ async updateDraftsFromResults(parent: number, res: Array<Draft>, inputs: Array<OpInput>) : Promise<Array<number>>{
   const out = this.getNonCxnOutputs(parent);
   const touched: Array<number> = [];
-
-
+  const opnode:OpNode = this.getOpNode(parent);
+  const op: Operation = this.ops.getOp(opnode.name);
 
   //console.log("updating drafts, there are currently: ", out.length, "existing ouputs and ", res.length, "new outputs");
 
   if(out.length === res.length){
+
     out.forEach((output, ndx) => {
       this.setDraftOnly(output, res[ndx]);
       touched.push(output);
@@ -1188,6 +1277,7 @@ removeOperationNode(id:number) : Array<Node>{
     //create a new draft node for each outcome;
     for(let i = res.length; i < out.length; i++){
       const dn = <DraftNode> this.getNode(out[i]);
+      if(dn.render_colors === undefined) dn.render_colors = false;
       dn.draft = initDraftWithParams({wefts: 1, warps: 1});
       dn.loom_settings = {
         type: this.ws.type,
@@ -1214,12 +1304,24 @@ removeOperationNode(id:number) : Array<Node>{
       const id = this.createNode('draft', null, null);
       const cxn = this.createNode('cxn', null, null);
       this.addConnection(parent, 0,  id, 0,  cxn);
-      fns.push(this.loadDraftData({prev_id: -1, cur_id: id}, res[i], null, null)); //add loom as null for now as it assumes that downstream drafts do not have custom loom settings (e.g. they can be generated from drawdown)
+      fns.push(this.loadDraftData({prev_id: -1, cur_id: id}, res[i], null, null, true)); //add loom as null for now as it assumes that downstream drafts do not have custom loom settings (e.g. they can be generated from drawdown)
     }
 
     return Promise.all(fns)
     .then(drafts_loaded => {
+
+    const param_vals = op.params.map((param, ndx) => {
+      return {
+        param: param,
+        val: opnode.params[ndx]
+      }
+    })
+
      const ids = drafts_loaded.map(el => el.entry.cur_id);
+     ids.forEach((id, ndx) => {
+      let d = this.getDraft(id);
+       d.gen_name = op.generateName(param_vals, inputs, ndx);
+     })
 
 
      return Promise.resolve(ids);
@@ -1322,12 +1424,15 @@ isValidIOTuple(io: IOTuple) : boolean {
   if(op === null || op === undefined) return Promise.reject("Operation is null")
 
   let inputs: Array<OpInput> = [];
-
   //if(this.ops.isDynamic(opnode.name)){
     
-    //first push the parent params
+  const param_vals = op.params.map((param, ndx) => {
+    return {
+      param: param,
+      val: opnode.params[ndx]
+    }
+  })
 
-    inputs.push({op_name: op.name, drafts: [], inlet: -1, params: opnode.params});
 
     const flip_fns = [];
     const draft_id_to_ndx = [];
@@ -1358,23 +1463,26 @@ isValidIOTuple(io: IOTuple) : boolean {
             console.error("Draft not found in flipped", flipped_drafts,draft_id_to_ndx, el);
             return undefined;
           } 
-          else return {op_name:'child', drafts: [draft], inlet: el.ndx, params: [opnode.inlets[el.ndx]]}
+          else return {drafts: [draft], inlet_id: el.ndx, params: [opnode.inlets[el.ndx]]}
         })
       
-      const cleaned_inputs = paraminputs.filter(el => el != undefined);
+      const cleaned_inputs: Array<OpInput> = paraminputs.filter(el => el != undefined);
 
       inputs = inputs.concat(cleaned_inputs);
-      return op.perform(inputs);
+      return op.perform(param_vals, inputs);
 
     })
     .then(res => {
+          
           const flips = utilInstance.getFlips(this.ws.selected_origin_option, 3);
           return Promise.all(res.map(el => flipDraft(el,  flips.horiz, flips.vert)));
       })
     .then(flipped => {
         opnode.dirty = false;
-        return this.updateDraftsFromResults(id, flipped);
-      });
+        
+        return this.updateDraftsFromResults(id, flipped, inputs);
+      })
+
         
 
   
@@ -1403,12 +1511,12 @@ isValidIOTuple(io: IOTuple) : boolean {
 
   setLoom(id: number, loom:Loom){
     const dn: DraftNode = <DraftNode> this.getNode(id);
-    if(dn !== null && dn !== undefined) dn.loom = _.cloneDeep(loom);
+    if(dn !== null && dn !== undefined) dn.loom = copyLoom(loom);
   }
 
   setLoomAndRecomputeDrawdown(id: number, loom:Loom, loom_settings:LoomSettings) : Promise<Draft>{
     const dn: DraftNode = <DraftNode> this.getNode(id);
-    if(dn !== null && dn !== undefined) dn.loom = _.cloneDeep(loom);
+    if(dn !== null && dn !== undefined) dn.loom = copyLoom(loom);
 
     const utils = getLoomUtilByType(loom_settings.type);
     return utils.computeDrawdownFromLoom(loom, this.ws.selected_origin_option)
@@ -1500,6 +1608,11 @@ isValidIOTuple(io: IOTuple) : boolean {
   }
 
 
+  /**
+   * gets the tree node associated with a given Node 
+   * @param id the idea of the node (not the tree node id) 
+   * @returns 
+   */
   getTreeNode(id:number): TreeNode{
     const found =  this.tree.find(el => el.node.id === id);
     if(found === undefined){
@@ -1635,7 +1748,7 @@ isValidIOTuple(io: IOTuple) : boolean {
      const combined = set_a.concat(set_b);
 
     if(combined.length === 0){
-      console.error("No connection found between", a, b);
+      //console.error("No connection found between", a, b);
       return -1;
     } 
 
@@ -1887,7 +2000,7 @@ isValidIOTuple(io: IOTuple) : boolean {
       const savable: NodeComponentProxy = {
         node_id: node.id,
         type: node.type,
-        bounds: (node.component !== null) ? node.component.bounds : {topleft: {x: 0, y: 0}, width: 0 ,height: 0},
+        topleft: (node.component !== null) ? node.component.topleft : {x: 0, y: 0},
       }
       objs.push(savable);
 
@@ -1920,7 +2033,6 @@ isValidIOTuple(io: IOTuple) : boolean {
    * @returns an array of objects that describe nodes
    */
     exportDraftNodeProxiesForSaving() : Promise<Array<DraftNodeProxy>> {
-
       const objs: Array<any> = []; 
   
       this.getDraftNodes().forEach(node => {
@@ -1933,7 +2045,7 @@ isValidIOTuple(io: IOTuple) : boolean {
             treadling: this.adjustTreadlingForSaving(  (<DraftNode>node).loom.treadling)
           }
         }
-
+        if((<DraftNode>node).draft !== null && (<DraftNode>node).draft !== undefined){
         const savable: DraftNodeProxy = {
           node_id: node.id,
           draft_id: (<DraftNode>node).draft.id,
@@ -1941,9 +2053,11 @@ isValidIOTuple(io: IOTuple) : boolean {
           draft: (this.hasParent(node.id)) ? null : (<DraftNode>node).draft,
           draft_visible: (node.component !== null) ? (<SubdraftComponent>node.component).draft_visible : true,
           loom:  (this.hasParent(node.id)) ? null :loom_export,
-          loom_settings: node.loom_settings
+          loom_settings: node.loom_settings,
+          render_colors: ((<DraftNode>node).render_colors == undefined ) ? true :  (<DraftNode>node).render_colors
         }
         objs.push(savable);
+      }
   
       })
 
@@ -2001,7 +2115,7 @@ isValidIOTuple(io: IOTuple) : boolean {
     const node: NodeComponentProxy = {
       node_id: id, 
       type: 'draft',
-      bounds: null
+      topleft: null
     }
     
     const draft_node: DraftNodeProxy = {
@@ -2012,6 +2126,7 @@ isValidIOTuple(io: IOTuple) : boolean {
       draft_visible: true,
       loom: null, 
       loom_settings:null,
+      render_colors: true
     };
 
     const treenode: TreeNodeProxy = {
@@ -2052,6 +2167,7 @@ isValidIOTuple(io: IOTuple) : boolean {
     const dn = <DraftNode> this.getNode(id);
     draft.id = id;
     dn.draft = draft;
+    dn.render_colors = (dn.render_colors === undefined) ? true : dn.render_colors; 
     if(dn.component !== null) (<SubdraftComponent> dn.component).draft = draft;
 
   }
@@ -2109,7 +2225,7 @@ isValidIOTuple(io: IOTuple) : boolean {
   setDraftPattern(id: number, pattern: Drawdown) {
 
     const dn = <DraftNode> this.getNode(id);
-    dn.draft.drawdown = cloneDeep(pattern);
+    dn.draft.drawdown = pattern.slice();
     (<SubdraftComponent> dn.component).draft = dn.draft;
     dn.dirty = true;    
   }
@@ -2128,11 +2244,21 @@ isValidIOTuple(io: IOTuple) : boolean {
     const objs: Array<any> = []; 
 
     this.getOpNodes().forEach(op_node => {
+      const op = this.ops.getOp(op_node.name);
+
+      let cleaned_params = op.params.map((param_template, ndx) => {
+        if(param_template.type == 'file'){
+          return op_node.params[ndx].id;
+        }else{
+          return op_node.params[ndx];
+        }
+      })
+      
 
       const savable:OpComponentProxy = {
         node_id: op_node.id,
         name: op_node.name,
-        params: op_node.params,
+        params: cleaned_params,
         inlets: op_node.inlets
       }
 

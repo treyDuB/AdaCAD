@@ -1,85 +1,83 @@
-<mat-toolbar color="primary">
+<mat-toolbar class="topbar" color="primary">
 
-<span class="left">
-  <button *ngIf="(auth.showLoginButton)" mat-raised-button matTooltip="login or signup" (click) = "openLoginDialog()"><i class="fa fa-sign-in"></i> Sign In</button>
-  <div class="auth" *ngIf="(auth.showLogoutButton)">
-    Hi {{auth.username}} <a mat-icon-button matTooltip="logout" (click)="logout()"><i class="fa fa-sign-out"></i></a>
+  <div class="left">
+  <button mat-icon-button
+  (click)=" collapse()"
+  class="collapse" 
+  [class.nav-opened] = "!collapsed"
+  value="collapsed">
+  <i class="fa"
+    [class.fa-angle-double-right]="collapsed" 
+    [class.fa-angle-double-left]="!collapsed"
+  aria-hidden="true"></i>
+  </button>
+
+     <div class="titlebar">AdaCAD 4.0, <i>beta</i></div>
+
+     <button mat-icon-button
+     (click)="openAboutDialog()"
+     matTooltip ="about AdaCAD"
+     >
+     <i class="fas fa-info-circle"></i>
+    </button>
+    </div>
+
+    <div class="right">
+
+
+      <div class="auth" *ngIf="(auth.showLogoutButton)">
+        <span class="loggedInUserName">Hi {{auth.username}} </span>
+        <a mat-icon-button matTooltip="logout" (click)="logout()"><i class="fa fa-sign-out"></i></a>
+      </div>
   </div>
-  
-  <a mat-raised-button matTooltip="help" href="https://adacad.unstable.design" target='_blank'><i class="fas fa-question"></i> Help</a>
-
-
-</span>
-
-<span class="center">
-   <button mat-icon-button
-      (click)="openAboutDialog()"
-      matTooltip ="about AdaCAD"
-      >
-      <i class="fas fa-info-circle"></i>
-    </button>
-    <span>AdaCAD</span>
-</span>
-  
-<span class="right">
-    <!-- DISABLED UNTIL I CAN FIX THIS -->
-    <!-- <button mat-icon-button matTooltip ="print screen" (click)="saveAsPrint()" >
-      <i class="fas fa-print"></i>
-    </button> -->
-        
-  <button mat-icon-button 
-  [matMenuTriggerFor]="clearScreen"
-  matTooltip ="clear screen"
-  >
-  <i class="fas fa-eraser"></i>
-</button> 
-    <mat-menu #clearScreen mat-raised-button>
-      <a  (click)="clear()" mat-menu-item> Really? Clear the workspace?</a>
-    </mat-menu>
-
-    <!---->
-    
-
-    
-  <button mat-icon-button 
-  [matMenuTriggerFor]="downloadDropdown"
-  matTooltip ="export adacad workspace"
-  >
-    <i class="fas fa-download"></i>
-  </button> 
-    <mat-menu #downloadDropdown mat-raised-button>
-      <a  (click)="saveAsAda()" mat-menu-item> as AdaCAD workspace file</a>
-      <a  (click)="saveAsBmp()" mat-menu-item> export all visible drafts as bitmaps</a>
-      <a  (click)="saveAsWif()" mat-menu-item> export all visible drafts as .WIF files</a>
-    </mat-menu>
-
-
-     <button mat-icon-button="Open" 
-     matTooltip ="open a new workspace"
-     (click)="openNewFileDialog()">
-     <i class="fas fa-folder-open"></i>
-    </button>
-
-
- <mat-form-field class="filename">
-        <mat-label>Filename</mat-label>
-        <div><input matInput [(ngModel)]="filename" placeholder="Filename"> </div>
-      </mat-form-field>
 
 
 
+  <!-- <button mat-icon-button
+  (click)="drawer.toggle(); collapsed = !collapsed"
+  class="collapse" 
+  value="collapsed">
+  <i class="fa"
+    [class.fa-angle-double-right]="collapsed" 
+    [class.fa-angle-double-left]="!collapsed"
+  aria-hidden="true"></i>
+</button> -->
 
 
-
-      <button mat-icon-button
-           (click)="drawer.toggle(); collapsed = !collapsed"
-            class="collapse" 
-            value="collapsed">
-         <i class="fa"
-           [class.fa-angle-double-right]="!collapsed" 
-           [class.fa-angle-double-left]="collapsed"
-         aria-hidden="true"></i>
-      </button>
-
-  </span>
 </mat-toolbar>
+
+<div class="betadesc">
+  <p>
+  This is a new/"beta" release of AdaCAD 4.0. This release has more features, including file loading/saving, multiselection, simulation, but has not been tested as extensively as our previous version of AdaCAD. <b>Use at your own risk. and please: </b> 
+
+  <a href="https://groups.google.com/g/adacad-forum" class="mat-stroked-button stable" >
+    click here if you find broken things!</a>
+
+  If you would like to use the existing, and stable, version of AdaCAD, you can do so here: 
+  <a style="color:white" href="https://adacad.org" >adacad.org</a></p>
+
+  <p>
+    If you would like to use use this version, we reccomend logging in or creating an account and watching our video about how to use this new version. This will allow you to load and save files within AdaCAD: </p>
+    
+    <div class="buttonrow">
+    
+    <div *ngIf="!auth.isLoggedIn">
+      <button mat-stroked-button class="example-full-width login" matTooltip="login" (click) = "openLoginDialog()"><i class="fa fa-sign-in"></i> Log in</button>
+    </div>
+
+    <div *ngIf="auth.isLoggedIn">
+      You are already logged in!
+    </div>
+
+
+    <!-- <a href="http://adacad.org" class="mat-stroked-button" >
+      Watch Intro Video
+     </a>
+      -->
+    </div>
+
+
+
+</div>
+
+
